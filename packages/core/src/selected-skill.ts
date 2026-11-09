@@ -133,6 +133,7 @@ export const CONTROLLED_DESTRUCTION_STAT_IDS = [
   'support_controlled_destruction_spell_damage_+%_final',
   'support_controlled_destruction_critical_strike_chance_+%_final',
 ] as const;
+export const FASTER_CASTING_STAT_ID = 'base_cast_speed_+%' as const;
 
 export interface SelectedSkillSupport {
   readonly id: string;
@@ -150,8 +151,7 @@ export interface SelectedSkillSupportLevel {
   readonly sourceRows: readonly SourceRowRef[];
 }
 
-/** Only the reviewed normal Controlled Destruction slice, not an extensible rule loader. */
-export interface SelectedSkillSupportDataset {
+export interface SelectedSkillControlledDestructionDataset {
   readonly identity: SnapshotIdentity;
   readonly id: 'SupportControlledDestruction';
   readonly gemId: string;
@@ -159,9 +159,29 @@ export interface SelectedSkillSupportDataset {
   readonly sourceRows: readonly SourceRowRef[];
 }
 
+export interface SelectedSkillFasterCastingLevel {
+  readonly gemLevel: number;
+  readonly increasedCastSpeedPercent: number;
+  readonly manaCostMultiplier: number;
+  readonly sourceRows: readonly SourceRowRef[];
+}
+
+export interface SelectedSkillFasterCastingDataset {
+  readonly identity: SnapshotIdentity;
+  readonly id: 'SupportFasterCasting';
+  readonly gemId: string;
+  readonly levels: readonly SelectedSkillFasterCastingLevel[];
+  readonly sourceRows: readonly SourceRowRef[];
+}
+
+/** Two reviewed normal supports, not an extensible rule loader. */
+export type SelectedSkillSupportDataset =
+  SelectedSkillControlledDestructionDataset | SelectedSkillFasterCastingDataset;
+
 export interface SelectedSkillSupportContribution extends StatContribution {
-  readonly operation: 'more-spell-damage' | 'less-critical-strike-chance';
+  readonly operation: 'more-spell-damage' | 'less-critical-strike-chance' | 'increased-cast-speed';
   readonly appliedToSelectedHit: boolean;
+  readonly appliedToCastRate: boolean;
   readonly sourceRows: readonly SourceRowRef[];
 }
 
@@ -169,6 +189,7 @@ export interface SelectedSkillSupportTrace {
   readonly supports: readonly SelectedSkillSupport[];
   readonly spellDamageMultiplier: number;
   readonly criticalChanceMultiplier: number;
+  readonly increasedCastSpeedPercent: number;
   readonly castTimeMultiplier: 1;
   /** Multiplier only: resource costs and sustainable casting are not calculated. */
   readonly manaCostMultiplier: number;
@@ -229,7 +250,7 @@ export interface SelectedSkillCalculation {
   readonly buildId: string;
   readonly configuration: SelectedSkillConfiguration;
   readonly skill: SelectedSkillSelection;
-  readonly engineRevision: 'poe1-selected-spark-v6';
+  readonly engineRevision: 'poe1-selected-spark-v7';
   readonly metric: 'selected-skill-hit-combined-dps';
   readonly hit: SparkCalculation;
   readonly addedLightningDamage: AddedLightningDamageTrace;

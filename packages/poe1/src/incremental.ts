@@ -178,23 +178,39 @@ function copyDataset(dataset: SparkDataset): SparkDataset {
     ...(dataset.supports === undefined
       ? {}
       : {
-          supports: dataset.supports.map((support) => ({
-            identity: {
-              game: support.identity.game,
-              build: support.identity.build,
-              snapshotId: support.identity.snapshotId,
-            },
-            id: support.id,
-            gemId: support.gemId,
-            levels: support.levels.map((level) => ({
-              gemLevel: level.gemLevel,
-              moreSpellDamagePercent: level.moreSpellDamagePercent,
-              criticalStrikeChancePercent: level.criticalStrikeChancePercent,
-              manaCostMultiplier: level.manaCostMultiplier,
-              sourceRows: copyRows(level.sourceRows),
-            })),
-            sourceRows: copyRows(support.sourceRows),
-          })),
+          supports: dataset.supports.map((support) => {
+            const common = {
+              identity: {
+                game: support.identity.game,
+                build: support.identity.build,
+                snapshotId: support.identity.snapshotId,
+              },
+              gemId: support.gemId,
+              sourceRows: copyRows(support.sourceRows),
+            };
+            return support.id === 'SupportControlledDestruction'
+              ? {
+                  ...common,
+                  id: support.id,
+                  levels: support.levels.map((level) => ({
+                    gemLevel: level.gemLevel,
+                    moreSpellDamagePercent: level.moreSpellDamagePercent,
+                    criticalStrikeChancePercent: level.criticalStrikeChancePercent,
+                    manaCostMultiplier: level.manaCostMultiplier,
+                    sourceRows: copyRows(level.sourceRows),
+                  })),
+                }
+              : {
+                  ...common,
+                  id: support.id,
+                  levels: support.levels.map((level) => ({
+                    gemLevel: level.gemLevel,
+                    increasedCastSpeedPercent: level.increasedCastSpeedPercent,
+                    manaCostMultiplier: level.manaCostMultiplier,
+                    sourceRows: copyRows(level.sourceRows),
+                  })),
+                };
+          }),
         }),
     ...(dataset.critical === undefined
       ? {}
@@ -531,7 +547,9 @@ export function createSelectedSkillSession(
     effectiveAdded: full.value.addedLightningDamage.effective,
     combinedBase: full.value.addedLightningDamage.combinedBase,
     damageIncrease: hit.increasedDamagePercent,
-    speedIncrease: hit.increasedCastSpeedPercent,
+    speedIncrease: input.modifiers
+      .filter((modifier) => modifier.statId === CAST_SPEED)
+      .reduce((sum, modifier) => sum + modifier.value, 0),
     supportEffects: copySupportEffects(full.value.supportEffects),
     baseChancePercent: full.value.criticalEffects.baseChancePercent,
     increasedChancePercent: full.value.criticalEffects.increasedChancePercent,
@@ -757,15 +775,28 @@ export function createSelectedSkillSession(
           after = { min: before.min * scale, max: before.max * scale, mean: before.mean * scale };
           break;
         }
-        case 'cast-rate':
+        case 'cast-rate': {
+          const totalCastSpeedPercent = speedIncrease + supportEffects.increasedCastSpeedPercent;
+          const speedMultiplier = Math.floor((1 + totalCastSpeedPercent / 100) * 100 + 0.5) / 100;
+          if (
+            !Number.isFinite(totalCastSpeedPercent) ||
+            !Number.isFinite(speedMultiplier) ||
+            speedMultiplier <= 0
+          ) {
+            return failure(
+              errorDiagnostic(
+                'selected.cast-speed',
+                'The rounded combined item and support cast-speed multiplier must be finite and positive.',
+              ),
+            );
+          }
           casts = Math.min(
-            Math.floor((1 + speedIncrease / 100) * 100 + 0.5) /
-              100 /
-              (baseline.baseCastTimeSeconds * supportEffects.castTimeMultiplier),
+            speedMultiplier / (baseline.baseCastTimeSeconds * supportEffects.castTimeMultiplier),
             1 / 0.033,
           );
           castTime = 1 / casts;
           break;
+        }
         case 'critical-effects': {
           const effects = calculateSelectedSkillCriticalEffects(
             next,
@@ -828,6 +859,7 @@ export function createSelectedSkillSession(
         supportEffects.criticalChanceMultiplier,
         supportEffects.castTimeMultiplier,
         supportEffects.manaCostMultiplier,
+        supportEffects.increasedCastSpeedPercent,
         baseChancePercent,
         increasedChancePercent,
         addedMultiplierPercent,
@@ -847,7 +879,7 @@ export function createSelectedSkillSession(
         castsPerSecond: casts,
         effectiveLightningResistancePercent: resistanceEffects.effectiveResistancePercent,
         increasedDamagePercent: damageIncrease,
-        increasedCastSpeedPercent: speedIncrease,
+        increasedCastSpeedPercent: speedIncrease + supportEffects.increasedCastSpeedPercent,
         modifierContributions: next.modifiers
           .filter((modifier) =>
             (SPARK_MODIFIER_STAT_IDS as readonly string[]).includes(modifier.statId),

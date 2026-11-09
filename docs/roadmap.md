@@ -13,11 +13,12 @@
 - Explicit average critical hits with client base chance, a pinned player multiplier rule, Controlled Destruction less crit, excluded ailments, exact scalar modifier provenance and fresh/incremental oracle checks.
 - Explicit already-active lightning exposure, reviewed maximum/floor profiles and post-cap penetration, with staged provenance, pinned oracle fixtures and selective resistance invalidation.
 - Explicit enemy shock magnitude and host uptime, separate shocked/unshocked traces, scenario provenance, executed pinned endpoints and full/incremental checks.
+- Normal Faster Casting as a second support, additive item/support cast speed, explicit cast-time and tick rules, independent Controlled Destruction interaction and per-gem provenance.
 
 ## Next capabilities
 
-1. Evaluate a second support for normal Spark with explicit eligibility, more/less, timing and hit-count rules. Keep the current configured-shock policy; deriving shock from hits requires a separate threshold/application/duration model before implementation.
-2. Add further resistance reductions/curses only as separate reviewed rules; do not infer them from the current cap profile. Review additional damage-taken modifiers separately before combining their additive pool with configured shock.
+1. Add a bounded resistance reduction/curse only with explicit configured state, exact operation order and independent pinned comparisons. Review additional damage-taken modifiers separately before combining their additive pool with shock.
+2. Add conditional applicability only under a specified state model and mutation tests. Keep the configured-shock policy; deriving shock from hits requires a separate threshold/application/duration model. Supports that introduce repeats, triggers or more-speed effects need their own timing and hit-count rules.
 3. Expand item reconciliation and passive/equipment integration within the existing normal Spark slice. Add conditions only with applicability tests; feedback mechanics require bounded solver semantics.
 4. Evaluate graph overhead and data validation costs using representative workloads before extending incremental machinery. Add further skills/variants only as separate documented, tested slices.
 

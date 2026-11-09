@@ -26,6 +26,44 @@ const added = (min, max, line = 7) => ({
   source: { kind: 'item', id: 'body-armour:1', line },
 });
 
+test('direct selected cast-speed fractions combine with Faster Casting before multiplier rounding', () => {
+  const selected = {
+    ...input,
+    skill: {
+      ...input.skill,
+      supports: [
+        {
+          id: 'SupportFasterCasting',
+          gemLevel: 20,
+          quality: 0,
+          enabled: true,
+          source: { kind: 'skill', id: 'faster-casting:1' },
+        },
+      ],
+    },
+    modifiers: [mod('base_cast_speed_+%', 12.34)],
+  };
+  const result = calculateSelectedSkill(selected, dataset);
+  assert.equal(result.ok, true, JSON.stringify(result.diagnostics));
+  assert.equal(result.value.hit.increasedCastSpeedPercent, 51.34);
+  assert.equal(result.value.supportEffects.increasedCastSpeedPercent, 39);
+  assert.equal(result.value.hit.modifierContributions[0].value, 12.34);
+  assert.equal(result.value.hit.castsPerSecond, 1.51 / 0.6);
+  assert.equal(result.value.hit.baseCastTimeSeconds, 0.6);
+  assert.equal(result.value.hitsPerCast, 1);
+  const normal = calculateSelectedSkill(input, dataset);
+  assert.deepEqual(
+    result.value.hit.nonCriticalHitAfterResistance,
+    normal.value.hit.nonCriticalHitAfterResistance,
+  );
+  selected.modifiers.push(mod('damage_+%', -100));
+  const zero = calculateSelectedSkill(selected, dataset);
+  assert.equal(zero.ok, true);
+  assert.equal(zero.value.combinedDps, 0);
+  assert.equal(zero.value.hit.castsPerSecond, 1.51 / 0.6);
+  assert.equal(zero.value.supportEffects.increasedCastSpeedPercent, 39);
+});
+
 test('ordered added-lightning groups retain raw provenance and scale before increases and rounding', () => {
   const groups = [added(1, 2), added(0, 0, 8)];
   const before = structuredClone(groups);

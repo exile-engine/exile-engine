@@ -9,7 +9,7 @@ import {
   type SparkDataset,
   type SparkInput,
 } from '@exile-engine/core';
-import { loadControlledDestructionDataset } from './supports.js';
+import { loadControlledDestructionDataset, loadFasterCastingDataset } from './supports.js';
 import { loadSelectedSkillCriticalDataset } from './critical.js';
 import { loadSelectedSkillResistanceDataset } from './resistance.js';
 import { loadSelectedSkillShockDataset } from './shock.js';
@@ -22,6 +22,8 @@ export async function loadSparkDataset(reader: CatalogReader) {
   if (!loaded.ok) return loaded;
   const support = await loadControlledDestructionDataset(reader);
   if (!support.ok) return support;
+  const fasterCasting = await loadFasterCastingDataset(reader);
+  if (!fasterCasting.ok) return fasterCasting;
   const critical = await loadSelectedSkillCriticalDataset(reader);
   if (!critical.ok) return critical;
   const resistance = await loadSelectedSkillResistanceDataset(reader);
@@ -30,6 +32,7 @@ export async function loadSparkDataset(reader: CatalogReader) {
   if (!shock.ok) return shock;
   if (
     !sameSnapshot(loaded.value.identity, support.value.identity) ||
+    !sameSnapshot(loaded.value.identity, fasterCasting.value.identity) ||
     !sameSnapshot(loaded.value.identity, reader.identity) ||
     !sameSnapshot(loaded.value.identity, critical.value.identity) ||
     !sameSnapshot(loaded.value.identity, resistance.value.identity) ||
@@ -43,7 +46,7 @@ export async function loadSparkDataset(reader: CatalogReader) {
     );
   return success<SparkDataset>({
     ...loaded.value,
-    supports: [support.value],
+    supports: [support.value, fasterCasting.value],
     critical: critical.value,
     resistance: resistance.value,
     shock: shock.value,
@@ -67,6 +70,9 @@ export type {
   SelectedSkillSupport,
   SelectedSkillSupportTrace,
   SelectedSkillSupportDataset,
+  SelectedSkillControlledDestructionDataset,
+  SelectedSkillFasterCastingLevel,
+  SelectedSkillFasterCastingDataset,
   SelectedSkillCriticalTrace,
   SelectedSkillCriticalDataset,
   SelectedLightningExposure,

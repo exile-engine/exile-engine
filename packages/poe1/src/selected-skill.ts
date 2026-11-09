@@ -46,7 +46,7 @@ export {
 } from './resistance.js';
 export type { LightningResistanceStages } from './resistance.js';
 
-export const selectedSkillEngineRevision = 'poe1-selected-spark-v6' as const;
+export const selectedSkillEngineRevision = 'poe1-selected-spark-v7' as const;
 
 function object(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === 'object' && !Array.isArray(value);
@@ -243,19 +243,22 @@ export function validateSelectedSkillInput(input: SelectedSkillInput): Result<Se
     skill.quality > 100 ||
     (skill.variant !== undefined && skill.variant !== 'normal') ||
     (skill.statSet !== undefined && skill.statSet !== 'base') ||
-    (skill.supports !== undefined && (!Array.isArray(skill.supports) || skill.supports.length > 1))
+    (skill.supports !== undefined &&
+      (!Object.hasOwn(skill, 'supports') || !denseArray(skill.supports, 2)))
   )
     reject(
       'selected.unsupported-skill',
-      'Only normal base Spark, levels 1–40, ordinary quality 0–100 and at most one reviewed support are supported.',
+      'Only normal base Spark, levels 1–40, ordinary quality 0–100 and at most two unique reviewed supports are supported.',
     );
-  if (object(skill) && Array.isArray(skill.supports) && skill.supports.length <= 1) {
+  if (object(skill) && denseArray(skill.supports, 2)) {
+    const seen = new Set<string>();
     for (const support of skill.supports) {
       if (
         !object(support) ||
         !ownFields(support, ['id', 'gemLevel', 'quality', 'enabled', 'source']) ||
         !keys(support, ['id', 'gemLevel', 'quality', 'enabled', 'source']) ||
-        support.id !== 'SupportControlledDestruction' ||
+        !['SupportControlledDestruction', 'SupportFasterCasting'].includes(support.id as string) ||
+        seen.has(support.id as string) ||
         !Number.isSafeInteger(support.gemLevel) ||
         (support.gemLevel as number) < 1 ||
         (support.gemLevel as number) > 20 ||
@@ -276,8 +279,9 @@ export function validateSelectedSkillInput(input: SelectedSkillInput): Result<Se
       )
         reject(
           'selected.unsupported-support',
-          'Only explicit normal Controlled Destruction levels 1–20, quality 0, enabled state and skill provenance are supported.',
+          'Only unique normal Controlled Destruction and Faster Casting levels 1–20, quality 0, explicit enabled state and skill provenance are supported.',
         );
+      if (object(support) && typeof support.id === 'string') seen.add(support.id);
     }
   }
   const config = input.configuration;
@@ -400,13 +404,12 @@ export function validateSelectedSkillInput(input: SelectedSkillInput): Result<Se
         !Number.isFinite(damage) ||
         damage < -100 ||
         !Number.isFinite(speed) ||
-        Math.floor((1 + speed / 100) * 100 + 0.5) / 100 <= 0 ||
         !Number.isSafeInteger(chance) ||
         !Number.isSafeInteger(multiplier)
       )
         reject(
           'selected.multiplier',
-          'Finite additive totals, damage increase at least -100% and a positive rounded cast-speed multiplier are required. Critical totals must remain safe integers at every addition.',
+          'Finite additive totals and damage increase at least -100% are required. Final cast speed is validated after support effects. Critical totals must remain safe integers at every addition.',
         );
     }
   }
@@ -605,7 +608,9 @@ export function assembleSelectedSkill(
         appliedToSelectedHit:
           contribution.operation === 'less-critical-strike-chance'
             ? criticalEffects.mode === 'average' &&
-              supportEffects.supports.some((support) => support.enabled)
+              supportEffects.supports.some(
+                (support) => support.id === 'SupportControlledDestruction' && support.enabled,
+              )
             : contribution.appliedToSelectedHit,
       })),
     },
@@ -634,8 +639,30 @@ export function calculateSelectedSkill(
         'The selected slice requires an exact bounded Spark dataset schema with all five supported modifier IDs.',
       ),
     );
-  const hit = calculateSparkForGame(sparkInput(validated.value), dataset, 'poe1');
+  // Core's isolated API validates its own speed pool. The selected pool includes supports,
+  // so resolve the intrinsic/damage facts at neutral cast speed and validate the combined pool below.
+  const isolatedInput = sparkInput(validated.value);
+  const hit = calculateSparkForGame(
+    {
+      ...isolatedInput,
+      modifiers: isolatedInput.modifiers!.filter((mod) => mod.statId !== 'base_cast_speed_+%'),
+    },
+    dataset,
+    'poe1',
+  );
   if (!hit.ok) return hit;
+  const itemHit = {
+    ...hit.value,
+    increasedCastSpeedPercent: isolatedInput
+      .modifiers!.filter((mod) => mod.statId === 'base_cast_speed_+%')
+      .reduce((sum, mod) => sum + mod.value, 0),
+    modifierContributions: isolatedInput.modifiers!.map((mod) => ({
+      statId: mod.statId,
+      value: mod.value,
+      source: { ...mod.source },
+      scope: 'global' as const,
+    })),
+  };
   const effectiveness = dataset.levels.find(
     (level) => level.gemLevel === validated.value.skill.gemLevel,
   )!.addedDamageEffectiveness!;
@@ -643,10 +670,25 @@ export function calculateSelectedSkill(
   if (!added.ok) return added;
   const supportEffects = calculateSelectedSkillSupports(validated.value, dataset);
   if (!supportEffects.ok) return supportEffects;
+  const speed =
+    Math.floor(
+      (1 +
+        (itemHit.increasedCastSpeedPercent + supportEffects.value.increasedCastSpeedPercent) /
+          100) *
+        100 +
+        0.5,
+    ) / 100;
+  if (!Number.isFinite(speed) || speed <= 0)
+    return failure(
+      errorDiagnostic(
+        'selected.cast-speed',
+        'The rounded combined item and support cast-speed multiplier must be finite and positive.',
+      ),
+    );
   const resistanceEffects = calculateSelectedSkillResistance(validated.value, dataset);
   if (!resistanceEffects.ok) return resistanceEffects;
   const selectedHit = selectedHitRules(
-    hit.value,
+    itemHit,
     added.value.combinedBase,
     supportEffects.value,
     resistanceEffects.value,
@@ -697,7 +739,9 @@ export function selectedHitRules(
   const effectiveLightningResistancePercent =
     resistanceEffects?.effectiveResistancePercent ?? hit.effectiveLightningResistancePercent;
   const scale = 1 - effectiveLightningResistancePercent / 100;
-  const speed = Math.floor((1 + hit.increasedCastSpeedPercent / 100) * 100 + 0.5) / 100;
+  const increasedCastSpeedPercent =
+    hit.increasedCastSpeedPercent + (supportEffects?.increasedCastSpeedPercent ?? 0);
+  const speed = Math.floor((1 + increasedCastSpeedPercent / 100) * 100 + 0.5) / 100;
   const castsPerSecond = Math.min(
     speed / (hit.baseCastTimeSeconds * (supportEffects?.castTimeMultiplier ?? 1)),
     1 / 0.033,
@@ -711,12 +755,14 @@ export function selectedHitRules(
       mean: ((min + max) / 2) * scale,
     },
     effectiveLightningResistancePercent,
+    increasedCastSpeedPercent,
     castsPerSecond,
     castTimeSeconds: 1 / castsPerSecond,
     ruleProvenance: [
       ...hit.ruleProvenance,
       'Selected spell added lightning: sum ordered raw minimum/maximum groups, multiply by client added-damage effectiveness, add intrinsic lightning, then apply increases without intermediate rounding.',
-      'Controlled Destruction: more spell damage multiplies after increased damage before final rounding; less critical chance is retained but excluded by noncritical mode. Cast-time multiplier is 1; the support record CastTime is not the active skill cast time.',
+      'Controlled Destruction: more spell damage multiplies after increased damage before final rounding; less critical chance applies only in explicit average-critical mode. Cast-time multiplier is 1; the support record CastTime is not the active skill cast time.',
+      'Faster Casting: increased cast speed adds to the item pool before speed rounding and the cast-rate ceiling. It changes cast rate, not hit damage; both support record CastTime values leave Spark base cast time unchanged.',
       'Selected Spark rules: PoB 3dbca4463c0a59079d9f7f032d8240cf868e09da; round hit endpoints before resistance, cast-speed multiplier to two decimals, cast rate at most 1/0.033 per second.',
     ],
   };

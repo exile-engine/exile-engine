@@ -19,6 +19,7 @@
 - Use finite numbers and validate domains and divisors. Preserve game-specific rounding where the source resolves base values. Do not manufacture additional rounding on intermediate presentation values.
 - Treat exposure and penetration as separate operations. An explicitly active negative exposure lowers uncapped enemy resistance; only the strongest applies. Cap/floor next, then subtract unconditional penetration without reapplying the floor. Preserve every candidate and penetration occurrence, with scenario state separate from item modifiers and the already-effective profile kept exclusive.
 - Configured shock magnitude and uptime are explicit scenario percentages, independent of hit-derived ailments. Apply its increased-damage-taken factor to post-resistance normal/critical damage without rerounding; keep unshocked traces and exact stat identity separate from scenario and formula provenance. Partial uptime assumes the same casting and damage distribution in both states and is checked against a host blend of executed PoB endpoints.
+- Faster Casting's increased speed adds to item cast speed before rounding and positive-multiplier validation. Keep its gem contribution separate from original item occurrences. Both reviewed support records have cast-time factor 1; their 1000 ms records never override Spark's base time. Preserve support selection order and distinguish hit applicability from cast-rate applicability.
 
 ## Versions and documentation
 

@@ -1,0 +1,159 @@
+{
+  "referenceRevision": "3dbca4463c0a59079d9f7f032d8240cf868e09da",
+  "executedOn": "2026-11-10",
+  "pobExecuted": true,
+  "probes": [
+    {
+      "id": "fractional-item-cast-speed",
+      "inputXml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<PathOfBuilding>\r\n  <Build level=\"1\" className=\"Witch\" ascendClassName=\"None\" mainSocketGroup=\"1\" targetVersion=\"3_0\">\r\n    <PlayerStat stat=\"CombinedDPS\" value=\"999999999\"/>\r\n  </Build>\r\n  <Skills>\r\n    <Skill enabled=\"true\" mainActiveSkill=\"1\" skillPart=\"1\">\r\n      <Gem skillId=\"Spark\" gemId=\"Metadata/Items/Gems/SkillGemSpark\" nameSpec=\"Spark\" level=\"20\" quality=\"0\" enabled=\"true\"/>\r\n      <Gem skillId=\"SupportFasterCasting\" gemId=\"Metadata/Items/Gems/SupportGemFasterCast\" nameSpec=\"Faster Casting\" level=\"20\" quality=\"0\" enabled=\"true\"/>\r\n    </Skill>\r\n  </Skills>\r\n  <Items activeItemSet=\"1\">\r\n    <Item id=\"1\"><![CDATA[Rarity: RARE\r\nSynthetic Spark Fixture\r\nSimple Robe\r\nImplicits: 0\r\n12.34% increased Cast Speed]]></Item>\r\n    <ItemSet id=\"1\"><Slot name=\"Body Armour\" itemId=\"1\"/></ItemSet>\r\n  </Items>\r\n  <Config>\r\n    <Input name=\"enemyIsBoss\" string=\"None\"/>\r\n    <Input name=\"enemyLightningResist\" number=\"0\"/>\r\n    <Input name=\"customMods\" string=\"Never deal Critical Strikes\"/>\r\n  </Config>\r\n</PathOfBuilding>\r\n",
+      "inputXmlSha256": "7732786fc8cb79fd424e6168969bdbe46cdc6548c9836e7f3dfdfbb9314c2558",
+      "authoredLine": "12.34% increased Cast Speed",
+      "nativeParsedItemValue": 12,
+      "expectedBoundedImport": "incomplete-import-no-calculation",
+      "observed": {
+        "ActionSpeedMod": 1,
+        "AverageDamage": 1043.5,
+        "AverageHit": 1043.5,
+        "CombinedDPS": 2626.1416666666664,
+        "CritChance": 0,
+        "CritEffect": 1,
+        "CritMultiplier": 0,
+        "CurrentShock": 0,
+        "HitChance": 100,
+        "LightningCritAverage": 0,
+        "LightningHitAverage": 1043.5,
+        "LightningMaxBase": 1983,
+        "LightningMinBase": 104,
+        "MaximumShock": 50,
+        "PreEffectiveCritChance": 0,
+        "Speed": 2.5166666666666666,
+        "Time": 0.3973509933774835,
+        "TotalDPS": 2626.1416666666664,
+        "TotalMax": 1983,
+        "TotalMin": 104,
+        "addedContributions": [],
+        "addedMaximum": 0,
+        "addedMinimum": 0,
+        "ailmentFlags": {
+          "CannotBrittle": false,
+          "CannotChill": false,
+          "CannotFreeze": false,
+          "CannotIgnite": false,
+          "CannotSap": false,
+          "CannotScorch": false,
+          "CannotShock": false
+        },
+        "baseCriticalChancePercent": 6,
+        "contributions": [
+          {
+            "flags": 16,
+            "keywordFlags": 0,
+            "name": "Speed",
+            "source": "Skill:SupportFasterCasting",
+            "value": 39
+          },
+          {
+            "flags": 16,
+            "keywordFlags": 0,
+            "name": "Speed",
+            "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+            "value": 12
+          }
+        ],
+        "criticalContributions": [
+          {
+            "flags": 0,
+            "keywordFlags": 0,
+            "name": "CritMultiplier",
+            "source": "Base",
+            "type": "BASE",
+            "value": 50
+          }
+        ],
+        "criticalMultiplierExtraPercent": 50,
+        "customModifierBlocks": [
+          {
+            "enabled": true,
+            "text": "Never deal Critical Strikes",
+            "title": "Default"
+          }
+        ],
+        "damageEffectiveness": 1.9,
+        "enemyDamageTakenPercent": 0,
+        "enemyLightningResistanceBeforeClampPercent": 0,
+        "enemyLightningResistanceContributions": [],
+        "enemyShockConfigured": false,
+        "increasedCastSpeedPercent": 51,
+        "increasedCriticalChancePercent": 0,
+        "increasedDamagePercent": 0,
+        "itemModifierLines": [
+          {
+            "line": "12.34% increased Cast Speed",
+            "mods": [
+              {
+                "flags": 16,
+                "keywordFlags": 0,
+                "name": "Speed",
+                "value": 12
+              }
+            ]
+          }
+        ],
+        "lightningBreakdown": {
+          "1": "Base damage:",
+          "2": "104 to 1983 ^8(base damage from skill)",
+          "3": "= 104.0 to 1983.0",
+          "4": "Hit damage:",
+          "5": "104 to 1983 ^8(total damage)",
+          "6": "= 104 to 1983",
+          "7": "Portion of total damage: 100%",
+          "damageTypes": [
+            {
+              "base": "104 to 1983",
+              "convSrc": false,
+              "inc": false,
+              "more": false,
+              "source": "Lightning",
+              "total": "104 to 1983"
+            }
+          ]
+        },
+        "lightningDamageMultiplier": 1,
+        "lightningExposureCandidates": [],
+        "lightningPenetrationPercent": 0,
+        "maximumResistanceMode": "configured",
+        "penetrationContributions": [],
+        "rawEnemyLightningResistancePercent": 0,
+        "selectedPart": 1,
+        "selectedSkillId": "Spark",
+        "shockContributions": [],
+        "supportContributions": [
+          {
+            "flags": 0,
+            "keywordFlags": 0,
+            "name": "SupportManaMultiplier",
+            "source": "Skill:SupportFasterCasting",
+            "value": 10
+          }
+        ],
+        "supportCriticalChanceMultiplier": 1,
+        "supportDamageMultiplier": 1,
+        "supportGems": [
+          {
+            "enabled": true,
+            "gameId": "Metadata/Items/Gems/SupportGemFasterCast",
+            "gemId": "Metadata/Items/Gems/SkillGemSupportFasterCasting",
+            "level": 20,
+            "nameSpec": "Faster Casting",
+            "quality": 0,
+            "skillId": "SupportFasterCasting"
+          }
+        ],
+        "supportManaCostMultiplier": 1.1,
+        "supportSpeedMultiplier": 1,
+        "supportTotalCastTime": 0,
+        "sourceXmlSha256": "7732786fc8cb79fd424e6168969bdbe46cdc6548c9836e7f3dfdfbb9314c2558"
+      }
+    }
+  ]
+}

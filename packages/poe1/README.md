@@ -39,7 +39,7 @@ addedLightningDamage: [
 
 Raw endpoints and their sums must be nonnegative safe integers with minimum at most maximum. Each group retains both stat IDs, values and shared provenance. The normalizer reads per-level client effectiveness (`1 + DamageEffectiveness / 10000`, currently 1.9), applies it to summed raw endpoints, adds intrinsic damage, then applies increases, any reviewed support more multiplier and final endpoint rounding. The result's `addedLightningDamage` trace reports each stage and every original group; `hit.baseLightningDamage` stays intrinsic. Generic/attack added damage, other elements, local/conditional effects and caller-defined effectiveness remain unsupported. This extension applies to selected-skill APIs; the original isolated-hit API above retains its earlier input contract.
 
-One optional normal Controlled Destruction is supported in `skill.supports`:
+Up to two unique normal supports are accepted in `skill.supports`: Controlled Destruction and Faster Casting, in either order:
 
 ```js
 supports: [
@@ -50,10 +50,19 @@ supports: [
     enabled: true,
     source: { kind: 'skill', id: 'socket-group:1:gem:2' },
   },
+  {
+    id: 'SupportFasterCasting',
+    gemLevel: 20,
+    quality: 0,
+    enabled: true,
+    source: { kind: 'skill', id: 'socket-group:1:gem:3' },
+  },
 ];
 ```
 
-Only levels 1–20, quality 0 and at most one explicit support record are accepted. `loadSparkDataset` loads matching support facts and validates normal Spark eligibility. The exact more-spell stat grants 25–39% more damage, multiplied after increased damage before hit rounding. Its 80% less critical-chance modifier applies before chance rounding and the cap in average-critical mode, and remains visible but inactive in disabled mode. The cast-time multiplier is 1: Spark retains its source base cast time and existing cast-speed rules. The support's own 1000 ms record is not an active cast-time override. Disabled known supports retain provenance and raw effects with applied multipliers of 1. Other supports, awakened versions, duplicate supports and nonzero support quality fail visibly. `supportEffects` reports raw contributions, source rows and all multipliers, including the 1.4 cost multiplier without calculating mana sustain.
+Only levels 1–20, quality 0 and one of each reviewed support are accepted. `loadSparkDataset` loads same-snapshot support facts and validates Spark eligibility. Controlled Destruction's exact more-spell stat grants 25–39% more damage before hit rounding; its 80% less critical chance applies before chance rounding/capping in average mode. Faster Casting contributes 20–39% `base_cast_speed_+%`, adding to item cast speed before rounding the combined speed multiplier to two decimals and applying the `1 / 0.033` cast-rate ceiling. The combined rounded multiplier must be positive; the item subtotal may be nonpositive if enabled Faster Casting makes the combined result valid.
+
+Both cast-time multipliers are 1: their own 1000 ms support records never replace Spark's 600 ms base time. Faster Casting changes cast rate without changing hit damage or count. `supportEffects.increasedCastSpeedPercent` is the support subtotal; `hit.increasedCastSpeedPercent` is the combined total. Gem contributions retain separate source rows and `appliedToCastRate` flags; original item contributions remain in `hit.modifierContributions`. Disabled supports keep raw facts/provenance with no applied effect. Cost multipliers are 1.4 and 1.1 (1.54 together), without calculating mana sustain. Other supports, awakened versions, duplicates and nonzero support quality fail visibly. The full/incremental checks cover each support independently, both orders, changed membership, item-speed interaction, rounding and caps.
 
 The ordered `modifiers` array also accepts `critical_strike_chance_+%`, `spell_critical_strike_chance_+%` and `base_critical_strike_multiplier_+`, with safe integer raw values and running totals. Chance increases add; global multiplier additions are percentage points. Spark's 6% base chance comes from client level records. The 150% base player multiplier is explicitly attributed to the pinned PoE1 rule, not a client table row. `criticalEffects` retains the chance stages, Controlled Destruction factor, multiplier stages, non-rerounded critical endpoints, expected hit means and individual modifier sources. In average mode, hit DPS uses the probability-weighted expected mean, then any configured shock factor; `hit` remains the noncritical baseline. Chance is rounded to two decimals then capped at 0–100%, and multiplier is floored at 1×. Generated ailments, lucky chance, charges, base overrides and critical-only conditions remain unsupported. See the supported-mechanics document for exact formulas and rounding order.
 

@@ -32,6 +32,13 @@ const support = (gemLevel = 1, enabled = true) => ({
   enabled,
   source: { kind: 'skill', id: 'synthetic-support-1', line: 1 },
 });
+const fasterCasting = (gemLevel = 1, enabled = true) => ({
+  id: 'SupportFasterCasting',
+  gemLevel,
+  quality: 0,
+  enabled,
+  source: { kind: 'skill', id: 'synthetic-faster-casting', line: 2 },
+});
 const exposure = (value = -10, enabled = true, id = 'synthetic-exposure-1') => ({
   statId: 'lightning_exposure_on_hit_magnitude',
   value,
@@ -409,6 +416,249 @@ test('support facts reject cycles, inherited identities, sparse levels and snaps
     assert.equal(calculateSelectedSkill(basic, malformed).ok, false);
     assert.equal(createSelectedSkillSession(basic, malformed).ok, false);
   }
+});
+
+test('Faster Casting adds to the item pool once and retains separate provenance', () => {
+  const input = structuredClone(basic);
+  input.skill.supports = [fasterCasting()];
+  const session = value(createSelectedSkillSession(input, dataset));
+  const first = session.current.calculation;
+  assert.deepEqual(first, value(calculateSelectedSkill(input, dataset)));
+  assert.equal(first.supportEffects.increasedCastSpeedPercent, 20);
+  assert.equal(first.hit.increasedCastSpeedPercent, 45);
+  assert.equal(first.hit.castsPerSecond, 1.45 / 0.6);
+  assert.equal(first.hit.baseCastTimeSeconds, 0.6);
+  assert.equal(first.supportEffects.castTimeMultiplier, 1);
+  assert.equal(
+    first.hit.modifierContributions.filter((entry) => entry.statId === 'base_cast_speed_+%').length,
+    1,
+  );
+  const occurrence = first.supportEffects.contributions.find(
+    (entry) => entry.operation === 'increased-cast-speed',
+  );
+  assert.equal(occurrence.statId, 'base_cast_speed_+%');
+  assert.equal(occurrence.value, 20);
+  assert.equal(occurrence.appliedToCastRate, true);
+  assert.equal(occurrence.appliedToSelectedHit, false);
+  input.configuration.effectiveLightningResistancePercent = 50;
+  const enemyChanged = checkUpdate(session, input);
+  assert.equal(enemyChanged.calculation.hit.increasedCastSpeedPercent, 45);
+  assert.ok(!enemyChanged.recalculated.includes('cast-rate'));
+  input.skill.supports[0].gemLevel = 20;
+  const levelChanged = checkUpdate(session, input);
+  assert.equal(levelChanged.calculation.supportEffects.increasedCastSpeedPercent, 39);
+  assert.equal(levelChanged.calculation.hit.increasedCastSpeedPercent, 64);
+  assert.equal(levelChanged.calculation.hit.castsPerSecond, 1.64 / 0.6);
+  assert.deepEqual(
+    levelChanged.calculation.hit.nonCriticalHitBeforeResistance,
+    first.hit.nonCriticalHitBeforeResistance,
+  );
+  input.modifiers[2].value = 10000;
+  const capped = checkUpdate(session, input).calculation;
+  assert.equal(capped.hit.increasedCastSpeedPercent, 10039);
+  assert.equal(capped.hit.castsPerSecond, 1 / 0.033);
+  input.modifiers[2].value = 25;
+  checkUpdate(session, input);
+  input.skill.supports[0].source.id = 'moved-faster-casting';
+  const moved = checkUpdate(session, input).calculation;
+  assert.equal(moved.supportEffects.contributions[0].source.id, 'moved-faster-casting');
+  input.skill.supports[0].enabled = false;
+  const disabled = checkUpdate(session, input).calculation;
+  assert.equal(disabled.supportEffects.increasedCastSpeedPercent, 0);
+  assert.equal(disabled.hit.increasedCastSpeedPercent, 25);
+  assert.equal(disabled.supportEffects.contributions[0].value, 39);
+  assert.equal(disabled.supportEffects.contributions[0].appliedToCastRate, false);
+});
+
+test('both supports preserve input order and independent enabled-state effects', () => {
+  const input = structuredClone(basic);
+  input.configuration.criticalStrikeMode = 'average';
+  input.configuration.ailmentMode = 'configured-shock';
+  input.configuration.shock = shock(20, 50);
+  input.skill.supports = [support(), fasterCasting()];
+  const session = value(createSelectedSkillSession(input, dataset));
+  const initial = session.current.calculation;
+  assert.equal(initial.supportEffects.spellDamageMultiplier, 1.25);
+  assert.equal(initial.supportEffects.increasedCastSpeedPercent, 20);
+  assert.equal(initial.criticalEffects.chancePercent, 1.2);
+  assert.equal(
+    initial.supportEffects.manaCostMultiplier,
+    dataset.supports
+      .find((entry) => entry.id === 'SupportControlledDestruction')
+      .levels.find((level) => level.gemLevel === 1).manaCostMultiplier *
+      dataset.supports
+        .find((entry) => entry.id === 'SupportFasterCasting')
+        .levels.find((level) => level.gemLevel === 1).manaCostMultiplier,
+  );
+  input.skill.supports.reverse();
+  const reordered = checkUpdate(session, input).calculation;
+  assert.deepEqual(
+    reordered.supportEffects.supports.map((entry) => entry.id),
+    ['SupportFasterCasting', 'SupportControlledDestruction'],
+  );
+  assert.equal(reordered.supportEffects.contributions[0].operation, 'increased-cast-speed');
+  assert.equal(reordered.hit.castsPerSecond, initial.hit.castsPerSecond);
+  assert.deepEqual(
+    reordered.hit.nonCriticalHitAfterResistance,
+    initial.hit.nonCriticalHitAfterResistance,
+  );
+  assert.equal(reordered.hitDps, initial.hitDps);
+  input.skill.supports[1].enabled = false;
+  const noDestruction = checkUpdate(session, input).calculation;
+  assert.equal(noDestruction.supportEffects.spellDamageMultiplier, 1);
+  assert.equal(noDestruction.supportEffects.increasedCastSpeedPercent, 20);
+  assert.equal(noDestruction.criticalEffects.chancePercent, 6);
+  assert.ok(
+    noDestruction.supportEffects.contributions
+      .filter((entry) => entry.operation === 'less-critical-strike-chance')
+      .every((entry) => !entry.appliedToSelectedHit),
+  );
+  input.skill.supports[0].enabled = false;
+  const neither = checkUpdate(session, input).calculation;
+  assert.equal(neither.supportEffects.increasedCastSpeedPercent, 0);
+  assert.equal(neither.supportEffects.manaCostMultiplier, 1);
+  input.skill.supports = [support()];
+  checkUpdate(session, input);
+  input.skill.supports.push(fasterCasting(20));
+  assert.equal(
+    checkUpdate(session, input).calculation.supportEffects.increasedCastSpeedPercent,
+    39,
+  );
+  input.skill.supports = [fasterCasting(20)];
+  const onlyCasting = checkUpdate(session, input).calculation;
+  assert.equal(onlyCasting.supportEffects.spellDamageMultiplier, 1);
+  assert.equal(onlyCasting.criticalEffects.chancePercent, 6);
+  assert.equal(onlyCasting.supportEffects.contributions.length, 1);
+});
+
+test('Faster Casting can rescue a nonpositive item-only pool and reclassification updates dependencies', () => {
+  const input = structuredClone(basic);
+  input.modifiers[2].value = -100;
+  input.skill.supports = [fasterCasting()];
+  const session = value(createSelectedSkillSession(input, dataset));
+  assert.deepEqual(session.current.calculation, value(calculateSelectedSkill(input, dataset)));
+  assert.equal(session.current.calculation.hit.increasedCastSpeedPercent, -80);
+  assert.equal(session.current.calculation.hit.castsPerSecond, 0.2 / 0.6);
+  input.configuration.effectiveLightningResistancePercent = 50;
+  checkUpdate(session, input);
+  input.modifiers[0].statId = 'base_cast_speed_+%';
+  const reclassified = checkUpdate(session, input);
+  assert.deepEqual(reclassified.dependencies['cast-speed-increase'], ['modifier:0', 'modifier:2']);
+  assert.deepEqual(reclassified.dependencies['damage-increase'], ['modifier:1']);
+  assert.equal(reclassified.calculation.hit.increasedCastSpeedPercent, -60);
+  input.modifiers.splice(2, 1);
+  const removed = checkUpdate(session, input);
+  assert.deepEqual(removed.dependencies['cast-speed-increase'], ['modifier:0']);
+  assert.equal(removed.calculation.hit.increasedCastSpeedPercent, 40);
+});
+
+test('combined cast-speed failures reject atomically after support effects and recover', () => {
+  const input = structuredClone(basic);
+  input.modifiers[2].value = -120;
+  input.skill.supports = [fasterCasting(20)];
+  const session = value(createSelectedSkillSession(input, dataset));
+  for (const mutate of [
+    (next) => {
+      next.skill.supports[0].gemLevel = 1;
+    },
+    (next) => {
+      next.skill.supports[0].enabled = false;
+    },
+    (next) => {
+      next.skill.supports = [];
+    },
+    (next) => {
+      next.modifiers[2].value = -200;
+    },
+  ]) {
+    const next = structuredClone(input);
+    mutate(next);
+    const before = session.current;
+    const full = calculateSelectedSkill(next, dataset);
+    const incremental = session.recalculate(next);
+    assert.equal(full.ok, false);
+    assert.equal(incremental.ok, false);
+    assert.equal(full.diagnostics[0].code, 'selected.cast-speed');
+    assert.equal(incremental.diagnostics[0].code, 'selected.cast-speed');
+    assert.equal(session.current, before);
+  }
+  const recovered = structuredClone(input);
+  recovered.skill.supports[0].gemLevel = 19;
+  checkUpdate(session, recovered);
+  recovered.skill.supports[0].gemLevel = 1;
+  recovered.modifiers[2].value = -119.4;
+  assert.equal(checkUpdate(session, recovered).calculation.hit.castsPerSecond, 0.01 / 0.6);
+  const invalidRounded = structuredClone(recovered);
+  invalidRounded.modifiers[2].value = -119.6;
+  const before = session.current;
+  assert.equal(calculateSelectedSkill(invalidRounded, dataset).ok, false);
+  assert.equal(session.recalculate(invalidRounded).ok, false);
+  assert.equal(session.current, before);
+});
+
+test('invalid duplicate, extra and unavailable Faster Casting supports stay visible', () => {
+  const input = structuredClone(basic);
+  input.skill.supports = [support(), fasterCasting()];
+  const session = value(createSelectedSkillSession(input, dataset));
+  const original = session.current;
+  for (const mutate of [
+    (next) => {
+      next.skill.supports = [fasterCasting(), fasterCasting(20)];
+    },
+    (next) => {
+      next.skill.supports.push(support(20));
+    },
+    (next) => {
+      next.skill.supports[1].quality = 20;
+    },
+    (next) => {
+      next.skill.supports[1].id = 'SupportFasterCast';
+    },
+    (next) => {
+      next.skill.supports[1].gemLevel = 21;
+    },
+    (next) => {
+      next.skill.supports[1].source = Object.create(next.skill.supports[1].source);
+    },
+  ]) {
+    const next = structuredClone(input);
+    mutate(next);
+    assert.equal(calculateSelectedSkill(next, dataset).ok, false);
+    assert.equal(session.recalculate(next).ok, false);
+    assert.equal(session.current, original);
+  }
+  const partial = structuredClone(dataset);
+  partial.supports = partial.supports.filter((entry) => entry.id !== 'SupportFasterCasting');
+  const onlyDestruction = structuredClone(basic);
+  onlyDestruction.skill.supports = [support()];
+  const withoutCasting = value(createSelectedSkillSession(onlyDestruction, partial));
+  const before = withoutCasting.current;
+  assert.equal(calculateSelectedSkill(input, partial).ok, false);
+  assert.equal(withoutCasting.recalculate(input).ok, false);
+  assert.equal(withoutCasting.current, before);
+});
+
+test('Faster Casting facts and sources are captured independently in either dataset order', () => {
+  const input = structuredClone(basic);
+  input.skill.supports = [support(), fasterCasting()];
+  const expected = structuredClone(input);
+  const ownedDataset = structuredClone(dataset);
+  ownedDataset.supports.reverse();
+  const session = value(createSelectedSkillSession(input, ownedDataset));
+  const original = structuredClone(session.current.calculation);
+  input.skill.supports[1].source.id = 'host-casting-source';
+  const facts = ownedDataset.supports.find((entry) => entry.id === 'SupportFasterCasting');
+  facts.levels.find((level) => level.gemLevel === 1).increasedCastSpeedPercent = 999;
+  facts.sourceRows[0].key = 'host-casting-row';
+  facts.levels[0].sourceRows[0].key = 'host-casting-level-row';
+  assert.deepEqual(session.current.calculation, original);
+  assert.throws(() => {
+    session.current.calculation.supportEffects.contributions.find(
+      (entry) => entry.operation === 'increased-cast-speed',
+    ).source.id = 'changed';
+  }, TypeError);
+  expected.skill.supports[1].gemLevel = 20;
+  checkUpdate(session, expected);
 });
 
 test('critical chance and multiplier edits retain separate applicability sets and normal-hit caches', () => {

@@ -17,7 +17,7 @@ export async function runSelectedSparkDemo(readShard, readXml) {
   const dataset = value(await loadSparkDataset(reader));
   const imported = importPobXml({
     format: 'pob-xml',
-    xml: await readXml('shock-combined'),
+    xml: await readXml('support-faster-casting-combined'),
     target: reader.identity,
     buildId: 'browser-synthetic-spark',
     configurationId: 'explicit-nonboss-25',
@@ -31,9 +31,12 @@ export async function runSelectedSparkDemo(readShard, readXml) {
   )
     throw new Error('Expected the pinned spell added-lightning group and client effectiveness.');
   if (
-    initial.supportEffects.supports.length !== 1 ||
+    initial.supportEffects.supports.length !== 2 ||
     initial.supportEffects.spellDamageMultiplier !== 1 + 39 / 100 ||
-    initial.supportEffects.castTimeMultiplier !== 1
+    initial.supportEffects.castTimeMultiplier !== 1 ||
+    initial.supportEffects.increasedCastSpeedPercent !== 39 ||
+    initial.hit.increasedCastSpeedPercent !== 64 ||
+    initial.hit.baseCastTimeSeconds !== 0.6
   )
     throw new Error('Expected the reviewed support damage and unchanged cast-time rules.');
   if (
@@ -61,6 +64,33 @@ export async function runSelectedSparkDemo(readShard, readXml) {
   const next = structuredClone(imported.selectedSkill);
   const reports = [];
   for (const change of [
+    () => {
+      next.skill.supports.find((support) => support.id === 'SupportFasterCasting').gemLevel = 1;
+    },
+    () => {
+      next.skill.supports.find((support) => support.id === 'SupportFasterCasting').enabled = false;
+    },
+    () => {
+      next.skill.supports.find((support) => support.id === 'SupportFasterCasting').enabled = true;
+    },
+    () => {
+      next.skill.supports.reverse();
+    },
+    () => {
+      next.skill.supports.splice(
+        next.skill.supports.findIndex((support) => support.id === 'SupportFasterCasting'),
+        1,
+      );
+    },
+    () => {
+      next.skill.supports.push({
+        id: 'SupportFasterCasting',
+        gemLevel: 20,
+        quality: 0,
+        enabled: true,
+        source: { kind: 'skill', id: 'browser-restored-faster-casting' },
+      });
+    },
     () => {
       next.configuration.shock.magnitudePercent = 20;
     },
@@ -126,13 +156,17 @@ export async function runSelectedSparkDemo(readShard, readXml) {
       next.configuration.criticalStrikeMode = 'average';
     },
     () => {
-      next.skill.supports[0].gemLevel = 1;
+      next.skill.supports.find(
+        (support) => support.id === 'SupportControlledDestruction',
+      ).gemLevel = 1;
     },
     () => {
-      next.skill.supports[0].enabled = false;
+      next.skill.supports.find((support) => support.id === 'SupportControlledDestruction').enabled =
+        false;
     },
     () => {
-      next.skill.supports[0].enabled = true;
+      next.skill.supports.find((support) => support.id === 'SupportControlledDestruction').enabled =
+        true;
     },
     () => {
       next.addedLightningDamage[0].values[0] += 1;
@@ -186,12 +220,14 @@ export async function runSelectedSparkDemo(readShard, readXml) {
         spellDamageMultiplier: report.calculation.supportEffects.spellDamageMultiplier,
         criticalChanceMultiplier: report.calculation.supportEffects.criticalChanceMultiplier,
         castTimeMultiplier: report.calculation.supportEffects.castTimeMultiplier,
+        increasedCastSpeedPercent: report.calculation.supportEffects.increasedCastSpeedPercent,
         contributions: report.calculation.supportEffects.contributions.map(
-          ({ statId, value, source, appliedToSelectedHit }) => ({
+          ({ statId, value, source, appliedToSelectedHit, appliedToCastRate }) => ({
             statId,
             value,
             source,
             appliedToSelectedHit,
+            appliedToCastRate,
           }),
         ),
       },

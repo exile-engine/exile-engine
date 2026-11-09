@@ -34,6 +34,13 @@ const initial = {
         enabled: true,
         source: { kind: 'skill', id: 'synthetic-support', line: 1 },
       },
+      {
+        id: 'SupportFasterCasting',
+        gemLevel: 1,
+        quality: 0,
+        enabled: true,
+        source: { kind: 'skill', id: 'synthetic-faster-casting', line: 2 },
+      },
     ],
   },
   configuration: {
@@ -124,6 +131,9 @@ for (const mutation of [
   'shock-magnitude',
   'shock-uptime',
   'shock-mode',
+  'faster-casting-level',
+  'faster-casting-enabled',
+  'support-order',
 ]) {
   const states = [];
   const next = structuredClone(initial);
@@ -160,6 +170,12 @@ for (const mutation of [
       if (index % 2 === 0) next.configuration.shock = structuredClone(initial.configuration.shock);
       else delete next.configuration.shock;
     }
+    if (mutation === 'faster-casting-level') next.skill.supports[1].gemLevel = 1 + (index % 20);
+    if (mutation === 'faster-casting-enabled') next.skill.supports[1].enabled = index % 2 === 0;
+    if (mutation === 'support-order')
+      next.skill.supports = structuredClone(
+        index % 2 === 0 ? initial.skill.supports : [...initial.skill.supports].reverse(),
+      );
     states.push(structuredClone(next));
   }
   const check = value(createSelectedSkillSession(initial, dataset));
@@ -216,7 +232,7 @@ for (const mutation of [
 console.log(
   JSON.stringify(
     {
-      benchmark: 'selected-skill-batches-v6',
+      benchmark: 'selected-skill-batches-v7',
       engineRevision: selectedSkillEngineRevision,
       node: process.version,
       identity: dataset.identity,

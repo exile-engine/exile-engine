@@ -17,6 +17,9 @@ const reference = JSON.parse(
 const oracle = JSON.parse(
   await readFile(new URL('./fixtures/pob-oracle-output.json', import.meta.url), 'utf8'),
 );
+const probes = JSON.parse(
+  await readFile(new URL('./fixtures/pob-oracle-probes.json', import.meta.url), 'utf8'),
+);
 const snapshot = new URL('../packages/data-poe1/snapshot/', import.meta.url);
 const reader = await loadCatalog((relative) => readFile(new URL(relative, snapshot)));
 const loaded = await loadSparkDataset(reader);
@@ -50,6 +53,10 @@ test('reference records the executed pinned PoB oracle and separately reviewed a
   assert.equal(
     digest(await readFile(new URL('./fixtures/pob-oracle-output.json', import.meta.url))),
     reference.oracle.outputSha256,
+  );
+  assert.equal(
+    digest(await readFile(new URL('./fixtures/pob-oracle-probes.json', import.meta.url))),
+    reference.oracle.parserProbeSha256,
   );
   for (const [path, expected] of Object.entries(reference.engine.sourceSha256)) {
     assert.equal(digest(await readFile(new URL(`../${path}`, import.meta.url))), expected, path);
@@ -142,6 +149,102 @@ test('Controlled Destruction facts and eligibility resolve from the same client 
       ),
     );
   }
+});
+
+test('Faster Casting joins exact gem, eligibility, cast-speed and per-level cost rows', async () => {
+  const fact = reference.fasterCastingReference;
+  const effect = await reader.getRecord('GrantedEffects', fact.id);
+  const statSet = await reader.resolve(effect.fields.StatSet1);
+  assert.equal(effect.rowIndex, fact.sourceRows.grantedEffect.rowIndex);
+  assert.equal(statSet.rowIndex, fact.sourceRows.statSet.rowIndex);
+  assert.equal(effect.fields.IsSupport, true);
+  assert.equal(effect.fields.CastTime, 1000);
+  assert.deepEqual(statSet.fields.ConstantStats, []);
+  assert.deepEqual(statSet.fields.ConstantStatsValues, []);
+  assert.deepEqual(
+    effect.fields.AllowedActiveSkillTypes.map((type) => type.key),
+    fact.allowedSkillTypes,
+  );
+  assert.deepEqual(
+    effect.fields.ExcludedActiveSkillTypes.map((type) => type.key),
+    fact.excludedSkillTypes,
+  );
+  const active = await reader.getRecord('ActiveSkills', 'spark');
+  const types = active.fields.ActiveSkillTypes.map((type) => type.key);
+  assert.ok(fact.allowedSkillTypes.some((type) => types.includes(type)));
+  assert.ok(fact.excludedSkillTypes.every((type) => !types.includes(type)));
+  const gem = await reader.getRecord('SkillGems', fact.sourceRows.skillGem.key);
+  const variant = await reader.resolve(gem.fields.GemVariants[0]);
+  assert.equal(gem.rowIndex, fact.sourceRows.skillGem.rowIndex);
+  assert.equal(gem.fields.BaseItemTypesKey.key, fact.gameItemId);
+  assert.equal(gem.fields.BaseItemTypesKey.rowIndex, fact.sourceRows.baseItem.rowIndex);
+  assert.equal(variant.rowIndex, fact.sourceRows.gemEffect.rowIndex);
+  assert.equal(variant.fields.GrantedEffect.key, fact.id);
+  const normalized = dataset.supports.find((support) => support.id === fact.id);
+  assert.deepEqual(normalized.identity, reference.identity);
+  assert.equal(normalized.gemId, fact.gameItemId);
+  assert.equal(normalized.levels.length, 20);
+  const rawStats = await reader.getTable('GrantedEffectStatSetsPerLevel');
+  const rawEffects = await reader.getTable('GrantedEffectsPerLevel');
+  for (const [index, expected] of fact.increasedCastSpeedByLevel.entries()) {
+    const gemLevel = index + 1;
+    const raw = rawStats.find(
+      (row) => row.fields.StatSet?.key === fact.id && row.fields.GemLevel === gemLevel,
+    );
+    const perEffect = rawEffects.find(
+      (row) => row.fields.GrantedEffect?.key === fact.id && row.fields.Level === gemLevel,
+    );
+    assert.deepEqual(
+      raw.fields.AdditionalStats.map((stat) => stat.key),
+      [fact.castSpeedStatId],
+    );
+    assert.equal(raw.fields.AdditionalStats[0].rowIndex, fact.sourceRows.stat.rowIndex);
+    assert.deepEqual(raw.fields.AdditionalStatsValues, [expected]);
+    assert.equal(perEffect.fields.CostMultiplier, fact.costMultiplierSource);
+    const level = normalized.levels.find((level) => level.gemLevel === gemLevel);
+    assert.equal(level.increasedCastSpeedPercent, expected);
+    close(level.manaCostMultiplier, fact.manaCostMultiplier, 'Faster Casting cost multiplier');
+    for (const source of [
+      { table: 'GrantedEffectStatSetsPerLevel', ...raw },
+      { table: 'GrantedEffectsPerLevel', ...perEffect },
+    ])
+      assert.ok(
+        level.sourceRows.some(
+          (row) =>
+            row.table === source.table &&
+            row.key === source.key &&
+            row.rowIndex === source.rowIndex,
+        ),
+      );
+  }
+});
+
+test('executed fractional item-text probe remains a rejected import rather than silently changing a contribution', () => {
+  assert.equal(probes.pobExecuted, true);
+  assert.equal(probes.referenceRevision, reference.reference.revision);
+  assert.equal(probes.probes.length, 1);
+  const probe = probes.probes[0];
+  assert.equal(createHash('sha256').update(probe.inputXml).digest('hex'), probe.inputXmlSha256);
+  assert.equal(probe.observed.sourceXmlSha256, probe.inputXmlSha256);
+  assert.ok(probe.inputXml.includes(probe.authoredLine));
+  assert.equal(probe.authoredLine, '12.34% increased Cast Speed');
+  assert.equal(probe.nativeParsedItemValue, 12);
+  assert.deepEqual(probe.observed.itemModifierLines[0], {
+    line: probe.authoredLine,
+    mods: [{ name: 'Speed', value: 12, flags: 16, keywordFlags: 0 }],
+  });
+  assert.equal(probe.observed.increasedCastSpeedPercent, 51);
+  const imported = importPobXml({
+    format: 'pob-xml',
+    xml: probe.inputXml,
+    target: reader.identity,
+    buildId: 'probe:fractional-item-cast-speed',
+    configurationId: 'probe:fractional-item-cast-speed:enemy',
+  });
+  assert.equal(imported.complete, false);
+  assert.equal(imported.selectedSkill, undefined);
+  assert.ok(imported.unresolved.length > 0);
+  assert.ok(imported.diagnostics.length > 0);
 });
 
 test('critical chance uses client rows while the base player multiplier keeps external rule provenance', async () => {
@@ -342,23 +445,36 @@ for (const expected of reference.cases) {
       'manaCostMultiplier',
     ])
       close(supportEffects[key], expected[key], key);
+    close(
+      supportEffects.increasedCastSpeedPercent,
+      expected.supportIncreasedCastSpeedPercent,
+      'support-only increased cast speed',
+    );
     assert.equal(supportEffects.castTimeMultiplier, 1);
     assert.deepEqual(
-      supportEffects.contributions.map(({ statId, value, operation, appliedToSelectedHit }) => ({
-        statId,
-        value,
-        operation,
-        appliedToSelectedHit,
-      })),
+      supportEffects.contributions.map(
+        ({ statId, value, operation, appliedToSelectedHit, appliedToCastRate }) => ({
+          statId,
+          value,
+          operation,
+          appliedToSelectedHit,
+          appliedToCastRate,
+        }),
+      ),
       expected.supportContributions,
     );
     for (const contribution of supportEffects.contributions) {
-      assert.deepEqual(contribution.source, expected.supports[0].source);
+      const supportId =
+        contribution.statId === reference.fasterCastingReference.castSpeedStatId
+          ? reference.fasterCastingReference.id
+          : reference.supportReference.id;
+      const selected = expected.supports.find((support) => support.id === supportId);
+      assert.ok(selected, `support source for ${contribution.statId}`);
+      assert.deepEqual(contribution.source, selected.source);
       assert.equal(contribution.scope, 'global');
       assert.ok(
         contribution.sourceRows.some(
-          (row) =>
-            row.table === 'GrantedEffectStatSets' && row.key === reference.supportReference.id,
+          (row) => row.table === 'GrantedEffectStatSets' && row.key === supportId,
         ),
       );
       assert.ok(
@@ -423,7 +539,7 @@ for (const expected of reference.cases) {
       .reduce((sum, mod) => sum + mod.value, 0);
     const castIncrease = expected.contributions
       .filter((mod) => mod.statId === 'base_cast_speed_+%')
-      .reduce((sum, mod) => sum + mod.value, 0);
+      .reduce((sum, mod) => sum + mod.value, expected.supportIncreasedCastSpeedPercent);
     const addedMinimum = expected.addedGroups.reduce((sum, group) => sum + group.values[0], 0);
     const addedMaximum = expected.addedGroups.reduce((sum, group) => sum + group.values[1], 0);
     const minimum = Math.floor(
@@ -749,41 +865,72 @@ for (const expected of reference.cases) {
       expected.supports.map(({ source, ...support }) => support),
     );
     for (const gem of observed.supportGems) {
-      assert.equal(gem.gameId, reference.supportReference.gameItemId);
-      assert.equal(gem.gemId, reference.supportReference.pobGemKey);
-      assert.equal(gem.nameSpec, reference.supportReference.name);
+      const fact = [reference.supportReference, reference.fasterCastingReference].find(
+        (entry) => entry.id === gem.skillId,
+      );
+      assert.ok(fact);
+      assert.equal(gem.gameId, fact.gameItemId);
+      assert.equal(gem.gemId, fact.pobGemKey);
+      assert.equal(gem.nameSpec, fact.name);
     }
-    const supportEnabled = expected.supports[0]?.enabled === true;
-    const observedSupportMods = observed.supportContributions.map(
-      ({ name, value, flags, keywordFlags, source }) => {
-        assert.equal(source, `Skill:${reference.supportReference.id}`);
-        return { name, value, flags, keywordFlags };
-      },
-    );
-    assert.deepEqual(
-      observedSupportMods,
-      supportEnabled
-        ? [
-            {
-              name: 'Damage',
-              value: expected.supportContributions[0].value,
-              flags: 2,
-              keywordFlags: 0,
-            },
-            {
-              name: 'CritChance',
-              value: reference.supportReference.criticalChancePercent,
-              flags: 0,
-              keywordFlags: 0,
-            },
+    const expectedMoreSupportMods = expected.supports
+      .filter((support) => support.enabled)
+      .flatMap((support) => {
+        const source = `Skill:${support.id}`;
+        if (support.id === reference.fasterCastingReference.id)
+          return [
             {
               name: 'SupportManaMultiplier',
-              value: reference.supportReference.costMultiplierSource - 100,
+              value: reference.fasterCastingReference.costMultiplierSource - 100,
               flags: 0,
               keywordFlags: 0,
+              source,
             },
-          ]
-        : [],
+          ];
+        return [
+          {
+            name: 'Damage',
+            value: reference.supportReference.moreSpellDamageByLevel[support.gemLevel - 1],
+            flags: 2,
+            keywordFlags: 0,
+            source,
+          },
+          {
+            name: 'CritChance',
+            value: reference.supportReference.criticalChancePercent,
+            flags: 0,
+            keywordFlags: 0,
+            source,
+          },
+          {
+            name: 'SupportManaMultiplier',
+            value: reference.supportReference.costMultiplierSource - 100,
+            flags: 0,
+            keywordFlags: 0,
+            source,
+          },
+        ];
+      });
+    const bySupportSource = (entries) =>
+      entries.toSorted(
+        (left, right) =>
+          left.source.localeCompare(right.source) || left.name.localeCompare(right.name),
+      );
+    assert.deepEqual(
+      bySupportSource(observed.supportContributions),
+      bySupportSource(expectedMoreSupportMods),
+    );
+    assert.deepEqual(
+      observed.contributions.filter((entry) => entry.source.startsWith('Skill:')),
+      expected.supports
+        .filter((support) => support.enabled && support.id === reference.fasterCastingReference.id)
+        .map((support) => ({
+          name: 'Speed',
+          value: reference.fasterCastingReference.increasedCastSpeedByLevel[support.gemLevel - 1],
+          source: `Skill:${support.id}`,
+          flags: 16,
+          keywordFlags: 0,
+        })),
     );
     close(added.raw.min, observed.addedMinimum, 'PoB added minimum');
     close(added.raw.max, observed.addedMaximum, 'PoB added maximum');
@@ -837,12 +984,22 @@ for (const expected of reference.cases) {
       ['LightningDamage:0:0', 'lightning_damage_+%'],
       ['Speed:16:0', 'base_cast_speed_+%'],
     ]);
-    const compared = observed.contributions.map((entry) => {
-      const statId = canonical.get(`${entry.name}:${entry.flags}:${entry.keywordFlags}`);
-      assert.ok(statId, `Unreviewed PoB modifier mapping: ${entry.name}`);
-      assert.equal(entry.source, 'Item:1:Synthetic Spark Fixture, Simple Robe');
-      return { statId, value: entry.value };
-    });
+    assert.ok(
+      observed.contributions.every(
+        (entry) =>
+          entry.source.startsWith('Item:') ||
+          entry.source === `Skill:${reference.fasterCastingReference.id}`,
+      ),
+      'every increased modifier source has an explicit comparison mapping',
+    );
+    const compared = observed.contributions
+      .filter((entry) => entry.source.startsWith('Item:'))
+      .map((entry) => {
+        const statId = canonical.get(`${entry.name}:${entry.flags}:${entry.keywordFlags}`);
+        assert.ok(statId, `Unreviewed PoB modifier mapping: ${entry.name}`);
+        assert.equal(entry.source, 'Item:1:Synthetic Spark Fixture, Simple Robe');
+        return { statId, value: entry.value };
+      });
     const sorted = (entries) =>
       entries.toSorted(
         (left, right) => left.statId.localeCompare(right.statId) || left.value - right.value,

@@ -54,6 +54,17 @@ const fixtures = Object.fromEntries(
       'shock-maximum',
       'shock-combined',
       'shock-no-damage',
+      ...[
+        'level1',
+        'level20',
+        'disabled',
+        'both',
+        'both-reversed',
+        'combined',
+        'rounded',
+        'tick-cap',
+        'rescued',
+      ].map((suffix) => `support-faster-casting-${suffix}`),
     ].map(async (name) => [
       name,
       await readFile(new URL(`./fixtures/pob/${name}.xml`, import.meta.url), 'utf8'),
@@ -84,7 +95,7 @@ const rawResistance = (
 });
 
 test('PoB capability advertises exactly the bounded XML profile', () => {
-  assert.equal(pobAdapterVersion, 'poe1-spark-xml-v6');
+  assert.equal(pobAdapterVersion, 'poe1-spark-xml-v7');
   assert.equal(pobCompatibility.status, 'bounded-poe1-spark-xml');
   assert.equal(pobCompatibility.xmlImportImplemented, true);
   assert.equal(pobCompatibility.shareCodeImportImplemented, false);
@@ -356,6 +367,109 @@ test('unknown, duplicate, incompatible or differently scoped support gems block 
   const unknown = importPobXml(source(rejected[0]));
   assert.equal(unknown.unresolved[0].source.gemIndex, 2);
   assert.equal(unknown.unresolved[0].source.socketGroup, 1);
+});
+
+test('Faster Casting and Controlled Destruction retain each selected gem and socket provenance', () => {
+  for (const suffix of [
+    'level1',
+    'level20',
+    'disabled',
+    'both',
+    'both-reversed',
+    'combined',
+    'rounded',
+    'tick-cap',
+    'rescued',
+  ]) {
+    const imported = importPobXml(
+      source(fixtures[`support-faster-casting-${suffix}`], suffix === 'combined' ? 40 : undefined),
+    );
+    assert.equal(imported.complete, true, suffix + JSON.stringify(imported.diagnostics));
+    assert.deepEqual(imported.selectedSkill.skill.supports, imported.supports);
+    assert.deepEqual(imported.selectedSkill.identity, target);
+    assert.equal(imported.selectedSkill.buildId, 'synthetic-spark');
+    const faster = imported.supports.find((support) => support.id === 'SupportFasterCasting');
+    assert.equal(faster.gemLevel, suffix === 'level1' || suffix === 'rescued' ? 1 : 20);
+    assert.equal(faster.enabled, suffix !== 'disabled');
+    assert.equal(
+      faster.source.id,
+      suffix === 'both' || suffix === 'combined' ? 'pob-gem:1:3' : 'pob-gem:1:2',
+    );
+    assert.equal(faster.source.label, 'Faster Casting');
+    assert.equal(
+      imported.modifiers.some((mod) => mod.source.kind === 'skill'),
+      false,
+    );
+  }
+  const forward = importPobXml(source(fixtures['support-faster-casting-both']));
+  const reverse = importPobXml(source(fixtures['support-faster-casting-both-reversed']));
+  assert.deepEqual(
+    forward.supports.map((support) => support.id),
+    ['SupportControlledDestruction', 'SupportFasterCasting'],
+  );
+  assert.deepEqual(
+    reverse.supports.map((support) => support.id),
+    ['SupportFasterCasting', 'SupportControlledDestruction'],
+  );
+  assert.equal(reverse.supports[1].source.id, 'pob-gem:1:3');
+});
+
+test('unreviewed Faster Casting variants, quality, duplicate gems and extra supports fail visibly', () => {
+  const xml = fixtures['support-faster-casting-level20'];
+  const gem = xml.match(/<Gem skillId="SupportFasterCasting"[^>]*\/>/)[0];
+  for (const invalid of [
+    gem.replace('SupportGemFasterCast', 'SupportGemFasterCasting'),
+    gem.replace('SupportGemFasterCast', 'SkillGemSupportFasterCasting'),
+    gem.replace('nameSpec="Faster Casting"', 'nameSpec="Awakened Faster Casting"'),
+    gem.replace('quality="0"', 'quality="1"'),
+    gem.replace('level="20"', 'level="21"'),
+    gem.replace('level="20"', 'level="1.5"'),
+    gem.replace('enabled="true"', 'enabled="false" unsupported="true"'),
+    gem + gem,
+    gem + gem.replace('enabled="true"', 'enabled="false"'),
+    gem + gem + gem,
+    gem
+      .replace('SupportFasterCasting', 'SupportSpellEcho')
+      .replace('enabled="true"', 'enabled="false"'),
+  ]) {
+    const result = importPobXml(source(xml.replace(gem, invalid)));
+    assert.equal(result.complete, false, invalid);
+    assert.equal('selectedSkill' in result, false);
+    assert.ok(result.unresolved.length);
+    assert.equal(result.rawXml, xml.replace(gem, invalid));
+  }
+  for (const amount of ['12.34', '12.00', '0.5']) {
+    const fractional = fixtures['support-faster-casting-rounded'].replace(
+      /[0-9]+(?:\.[0-9]+)?% increased Cast Speed/,
+      `${amount}% increased Cast Speed`,
+    );
+    const result = importPobXml(source(fractional));
+    assert.equal(result.complete, false);
+    assert.equal('selectedSkill' in result, false);
+    assert.ok(result.unresolved.some((entry) => entry.raw.includes(`${amount}%`)));
+  }
+});
+
+test('fractional and unsafe XML percentage item lines retain diagnostics rather than disagreeing with native rounding', () => {
+  for (const suffix of [
+    'Damage',
+    'Spell Damage',
+    'Lightning Damage',
+    'Projectile Damage',
+    'Cast Speed',
+  ]) {
+    for (const amount of ['12.34', '12.00', '9007199254740992']) {
+      const xml = fixtures.baseline.replace(
+        'Implicits: 0',
+        `Implicits: 0\n${amount}% increased ${suffix}`,
+      );
+      const result = importPobXml(source(xml));
+      assert.equal(result.complete, false);
+      assert.equal('selectedSkill' in result, false);
+      assert.equal(result.rawXml, xml);
+      assert.ok(result.unresolved.some((entry) => entry.raw === `${amount}% increased ${suffix}`));
+    }
+  }
 });
 
 test('average critical fixtures require the exact excluded-ailment declaration and preserve mode identity', () => {

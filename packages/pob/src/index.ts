@@ -1,6 +1,5 @@
 import {
   isSnapshotIdentity,
-  SELECTED_SPARK_CRITICAL_MODIFIER_STAT_IDS,
   type AddedLightningDamageContribution,
   type Diagnostic,
   type SelectedSkillInput,
@@ -13,7 +12,7 @@ import {
 import { parseXml, XmlError, type PobXmlLimits, type XmlElement } from './xml.js';
 
 export { pobXmlLimits, type PobXmlLimits } from './xml.js';
-export const pobAdapterVersion = 'poe1-spark-xml-v6';
+export const pobAdapterVersion = 'poe1-spark-xml-v7';
 export const pobCompatibility = Object.freeze({
   status: 'bounded-poe1-spark-xml' as const,
   xmlImportImplemented: true as const,
@@ -79,11 +78,11 @@ export interface PobXmlAdapter {
 }
 
 const rules = [
-  [/^([0-9]+(?:\.[0-9]+)?)% (increased|reduced) Damage$/, 'damage_+%'],
-  [/^([0-9]+(?:\.[0-9]+)?)% (increased|reduced) Spell Damage$/, 'spell_damage_+%'],
-  [/^([0-9]+(?:\.[0-9]+)?)% (increased|reduced) Lightning Damage$/, 'lightning_damage_+%'],
-  [/^([0-9]+(?:\.[0-9]+)?)% (increased|reduced) Projectile Damage$/, 'projectile_damage_+%'],
-  [/^([0-9]+(?:\.[0-9]+)?)% (increased|reduced) Cast Speed$/, 'base_cast_speed_+%'],
+  [/^([0-9]+)% (increased|reduced) Damage$/, 'damage_+%'],
+  [/^([0-9]+)% (increased|reduced) Spell Damage$/, 'spell_damage_+%'],
+  [/^([0-9]+)% (increased|reduced) Lightning Damage$/, 'lightning_damage_+%'],
+  [/^([0-9]+)% (increased|reduced) Projectile Damage$/, 'projectile_damage_+%'],
+  [/^([0-9]+)% (increased|reduced) Cast Speed$/, 'base_cast_speed_+%'],
   [/^([0-9]+)% (increased|reduced) Critical Strike Chance$/, 'critical_strike_chance_+%'],
   [
     /^([0-9]+)% (increased|reduced) Critical Strike Chance for Spells$/,
@@ -320,10 +319,10 @@ export function importPobXml(
           'ambiguous-stat',
         );
       const gems = group.children.filter((child) => child.name === 'Gem');
-      if (gems.length < 1 || gems.length > 2)
+      if (gems.length < 1 || gems.length > 3)
         problem(
           'pob.ambiguous-selection',
-          'Require Spark as the first gem and at most one Controlled Destruction support as the second gem.',
+          'Require Spark first, followed by at most one each of normal Controlled Destruction and Faster Casting.',
           { element: 'Skill', socketGroup: 1 },
           JSON.stringify(gems),
           'ambiguous-stat',
@@ -358,37 +357,52 @@ export function importPobXml(
           skills.push(selected);
         }
       }
+      const seenSupports = new Set<string>();
       for (let gemIndex = 1; gemIndex < gems.length; gemIndex++) {
         const supportGem = gems[gemIndex]!;
         check(supportGem, ['skillId', 'gemId', 'nameSpec', 'level', 'quality', 'enabled']);
         const gemLevel = integer(supportGem.attributes.level, 1, 20);
+        const profile = [
+          {
+            id: 'SupportControlledDestruction',
+            gemId: 'Metadata/Items/Gems/SupportGemControlledDestruction',
+            name: 'Controlled Destruction',
+          },
+          {
+            id: 'SupportFasterCasting',
+            gemId: 'Metadata/Items/Gems/SupportGemFasterCast',
+            name: 'Faster Casting',
+          },
+        ].find((candidate) => candidate.id === supportGem.attributes.skillId);
         if (
-          gemIndex !== 1 ||
-          supportGem.attributes.skillId !== 'SupportControlledDestruction' ||
-          supportGem.attributes.gemId !== 'Metadata/Items/Gems/SupportGemControlledDestruction' ||
-          supportGem.attributes.nameSpec !== 'Controlled Destruction' ||
+          gemIndex > 2 ||
+          !profile ||
+          seenSupports.has(profile.id) ||
+          supportGem.attributes.gemId !== profile.gemId ||
+          supportGem.attributes.nameSpec !== profile.name ||
           gemLevel === undefined ||
           supportGem.attributes.quality !== '0' ||
           !['true', 'false'].includes(supportGem.attributes.enabled ?? '')
         )
           problem(
             'pob.unsupported-support',
-            'Only one normal Controlled Destruction support, levels 1–20, quality 0 and explicit enabled state is supported in the selected group.',
+            'Only unique normal Controlled Destruction and Faster Casting supports, levels 1–20, quality 0 and explicit enabled state are supported in the selected group.',
             { element: 'Gem', socketGroup: 1, gemIndex: gemIndex + 1 },
             JSON.stringify(supportGem.attributes),
           );
         else
           supports.push({
-            id: 'SupportControlledDestruction',
+            id: profile.id,
             gemLevel,
             quality: 0,
             enabled: supportGem.attributes.enabled === 'true',
             source: {
               kind: 'skill',
-              id: 'pob-gem:1:2',
-              label: 'Controlled Destruction',
+              id: `pob-gem:1:${gemIndex + 1}`,
+              label: profile.name,
             },
           });
+        if (profile) seenSupports.add(profile.id);
       }
     }
   }
@@ -772,11 +786,7 @@ export function importPobXml(
         });
         if (
           matches.length !== 1 ||
-          !Number.isFinite(matches[0]?.value) ||
-          ((SELECTED_SPARK_CRITICAL_MODIFIER_STAT_IDS as readonly string[]).includes(
-            matches[0]?.statId ?? '',
-          ) &&
-            !Number.isSafeInteger(matches[0]?.value)) ||
+          !Number.isSafeInteger(matches[0]?.value) ||
           (matches[0]?.statId === 'base_reduce_enemy_lightning_resistance_%' &&
             (!Number.isSafeInteger(matches[0].value) ||
               matches[0].value < 0 ||

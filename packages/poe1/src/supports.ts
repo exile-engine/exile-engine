@@ -12,12 +12,20 @@ import {
   type SelectedSkillInput,
   type SelectedSkillSupportDataset,
   type SelectedSkillSupportTrace,
+  type SelectedSkillSupportLevel,
+  type SelectedSkillFasterCastingLevel,
+  type SelectedSkillFasterCastingDataset,
+  type SelectedSkillControlledDestructionDataset,
+  type SelectedSkillSupportContribution,
   type SourceRowRef,
   type SparkDataset,
 } from '@exile-engine/core';
 
 const SUPPORT = 'SupportControlledDestruction';
 const GEM = 'Metadata/Items/Gems/SupportGemControlledDestruction';
+const FASTER = 'SupportFasterCasting';
+const FASTER_GEM = 'Metadata/Items/Gems/SupportGemFasterCast';
+const CAST_SPEED = 'base_cast_speed_+%';
 const [MORE, CRIT] = CONTROLLED_DESTRUCTION_STAT_IDS;
 const object = (value: unknown): value is Record<string, unknown> =>
   !!value && typeof value === 'object' && !Array.isArray(value);
@@ -59,16 +67,18 @@ function rows(value: unknown): boolean {
 /** Exact bounded records prevent unsupported or inherited semantics from entering a session. */
 export function selectedSupportDatasetShape(dataset: SparkDataset): boolean {
   if (dataset.supports === undefined) return true;
+  const supportIds = new Set<string>();
   return (
-    dense(dataset.supports, 1) &&
-    dataset.supports.length === 1 &&
+    dense(dataset.supports, 2) &&
+    dataset.supports.length >= 1 &&
     dataset.supports.every((data) => {
       if (
         !object(data) ||
         !own(data, ['identity', 'id', 'gemId', 'levels', 'sourceRows']) ||
         !keys(data, ['identity', 'id', 'gemId', 'levels', 'sourceRows']) ||
-        data.id !== SUPPORT ||
-        data.gemId !== GEM ||
+        (data.id !== SUPPORT && data.id !== FASTER) ||
+        supportIds.has(data.id as string) ||
+        data.gemId !== (data.id === SUPPORT ? GEM : FASTER_GEM) ||
         !object(data.identity) ||
         !own(data.identity, ['game', 'build', 'snapshotId']) ||
         !keys(data.identity, ['game', 'build', 'snapshotId']) ||
@@ -79,32 +89,47 @@ export function selectedSupportDatasetShape(dataset: SparkDataset): boolean {
         data.levels.length !== 20
       )
         return false;
+      supportIds.add(data.id);
       const seen = new Set<number>();
       return data.levels.every((level) => {
         if (
           !object(level) ||
-          !own(level, [
-            'gemLevel',
-            'moreSpellDamagePercent',
-            'criticalStrikeChancePercent',
-            'manaCostMultiplier',
-            'sourceRows',
-          ]) ||
-          !keys(level, [
-            'gemLevel',
-            'moreSpellDamagePercent',
-            'criticalStrikeChancePercent',
-            'manaCostMultiplier',
-            'sourceRows',
-          ]) ||
+          !own(
+            level,
+            data.id === SUPPORT
+              ? [
+                  'gemLevel',
+                  'moreSpellDamagePercent',
+                  'criticalStrikeChancePercent',
+                  'manaCostMultiplier',
+                  'sourceRows',
+                ]
+              : ['gemLevel', 'increasedCastSpeedPercent', 'manaCostMultiplier', 'sourceRows'],
+          ) ||
+          !keys(
+            level,
+            data.id === SUPPORT
+              ? [
+                  'gemLevel',
+                  'moreSpellDamagePercent',
+                  'criticalStrikeChancePercent',
+                  'manaCostMultiplier',
+                  'sourceRows',
+                ]
+              : ['gemLevel', 'increasedCastSpeedPercent', 'manaCostMultiplier', 'sourceRows'],
+          ) ||
           !Number.isSafeInteger(level.gemLevel) ||
           (level.gemLevel as number) < 1 ||
           (level.gemLevel as number) > 20 ||
           seen.has(level.gemLevel as number) ||
-          !Number.isSafeInteger(level.moreSpellDamagePercent) ||
-          (level.moreSpellDamagePercent as number) < 0 ||
-          (level.moreSpellDamagePercent as number) > 100 ||
-          level.criticalStrikeChancePercent !== -80 ||
+          (data.id === SUPPORT
+            ? !Number.isSafeInteger(level.moreSpellDamagePercent) ||
+              (level.moreSpellDamagePercent as number) < 0 ||
+              (level.moreSpellDamagePercent as number) > 100 ||
+              level.criticalStrikeChancePercent !== -80
+            : !Number.isSafeInteger(level.increasedCastSpeedPercent) ||
+              (level.increasedCastSpeedPercent as number) < 0 ||
+              (level.increasedCastSpeedPercent as number) > 100) ||
           typeof level.manaCostMultiplier !== 'number' ||
           !Number.isFinite(level.manaCostMultiplier) ||
           level.manaCostMultiplier <= 0 ||
@@ -157,22 +182,32 @@ async function resolve(
 }
 
 /** Read one reviewed support from the same snapshot as Spark. No formulas or paths are evaluated. */
-export async function loadControlledDestructionDataset(
+async function loadReviewedSupportDataset(
   reader: CatalogReader,
+  supportId: typeof SUPPORT | typeof FASTER,
 ): Promise<Result<SelectedSkillSupportDataset>> {
   if (!isSnapshotIdentity(reader.identity) || reader.identity.game !== 'poe1')
     return failure(errorDiagnostic('support.snapshot', 'A pinned PoE1 snapshot is required.'));
   const identity = { ...reader.identity };
+  const faster = supportId === FASTER;
+  const gemId = faster ? FASTER_GEM : GEM;
+  const statIds = faster ? [CAST_SPEED] : CONTROLLED_DESTRUCTION_STAT_IDS;
+  const levelStatId = faster ? CAST_SPEED : MORE;
   try {
-    const effect = await reader.getRecord('GrantedEffects', SUPPORT);
+    const effect = await reader.getRecord('GrantedEffects', supportId);
     const spark = await reader.getRecord('GrantedEffects', 'Spark');
-    if (!effect || effect.fields.Id !== SUPPORT || effect.fields.IsSupport !== true || !spark)
-      throw new Error('Missing normal Controlled Destruction or Spark.');
+    if (
+      !effect ||
+      effect.key !== supportId ||
+      effect.fields.Id !== supportId ||
+      effect.fields.IsSupport !== true ||
+      !spark
+    )
+      throw new Error('Missing reviewed normal support or Spark.');
     if (spark.fields.CannotBeSupported !== false)
       throw new Error('Normal Spark cannot be supported or lacks verified eligibility.');
     for (const field of [
       'AddedActiveSkillTypes',
-      'ExcludedActiveSkillTypes',
       'AddedMinionActiveSkillTypes',
       'SupportWeaponRestrictions',
       'StatSet2',
@@ -181,9 +216,18 @@ export async function loadControlledDestructionDataset(
     const allowed = array(effect, 'AllowedActiveSkillTypes').map(
       (value) => reference(value, 'ActiveSkillType').key,
     );
+    const excluded = array(effect, 'ExcludedActiveSkillTypes').map(
+      (value) => reference(value, 'ActiveSkillType').key,
+    );
     if (
-      allowed.length !== 3 ||
-      !['Damage', 'Attack', 'DegenOnlySpellDamage'].every((id) => allowed.includes(id)) ||
+      (faster
+        ? allowed.length !== 1 ||
+          allowed[0] !== 'Spell' ||
+          excluded.length !== 2 ||
+          !['Instant', 'FixedCastTime'].every((id) => excluded.includes(id))
+        : allowed.length !== 3 ||
+          !['Damage', 'Attack', 'DegenOnlySpellDamage'].every((id) => allowed.includes(id)) ||
+          excluded.length !== 0) ||
       effect.fields.SupportsGemsOnly !== false ||
       effect.fields.ActiveSkill !== null
     )
@@ -196,12 +240,14 @@ export async function loadControlledDestructionDataset(
       active.key !== 'spark' ||
       !activeTypes.includes('Spell') ||
       !activeTypes.includes('Damage') ||
+      activeTypes.some((id) => excluded.includes(id)) ||
       !activeTypes.some((id) => allowed.includes(id))
     )
       throw new Error('Normal Spark is not eligible for this spell-damage support.');
     const typeRows: SourceRowRef[] = [];
     for (const value of [
       ...array(effect, 'AllowedActiveSkillTypes'),
+      ...array(effect, 'ExcludedActiveSkillTypes'),
       ...array(active, 'ActiveSkillTypes'),
     ]) {
       const row = await resolve(reader, value, 'ActiveSkillType');
@@ -212,30 +258,31 @@ export async function loadControlledDestructionDataset(
     }
     const set = await resolve(reader, effect.fields.StatSet1, 'GrantedEffectStatSets');
     if (
-      set.key !== SUPPORT ||
+      set.key !== supportId ||
       array(set, 'ImplicitStats').length ||
-      array(set, 'ConstantStats').length !== 1 ||
-      reference(array(set, 'ConstantStats')[0], 'Stats').key !== CRIT ||
-      array(set, 'ConstantStatsValues').length !== 1 ||
-      array(set, 'ConstantStatsValues')[0] !== -80
+      (faster
+        ? array(set, 'ConstantStats').length !== 0 || array(set, 'ConstantStatsValues').length !== 0
+        : array(set, 'ConstantStats').length !== 1 ||
+          reference(array(set, 'ConstantStats')[0], 'Stats').key !== CRIT ||
+          array(set, 'ConstantStatsValues').length !== 1 ||
+          array(set, 'ConstantStatsValues')[0] !== -80)
     )
       throw new Error('Unsupported Controlled Destruction constant stats.');
     if (set.fields.IgnoredStats !== undefined && array(set, 'IgnoredStats').length)
       throw new Error('Support stat removals are unsupported.');
-    const stats = await Promise.all(
-      CONTROLLED_DESTRUCTION_STAT_IDS.map((id) => reader.getRecord('Stats', id)),
-    );
+    const stats = await Promise.all(statIds.map((id) => reader.getRecord('Stats', id)));
     if (
       stats.some(
         (row, index) =>
           !row ||
-          row.fields.Id !== CONTROLLED_DESTRUCTION_STAT_IDS[index] ||
+          row.key !== statIds[index] ||
+          row.fields.Id !== statIds[index] ||
           row.fields.IsLocal !== false ||
           row.fields.IsWeaponLocal !== false,
       )
     )
       throw new Error('Missing exact global support stat identities.');
-    if (!matches(array(set, 'ConstantStats')[0], 'Stats', stats[1]!))
+    if (!faster && !matches(array(set, 'ConstantStats')[0], 'Stats', stats[1]!))
       throw new Error('Mismatched critical-chance stat row identity.');
     const [statLevels, effectLevels, gems] = await Promise.all([
       reader.getTable('GrantedEffectStatSetsPerLevel'),
@@ -243,7 +290,7 @@ export async function loadControlledDestructionDataset(
       reader.getTable('SkillGems'),
     ]);
     const candidates = gems.filter(
-      (row) => object(row.fields.BaseItemTypesKey) && row.fields.BaseItemTypesKey.key === GEM,
+      (row) => object(row.fields.BaseItemTypesKey) && row.fields.BaseItemTypesKey.key === gemId,
     );
     if (
       candidates.length !== 1 ||
@@ -254,11 +301,16 @@ export async function loadControlledDestructionDataset(
     const gem = candidates[0]!;
     const base = await resolve(reader, gem.fields.BaseItemTypesKey, 'BaseItemTypes');
     const variants = array(gem, 'GemVariants');
-    if (base.key !== GEM || variants.length !== 1) throw new Error('Ambiguous normal support gem.');
+    if (base.key !== gemId || variants.length !== 1)
+      throw new Error('Ambiguous normal support gem.');
     const variant = await resolve(reader, variants[0], 'GemEffects');
-    if (variant.key !== SUPPORT || !matches(variant.fields.GrantedEffect, 'GrantedEffects', effect))
+    if (
+      variant.key !== supportId ||
+      !matches(variant.fields.GrantedEffect, 'GrantedEffects', effect)
+    )
       throw new Error('The support gem does not grant the reviewed effect.');
-    const levels = [];
+    const levels: SelectedSkillSupportLevel[] = [];
+    const fasterLevels: SelectedSkillFasterCastingLevel[] = [];
     for (let gemLevel = 1; gemLevel <= 20; gemLevel++) {
       const rows = statLevels.filter(
         (row) =>
@@ -279,7 +331,7 @@ export async function loadControlledDestructionDataset(
         array(row, 'BaseResolvedValues').length ||
         array(row, 'AdditionalFlags').length ||
         array(row, 'AdditionalStats').length !== 1 ||
-        reference(array(row, 'AdditionalStats')[0], 'Stats').key !== MORE ||
+        reference(array(row, 'AdditionalStats')[0], 'Stats').key !== levelStatId ||
         !matches(array(row, 'AdditionalStats')[0], 'Stats', stats[0]!) ||
         array(row, 'AdditionalStatsValues').length !== 1 ||
         array(row, 'FloatStatsValues').length !== 0 ||
@@ -295,39 +347,61 @@ export async function loadControlledDestructionDataset(
         (more as number) > 100 ||
         !Number.isSafeInteger(multiplier) ||
         (multiplier as number) <= 0 ||
+        (multiplier as number) > 10000 ||
         cost.fields.AttackSpeedMultiplier !== 0 ||
         cost.fields.AttackTime !== 0 ||
         cost.fields.Cooldown !== 0
       )
         throw new Error(`Invalid or unsupported support level ${gemLevel}.`);
-      levels.push({
-        gemLevel,
-        moreSpellDamagePercent: more as number,
-        criticalStrikeChancePercent: -80,
-        manaCostMultiplier: (multiplier as number) / 100,
-        sourceRows: [
-          rowRef('GrantedEffectStatSetsPerLevel', row),
-          rowRef('GrantedEffectsPerLevel', cost),
-        ],
-      });
+      const sourceRows = [
+        rowRef('GrantedEffectStatSetsPerLevel', row),
+        rowRef('GrantedEffectsPerLevel', cost),
+      ];
+      if (faster)
+        fasterLevels.push({
+          gemLevel,
+          increasedCastSpeedPercent: more as number,
+          manaCostMultiplier: (multiplier as number) / 100,
+          sourceRows,
+        });
+      else
+        levels.push({
+          gemLevel,
+          moreSpellDamagePercent: more as number,
+          criticalStrikeChancePercent: -80,
+          manaCostMultiplier: (multiplier as number) / 100,
+          sourceRows: [
+            rowRef('GrantedEffectStatSetsPerLevel', row),
+            rowRef('GrantedEffectsPerLevel', cost),
+          ],
+        });
     }
     if (!sameSnapshot(identity, reader.identity))
       throw new Error('Support snapshot changed while loading.');
-    return success({
+    const sourceRows = [
+      rowRef('GrantedEffects', effect),
+      rowRef('GrantedEffectStatSets', set),
+      rowRef('ActiveSkills', active),
+      rowRef('SkillGems', gem),
+      rowRef('BaseItemTypes', base),
+      rowRef('GemEffects', variant),
+      ...typeRows,
+      ...stats.map((row) => rowRef('Stats', row!)),
+    ];
+    if (faster)
+      return success<SelectedSkillFasterCastingDataset>({
+        identity,
+        id: FASTER,
+        gemId,
+        levels: fasterLevels,
+        sourceRows,
+      });
+    return success<SelectedSkillControlledDestructionDataset>({
       identity,
       id: SUPPORT,
-      gemId: GEM,
+      gemId,
       levels,
-      sourceRows: [
-        rowRef('GrantedEffects', effect),
-        rowRef('GrantedEffectStatSets', set),
-        rowRef('ActiveSkills', active),
-        rowRef('SkillGems', gem),
-        rowRef('BaseItemTypes', base),
-        rowRef('GemEffects', variant),
-        ...typeRows,
-        ...stats.map((row) => rowRef('Stats', row!)),
-      ],
+      sourceRows,
     });
   } catch (error) {
     return failure(
@@ -339,6 +413,28 @@ export async function loadControlledDestructionDataset(
   }
 }
 
+export async function loadControlledDestructionDataset(
+  reader: CatalogReader,
+): Promise<Result<SelectedSkillControlledDestructionDataset>> {
+  const loaded = await loadReviewedSupportDataset(reader, SUPPORT);
+  if (!loaded.ok) return loaded;
+  return loaded.value.id === SUPPORT
+    ? success(loaded.value)
+    : failure(
+        errorDiagnostic('support.invalid-data', 'Mismatched Controlled Destruction profile.'),
+      );
+}
+
+export async function loadFasterCastingDataset(
+  reader: CatalogReader,
+): Promise<Result<SelectedSkillFasterCastingDataset>> {
+  const loaded = await loadReviewedSupportDataset(reader, FASTER);
+  if (!loaded.ok) return loaded;
+  return loaded.value.id === FASTER
+    ? success(loaded.value)
+    : failure(errorDiagnostic('support.invalid-data', 'Mismatched Faster Casting profile.'));
+}
+
 /** Interpret explicit support facts. Crit and resource effects stay visible outside the hit metric. */
 export function calculateSelectedSkillSupports(
   input: SelectedSkillInput,
@@ -348,53 +444,88 @@ export function calculateSelectedSkillSupports(
     ...support,
     source: { ...support.source },
   }));
-  if (!supports.length)
-    return success({
-      supports,
-      spellDamageMultiplier: 1,
-      criticalChanceMultiplier: 1,
-      castTimeMultiplier: 1,
-      manaCostMultiplier: 1,
-      contributions: [],
-      sourceRows: [],
-    });
-  const support = supports[0]!;
-  const data = dataset.supports?.find((candidate) => candidate.id === support.id);
-  const level = data?.levels.find((candidate) => candidate.gemLevel === support.gemLevel);
-  if (!data || !level || !sameSnapshot(input.identity, data.identity))
-    return failure(
-      errorDiagnostic(
-        'support.missing-data',
-        'Selected support requires matching normalized facts from the exact snapshot.',
-      ),
-    );
-  const sourceRows = [...data.sourceRows, ...level.sourceRows].map((row) => ({ ...row }));
+  let spellDamageMultiplier = 1;
+  let criticalChanceMultiplier = 1;
+  let manaCostMultiplier = 1;
+  let increasedCastSpeedPercent = 0;
+  const sourceRows: SourceRowRef[] = [];
+  const contributions: SelectedSkillSupportContribution[] = [];
+  for (const support of supports) {
+    const data = dataset.supports?.find((candidate) => candidate.id === support.id);
+    if (!data || !sameSnapshot(input.identity, data.identity))
+      return failure(
+        errorDiagnostic(
+          'support.missing-data',
+          'Selected support requires matching normalized facts from the exact snapshot.',
+        ),
+      );
+    if (data.id === SUPPORT) {
+      const level = data.levels.find((candidate) => candidate.gemLevel === support.gemLevel);
+      if (!level)
+        return failure(
+          errorDiagnostic('support.missing-data', 'Missing selected Controlled Destruction level.'),
+        );
+      const rows = [...data.sourceRows, ...level.sourceRows].map((row) => ({ ...row }));
+      sourceRows.push(...rows);
+      if (support.enabled) {
+        spellDamageMultiplier *= 1 + level.moreSpellDamagePercent / 100;
+        criticalChanceMultiplier *= (100 + level.criticalStrikeChancePercent) / 100;
+        manaCostMultiplier *= level.manaCostMultiplier;
+      }
+      contributions.push(
+        {
+          statId: MORE,
+          value: level.moreSpellDamagePercent,
+          source: { ...support.source },
+          scope: 'global',
+          operation: 'more-spell-damage',
+          appliedToSelectedHit: support.enabled,
+          appliedToCastRate: false,
+          sourceRows: rows.map((row) => ({ ...row })),
+        },
+        {
+          statId: CRIT,
+          value: level.criticalStrikeChancePercent,
+          source: { ...support.source },
+          scope: 'global',
+          operation: 'less-critical-strike-chance',
+          appliedToSelectedHit: false,
+          appliedToCastRate: false,
+          sourceRows: rows.map((row) => ({ ...row })),
+        },
+      );
+    } else {
+      const level = data.levels.find((candidate) => candidate.gemLevel === support.gemLevel);
+      if (!level)
+        return failure(
+          errorDiagnostic('support.missing-data', 'Missing selected Faster Casting level.'),
+        );
+      const rows = [...data.sourceRows, ...level.sourceRows].map((row) => ({ ...row }));
+      sourceRows.push(...rows);
+      if (support.enabled) {
+        increasedCastSpeedPercent += level.increasedCastSpeedPercent;
+        manaCostMultiplier *= level.manaCostMultiplier;
+      }
+      contributions.push({
+        statId: CAST_SPEED,
+        value: level.increasedCastSpeedPercent,
+        source: { ...support.source },
+        scope: 'global',
+        operation: 'increased-cast-speed',
+        appliedToSelectedHit: false,
+        appliedToCastRate: support.enabled,
+        sourceRows: rows.map((row) => ({ ...row })),
+      });
+    }
+  }
   return success({
     supports,
-    spellDamageMultiplier: support.enabled ? 1 + level.moreSpellDamagePercent / 100 : 1,
-    criticalChanceMultiplier: support.enabled ? (100 + level.criticalStrikeChancePercent) / 100 : 1,
+    spellDamageMultiplier,
+    criticalChanceMultiplier,
+    increasedCastSpeedPercent,
     castTimeMultiplier: 1,
-    manaCostMultiplier: support.enabled ? level.manaCostMultiplier : 1,
+    manaCostMultiplier,
     sourceRows,
-    contributions: [
-      {
-        statId: MORE,
-        value: level.moreSpellDamagePercent,
-        source: { ...support.source },
-        scope: 'global',
-        operation: 'more-spell-damage',
-        appliedToSelectedHit: support.enabled,
-        sourceRows: sourceRows.map((row) => ({ ...row })),
-      },
-      {
-        statId: CRIT,
-        value: level.criticalStrikeChancePercent,
-        source: { ...support.source },
-        scope: 'global',
-        operation: 'less-critical-strike-chance',
-        appliedToSelectedHit: false,
-        sourceRows: sourceRows.map((row) => ({ ...row })),
-      },
-    ],
+    contributions,
   });
 }

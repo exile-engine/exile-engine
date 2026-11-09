@@ -13,7 +13,7 @@ Reports expose each node's reads and the derived nodes actually evaluated in dep
 | Damage modifier                             | Damage increase, normal hit before/after resistance, critical effects, shock effects, result                                                              |
 | Cast-speed modifier                         | Cast-speed increase, cast rate, result                                                                                                                    |
 | Added-lightning group                       | Raw/effective added lightning, combined base, normal hit before/after resistance, critical effects, shock effects, result                                 |
-| Support level/enabled/source                | Support effects, normal hit before/after resistance, cast rate, critical effects, shock effects, result                                                   |
+| Support level/enabled/source/order          | Support effects, normal hit before/after resistance, cast rate, critical effects, shock effects, result                                                   |
 | Critical chance or multiplier modifier      | Corresponding critical aggregate, critical effects, shock effects, result                                                                                 |
 | Critical chance modifier becomes multiplier | Both critical aggregates, critical effects, shock effects, result                                                                                         |
 | Critical mode                               | Critical effects, shock effects, result                                                                                                                   |
@@ -29,7 +29,15 @@ Reports expose each node's reads and the derived nodes actually evaluated in dep
 
 Each modifier remains a separate input leaf identified by array position. Exact stat IDs classify four increased-damage categories, cast speed, two increased-critical-chance categories, added critical multiplier and lightning penetration. Reclassifying, adding or removing a contribution replaces the applicable aggregate dependencies. Reordering contributions can cause additional work. Authored values, ordered added-damage groups and individual sources remain visible.
 
-The raw added-lightning aggregate is independent of level-specific effectiveness. A level change refreshes effectiveness and base critical chance while retaining raw sums and modifier aggregates. Support selection is independent of the active skill's base facts. Controlled Destruction applies its more multiplier after additive increases and before endpoint rounding; its cast-time factor is explicitly one. Its less-critical-chance contribution applies to average critical mode when enabled. Result assembly updates that applicability flag without recalculating support multipliers on a mode-only change.
+The raw added-lightning aggregate is independent of level-specific effectiveness. A level change refreshes effectiveness and base critical chance while retaining raw sums and modifier aggregates. Support selection is independent of the active skill's base facts. Normal Controlled Destruction and Faster Casting are supported at levels 1–20 and quality zero, individually or together, with at most one occurrence of each. Input order and disabled raw contributions remain visible. Unknown, duplicate and extra supports are rejected.
+
+Controlled Destruction applies its more multiplier after additive increases and before endpoint rounding. Its less-critical-chance contribution applies to average critical mode when that support is enabled. Result assembly updates that flag without recalculating support effects on a critical-mode-only change. Enabling Faster Casting while Controlled Destruction is disabled does not apply the latter's critical penalty.
+
+Faster Casting contributes its 20–39% increased cast speed to the same additive pool as item cast speed. `cast-speed-increase` caches the item/scalar subtotal; `support-effects` reports the support subtotal. The cast node adds them once, rounds the combined speed multiplier to two decimals, checks it is positive, and applies the server-tick ceiling. `hit.increasedCastSpeedPercent` reports the total, while item and support occurrences retain separate sources. No support contribution is appended to `input.modifiers`. Both supports have cast-time multiplier one and preserve the active Spark base interval. Mana multipliers remain metadata; resource costs and sustainable casting are outside this calculation.
+
+The rounded combined pool determines validity. An item-only -100% cast-speed pool is valid with enabled level-one Faster Casting: the total is -80%, giving a positive 0.2 multiplier. Removing or disabling the support can invalidate that input. Tests verify atomic rejection and recovery, including rounding boundaries. Sessions initialize the cached item subtotal from input occurrences so later configuration changes cannot add the support twice.
+
+The support-effects node conservatively refreshes all its consumers. A Faster Casting-only level, enabled-state, source or order change therefore recalculates normal-hit, cast, critical and shock nodes even when only cast-related values change. Tests confirm the unchanged damage values, and reports expose the actual extra work. Separate numerical support projections have not been introduced.
 
 Average critical mode requires an explicit ailment profile: `ailmentMode: 'excluded'`, or `ailmentMode: 'configured-shock'` with the bounded shock scenario described below. Critical modifiers do not enter normal-hit or cast-speed totals. The trace retains base chance, additive chance, the support less factor, rounding/cap, the pinned base multiplier rule, added multiplier points, critical ranges and expected means. Disabled critical mode uses probability zero while preserving the trace. No extra hit count is inferred.
 
@@ -59,33 +67,36 @@ Magnitude, uptime, source and mode changes evaluate only `shock-effects` and res
 
 ## Reproducible benchmark
 
-Run `npm run build` followed by `node scripts/benchmark-selected-skill.mjs`. The host script uses the recorded PoE1 client fixture (`local-client-fixture`, snapshot `poe1-spark-client-fixture-v1`) with 36 individual item contributions, including three critical modifiers and one penetration modifier; one grouped added-lightning range; level-one enabled Controlled Destruction; level 20 Spark; average critical mode; and configured shock of 20% magnitude with 50% supplied uptime. The enemy starts at 100 base resistance, configured maximum mode, two exposure candidates (-10 enabled and -25 disabled), and 15 penetration.
+Run `npm run build` followed by `node scripts/benchmark-selected-skill.mjs`. The host script uses the recorded PoE1 client fixture (`local-client-fixture`, snapshot `poe1-spark-client-fixture-v1`) with 36 individual item contributions, including three critical modifiers and one penetration modifier; one grouped added-lightning range; enabled level-one Controlled Destruction and Faster Casting; level 20 Spark; average critical mode; and configured shock of 20% magnitude with 50% supplied uptime. The enemy starts at 100 base resistance, configured maximum mode, two exposure candidates (-10 enabled and -25 disabled), and 15 penetration.
 
-Eighteen separate batches each contain 1,000 mutations. Every state is compared completely to fresh recomputation outside the timed region. There are 100 warmup updates, five timed trials, alternating full/incremental trial order and a median per path. Session creation, XML parsing and snapshot loading are excluded; validation, input capture, graph reconstruction/planning and result construction are included. A DPS checksum keeps results observable.
+Twenty-one separate batches each contain 1,000 mutations. Every state is compared completely to fresh recomputation outside the timed region. There are 100 warmup updates, five timed trials, alternating full/incremental trial order and a median per path. Session creation, XML parsing and snapshot loading are excluded; validation, input capture, graph reconstruction/planning and result construction are included. A DPS checksum keeps results observable.
 
-Recorded November 10, 2026, on Windows x64, Node 24.6.0 and npm 11.5.1; engine rule revision `poe1-selected-spark-v6`, working implementation based on Git revision `b71f99117c944c70767237895e836e864fba4ca2`:
+Recorded November 10, 2026, on Windows x64, Node 24.6.0 and npm 11.5.1; engine rule revision `poe1-selected-spark-v7`, working implementation based on Git revision `747a80b2ee68eef856ad070eb5a9b1036021668c`:
 
 | Batch, 1,000 updates                     | Full median | Incremental median | Incremental / full |
 | ---------------------------------------- | ----------: | -----------------: | -----------------: |
-| Item damage value                        |    61.40 ms |          156.59 ms |               2.55 |
-| Enemy base resistance                    |    51.90 ms |          137.63 ms |               2.65 |
-| Damage/cast-speed applicability          |    44.43 ms |          124.46 ms |               2.80 |
-| Added-lightning range                    |    42.63 ms |          118.17 ms |               2.77 |
-| Support level                            |    40.94 ms |          119.21 ms |               2.91 |
-| Support enabled state                    |    39.07 ms |          113.14 ms |               2.90 |
-| Critical chance                          |    41.79 ms |          125.40 ms |               3.00 |
-| Critical multiplier                      |    41.85 ms |          121.05 ms |               2.89 |
-| Critical mode                            |    39.34 ms |          107.96 ms |               2.74 |
-| Critical chance/multiplier applicability |    38.09 ms |          112.13 ms |               2.94 |
-| Exposure strength                        |    38.85 ms |          117.11 ms |               3.01 |
-| Exposure enabled state                   |    40.21 ms |          115.97 ms |               2.88 |
-| Lightning penetration                    |    42.41 ms |          123.35 ms |               2.91 |
-| Penetration/damage applicability         |    37.74 ms |          110.64 ms |               2.93 |
-| Cast speed only                          |    36.81 ms |          101.78 ms |               2.76 |
-| Shock magnitude                          |    37.03 ms |           99.21 ms |               2.68 |
-| Shock uptime                             |    40.34 ms |          105.51 ms |               2.62 |
-| Shock mode                               |    39.56 ms |          101.43 ms |               2.56 |
+| Item damage value                        |    50.71 ms |          111.59 ms |               2.20 |
+| Enemy base resistance                    |    49.48 ms |          113.26 ms |               2.29 |
+| Damage/cast-speed applicability          |    49.12 ms |          110.60 ms |               2.25 |
+| Added-lightning range                    |    46.46 ms |          107.61 ms |               2.32 |
+| Controlled Destruction level             |    45.83 ms |          116.99 ms |               2.55 |
+| Controlled Destruction enabled           |    46.38 ms |          114.46 ms |               2.47 |
+| Critical chance                          |    45.69 ms |          110.88 ms |               2.43 |
+| Critical multiplier                      |    44.42 ms |          113.16 ms |               2.55 |
+| Critical mode                            |    49.09 ms |          117.24 ms |               2.39 |
+| Critical chance/multiplier applicability |    49.64 ms |          119.54 ms |               2.41 |
+| Exposure strength                        |    54.38 ms |          137.92 ms |               2.54 |
+| Exposure enabled state                   |    53.82 ms |          132.91 ms |               2.47 |
+| Lightning penetration                    |    56.92 ms |          136.07 ms |               2.39 |
+| Penetration/damage applicability         |    51.46 ms |          128.51 ms |               2.50 |
+| Item cast speed only                     |    49.35 ms |          114.47 ms |               2.32 |
+| Shock magnitude                          |    49.66 ms |          110.34 ms |               2.22 |
+| Shock uptime                             |    49.99 ms |          112.42 ms |               2.25 |
+| Shock mode                               |    51.60 ms |          112.62 ms |               2.18 |
+| Faster Casting level                     |    49.39 ms |          125.19 ms |               2.53 |
+| Faster Casting enabled                   |    48.94 ms |          125.45 ms |               2.56 |
+| Support order                            |    48.52 ms |          125.93 ms |               2.60 |
 
-All 18,000 comparisons passed. The first damage/cast applicability, support-level, support-enabled, critical-mode, critical-applicability, penetration-applicability and shock-mode states equal their initial states, so 999 updates in each batch evaluated derived nodes. The other eleven batches evaluated the reported nodes 1,000 times. No benchmark mutation recalculated base facts. Penetration-only updates retained all earlier resistance stages. Shock edits evaluated only shock effects and result assembly; cast-speed-only edits reused shock means. Critical-mode edits evaluated critical effects, shock effects and result assembly.
+All 21,000 comparisons passed. The first damage/cast applicability, Controlled Destruction level/enabled, critical-mode, critical-applicability, penetration-applicability, shock-mode, Faster Casting level/enabled and support-order states equal their initial states, so 999 updates in each of those ten batches evaluated derived nodes. The other eleven batches evaluated the reported nodes 1,000 times. No benchmark mutation recalculated base facts. Penetration-only updates retained all earlier resistance stages. Shock edits evaluated only shock effects and result assembly; item cast-speed-only edits reused shock means. Support changes used the conservative aggregate invalidation described above.
 
 These are development-machine measurements without CPU isolation; batches and repeated runs vary. The incremental path is slower for this small rule set because input validation, capture and graph maintenance outweigh the avoided arithmetic. This demonstrates selective work and equality, not a speedup or production latency guarantee. Both paths retain linear validation work. Full recomputation remains the simple default. Measure a larger supported workload before optimizing graph reuse or introducing keyed patches; these measurements do not justify expanding mechanic coverage.
