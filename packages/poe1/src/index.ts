@@ -13,6 +13,7 @@ import { loadControlledDestructionDataset, loadFasterCastingDataset } from './su
 import { loadSelectedSkillCriticalDataset } from './critical.js';
 import { loadSelectedSkillResistanceDataset } from './resistance.js';
 import { loadSelectedSkillShockDataset } from './shock.js';
+import { loadConductivityDataset } from './conductivity.js';
 
 export const game = 'poe1' as const;
 
@@ -30,13 +31,16 @@ export async function loadSparkDataset(reader: CatalogReader) {
   if (!resistance.ok) return resistance;
   const shock = await loadSelectedSkillShockDataset(reader);
   if (!shock.ok) return shock;
+  const conductivity = await loadConductivityDataset(reader);
+  if (!conductivity.ok) return conductivity;
   if (
     !sameSnapshot(loaded.value.identity, support.value.identity) ||
     !sameSnapshot(loaded.value.identity, fasterCasting.value.identity) ||
     !sameSnapshot(loaded.value.identity, reader.identity) ||
     !sameSnapshot(loaded.value.identity, critical.value.identity) ||
     !sameSnapshot(loaded.value.identity, resistance.value.identity) ||
-    !sameSnapshot(loaded.value.identity, shock.value.identity)
+    !sameSnapshot(loaded.value.identity, shock.value.identity) ||
+    !sameSnapshot(loaded.value.identity, conductivity.value.identity)
   )
     return failure(
       errorDiagnostic(
@@ -50,6 +54,7 @@ export async function loadSparkDataset(reader: CatalogReader) {
     critical: critical.value,
     resistance: resistance.value,
     shock: shock.value,
+    conductivity: conductivity.value,
   });
 }
 
@@ -79,6 +84,10 @@ export type {
   SelectedLightningResistanceConfiguration,
   SelectedSkillResistanceDataset,
   SelectedSkillResistanceTrace,
+  SelectedConductivityConfiguration,
+  SelectedConductivityLevel,
+  SelectedConductivityDataset,
+  SelectedConductivityTrace,
   SelectedShockConfiguration,
   SelectedSkillShockContribution,
   SelectedSkillShockDataset,

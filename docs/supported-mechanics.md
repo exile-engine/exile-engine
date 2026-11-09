@@ -21,7 +21,7 @@ For the isolated-hit APIs above, unsupported variants, support gems, flat added 
 
 English and Thai are the tested first item-text slice. A copied wand can resolve its base identity and supported damage/cast-speed modifier groups, retain ambiguous or unknown lines for reconciliation and render selected groups in the other locale. Available SD data for other locales is retained, with no blanket claim of tested parser coverage.
 
-The PoB package imports a bounded PoE1 XML subset: explicitly selected normal Spark with ordinary quality, optionally normal Controlled Destruction and Faster Casting supports, no allocated passives, simple equipped synthetic items containing the supported modifier lines, and an explicit nonboss enemy configuration. See its package README for the exact accepted grammar and limits. Unknown/ambiguous input retains its source and blocks calculation. URLs, share codes and complete build import are unsupported. A successful modifier match does not imply that every equipment property is modeled.
+The PoB package imports a bounded PoE1 XML subset: explicitly selected normal Spark with ordinary quality, optionally normal Controlled Destruction and Faster Casting supports, an optional separate configured Conductivity group, no allocated passives, simple equipped synthetic items containing the supported modifier lines, and an explicit nonboss enemy configuration. See its package README for the exact accepted grammar and limits. Unknown/ambiguous input retains its source and blocks calculation. URLs, share codes and complete build import are unsupported. A successful modifier match does not imply that every equipment property is modeled.
 
 ## PoE1 selected-skill calculation
 
@@ -84,7 +84,7 @@ Fresh calculation recomputes all supported rules. Sessions cache derived nodes a
 
 ## Lightning resistance, exposure and penetration
 
-The configured profile is `configuration.lightningResistance: { baseResistancePercent, maximumResistanceMode, source, exposures }`, mutually exclusive with `effectiveLightningResistancePercent`. Raw resistance is an integer from -1000% through 1000%, and its source is an explicit scenario `SourceRef`. `maximumResistanceMode` is either `'configured'` or `'default75'`. There is no arbitrary maximum-resistance override, curse, scorch, inversion or critical-only resistance rule in this slice.
+The configured profile is `configuration.lightningResistance: { baseResistancePercent, maximumResistanceMode, source, exposures, conductivity? }`, mutually exclusive with `effectiveLightningResistancePercent`. Raw resistance is an integer from -1000% through 1000%, and its source is an explicit scenario `SourceRef`. `maximumResistanceMode` is either `'configured'` or `'default75'`. Only the configured Conductivity rule below is accepted; arbitrary maximum-resistance overrides, other curses, scorch, inversion and critical-only resistance rules remain unsupported.
 
 Each of at most eight exposure candidates is `{ statId: 'lightning_exposure_on_hit_magnitude', value, enabled, source }`. Values are integers from -100 through 0 percentage points and sources are explicit scenario identities. These are **already-active enemy exposure assumptions**, not predictions of application chance, first-hit timing or uptime. Only the strongest enabled negative magnitude applies. Weaker, disabled and zero candidates remain in the trace; tied strongest indices are all retained while the magnitude applies once. Exposure never stacks additively.
 
@@ -94,7 +94,7 @@ The pinned PoB profile computes these stages, without intermediate damage roundi
 
 ```text
 exposure = strongest enabled negative magnitude, or 0
-uncapped = raw base resistance + exposure
+uncapped = raw base resistance + exposure + applied Conductivity resistance delta
 maximum = configured ? min(max(raw base resistance, 75), 90) : 75
 capped = max(-200, min(uncapped, maximum))
 effective = capped - total lightning penetration
@@ -131,6 +131,33 @@ This assumes constant casting and the same normal/critical damage distribution, 
 The XML adapter requires both native `conditionEnemyShocked` and `conditionShockEffect`, plus a separate host `shockUptimePercent` option. Native XML has no uptime setting. A false condition is accepted only with zero host uptime; unknown, missing or contradictory declarations fail. The eight shock fixtures execute native shocked and unshocked endpoints against pinned PoB. Intermediate values and contributions are checked; partial uptime compares the explicitly documented host blend of those executed endpoints, not a claimed native PoB partial-uptime result. The tolerance remains `1e-9 + 1e-12 × abs(expected)`.
 
 Full calculation recomputes shock from scratch. Sessions cache a separate `shock-effects` node: magnitude, uptime, policy or scenario-source changes recalculate it and final assembly while reusing damage, resistance, critical and cast values. Membership changes, source ownership, combined item/configuration edits and invalid-update recovery are checked against fresh complete results. Feedback remains explicitly rejected. See the [pinned evidence](pob-reference.md) and [benchmark](selected-skill-performance.md).
+
+## Explicit configured Conductivity
+
+One already-active normal Conductivity may be supplied as `configuration.lightningResistance.conductivity`. It requires `{ id: 'Conductivity', gemLevel, quality: 0, enabled, increasedEffectPercent, source, effectSource }`: integer level 1–20, explicit boolean enabled, integer increased/reduced curse effect from -100 through 200%, and two scenario sources identifying the curse and effect assumption separately. Missing fields, unknown curses, unsupported quality, extra mechanics and malformed or mismatched source facts fail. The already-effective resistance profile cannot carry this curse, avoiding ambiguous double application.
+
+Conductivity is assumed active for every counted hit when enabled. It is not a second damage source or a second counted cast. No curse application chance, action-time cost, duration/uptime, radius coverage, curse limit, other curse selection, hexproof/immunity, boss penalty, enemy reduced/less curse effect, on-hit curse or support-gem interaction is inferred. The nonboss XML profile remains `enemyIsBoss=None`. Average or disabled critical mode is accepted only with explicit `ailmentMode: 'excluded'` or `'configured-shock'`, because Conductivity's shock-chance side effect must not generate an unmodeled ailment.
+
+The same-snapshot normalizer verifies the normal gem/effect/statset/type chain and all twenty levels. Exact stat `base_lightning_damage_resistance_%` (Stats 150) gives -17% at level 1 through -36% at level 20. `curse_effect_+%` (Stats 1393) identifies the scenario effect contribution. The pinned rule is:
+
+```text
+effect multiplier = 1 + increasedEffectPercent / 100
+scaled resistance delta = base Conductivity resistance × effect multiplier
+rounded delta = round(scaled delta, 2)
+truncated delta = trunc(rounded delta)             # toward zero
+applied delta = enabled ? truncated delta : 0
+uncapped resistance = raw base + strongest exposure + applied delta
+capped resistance = max(-200, min(uncapped resistance, configured maximum))
+effective resistance = capped resistance - penetration
+```
+
+There is no resistance cap between exposure and Conductivity. Level 1 with +25% effect scales -17 to -21.25, then truncates to -21; -50% effect gives -8 from -8.5. -100% effect yields zero while preserving the configured curse. Raw 110%, exposure -15%, level-20 Conductivity with +25% effect (-45), and penetration 20% resolves through uncapped 50% to effective 30%. At the floor, raw -190%, exposure -30%, level-20 curse with +200% effect (-108), and penetration 20% resolves through uncapped -328%, capped -200%, then effective -220%. Normal and critical hits share the result; configured shock applies afterward.
+
+`resistanceEffects.conductivity` is null when absent. When configured, it retains both scenario sources, base/scaled/rounded/truncated/applied resistance, effect multiplier, exact resistance/effect contributions, rule attribution and source rows. It also reports raw duration/radius and the separate `chance_to_be_shocked_%` (Stats 535): base 25%, scaled under the same rule but explicitly `appliedToSelectedHit: false`. The chance is retained even for disabled or zero-effect state. No shock is generated from that value; explicit external shock retains its own configuration. Zero damage remains zero.
+
+XML uses a second enabled `Skill` group with `mainActiveSkill="1"`, `skillPart="1"` and one normal Conductivity gem, exact game ID `Metadata/Items/Gems/SkillGemConductivity`, level 1–20, quality 0 and explicit gem enabled state. Spark stays selected in group 1. A mandatory enabled block titled `Conductivity Effect` contains exactly one integer `N% increased Effect of your Curses` or `N% reduced Effect of your Curses`, including explicit zero. It must accompany the curse group and the reserved `Cannot inflict Elemental Ailments` assumption. The adapter preserves actual gem and effect-block sources and rejects missing/contradictory declarations.
+
+Nine executed pinned PoB fixtures compare curse scaling, both contributions, excluded side effects, the resistance stages, unchanged Spark casts and final selected-skill hit/combined DPS. Full/incremental checks cover level/effect/enabled state, insertion/removal, source changes, cap/floor crossings, exposure and penetration interaction, dependency reclassification and atomic rejection/recovery. A separate `conductivity-effects` node feeds uncapped resistance; the current graph conservatively refreshes its resistance consumers on source-only edits. Pre-resistance damage, support and cast caches are reused. Curse-generated ailment feedback remains outside this state model; cyclic graphs still fail explicitly.
 
 ## Data coverage
 

@@ -5,6 +5,7 @@ import {
   type SelectedSkillInput,
   type SelectedSkillSupport,
   type SelectedLightningExposure,
+  type SelectedConductivityConfiguration,
   type SourceRef,
   type SnapshotIdentity,
   type StatContribution,
@@ -12,7 +13,7 @@ import {
 import { parseXml, XmlError, type PobXmlLimits, type XmlElement } from './xml.js';
 
 export { pobXmlLimits, type PobXmlLimits } from './xml.js';
-export const pobAdapterVersion = 'poe1-spark-xml-v7';
+export const pobAdapterVersion = 'poe1-spark-xml-v8';
 export const pobCompatibility = Object.freeze({
   status: 'bounded-poe1-spark-xml' as const,
   xmlImportImplemented: true as const,
@@ -301,9 +302,21 @@ export function importPobXml(
   if (notes) check(notes, [], [], true);
   const skillContainer = unique(root, 'Skills');
   let selected: PobImportedSkill | undefined;
+  let conductivitySelection:
+    Omit<SelectedConductivityConfiguration, 'increasedEffectPercent' | 'effectSource'> | undefined;
+  let conductivityEffect: { increasedEffectPercent: number; source: SourceRef } | undefined;
   if (skillContainer) {
     check(skillContainer, [], ['Skill']);
-    const group = unique(skillContainer, 'Skill');
+    const groups = skillContainer.children.filter((child) => child.name === 'Skill');
+    if (groups.length < 1 || groups.length > 2)
+      problem(
+        'pob.ambiguous-selection',
+        'Require selected Spark group 1 and at most one configured Conductivity group 2.',
+        { element: 'Skills' },
+        String(groups.length),
+        'ambiguous-stat',
+      );
+    const group = groups[0];
     if (group) {
       check(group, ['enabled', 'mainActiveSkill', 'skillPart', 'label', 'slot'], ['Gem']);
       if (
@@ -404,6 +417,41 @@ export function importPobXml(
           });
         if (profile) seenSupports.add(profile.id);
       }
+    }
+    const curseGroup = groups[1];
+    if (curseGroup) {
+      check(curseGroup, ['enabled', 'mainActiveSkill', 'skillPart', 'label'], ['Gem']);
+      const curseGems = curseGroup.children.filter((child) => child.name === 'Gem');
+      const gem = curseGems[0];
+      if (gem) check(gem, ['skillId', 'gemId', 'nameSpec', 'level', 'quality', 'enabled']);
+      const gemLevel = integer(gem?.attributes.level, 1, 20);
+      if (
+        curseGroup.attributes.enabled !== 'true' ||
+        curseGroup.attributes.mainActiveSkill !== '1' ||
+        curseGroup.attributes.skillPart !== '1' ||
+        curseGems.length !== 1 ||
+        !gem ||
+        gem.attributes.skillId !== 'Conductivity' ||
+        gem.attributes.gemId !== 'Metadata/Items/Gems/SkillGemConductivity' ||
+        gem.attributes.nameSpec !== 'Conductivity' ||
+        gem.attributes.quality !== '0' ||
+        gemLevel === undefined ||
+        !['true', 'false'].includes(gem.attributes.enabled ?? '')
+      )
+        problem(
+          'pob.unsupported-conductivity',
+          'Group 2 must be enabled with one normal Conductivity, level 1–20, quality 0, explicit gem enabled state and skillPart 1; curse supports and other groups are unsupported.',
+          { element: 'Skill', socketGroup: 2 },
+          JSON.stringify(curseGroup.attributes),
+        );
+      else
+        conductivitySelection = {
+          id: 'Conductivity',
+          gemLevel,
+          quality: 0,
+          enabled: gem.attributes.enabled === 'true',
+          source: { kind: 'scenario', id: 'pob-gem:2:1', label: 'Conductivity' },
+        };
     }
   }
   const config = unique(root, 'Config');
@@ -509,10 +557,10 @@ export function importPobXml(
         );
       const titles = new Set<string>();
       let assumptions = 0;
-      if (blocks.length > 9)
+      if (blocks.length > 10)
         problem(
           'pob.exposure-limit',
-          'At most one assumptions block and eight exposure blocks are supported.',
+          'At most one assumptions block, one Conductivity Effect block and eight exposure blocks are supported.',
           { element: 'Config' },
           String(blocks.length),
           'malformed-input',
@@ -538,6 +586,37 @@ export function importPobXml(
           continue;
         }
         titles.add(title);
+        if (title === 'Conductivity Effect') {
+          const match = /^([0-9]+)% (increased|reduced) Effect of your Curses$/.exec(text);
+          const amount = match ? Number(match[1]) * (match[2] === 'reduced' ? -1 : 1) : NaN;
+          if (
+            enabled !== 'true' ||
+            !match ||
+            !Number.isSafeInteger(amount) ||
+            amount < -100 ||
+            amount > 200
+          )
+            problem(
+              'pob.invalid-conductivity-effect',
+              'Conductivity Effect must be an enabled block with exactly one integer increased/reduced Effect of your Curses, from -100 through 200 percent.',
+              { element: 'CustomModifierBlock' },
+              block.text,
+              'malformed-input',
+            );
+          else {
+            const line = block.text.split('\n').findIndex((value) => value.trim() !== '') + 1;
+            conductivityEffect = {
+              increasedEffectPercent: amount,
+              source: {
+                kind: 'scenario',
+                id: 'pob-config:conductivity-effect',
+                label: block.text.split('\n')[line - 1]!,
+                line,
+              },
+            };
+          }
+          continue;
+        }
         if (title === 'Exile Engine Assumptions') {
           assumptions++;
           if (
@@ -581,6 +660,14 @@ export function importPobXml(
           });
         }
       }
+      if (exposures.length > 8)
+        problem(
+          'pob.exposure-limit',
+          'At most eight exposure candidates are supported.',
+          { element: 'Config' },
+          String(exposures.length),
+          'malformed-input',
+        );
       if (assumptions !== 1)
         problem(
           'pob.missing-configuration',
@@ -813,6 +900,17 @@ export function importPobXml(
       }
     }
   }
+  if (
+    (conductivitySelection && (!conductivityEffect || !averageCriticalStrikes)) ||
+    (conductivityEffect && !conductivitySelection)
+  )
+    problem(
+      'pob.conductivity-configuration',
+      'Configured Conductivity requires its group 2 gem, a Conductivity Effect block and the explicit Cannot inflict Elemental Ailments declaration. No default curse effect or generated shock is inferred.',
+      { element: 'Config' },
+      '',
+      'malformed-input',
+    );
   if (diagnostics.length || !selected || resistance === undefined || !resistanceSource)
     return result();
   return result({
@@ -833,6 +931,15 @@ export function importPobXml(
         maximumResistanceMode,
         source: resistanceSource,
         exposures,
+        ...(conductivitySelection && conductivityEffect
+          ? {
+              conductivity: {
+                ...conductivitySelection,
+                increasedEffectPercent: conductivityEffect.increasedEffectPercent,
+                effectSource: conductivityEffect.source,
+              },
+            }
+          : {}),
       },
       ...(averageCriticalStrikes
         ? { criticalStrikeMode: 'average' as const, ailmentMode: 'excluded' as const }

@@ -36,6 +36,7 @@ import {
   selectedShockDatasetShape,
   validShockConfiguration,
 } from './shock.js';
+import { selectedConductivityDatasetShape } from './conductivity.js';
 export { calculateSelectedSkillSupports } from './supports.js';
 export { calculateSelectedSkillCriticalEffects } from './critical.js';
 export {
@@ -46,7 +47,7 @@ export {
 } from './resistance.js';
 export type { LightningResistanceStages } from './resistance.js';
 
-export const selectedSkillEngineRevision = 'poe1-selected-spark-v7' as const;
+export const selectedSkillEngineRevision = 'poe1-selected-spark-v8' as const;
 
 function object(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === 'object' && !Array.isArray(value);
@@ -95,6 +96,15 @@ function copyConfiguration(config: SelectedSkillConfiguration): SelectedSkillCon
               ...exposure,
               source: { ...exposure.source },
             })),
+            ...(config.lightningResistance.conductivity === undefined
+              ? {}
+              : {
+                  conductivity: {
+                    ...config.lightningResistance.conductivity,
+                    source: { ...config.lightningResistance.conductivity.source },
+                    effectSource: { ...config.lightningResistance.conductivity.effectSource },
+                  },
+                }),
           },
         }),
   };
@@ -139,6 +149,7 @@ function selectedDatasetShape(dataset: SparkDataset): boolean {
       'critical',
       'resistance',
       'shock',
+      'conductivity',
     ]) &&
     object(dataset.identity) &&
     keys(dataset.identity, ['game', 'build', 'snapshotId']) &&
@@ -188,7 +199,8 @@ function selectedDatasetShape(dataset: SparkDataset): boolean {
     selectedSupportDatasetShape(dataset) &&
     selectedCriticalDatasetShape(dataset) &&
     selectedResistanceDatasetShape(dataset) &&
-    selectedShockDatasetShape(dataset)
+    selectedShockDatasetShape(dataset) &&
+    selectedConductivityDatasetShape(dataset)
   );
 }
 
@@ -318,11 +330,13 @@ export function validateSelectedSkillInput(input: SelectedSkillInput): Result<Se
         config.effectiveLightningResistancePercent < -200 ||
         config.effectiveLightningResistancePercent > 90)) ||
     (Object.hasOwn(config, 'lightningResistance') &&
-      !validLightningResistanceConfiguration(config.lightningResistance))
+      !validLightningResistanceConfiguration(config.lightningResistance)) ||
+    (config.lightningResistance?.conductivity !== undefined &&
+      !['excluded', 'configured-shock'].includes(config.ailmentMode as string))
   )
     reject(
       'selected.configuration',
-      'An explicit configuration ID and exactly one valid lightning resistance profile are required. Average critical mode requires an explicit ailment policy. Configured shock requires integer magnitude 0–50%, uptime 0–100% and scenario provenance; other ailments remain excluded.',
+      'An explicit configuration ID and exactly one valid lightning resistance profile are required. Average critical mode and configured Conductivity require an explicit excluded or configured-shock ailment policy. Configured shock requires integer magnitude 0–50%, uptime 0–100% and scenario provenance; other ailments remain excluded.',
     );
   if (!Array.isArray(input.modifiers) || input.modifiers.length > 1000) {
     reject('selected.modifiers', 'Expected at most 1000 individual contributions.');

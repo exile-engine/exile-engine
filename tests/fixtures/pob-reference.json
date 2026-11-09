@@ -2,23 +2,24 @@
   "comparisonKind": "executed-pinned-pob-headless",
   "pobExecuted": true,
   "engine": {
-    "repositoryRevision": "747a80b2ee68eef856ad070eb5a9b1036021668c",
+    "repositoryRevision": "94fdb5d633de9ec6b01d8f19bd06392488160ca6",
     "workingTreeChanges": true,
-    "rulesRevision": "poe1-selected-spark-v7",
+    "rulesRevision": "poe1-selected-spark-v8",
     "sourceSha256": {
-      "packages/core/src/selected-skill.ts": "2681652135c8b1a001c599a9296c494851529f62bb792a2f731e7a07f2c91378",
+      "packages/core/src/selected-skill.ts": "86b31cfd314f5062959b8bff1421da641fcfce8cb1b5e058e5802fbe095846c9",
       "packages/core/src/spark.ts": "d703848b743ac24cc6af15ed84c925a052724297c4d2a5f4d2eb68b1d9c0b853",
-      "packages/poe1/src/selected-skill.ts": "de5879e4e9df95294a0dbc4e4c707e1d7018afb2a1893e066be4ba3d14f8a73e",
-      "packages/poe1/src/incremental.ts": "042a453fd53be61a850b146a7b8af4984ebb2164c86fd7dd45db8d60136b17e2",
+      "packages/poe1/src/selected-skill.ts": "06b4bb991523e45ad304fca98e571be0402262c523616d9d62304a45eef183e7",
+      "packages/poe1/src/incremental.ts": "f9d5793ea3593bd83b6e4d942c8ec7ce6c70a19a8e36c4e1c638fa71741fc064",
       "packages/poe1/src/graph.ts": "964fb36094d6d8609caa5d28a5aedacd0a2d8ce513992d29bb43d1c62e262c3c",
-      "packages/pob/src/index.ts": "f05307f8c1f6c73ec470d429860dbe235a27c5674b10b7f90fe361e4af690a7a",
+      "packages/pob/src/index.ts": "52871863a6a12eba44636063b17481a25367beca87e8c256bbca1483bc59addd",
       "packages/pob/src/xml.ts": "a360760b838bd73656a9d81bb8aa1efc099f96c2033876a36f8363b40d145268",
-      "packages/core/src/types.ts": "f97f8fb51b94da7ac1a453cd0ce47a23167f22ca2a6415bbe0ae15c66f6a43d4",
-      "packages/poe1/src/index.ts": "cabe1216cbeab767452cc034d1ae44edffce7e2475f90b44e27010dfe59b0fbc",
+      "packages/core/src/types.ts": "e563c8d54b28cf4ff25672332c4afaae5553fdeb47f75ae4b055baa3a122de7c",
+      "packages/poe1/src/index.ts": "ca8ac2680580424dd2ca41e5f5d69ab23542c51224ee1d7bed300b47e77719b0",
       "packages/poe1/src/supports.ts": "eede360a1ed8f7807eac178f25f7716147269a63615d33368491f74ec94b206d",
       "packages/poe1/src/critical.ts": "0dc9ecf05664bccb6d7dae816e76b7a93f2bd42ba5efb43f17c218162acc7c3f",
-      "packages/poe1/src/resistance.ts": "b031d43648b2d1ae5cce7340610d47ee45e59471d42c6536e168a01ba793bfd8",
-      "packages/poe1/src/shock.ts": "ab3cb7692ea8b8c6acaa9bb7be38a60dd786ef40956eb64829e00e53b72eb0ef"
+      "packages/poe1/src/resistance.ts": "d06153bf135b36b07a16377932a912d7750c2cadb4db76d74f4b74b45401685c",
+      "packages/poe1/src/shock.ts": "ab3cb7692ea8b8c6acaa9bb7be38a60dd786ef40956eb64829e00e53b72eb0ef",
+      "packages/poe1/src/conductivity.ts": "92710b2a2716777f01d53ea5dec5942afc2eb5f06432e7ef1906e504870b0f41"
     }
   },
   "reference": {
@@ -28,7 +29,7 @@
       {
         "path": "src/Data/Skills/act_int.lua",
         "gitBlob": "3fc3566ba0a171fd2d988ecabc475e5ea2525d93",
-        "lines": "16707-16781"
+        "lines": "16707-16781,3070-3140"
       },
       {
         "path": "src/Data/Misc.lua",
@@ -118,7 +119,7 @@
       {
         "path": "src/Modules/CalcPerform.lua",
         "gitBlob": "d683aab3ce3a3b96fdc13bac149cbf6d1ff76249",
-        "lines": "3654-3683,3545-3556,3624-3634"
+        "lines": "3654-3683,3545-3556,3624-3634,2697-2713"
       },
       {
         "path": "src/Classes/Item.lua",
@@ -134,6 +135,16 @@
         "path": "src/Data/ModScalability.lua",
         "gitBlob": "7ca557587e5aa4dd982a245e2390af9b9a8d9aad",
         "lines": "1733,1945,2670,2966,3141"
+      },
+      {
+        "path": "src/Classes/ModStore.lua",
+        "gitBlob": "0dd30e41d664333f5532f376f2c443d90bbc97f8",
+        "lines": "56-83"
+      },
+      {
+        "path": "src/Modules/Common.lua",
+        "gitBlob": "6cc8691de34dd19a63803cf8ee06a9a4173ad65f",
+        "lines": "709-714"
       }
     ]
   },
@@ -7339,20 +7350,1426 @@
       "supportIncreasedCastSpeedPercent": 20,
       "unshockedHitDps": 173.91666666666669,
       "unshockedCombinedDps": 173.91666666666669
+    },
+    {
+      "fixture": "conductivity-level1",
+      "contributions": [],
+      "increasedDamagePercent": 0,
+      "increasedCastSpeedPercent": 0,
+      "effectiveLightningResistancePercent": 58,
+      "beforeResistance": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "afterResistance": {
+        "min": 43.68000000000001,
+        "max": 832.8600000000001,
+        "mean": 438.27000000000004
+      },
+      "castTimeSeconds": 0.6,
+      "castsPerSecond": 1.6666666666666667,
+      "hitDps": 752.3635000000002,
+      "combinedDps": 752.3635000000002,
+      "gemLevel": 20,
+      "baseLightningDamage": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "addedGroups": [],
+      "rawAddedLightningDamage": {
+        "min": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "effectiveAddedLightningDamage": {
+        "min": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "combinedBaseLightningDamage": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "addedDamageEffectiveness": 1.9,
+      "supports": [],
+      "supportContributions": [],
+      "spellDamageMultiplier": 1,
+      "criticalChanceMultiplier": 1,
+      "castTimeMultiplier": 1,
+      "manaCostMultiplier": 1,
+      "criticalMode": "average",
+      "criticalModifiers": [],
+      "criticalEffects": {
+        "mode": "average",
+        "baseChancePercent": 6,
+        "increasedChancePercent": 0,
+        "lessChanceMultiplier": 1,
+        "unroundedChancePercent": 6,
+        "roundedChancePercent": 6,
+        "chancePercent": 6,
+        "baseMultiplierPercent": 150,
+        "addedMultiplierPercent": 0,
+        "criticalMultiplier": 1.5,
+        "criticalHitBeforeResistance": {
+          "min": 156,
+          "max": 2974.5,
+          "mean": 1565.25
+        },
+        "criticalHitAfterResistance": {
+          "min": 65.52000000000001,
+          "max": 1249.2900000000002,
+          "mean": 657.4050000000001
+        },
+        "expectedHitMeanBeforeResistance": 1074.805,
+        "expectedHitMeanAfterResistance": 451.4181000000001
+      },
+      "xmlSha256": "9ba17439b87fc073290fbcab74e4229b9530685da90375f4c4be8b0316e920a4",
+      "rawResistancePercent": 75,
+      "maximumResistanceMode": "configured",
+      "exposures": [],
+      "penetrationModifiers": [],
+      "resistanceEffects": {
+        "profile": "configured",
+        "baseResistancePercent": 75,
+        "maximumResistanceMode": "configured",
+        "maximumResistancePercent": 75,
+        "minimumResistancePercent": -200,
+        "exposurePercent": 0,
+        "selectedExposureIndices": [],
+        "uncappedResistancePercent": 58,
+        "cappedResistancePercent": 58,
+        "penetrationPercent": 0,
+        "effectiveResistancePercent": 58,
+        "damageMultiplier": 0.42000000000000004
+      },
+      "shockEffects": {
+        "mode": "excluded",
+        "magnitudePercent": 0,
+        "uptimePercent": 0,
+        "shockedDamageMultiplier": 1.0,
+        "averageDamageMultiplier": 1.0,
+        "unshockedHitMeanAfterResistance": 451.4181000000001,
+        "shockedHitMeanAfterResistance": 451.4181000000001,
+        "normalHitMeanAfterShock": 438.27000000000004,
+        "criticalHitMeanAfterShock": 657.4050000000001,
+        "expectedHitMeanAfterShock": 451.4181000000001
+      },
+      "supportIncreasedCastSpeedPercent": 0,
+      "conductivity": {
+        "id": "Conductivity",
+        "gemLevel": 1,
+        "quality": 0,
+        "enabled": true,
+        "increasedEffectPercent": 0,
+        "source": {
+          "kind": "scenario",
+          "id": "pob-gem:2:1",
+          "label": "Conductivity"
+        },
+        "effectSource": {
+          "kind": "scenario",
+          "id": "pob-config:conductivity-effect",
+          "label": "0% increased Effect of your Curses",
+          "line": 1
+        }
+      },
+      "conductivityEffects": {
+        "baseLightningResistancePercent": -17,
+        "effectMultiplier": 1.0,
+        "scaledLightningResistancePercent": -17.0,
+        "roundedLightningResistancePercent": -17.0,
+        "truncatedLightningResistancePercent": -17,
+        "appliedLightningResistancePercent": -17,
+        "durationMilliseconds": 8000,
+        "radiusIncrement": 0
+      },
+      "unshockedHitDps": 752.3635000000002,
+      "unshockedCombinedDps": 752.3635000000002
+    },
+    {
+      "fixture": "conductivity-level20",
+      "contributions": [],
+      "increasedDamagePercent": 0,
+      "increasedCastSpeedPercent": 0,
+      "effectiveLightningResistancePercent": 39,
+      "beforeResistance": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "afterResistance": {
+        "min": 63.44,
+        "max": 1209.6299999999999,
+        "mean": 636.535
+      },
+      "castTimeSeconds": 0.6,
+      "castsPerSecond": 1.6666666666666667,
+      "hitDps": 1092.7184166666668,
+      "combinedDps": 1092.7184166666668,
+      "gemLevel": 20,
+      "baseLightningDamage": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "addedGroups": [],
+      "rawAddedLightningDamage": {
+        "min": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "effectiveAddedLightningDamage": {
+        "min": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "combinedBaseLightningDamage": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "addedDamageEffectiveness": 1.9,
+      "supports": [],
+      "supportContributions": [],
+      "spellDamageMultiplier": 1,
+      "criticalChanceMultiplier": 1,
+      "castTimeMultiplier": 1,
+      "manaCostMultiplier": 1,
+      "criticalMode": "average",
+      "criticalModifiers": [],
+      "criticalEffects": {
+        "mode": "average",
+        "baseChancePercent": 6,
+        "increasedChancePercent": 0,
+        "lessChanceMultiplier": 1,
+        "unroundedChancePercent": 6,
+        "roundedChancePercent": 6,
+        "chancePercent": 6,
+        "baseMultiplierPercent": 150,
+        "addedMultiplierPercent": 0,
+        "criticalMultiplier": 1.5,
+        "criticalHitBeforeResistance": {
+          "min": 156,
+          "max": 2974.5,
+          "mean": 1565.25
+        },
+        "criticalHitAfterResistance": {
+          "min": 95.16,
+          "max": 1814.445,
+          "mean": 954.8025
+        },
+        "expectedHitMeanBeforeResistance": 1074.805,
+        "expectedHitMeanAfterResistance": 655.6310500000001
+      },
+      "xmlSha256": "b7157a85ed9b2163a22fbde98207b2d815add58e28d46f88adf0cb69acbedc69",
+      "rawResistancePercent": 75,
+      "maximumResistanceMode": "configured",
+      "exposures": [],
+      "penetrationModifiers": [],
+      "resistanceEffects": {
+        "profile": "configured",
+        "baseResistancePercent": 75,
+        "maximumResistanceMode": "configured",
+        "maximumResistancePercent": 75,
+        "minimumResistancePercent": -200,
+        "exposurePercent": 0,
+        "selectedExposureIndices": [],
+        "uncappedResistancePercent": 39,
+        "cappedResistancePercent": 39,
+        "penetrationPercent": 0,
+        "effectiveResistancePercent": 39,
+        "damageMultiplier": 0.61
+      },
+      "shockEffects": {
+        "mode": "excluded",
+        "magnitudePercent": 0,
+        "uptimePercent": 0,
+        "shockedDamageMultiplier": 1.0,
+        "averageDamageMultiplier": 1.0,
+        "unshockedHitMeanAfterResistance": 655.6310500000001,
+        "shockedHitMeanAfterResistance": 655.6310500000001,
+        "normalHitMeanAfterShock": 636.535,
+        "criticalHitMeanAfterShock": 954.8025,
+        "expectedHitMeanAfterShock": 655.6310500000001
+      },
+      "supportIncreasedCastSpeedPercent": 0,
+      "conductivity": {
+        "id": "Conductivity",
+        "gemLevel": 20,
+        "quality": 0,
+        "enabled": true,
+        "increasedEffectPercent": 0,
+        "source": {
+          "kind": "scenario",
+          "id": "pob-gem:2:1",
+          "label": "Conductivity"
+        },
+        "effectSource": {
+          "kind": "scenario",
+          "id": "pob-config:conductivity-effect",
+          "label": "0% increased Effect of your Curses",
+          "line": 1
+        }
+      },
+      "conductivityEffects": {
+        "baseLightningResistancePercent": -36,
+        "effectMultiplier": 1.0,
+        "scaledLightningResistancePercent": -36.0,
+        "roundedLightningResistancePercent": -36.0,
+        "truncatedLightningResistancePercent": -36,
+        "appliedLightningResistancePercent": -36,
+        "durationMilliseconds": 11800,
+        "radiusIncrement": 10
+      },
+      "unshockedHitDps": 1092.7184166666668,
+      "unshockedCombinedDps": 1092.7184166666668
+    },
+    {
+      "fixture": "conductivity-disabled",
+      "contributions": [],
+      "increasedDamagePercent": 0,
+      "increasedCastSpeedPercent": 0,
+      "effectiveLightningResistancePercent": 75,
+      "beforeResistance": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "afterResistance": {
+        "min": 26.0,
+        "max": 495.75,
+        "mean": 260.875
+      },
+      "castTimeSeconds": 0.6,
+      "castsPerSecond": 1.6666666666666667,
+      "hitDps": 447.83541666666673,
+      "combinedDps": 447.83541666666673,
+      "gemLevel": 20,
+      "baseLightningDamage": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "addedGroups": [],
+      "rawAddedLightningDamage": {
+        "min": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "effectiveAddedLightningDamage": {
+        "min": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "combinedBaseLightningDamage": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "addedDamageEffectiveness": 1.9,
+      "supports": [],
+      "supportContributions": [],
+      "spellDamageMultiplier": 1,
+      "criticalChanceMultiplier": 1,
+      "castTimeMultiplier": 1,
+      "manaCostMultiplier": 1,
+      "criticalMode": "average",
+      "criticalModifiers": [],
+      "criticalEffects": {
+        "mode": "average",
+        "baseChancePercent": 6,
+        "increasedChancePercent": 0,
+        "lessChanceMultiplier": 1,
+        "unroundedChancePercent": 6,
+        "roundedChancePercent": 6,
+        "chancePercent": 6,
+        "baseMultiplierPercent": 150,
+        "addedMultiplierPercent": 0,
+        "criticalMultiplier": 1.5,
+        "criticalHitBeforeResistance": {
+          "min": 156,
+          "max": 2974.5,
+          "mean": 1565.25
+        },
+        "criticalHitAfterResistance": {
+          "min": 39.0,
+          "max": 743.625,
+          "mean": 391.3125
+        },
+        "expectedHitMeanBeforeResistance": 1074.805,
+        "expectedHitMeanAfterResistance": 268.70125
+      },
+      "xmlSha256": "b3aadaa69f57cb2bab2e1ed36e42c108dd1f243ca41a3ce318e8bb8847e6f713",
+      "rawResistancePercent": 75,
+      "maximumResistanceMode": "configured",
+      "exposures": [],
+      "penetrationModifiers": [],
+      "resistanceEffects": {
+        "profile": "configured",
+        "baseResistancePercent": 75,
+        "maximumResistanceMode": "configured",
+        "maximumResistancePercent": 75,
+        "minimumResistancePercent": -200,
+        "exposurePercent": 0,
+        "selectedExposureIndices": [],
+        "uncappedResistancePercent": 75,
+        "cappedResistancePercent": 75,
+        "penetrationPercent": 0,
+        "effectiveResistancePercent": 75,
+        "damageMultiplier": 0.25
+      },
+      "shockEffects": {
+        "mode": "excluded",
+        "magnitudePercent": 0,
+        "uptimePercent": 0,
+        "shockedDamageMultiplier": 1.0,
+        "averageDamageMultiplier": 1.0,
+        "unshockedHitMeanAfterResistance": 268.70125,
+        "shockedHitMeanAfterResistance": 268.70125,
+        "normalHitMeanAfterShock": 260.875,
+        "criticalHitMeanAfterShock": 391.3125,
+        "expectedHitMeanAfterShock": 268.70125
+      },
+      "supportIncreasedCastSpeedPercent": 0,
+      "conductivity": {
+        "id": "Conductivity",
+        "gemLevel": 20,
+        "quality": 0,
+        "enabled": false,
+        "increasedEffectPercent": 0,
+        "source": {
+          "kind": "scenario",
+          "id": "pob-gem:2:1",
+          "label": "Conductivity"
+        },
+        "effectSource": {
+          "kind": "scenario",
+          "id": "pob-config:conductivity-effect",
+          "label": "0% increased Effect of your Curses",
+          "line": 1
+        }
+      },
+      "conductivityEffects": {
+        "baseLightningResistancePercent": -36,
+        "effectMultiplier": 1.0,
+        "scaledLightningResistancePercent": -36.0,
+        "roundedLightningResistancePercent": -36.0,
+        "truncatedLightningResistancePercent": -36,
+        "appliedLightningResistancePercent": 0,
+        "durationMilliseconds": 11800,
+        "radiusIncrement": 10
+      },
+      "unshockedHitDps": 447.83541666666673,
+      "unshockedCombinedDps": 447.83541666666673
+    },
+    {
+      "fixture": "conductivity-rounded",
+      "contributions": [],
+      "increasedDamagePercent": 0,
+      "increasedCastSpeedPercent": 0,
+      "effectiveLightningResistancePercent": 54,
+      "beforeResistance": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "afterResistance": {
+        "min": 47.839999999999996,
+        "max": 912.18,
+        "mean": 480.01
+      },
+      "castTimeSeconds": 0.6,
+      "castsPerSecond": 1.6666666666666667,
+      "hitDps": 824.0171666666668,
+      "combinedDps": 824.0171666666668,
+      "gemLevel": 20,
+      "baseLightningDamage": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "addedGroups": [],
+      "rawAddedLightningDamage": {
+        "min": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "effectiveAddedLightningDamage": {
+        "min": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "combinedBaseLightningDamage": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "addedDamageEffectiveness": 1.9,
+      "supports": [],
+      "supportContributions": [],
+      "spellDamageMultiplier": 1,
+      "criticalChanceMultiplier": 1,
+      "castTimeMultiplier": 1,
+      "manaCostMultiplier": 1,
+      "criticalMode": "average",
+      "criticalModifiers": [],
+      "criticalEffects": {
+        "mode": "average",
+        "baseChancePercent": 6,
+        "increasedChancePercent": 0,
+        "lessChanceMultiplier": 1,
+        "unroundedChancePercent": 6,
+        "roundedChancePercent": 6,
+        "chancePercent": 6,
+        "baseMultiplierPercent": 150,
+        "addedMultiplierPercent": 0,
+        "criticalMultiplier": 1.5,
+        "criticalHitBeforeResistance": {
+          "min": 156,
+          "max": 2974.5,
+          "mean": 1565.25
+        },
+        "criticalHitAfterResistance": {
+          "min": 71.75999999999999,
+          "max": 1368.27,
+          "mean": 720.015
+        },
+        "expectedHitMeanBeforeResistance": 1074.805,
+        "expectedHitMeanAfterResistance": 494.4103
+      },
+      "xmlSha256": "6aaf20c6d8743ec23df4927d1dee2d20bb91c827b972ace4295922253e7982c0",
+      "rawResistancePercent": 75,
+      "maximumResistanceMode": "configured",
+      "exposures": [],
+      "penetrationModifiers": [],
+      "resistanceEffects": {
+        "profile": "configured",
+        "baseResistancePercent": 75,
+        "maximumResistanceMode": "configured",
+        "maximumResistancePercent": 75,
+        "minimumResistancePercent": -200,
+        "exposurePercent": 0,
+        "selectedExposureIndices": [],
+        "uncappedResistancePercent": 54,
+        "cappedResistancePercent": 54,
+        "penetrationPercent": 0,
+        "effectiveResistancePercent": 54,
+        "damageMultiplier": 0.45999999999999996
+      },
+      "shockEffects": {
+        "mode": "excluded",
+        "magnitudePercent": 0,
+        "uptimePercent": 0,
+        "shockedDamageMultiplier": 1.0,
+        "averageDamageMultiplier": 1.0,
+        "unshockedHitMeanAfterResistance": 494.4103,
+        "shockedHitMeanAfterResistance": 494.4103,
+        "normalHitMeanAfterShock": 480.01,
+        "criticalHitMeanAfterShock": 720.015,
+        "expectedHitMeanAfterShock": 494.4103
+      },
+      "supportIncreasedCastSpeedPercent": 0,
+      "conductivity": {
+        "id": "Conductivity",
+        "gemLevel": 1,
+        "quality": 0,
+        "enabled": true,
+        "increasedEffectPercent": 25,
+        "source": {
+          "kind": "scenario",
+          "id": "pob-gem:2:1",
+          "label": "Conductivity"
+        },
+        "effectSource": {
+          "kind": "scenario",
+          "id": "pob-config:conductivity-effect",
+          "label": "25% increased Effect of your Curses",
+          "line": 1
+        }
+      },
+      "conductivityEffects": {
+        "baseLightningResistancePercent": -17,
+        "effectMultiplier": 1.25,
+        "scaledLightningResistancePercent": -21.25,
+        "roundedLightningResistancePercent": -21.25,
+        "truncatedLightningResistancePercent": -21,
+        "appliedLightningResistancePercent": -21,
+        "durationMilliseconds": 8000,
+        "radiusIncrement": 0
+      },
+      "unshockedHitDps": 824.0171666666668,
+      "unshockedCombinedDps": 824.0171666666668
+    },
+    {
+      "fixture": "conductivity-reduced",
+      "contributions": [],
+      "increasedDamagePercent": 0,
+      "increasedCastSpeedPercent": 0,
+      "effectiveLightningResistancePercent": 67,
+      "beforeResistance": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "afterResistance": {
+        "min": 34.31999999999999,
+        "max": 654.3899999999999,
+        "mean": 344.35499999999996
+      },
+      "castTimeSeconds": 0.6,
+      "castsPerSecond": 1.6666666666666667,
+      "hitDps": 591.14275,
+      "combinedDps": 591.14275,
+      "gemLevel": 20,
+      "baseLightningDamage": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "addedGroups": [],
+      "rawAddedLightningDamage": {
+        "min": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "effectiveAddedLightningDamage": {
+        "min": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "combinedBaseLightningDamage": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "addedDamageEffectiveness": 1.9,
+      "supports": [],
+      "supportContributions": [],
+      "spellDamageMultiplier": 1,
+      "criticalChanceMultiplier": 1,
+      "castTimeMultiplier": 1,
+      "manaCostMultiplier": 1,
+      "criticalMode": "average",
+      "criticalModifiers": [],
+      "criticalEffects": {
+        "mode": "average",
+        "baseChancePercent": 6,
+        "increasedChancePercent": 0,
+        "lessChanceMultiplier": 1,
+        "unroundedChancePercent": 6,
+        "roundedChancePercent": 6,
+        "chancePercent": 6,
+        "baseMultiplierPercent": 150,
+        "addedMultiplierPercent": 0,
+        "criticalMultiplier": 1.5,
+        "criticalHitBeforeResistance": {
+          "min": 156,
+          "max": 2974.5,
+          "mean": 1565.25
+        },
+        "criticalHitAfterResistance": {
+          "min": 51.48,
+          "max": 981.5849999999999,
+          "mean": 516.5324999999999
+        },
+        "expectedHitMeanBeforeResistance": 1074.805,
+        "expectedHitMeanAfterResistance": 354.68564999999995
+      },
+      "xmlSha256": "e68e9e73b579f3ccc39f099e35f02989d775a9dd8623afce5aed483c4b2bad01",
+      "rawResistancePercent": 75,
+      "maximumResistanceMode": "configured",
+      "exposures": [],
+      "penetrationModifiers": [],
+      "resistanceEffects": {
+        "profile": "configured",
+        "baseResistancePercent": 75,
+        "maximumResistanceMode": "configured",
+        "maximumResistancePercent": 75,
+        "minimumResistancePercent": -200,
+        "exposurePercent": 0,
+        "selectedExposureIndices": [],
+        "uncappedResistancePercent": 67,
+        "cappedResistancePercent": 67,
+        "penetrationPercent": 0,
+        "effectiveResistancePercent": 67,
+        "damageMultiplier": 0.32999999999999996
+      },
+      "shockEffects": {
+        "mode": "excluded",
+        "magnitudePercent": 0,
+        "uptimePercent": 0,
+        "shockedDamageMultiplier": 1.0,
+        "averageDamageMultiplier": 1.0,
+        "unshockedHitMeanAfterResistance": 354.68564999999995,
+        "shockedHitMeanAfterResistance": 354.68564999999995,
+        "normalHitMeanAfterShock": 344.35499999999996,
+        "criticalHitMeanAfterShock": 516.5324999999999,
+        "expectedHitMeanAfterShock": 354.68564999999995
+      },
+      "supportIncreasedCastSpeedPercent": 0,
+      "conductivity": {
+        "id": "Conductivity",
+        "gemLevel": 1,
+        "quality": 0,
+        "enabled": true,
+        "increasedEffectPercent": -50,
+        "source": {
+          "kind": "scenario",
+          "id": "pob-gem:2:1",
+          "label": "Conductivity"
+        },
+        "effectSource": {
+          "kind": "scenario",
+          "id": "pob-config:conductivity-effect",
+          "label": "50% reduced Effect of your Curses",
+          "line": 1
+        }
+      },
+      "conductivityEffects": {
+        "baseLightningResistancePercent": -17,
+        "effectMultiplier": 0.5,
+        "scaledLightningResistancePercent": -8.5,
+        "roundedLightningResistancePercent": -8.5,
+        "truncatedLightningResistancePercent": -8,
+        "appliedLightningResistancePercent": -8,
+        "durationMilliseconds": 8000,
+        "radiusIncrement": 0
+      },
+      "unshockedHitDps": 591.14275,
+      "unshockedCombinedDps": 591.14275
+    },
+    {
+      "fixture": "conductivity-zero-effect",
+      "contributions": [],
+      "increasedDamagePercent": 0,
+      "increasedCastSpeedPercent": 0,
+      "effectiveLightningResistancePercent": 75,
+      "beforeResistance": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "afterResistance": {
+        "min": 26.0,
+        "max": 495.75,
+        "mean": 260.875
+      },
+      "castTimeSeconds": 0.6,
+      "castsPerSecond": 1.6666666666666667,
+      "hitDps": 447.83541666666673,
+      "combinedDps": 447.83541666666673,
+      "gemLevel": 20,
+      "baseLightningDamage": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "addedGroups": [],
+      "rawAddedLightningDamage": {
+        "min": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "effectiveAddedLightningDamage": {
+        "min": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "combinedBaseLightningDamage": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "addedDamageEffectiveness": 1.9,
+      "supports": [],
+      "supportContributions": [],
+      "spellDamageMultiplier": 1,
+      "criticalChanceMultiplier": 1,
+      "castTimeMultiplier": 1,
+      "manaCostMultiplier": 1,
+      "criticalMode": "average",
+      "criticalModifiers": [],
+      "criticalEffects": {
+        "mode": "average",
+        "baseChancePercent": 6,
+        "increasedChancePercent": 0,
+        "lessChanceMultiplier": 1,
+        "unroundedChancePercent": 6,
+        "roundedChancePercent": 6,
+        "chancePercent": 6,
+        "baseMultiplierPercent": 150,
+        "addedMultiplierPercent": 0,
+        "criticalMultiplier": 1.5,
+        "criticalHitBeforeResistance": {
+          "min": 156,
+          "max": 2974.5,
+          "mean": 1565.25
+        },
+        "criticalHitAfterResistance": {
+          "min": 39.0,
+          "max": 743.625,
+          "mean": 391.3125
+        },
+        "expectedHitMeanBeforeResistance": 1074.805,
+        "expectedHitMeanAfterResistance": 268.70125
+      },
+      "xmlSha256": "cab1cb0673d4dc6e512648d66d0e71e3798e7985cb88747b081bb7aa6ab248cb",
+      "rawResistancePercent": 75,
+      "maximumResistanceMode": "configured",
+      "exposures": [],
+      "penetrationModifiers": [],
+      "resistanceEffects": {
+        "profile": "configured",
+        "baseResistancePercent": 75,
+        "maximumResistanceMode": "configured",
+        "maximumResistancePercent": 75,
+        "minimumResistancePercent": -200,
+        "exposurePercent": 0,
+        "selectedExposureIndices": [],
+        "uncappedResistancePercent": 75,
+        "cappedResistancePercent": 75,
+        "penetrationPercent": 0,
+        "effectiveResistancePercent": 75,
+        "damageMultiplier": 0.25
+      },
+      "shockEffects": {
+        "mode": "excluded",
+        "magnitudePercent": 0,
+        "uptimePercent": 0,
+        "shockedDamageMultiplier": 1.0,
+        "averageDamageMultiplier": 1.0,
+        "unshockedHitMeanAfterResistance": 268.70125,
+        "shockedHitMeanAfterResistance": 268.70125,
+        "normalHitMeanAfterShock": 260.875,
+        "criticalHitMeanAfterShock": 391.3125,
+        "expectedHitMeanAfterShock": 268.70125
+      },
+      "supportIncreasedCastSpeedPercent": 0,
+      "conductivity": {
+        "id": "Conductivity",
+        "gemLevel": 20,
+        "quality": 0,
+        "enabled": true,
+        "increasedEffectPercent": -100,
+        "source": {
+          "kind": "scenario",
+          "id": "pob-gem:2:1",
+          "label": "Conductivity"
+        },
+        "effectSource": {
+          "kind": "scenario",
+          "id": "pob-config:conductivity-effect",
+          "label": "100% reduced Effect of your Curses",
+          "line": 1
+        }
+      },
+      "conductivityEffects": {
+        "baseLightningResistancePercent": -36,
+        "effectMultiplier": 0.0,
+        "scaledLightningResistancePercent": -0.0,
+        "roundedLightningResistancePercent": 0.0,
+        "truncatedLightningResistancePercent": 0,
+        "appliedLightningResistancePercent": 0,
+        "durationMilliseconds": 11800,
+        "radiusIncrement": 10
+      },
+      "unshockedHitDps": 447.83541666666673,
+      "unshockedCombinedDps": 447.83541666666673
+    },
+    {
+      "fixture": "conductivity-overcap",
+      "contributions": [],
+      "increasedDamagePercent": 0,
+      "increasedCastSpeedPercent": 0,
+      "effectiveLightningResistancePercent": 39,
+      "beforeResistance": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "afterResistance": {
+        "min": 63.44,
+        "max": 1209.6299999999999,
+        "mean": 636.535
+      },
+      "castTimeSeconds": 0.6,
+      "castsPerSecond": 1.6666666666666667,
+      "hitDps": 1092.7184166666668,
+      "combinedDps": 1092.7184166666668,
+      "gemLevel": 20,
+      "baseLightningDamage": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "addedGroups": [],
+      "rawAddedLightningDamage": {
+        "min": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "effectiveAddedLightningDamage": {
+        "min": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "combinedBaseLightningDamage": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "addedDamageEffectiveness": 1.9,
+      "supports": [],
+      "supportContributions": [],
+      "spellDamageMultiplier": 1,
+      "criticalChanceMultiplier": 1,
+      "castTimeMultiplier": 1,
+      "manaCostMultiplier": 1,
+      "criticalMode": "average",
+      "criticalModifiers": [],
+      "criticalEffects": {
+        "mode": "average",
+        "baseChancePercent": 6,
+        "increasedChancePercent": 0,
+        "lessChanceMultiplier": 1,
+        "unroundedChancePercent": 6,
+        "roundedChancePercent": 6,
+        "chancePercent": 6,
+        "baseMultiplierPercent": 150,
+        "addedMultiplierPercent": 0,
+        "criticalMultiplier": 1.5,
+        "criticalHitBeforeResistance": {
+          "min": 156,
+          "max": 2974.5,
+          "mean": 1565.25
+        },
+        "criticalHitAfterResistance": {
+          "min": 95.16,
+          "max": 1814.445,
+          "mean": 954.8025
+        },
+        "expectedHitMeanBeforeResistance": 1074.805,
+        "expectedHitMeanAfterResistance": 655.6310500000001
+      },
+      "xmlSha256": "0c1b5fb3191971c739b75416e2a1020c86834a9d64eb8035d945a3154bb03337",
+      "rawResistancePercent": 110,
+      "maximumResistanceMode": "configured",
+      "exposures": [
+        {
+          "statId": "lightning_exposure_on_hit_magnitude",
+          "value": -15,
+          "enabled": true,
+          "source": {
+            "kind": "scenario",
+            "id": "pob-config:exposure:Exposure 1",
+            "label": "Inflict Lightning Exposure on Hit, applying -15% to Lightning Resistance",
+            "line": 1
+          }
+        }
+      ],
+      "penetrationModifiers": [
+        {
+          "statId": "base_reduce_enemy_lightning_resistance_%",
+          "value": 20,
+          "line": 5
+        }
+      ],
+      "resistanceEffects": {
+        "profile": "configured",
+        "baseResistancePercent": 110,
+        "maximumResistanceMode": "configured",
+        "maximumResistancePercent": 90,
+        "minimumResistancePercent": -200,
+        "exposurePercent": -15,
+        "selectedExposureIndices": [0],
+        "uncappedResistancePercent": 59,
+        "cappedResistancePercent": 59,
+        "penetrationPercent": 20,
+        "effectiveResistancePercent": 39,
+        "damageMultiplier": 0.61
+      },
+      "shockEffects": {
+        "mode": "excluded",
+        "magnitudePercent": 0,
+        "uptimePercent": 0,
+        "shockedDamageMultiplier": 1.0,
+        "averageDamageMultiplier": 1.0,
+        "unshockedHitMeanAfterResistance": 655.6310500000001,
+        "shockedHitMeanAfterResistance": 655.6310500000001,
+        "normalHitMeanAfterShock": 636.535,
+        "criticalHitMeanAfterShock": 954.8025,
+        "expectedHitMeanAfterShock": 655.6310500000001
+      },
+      "supportIncreasedCastSpeedPercent": 0,
+      "conductivity": {
+        "id": "Conductivity",
+        "gemLevel": 20,
+        "quality": 0,
+        "enabled": true,
+        "increasedEffectPercent": 0,
+        "source": {
+          "kind": "scenario",
+          "id": "pob-gem:2:1",
+          "label": "Conductivity"
+        },
+        "effectSource": {
+          "kind": "scenario",
+          "id": "pob-config:conductivity-effect",
+          "label": "0% increased Effect of your Curses",
+          "line": 1
+        }
+      },
+      "conductivityEffects": {
+        "baseLightningResistancePercent": -36,
+        "effectMultiplier": 1.0,
+        "scaledLightningResistancePercent": -36.0,
+        "roundedLightningResistancePercent": -36.0,
+        "truncatedLightningResistancePercent": -36,
+        "appliedLightningResistancePercent": -36,
+        "durationMilliseconds": 11800,
+        "radiusIncrement": 10
+      },
+      "unshockedHitDps": 1092.7184166666668,
+      "unshockedCombinedDps": 1092.7184166666668
+    },
+    {
+      "fixture": "conductivity-floor",
+      "contributions": [],
+      "increasedDamagePercent": 0,
+      "increasedCastSpeedPercent": 0,
+      "effectiveLightningResistancePercent": -220,
+      "beforeResistance": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "afterResistance": {
+        "min": 332.8,
+        "max": 6345.6,
+        "mean": 3339.2000000000003
+      },
+      "castTimeSeconds": 0.6,
+      "castsPerSecond": 1.6666666666666667,
+      "hitDps": 5732.293333333334,
+      "combinedDps": 5732.293333333334,
+      "gemLevel": 20,
+      "baseLightningDamage": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "addedGroups": [],
+      "rawAddedLightningDamage": {
+        "min": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "effectiveAddedLightningDamage": {
+        "min": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "combinedBaseLightningDamage": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "addedDamageEffectiveness": 1.9,
+      "supports": [],
+      "supportContributions": [],
+      "spellDamageMultiplier": 1,
+      "criticalChanceMultiplier": 1,
+      "castTimeMultiplier": 1,
+      "manaCostMultiplier": 1,
+      "criticalMode": "average",
+      "criticalModifiers": [],
+      "criticalEffects": {
+        "mode": "average",
+        "baseChancePercent": 6,
+        "increasedChancePercent": 0,
+        "lessChanceMultiplier": 1,
+        "unroundedChancePercent": 6,
+        "roundedChancePercent": 6,
+        "chancePercent": 6,
+        "baseMultiplierPercent": 150,
+        "addedMultiplierPercent": 0,
+        "criticalMultiplier": 1.5,
+        "criticalHitBeforeResistance": {
+          "min": 156,
+          "max": 2974.5,
+          "mean": 1565.25
+        },
+        "criticalHitAfterResistance": {
+          "min": 499.20000000000005,
+          "max": 9518.4,
+          "mean": 5008.8
+        },
+        "expectedHitMeanBeforeResistance": 1074.805,
+        "expectedHitMeanAfterResistance": 3439.376
+      },
+      "xmlSha256": "c42a5bded261c4a70437e2f348dd28ac4a98fc18690dd208d76eee2fd1eaca43",
+      "rawResistancePercent": -190,
+      "maximumResistanceMode": "configured",
+      "exposures": [
+        {
+          "statId": "lightning_exposure_on_hit_magnitude",
+          "value": -30,
+          "enabled": true,
+          "source": {
+            "kind": "scenario",
+            "id": "pob-config:exposure:Exposure 1",
+            "label": "Inflict Lightning Exposure on Hit, applying -30% to Lightning Resistance",
+            "line": 1
+          }
+        }
+      ],
+      "penetrationModifiers": [
+        {
+          "statId": "base_reduce_enemy_lightning_resistance_%",
+          "value": 20,
+          "line": 5
+        }
+      ],
+      "resistanceEffects": {
+        "profile": "configured",
+        "baseResistancePercent": -190,
+        "maximumResistanceMode": "configured",
+        "maximumResistancePercent": 75,
+        "minimumResistancePercent": -200,
+        "exposurePercent": -30,
+        "selectedExposureIndices": [0],
+        "uncappedResistancePercent": -328,
+        "cappedResistancePercent": -200,
+        "penetrationPercent": 20,
+        "effectiveResistancePercent": -220,
+        "damageMultiplier": 3.2
+      },
+      "shockEffects": {
+        "mode": "excluded",
+        "magnitudePercent": 0,
+        "uptimePercent": 0,
+        "shockedDamageMultiplier": 1.0,
+        "averageDamageMultiplier": 1.0,
+        "unshockedHitMeanAfterResistance": 3439.376,
+        "shockedHitMeanAfterResistance": 3439.376,
+        "normalHitMeanAfterShock": 3339.2000000000003,
+        "criticalHitMeanAfterShock": 5008.8,
+        "expectedHitMeanAfterShock": 3439.376
+      },
+      "supportIncreasedCastSpeedPercent": 0,
+      "conductivity": {
+        "id": "Conductivity",
+        "gemLevel": 20,
+        "quality": 0,
+        "enabled": true,
+        "increasedEffectPercent": 200,
+        "source": {
+          "kind": "scenario",
+          "id": "pob-gem:2:1",
+          "label": "Conductivity"
+        },
+        "effectSource": {
+          "kind": "scenario",
+          "id": "pob-config:conductivity-effect",
+          "label": "200% increased Effect of your Curses",
+          "line": 1
+        }
+      },
+      "conductivityEffects": {
+        "baseLightningResistancePercent": -36,
+        "effectMultiplier": 3.0,
+        "scaledLightningResistancePercent": -108.0,
+        "roundedLightningResistancePercent": -108.0,
+        "truncatedLightningResistancePercent": -108,
+        "appliedLightningResistancePercent": -108,
+        "durationMilliseconds": 11800,
+        "radiusIncrement": 10
+      },
+      "unshockedHitDps": 5732.293333333334,
+      "unshockedCombinedDps": 5732.293333333334
+    },
+    {
+      "fixture": "conductivity-combined",
+      "gemLevel": 20,
+      "increasedDamagePercent": 100,
+      "increasedCastSpeedPercent": 64,
+      "effectiveLightningResistancePercent": 30,
+      "contributions": [
+        {
+          "statId": "damage_+%",
+          "value": 10
+        },
+        {
+          "statId": "spell_damage_+%",
+          "value": 20
+        },
+        {
+          "statId": "lightning_damage_+%",
+          "value": 30
+        },
+        {
+          "statId": "projectile_damage_+%",
+          "value": 40
+        },
+        {
+          "statId": "base_cast_speed_+%",
+          "value": 25
+        }
+      ],
+      "baseLightningDamage": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "addedGroups": [
+        {
+          "statIds": [
+            "spell_minimum_added_lightning_damage",
+            "spell_maximum_added_lightning_damage"
+          ],
+          "values": [10, 20],
+          "source": {
+            "kind": "item",
+            "id": "pob-item:1",
+            "line": 5
+          }
+        }
+      ],
+      "rawAddedLightningDamage": {
+        "min": 10,
+        "max": 20,
+        "mean": 15
+      },
+      "addedDamageEffectiveness": 1.9,
+      "effectiveAddedLightningDamage": {
+        "min": 19,
+        "max": 38,
+        "mean": 28.5
+      },
+      "combinedBaseLightningDamage": {
+        "min": 123,
+        "max": 2021,
+        "mean": 1072
+      },
+      "beforeResistance": {
+        "min": 342,
+        "max": 5618,
+        "mean": 2980
+      },
+      "afterResistance": {
+        "min": 239.39999999999998,
+        "max": 3932.6,
+        "mean": 2086.0
+      },
+      "castTimeSeconds": 0.36585365853658536,
+      "castsPerSecond": 2.7333333333333334,
+      "hitDps": 6272.134736000001,
+      "combinedDps": 6272.134736000001,
+      "supports": [
+        {
+          "id": "SupportControlledDestruction",
+          "gemLevel": 20,
+          "quality": 0,
+          "enabled": true,
+          "source": {
+            "kind": "skill",
+            "id": "pob-gem:1:2",
+            "label": "Controlled Destruction"
+          }
+        },
+        {
+          "id": "SupportFasterCasting",
+          "gemLevel": 20,
+          "quality": 0,
+          "enabled": true,
+          "source": {
+            "kind": "skill",
+            "id": "pob-gem:1:3",
+            "label": "Faster Casting"
+          }
+        }
+      ],
+      "supportContributions": [
+        {
+          "statId": "support_controlled_destruction_spell_damage_+%_final",
+          "value": 39,
+          "operation": "more-spell-damage",
+          "appliedToSelectedHit": true,
+          "appliedToCastRate": false
+        },
+        {
+          "statId": "support_controlled_destruction_critical_strike_chance_+%_final",
+          "value": -80,
+          "operation": "less-critical-strike-chance",
+          "appliedToSelectedHit": true,
+          "appliedToCastRate": false
+        },
+        {
+          "statId": "base_cast_speed_+%",
+          "value": 39,
+          "operation": "increased-cast-speed",
+          "appliedToSelectedHit": false,
+          "appliedToCastRate": true
+        }
+      ],
+      "spellDamageMultiplier": 1.3900000000000001,
+      "criticalChanceMultiplier": 0.2,
+      "castTimeMultiplier": 1,
+      "manaCostMultiplier": 1.54,
+      "criticalMode": "average",
+      "criticalModifiers": [
+        {
+          "statId": "critical_strike_chance_+%",
+          "value": 100,
+          "line": 11
+        },
+        {
+          "statId": "spell_critical_strike_chance_+%",
+          "value": 50,
+          "line": 12
+        },
+        {
+          "statId": "base_critical_strike_multiplier_+",
+          "value": 50,
+          "line": 13
+        }
+      ],
+      "criticalEffects": {
+        "mode": "average",
+        "baseChancePercent": 6,
+        "increasedChancePercent": 150,
+        "lessChanceMultiplier": 0.2,
+        "unroundedChancePercent": 3,
+        "roundedChancePercent": 3,
+        "chancePercent": 3,
+        "baseMultiplierPercent": 150,
+        "addedMultiplierPercent": 50,
+        "criticalMultiplier": 2,
+        "criticalHitBeforeResistance": {
+          "min": 684,
+          "max": 11236,
+          "mean": 5960
+        },
+        "criticalHitAfterResistance": {
+          "min": 478.79999999999995,
+          "max": 7865.2,
+          "mean": 4172.0
+        },
+        "expectedHitMeanBeforeResistance": 3069.4,
+        "expectedHitMeanAfterResistance": 2148.58
+      },
+      "rawResistancePercent": 110,
+      "maximumResistanceMode": "configured",
+      "exposures": [
+        {
+          "statId": "lightning_exposure_on_hit_magnitude",
+          "value": -15,
+          "enabled": true,
+          "source": {
+            "kind": "scenario",
+            "id": "pob-config:exposure:Exposure 1",
+            "label": "Inflict Lightning Exposure on Hit, applying -15% to Lightning Resistance",
+            "line": 1
+          }
+        }
+      ],
+      "penetrationModifiers": [
+        {
+          "statId": "base_reduce_enemy_lightning_resistance_%",
+          "value": 20,
+          "line": 14
+        }
+      ],
+      "resistanceEffects": {
+        "profile": "configured",
+        "baseResistancePercent": 110,
+        "maximumResistanceMode": "configured",
+        "maximumResistancePercent": 90,
+        "minimumResistancePercent": -200,
+        "exposurePercent": -15,
+        "selectedExposureIndices": [0],
+        "uncappedResistancePercent": 50,
+        "cappedResistancePercent": 50,
+        "penetrationPercent": 20,
+        "effectiveResistancePercent": 30,
+        "damageMultiplier": 0.7
+      },
+      "xmlSha256": "e7ca9041c24252c2d9e798ae8f9a06623c629535cfccf507b9597c9389891ef1",
+      "comparisonKind": "host-weighted-executed-pob-endpoints",
+      "shock": {
+        "magnitudePercent": 17,
+        "uptimePercent": 40,
+        "source": {
+          "kind": "scenario",
+          "id": "pob-config:shock",
+          "label": "conditionEnemyShocked=true; conditionShockEffect=17; host shockUptimePercent=40"
+        }
+      },
+      "oracleEndpoints": {
+        "shockedXmlSha256": "e7ca9041c24252c2d9e798ae8f9a06623c629535cfccf507b9597c9389891ef1",
+        "unshockedXmlSha256": "af85e057368e56a0d6cd7966c1ea7a0fc49ee39535b57e1b593dee5f450cfb95",
+        "unshockedXmlTransformation": "replace the sole conditionEnemyShocked boolean true with false; all other XML bytes unchanged"
+      },
+      "unshockedHitDps": 5872.785333333333,
+      "unshockedCombinedDps": 5872.785333333333,
+      "shockEffects": {
+        "mode": "configured",
+        "magnitudePercent": 17,
+        "uptimePercent": 40,
+        "shockedDamageMultiplier": 1.17,
+        "averageDamageMultiplier": 1.068,
+        "unshockedHitMeanAfterResistance": 2148.58,
+        "shockedHitMeanAfterResistance": 2513.8385999999996,
+        "normalHitMeanAfterShock": 2227.848,
+        "criticalHitMeanAfterShock": 4455.696,
+        "expectedHitMeanAfterShock": 2294.6834400000002
+      },
+      "supportIncreasedCastSpeedPercent": 39,
+      "conductivity": {
+        "id": "Conductivity",
+        "gemLevel": 20,
+        "quality": 0,
+        "enabled": true,
+        "increasedEffectPercent": 25,
+        "source": {
+          "kind": "scenario",
+          "id": "pob-gem:2:1",
+          "label": "Conductivity"
+        },
+        "effectSource": {
+          "kind": "scenario",
+          "id": "pob-config:conductivity-effect",
+          "label": "25% increased Effect of your Curses",
+          "line": 1
+        }
+      },
+      "conductivityEffects": {
+        "baseLightningResistancePercent": -36,
+        "effectMultiplier": 1.25,
+        "scaledLightningResistancePercent": -45.0,
+        "roundedLightningResistancePercent": -45.0,
+        "truncatedLightningResistancePercent": -45,
+        "appliedLightningResistancePercent": -45,
+        "durationMilliseconds": 11800,
+        "radiusIncrement": 10
+      }
     }
   ],
   "oracle": {
     "executedOn": "2026-11-10",
     "mode": "official-headless-wrapper",
-    "fixtureInputs": "53 exact UTF-8 XML fixtures plus 9 explicitly derived unshocked endpoint XML variants; no injected calculation rules",
+    "fixtureInputs": "62 exact UTF-8 XML fixtures plus 10 explicitly derived unshocked endpoint XML variants; no injected calculation rules",
     "outputFile": "tests/fixtures/pob-oracle-output.json",
-    "outputSha256": "36397e378604bab682597d13c4c362c4128ca4594ffb90c90e568f381a6d75e1",
+    "outputSha256": "efa605fd34e715cdd4aa99eb9607025b4b7725c568813bb0f50b509ef811663c",
     "numericSerialization": "17 significant digits",
     "host": {
       "platform": "windows-x64",
       "python": "3.13.7",
       "binding": "external ctypes host; no observer code stored in Exile Engine",
-      "observerSha256": "e062d2acbb0f21c6193368043caeeb40e14e52bbb15a76ac19369803a26b6aa4"
+      "observerSha256": "f4d6d86b26a69f72bf5215038341fd8170be5d80aca83fb95a0be2c04b0c1739"
     },
     "runtime": {
       "gitRevision": "3dbca4463c0a59079d9f7f032d8240cf868e09da",
@@ -7649,5 +9066,92 @@
     },
     "timingAssumption": "Add this increased cast speed to applicable item cast speed before positive-rate validation and two-decimal speed-multiplier rounding; the active Spark base time remains 0.6s, no repeats/triggers/additional hits, capped at 1/0.033 casts per second.",
     "xmlScalarDomain": "All five damage/cast item scalar lines require safe integer values; pinned PoB rounds fractional values per item line before the Speed sum. Direct canonical API decimals have separate arithmetic tests and are not claimed as identical XML imports."
+  },
+  "conductivityReference": {
+    "id": "Conductivity",
+    "gameItemId": "Metadata/Items/Gems/SkillGemConductivity",
+    "name": "Conductivity",
+    "minimumGemLevel": 1,
+    "maximumGemLevel": 20,
+    "quality": 0,
+    "resistanceStatId": "base_lightning_damage_resistance_%",
+    "chanceStatId": "chance_to_be_shocked_%",
+    "effectStatId": "curse_effect_+%",
+    "baseChanceToBeShockedPercent": 25,
+    "resistanceByLevel": [
+      -17, -18, -19, -20, -21, -22, -23, -24, -25, -26, -27, -28, -29, -30, -31, -32, -33, -34, -35,
+      -36
+    ],
+    "durationMillisecondsByLevel": [
+      8000, 8200, 8400, 8600, 8800, 9000, 9200, 9400, 9600, 9800, 10000, 10200, 10400, 10600, 10800,
+      11000, 11200, 11400, 11600, 11800
+    ],
+    "radiusIncrementByLevel": [0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10],
+    "ruleSource": {
+      "kind": "external",
+      "id": "pob:3dbca4463c0a59079d9f7f032d8240cf868e09da:CalcPerform:2697-2713;ModStore:56-83;CalcOffence:494-506",
+      "label": "Pinned PoE1 already-active Conductivity: scale each curse stat, round to two decimals then truncate toward zero; add resistance reduction before caps and penetration."
+    },
+    "sourceRows": {
+      "grantedEffect": {
+        "table": "GrantedEffects",
+        "key": "Conductivity",
+        "rowIndex": 2430
+      },
+      "statSet": {
+        "table": "GrantedEffectStatSets",
+        "key": "Conductivity",
+        "rowIndex": 2440
+      },
+      "activeSkill": {
+        "table": "ActiveSkills",
+        "key": "conductivity",
+        "rowIndex": 307
+      },
+      "skillGem": {
+        "table": "SkillGems",
+        "key": "SkillGems:184",
+        "rowIndex": 184
+      },
+      "gemEffect": {
+        "table": "GemEffects",
+        "key": "Conductivity",
+        "rowIndex": 322
+      },
+      "baseItem": {
+        "table": "BaseItemTypes",
+        "key": "Metadata/Items/Gems/SkillGemConductivity",
+        "rowIndex": 1809
+      }
+    },
+    "statRows": [
+      {
+        "table": "Stats",
+        "key": "base_lightning_damage_resistance_%",
+        "rowIndex": 150
+      },
+      {
+        "table": "Stats",
+        "key": "chance_to_be_shocked_%",
+        "rowIndex": 535
+      },
+      {
+        "table": "Stats",
+        "key": "curse_effect_+%",
+        "rowIndex": 1393
+      },
+      {
+        "table": "Stats",
+        "key": "base_skill_effect_duration",
+        "rowIndex": 358
+      },
+      {
+        "table": "Stats",
+        "key": "active_skill_base_radius_+",
+        "rowIndex": 5827
+      }
+    ],
+    "scaling": "trunc(round(baseStat * (1 + increasedEffectPercent / 100), 2)); preserve raw scaled and rounded values before truncation",
+    "applicationAssumption": "one externally configured already-active nonboss normal Conductivity; no application cost/cast timing, duration/uptime inference, hexproof, curse-limit competition, bosses, other curses or generated shock; chance-to-be-shocked side stat retained and excluded under explicit Cannot inflict Elemental Ailments policy"
   }
 }

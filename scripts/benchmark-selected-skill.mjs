@@ -49,6 +49,15 @@ const initial = {
       baseResistancePercent: 100,
       maximumResistanceMode: 'configured',
       source: { kind: 'scenario', id: 'synthetic-enemy-resistance', line: 1 },
+      conductivity: {
+        id: 'Conductivity',
+        gemLevel: 1,
+        quality: 0,
+        enabled: true,
+        increasedEffectPercent: 0,
+        source: { kind: 'scenario', id: 'synthetic-conductivity', line: 1 },
+        effectSource: { kind: 'scenario', id: 'synthetic-curse-effect', line: 1 },
+      },
       exposures: [
         {
           statId: 'lightning_exposure_on_hit_magnitude',
@@ -134,6 +143,11 @@ for (const mutation of [
   'faster-casting-level',
   'faster-casting-enabled',
   'support-order',
+  'conductivity-level',
+  'conductivity-enabled',
+  'conductivity-effect',
+  'conductivity-source',
+  'conductivity-membership',
 ]) {
   const states = [];
   const next = structuredClone(initial);
@@ -176,6 +190,22 @@ for (const mutation of [
       next.skill.supports = structuredClone(
         index % 2 === 0 ? initial.skill.supports : [...initial.skill.supports].reverse(),
       );
+    if (mutation === 'conductivity-level')
+      next.configuration.lightningResistance.conductivity.gemLevel = 1 + (index % 20);
+    if (mutation === 'conductivity-enabled')
+      next.configuration.lightningResistance.conductivity.enabled = index % 2 === 0;
+    if (mutation === 'conductivity-effect')
+      next.configuration.lightningResistance.conductivity.increasedEffectPercent =
+        (index % 301) - 100;
+    if (mutation === 'conductivity-source')
+      next.configuration.lightningResistance.conductivity.source.id = `synthetic-conductivity-${index}`;
+    if (mutation === 'conductivity-membership') {
+      if (index % 2 === 0)
+        next.configuration.lightningResistance.conductivity = structuredClone(
+          initial.configuration.lightningResistance.conductivity,
+        );
+      else delete next.configuration.lightningResistance.conductivity;
+    }
     states.push(structuredClone(next));
   }
   const check = value(createSelectedSkillSession(initial, dataset));
@@ -232,7 +262,7 @@ for (const mutation of [
 console.log(
   JSON.stringify(
     {
-      benchmark: 'selected-skill-batches-v7',
+      benchmark: 'selected-skill-batches-v8',
       engineRevision: selectedSkillEngineRevision,
       node: process.version,
       identity: dataset.identity,

@@ -82,7 +82,25 @@ lightningResistance: {
 
 Add penetration as sourced `modifiers` with the exact ID `base_reduce_enemy_lightning_resistance_%`, such as value 20. The strongest active exposure lowers uncapped resistance first; the reviewed maximum and -200% floor apply next; penetration subtracts last without another floor. The example resolves to 70% effective resistance. `'default75'` instead of `'configured'` fixes the maximum at 75% and resolves the example to 55%; configured mode derives the maximum as `min(max(raw, 75), 90)` to match the pinned PoB profile. Both normal and critical hits share the result.
 
-Raw resistance is an integer in -1000…1000, up to eight exposure candidates have signed integer magnitudes -100…0, and penetration values/sum are integers in 0…200. Candidates are explicit already-active state, with no on-hit chance or uptime inference. `resistanceEffects` retains all stages, individual penetration sources, exposure candidates/ties, rule attribution and source rows. Already-effective configurations retain their old behavior and reject any penetration occurrence to prevent ambiguous double application. Other caps, curses, conditional/critical-only penetration and resistance mechanics remain unsupported; see the full scope document for XML profiles and exact validation limits.
+Raw resistance is an integer in -1000…1000, up to eight exposure candidates have signed integer magnitudes -100…0, and penetration values/sum are integers in 0…200. Candidates are explicit already-active state, with no on-hit chance or uptime inference. `resistanceEffects` retains all stages, individual penetration sources, exposure candidates/ties, rule attribution and source rows. Already-effective configurations retain their old behavior and reject any penetration occurrence to prevent ambiguous double application. Only configured Conductivity below extends the curse vocabulary; other caps/curses, conditional penetration and other resistance mechanics remain unsupported.
+
+Optional `lightningResistance.conductivity` supplies one already-active normal curse:
+
+```js
+conductivity: {
+  id: 'Conductivity',
+  gemLevel: 20,
+  quality: 0,
+  enabled: true,
+  increasedEffectPercent: 25,
+  source: { kind: 'scenario', id: 'active-conductivity' },
+  effectSource: { kind: 'scenario', id: 'explicit-curse-effect' },
+}
+```
+
+Levels 1–20, quality 0 and integer effect -100…200% are accepted, with both scenario sources required. Use an explicit `ailmentMode: 'excluded'` or `'configured-shock'`. Client resistance is -17% at level 1 through -36% at level 20. Scale by `1 + increasedEffectPercent / 100`, round to two decimals, then truncate toward zero. The example applies -45% resistance. Add this delta and strongest exposure to raw resistance before caps/floor; penetrate afterward. A level-one curse at +25% effect applies -21 from -21.25, rather than flooring to -22.
+
+`resistanceEffects.conductivity` is null when absent and otherwise reports the configuration, all scaling stages, exact resistance/effect contributions and their separate sources, raw duration/radius, rule/source rows and excluded shock chance. Conductivity's raw 25% chance to be shocked is scaled but explicitly not applied to the selected metric. Generated ailments, other curses, curse limits/immunity, boss/less-effect rules, application, coverage and uptime remain outside this already-active nonboss profile. Disabled or zero-effect curses keep provenance; missing facts fail even when disabled. The `conductivity-effects` node feeds uncapped resistance and downstream hit means, retaining base, support and cast caches on curse-only edits. Full and incremental checks include membership, source changes, exposure/penetration interactions, caps and failure/recovery.
 
 Explicit configured shock uses this configuration alongside either reviewed resistance profile:
 

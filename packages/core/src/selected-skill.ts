@@ -73,6 +73,59 @@ export interface SelectedLightningResistanceConfiguration {
   readonly maximumResistanceMode: 'configured' | 'default75';
   readonly source: SourceRef;
   readonly exposures: readonly SelectedLightningExposure[];
+  readonly conductivity?: SelectedConductivityConfiguration;
+}
+
+/** One already-active normal curse; no application, casting or uptime inference. */
+export interface SelectedConductivityConfiguration {
+  readonly id: 'Conductivity';
+  readonly gemLevel: number;
+  readonly quality: 0;
+  readonly enabled: boolean;
+  readonly increasedEffectPercent: number;
+  readonly source: SourceRef;
+  readonly effectSource: SourceRef;
+}
+
+export interface SelectedConductivityLevel {
+  readonly gemLevel: number;
+  readonly baseLightningResistancePercent: number;
+  readonly durationMilliseconds: number;
+  readonly radiusIncrement: number;
+  readonly sourceRows: readonly SourceRowRef[];
+}
+
+export interface SelectedConductivityDataset {
+  readonly identity: SnapshotIdentity;
+  readonly id: 'Conductivity';
+  readonly gemId: string;
+  readonly chanceToBeShockedPercent: 25;
+  readonly levels: readonly SelectedConductivityLevel[];
+  readonly ruleSource: SourceRef;
+  readonly sourceRows: readonly SourceRowRef[];
+}
+
+export interface SelectedConductivityTrace {
+  readonly configuration: SelectedConductivityConfiguration;
+  readonly baseLightningResistancePercent: number;
+  readonly effectMultiplier: number;
+  readonly scaledLightningResistancePercent: number;
+  readonly roundedLightningResistancePercent: number;
+  readonly truncatedLightningResistancePercent: number;
+  readonly appliedLightningResistancePercent: number;
+  readonly resistanceContribution: StatContribution;
+  readonly effectContribution: StatContribution;
+  readonly excludedShockChance: {
+    readonly statId: 'chance_to_be_shocked_%';
+    readonly basePercent: 25;
+    readonly scaledPercent: number;
+    readonly appliedToSelectedHit: false;
+    readonly source: SourceRef;
+  };
+  readonly durationMilliseconds: number;
+  readonly radiusIncrement: number;
+  readonly ruleSource: SourceRef;
+  readonly sourceRows: readonly SourceRowRef[];
 }
 
 export interface SelectedSkillResistanceDataset {
@@ -88,6 +141,7 @@ export interface SelectedSkillResistanceTrace {
   readonly maximumResistancePercent: number | null;
   readonly minimumResistancePercent: number | null;
   readonly exposurePercent: number;
+  readonly conductivity: SelectedConductivityTrace | null;
   readonly exposureContributions: readonly SelectedLightningExposure[];
   readonly selectedExposureIndices: readonly number[];
   readonly uncappedResistancePercent: number;
@@ -250,7 +304,7 @@ export interface SelectedSkillCalculation {
   readonly buildId: string;
   readonly configuration: SelectedSkillConfiguration;
   readonly skill: SelectedSkillSelection;
-  readonly engineRevision: 'poe1-selected-spark-v7';
+  readonly engineRevision: 'poe1-selected-spark-v8';
   readonly metric: 'selected-skill-hit-combined-dps';
   readonly hit: SparkCalculation;
   readonly addedLightningDamage: AddedLightningDamageTrace;

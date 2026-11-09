@@ -14,7 +14,13 @@ import {
   type SelectedSkillResistanceTrace,
   type SourceRef,
   type SparkDataset,
+  type SelectedConductivityTrace,
 } from '@exile-engine/core';
+import {
+  calculateSelectedConductivity,
+  copyConductivityTrace,
+  validConductivityConfiguration,
+} from './conductivity.js';
 
 const RULE_SOURCE: SourceRef = Object.freeze({
   kind: 'external',
@@ -54,7 +60,15 @@ export function validLightningResistanceConfiguration(value: unknown): boolean {
   if (
     !object(value) ||
     !own(value, ['baseResistancePercent', 'maximumResistanceMode', 'source', 'exposures']) ||
-    !keys(value, ['baseResistancePercent', 'maximumResistanceMode', 'source', 'exposures']) ||
+    !keys(value, [
+      'baseResistancePercent',
+      'maximumResistanceMode',
+      'source',
+      'exposures',
+      'conductivity',
+    ]) ||
+    (value.conductivity !== undefined && !Object.hasOwn(value, 'conductivity')) ||
+    (Object.hasOwn(value, 'conductivity') && !validConductivityConfiguration(value.conductivity)) ||
     !Number.isSafeInteger(value.baseResistancePercent) ||
     (value.baseResistancePercent as number) < -1000 ||
     (value.baseResistancePercent as number) > 1000 ||
@@ -197,6 +211,7 @@ export function capLightningResistance(
 export interface LightningResistanceStages {
   readonly exposurePercent: number;
   readonly selectedExposureIndices: readonly number[];
+  readonly conductivity: SelectedConductivityTrace | null;
   readonly uncappedResistancePercent: number;
   readonly maximumResistancePercent: number | null;
   readonly minimumResistancePercent: number | null;
@@ -243,6 +258,7 @@ export function assembleSelectedSkillResistance(
       raw?.baseResistancePercent ?? input.configuration.effectiveLightningResistancePercent!,
     maximumResistanceMode: raw?.maximumResistanceMode ?? 'already-effective',
     ...stages,
+    conductivity: copyConductivityTrace(stages.conductivity),
     selectedExposureIndices: [...stages.selectedExposureIndices],
     damageMultiplier,
     exposureContributions: (raw?.exposures ?? []).map((exposure) => ({
@@ -280,6 +296,7 @@ export function calculateSelectedSkillResistance(
     return assembleSelectedSkillResistance(input, dataset, {
       exposurePercent: 0,
       selectedExposureIndices: [],
+      conductivity: null,
       uncappedResistancePercent: effective,
       maximumResistancePercent: null,
       minimumResistancePercent: null,
@@ -289,7 +306,12 @@ export function calculateSelectedSkillResistance(
     });
   }
   const selected = selectLightningExposure(raw.exposures);
-  const uncappedResistancePercent = raw.baseResistancePercent + selected.exposurePercent;
+  const conductivity = calculateSelectedConductivity(input, dataset.conductivity);
+  if (!conductivity.ok) return conductivity;
+  const uncappedResistancePercent =
+    raw.baseResistancePercent +
+    selected.exposurePercent +
+    (conductivity.value?.appliedLightningResistancePercent ?? 0);
   const capped = capLightningResistance(
     raw.baseResistancePercent,
     uncappedResistancePercent,
@@ -300,6 +322,7 @@ export function calculateSelectedSkillResistance(
     .reduce((sum, mod) => sum + mod.value, 0);
   return assembleSelectedSkillResistance(input, dataset, {
     ...selected,
+    conductivity: conductivity.value,
     uncappedResistancePercent,
     ...capped,
     penetrationPercent,

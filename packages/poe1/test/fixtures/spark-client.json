@@ -165,6 +165,121 @@
         "Id": "base_damage_taken_+%_from_shock",
         "IsLocal": false,
         "IsWeaponLocal": false
+      },
+      {
+        "_index": 150,
+        "Id": "base_lightning_damage_resistance_%",
+        "IsPublic": true,
+        "IsLocal": false,
+        "IsWeaponLocal": false,
+        "Semantics": 1,
+        "IsParty": false,
+        "IsVirtual": false,
+        "MainHandAlias_StatsKey": null,
+        "OffHandAlias_StatsKey": null,
+        "IsProxied": true,
+        "HASH32": 1417405558,
+        "BelongsActiveSkillsKey": [],
+        "Category": {
+          "kind": "ref",
+          "table": "PassiveSkillStatCategories",
+          "key": "Resistances",
+          "rowIndex": 10
+        },
+        "@unknown:13": false,
+        "IsApplyDamageFunctionStat": false,
+        "IsScalable": true,
+        "ContextFlags": [],
+        "DotFlag": []
+      },
+      {
+        "_index": 535,
+        "Id": "chance_to_be_shocked_%",
+        "IsPublic": true,
+        "IsLocal": false,
+        "IsWeaponLocal": false,
+        "Semantics": 1,
+        "IsParty": false,
+        "IsVirtual": false,
+        "MainHandAlias_StatsKey": null,
+        "OffHandAlias_StatsKey": null,
+        "IsProxied": true,
+        "HASH32": 1244237611,
+        "BelongsActiveSkillsKey": [],
+        "Category": null,
+        "@unknown:13": false,
+        "IsApplyDamageFunctionStat": false,
+        "IsScalable": true,
+        "ContextFlags": [],
+        "DotFlag": []
+      },
+      {
+        "_index": 1393,
+        "Id": "curse_effect_+%",
+        "IsPublic": true,
+        "IsLocal": false,
+        "IsWeaponLocal": false,
+        "Semantics": 1,
+        "IsParty": false,
+        "IsVirtual": false,
+        "MainHandAlias_StatsKey": null,
+        "OffHandAlias_StatsKey": null,
+        "IsProxied": true,
+        "HASH32": 1845297819,
+        "BelongsActiveSkillsKey": [],
+        "Category": {
+          "kind": "ref",
+          "table": "PassiveSkillStatCategories",
+          "key": "Other Offensive Stats",
+          "rowIndex": 6
+        },
+        "@unknown:13": false,
+        "IsApplyDamageFunctionStat": false,
+        "IsScalable": true,
+        "ContextFlags": [],
+        "DotFlag": []
+      },
+      {
+        "_index": 3026,
+        "Id": "base_deal_no_damage",
+        "IsPublic": false,
+        "IsLocal": false,
+        "IsWeaponLocal": false,
+        "Semantics": 4,
+        "IsParty": false,
+        "IsVirtual": false,
+        "MainHandAlias_StatsKey": null,
+        "OffHandAlias_StatsKey": null,
+        "IsProxied": false,
+        "HASH32": 2257170321,
+        "BelongsActiveSkillsKey": [],
+        "Category": null,
+        "@unknown:13": false,
+        "IsApplyDamageFunctionStat": false,
+        "IsScalable": false,
+        "ContextFlags": [],
+        "DotFlag": []
+      },
+      {
+        "_index": 5827,
+        "Id": "active_skill_base_radius_+",
+        "IsPublic": true,
+        "IsLocal": false,
+        "IsWeaponLocal": false,
+        "Semantics": 3,
+        "IsParty": true,
+        "IsVirtual": false,
+        "MainHandAlias_StatsKey": null,
+        "OffHandAlias_StatsKey": null,
+        "IsProxied": true,
+        "HASH32": 2050194113,
+        "BelongsActiveSkillsKey": [],
+        "Category": null,
+        "@unknown:13": true,
+        "IsApplyDamageFunctionStat": false,
+        "IsScalable": true,
+        "ContextFlags": [],
+        "DotFlag": []
       }
     ],
     "GrantedEffects": [
@@ -282,6 +397,42 @@
         "@unknown:25": false,
         "StatSet1": 1112,
         "StatSet2": []
+      },
+      {
+        "_index": 2430,
+        "Id": "Conductivity",
+        "IsSupport": false,
+        "AllowedActiveSkillTypes": [],
+        "SupportGemLetter": "",
+        "Attribute": 3,
+        "AddedActiveSkillTypes": [],
+        "ExcludedActiveSkillTypes": [],
+        "SupportsGemsOnly": false,
+        "HASH32": 2867330025,
+        "@unknown:9": [],
+        "CannotBeSupported": false,
+        "LifeLeechBehaviourCategory": 2,
+        "CastTime": 500,
+        "ActiveSkill": {
+          "kind": "ref",
+          "table": "ActiveSkills",
+          "key": "conductivity",
+          "rowIndex": 307
+        },
+        "IgnoreMinionTypes": false,
+        "CooldownNotRecoverDuringActive": false,
+        "AddedMinionActiveSkillTypes": [],
+        "Animation": null,
+        "MultiPartAchievement": null,
+        "@unknown:19": false,
+        "SupportWeaponRestrictions": [],
+        "RegularVariant": null,
+        "SkillID": 0,
+        "@unknown:23": 0,
+        "@unknown:24": 0,
+        "@unknown:25": false,
+        "StatSet1": 2440,
+        "StatSet2": []
       }
     ],
     "GrantedEffectStatSets": [
@@ -311,6 +462,16 @@
         "ConstantStats": [],
         "ConstantStatsValues": [],
         "BaseEffectiveness": 0,
+        "@unknown:5": 0,
+        "IncrementalEffectiveness": 0
+      },
+      {
+        "_index": 2440,
+        "Id": "Conductivity",
+        "ImplicitStats": [3026],
+        "ConstantStats": [535],
+        "ConstantStatsValues": [25],
+        "BaseEffectiveness": 1,
         "@unknown:5": 0,
         "IncrementalEffectiveness": 0
       }
@@ -1915,6 +2076,526 @@
         "AdditionalStats": [218],
         "StatInterpolations": [1],
         "FloatStatsValues": []
+      },
+      {
+        "_index": 23027,
+        "StatSet": 2440,
+        "GemLevel": 1,
+        "PlayerLevelReq": 24,
+        "SpellCritChance": 0,
+        "AttackCritChance": 0,
+        "BaseMultiplier": 0,
+        "DamageEffectiveness": 0,
+        "BaseResolvedValues": [],
+        "AdditionalStatsValues": [8000, 0, -17],
+        "GrantedEffects": [
+          {
+            "kind": "ref",
+            "table": "GrantedEffects",
+            "key": "Conductivity",
+            "rowIndex": 2430
+          }
+        ],
+        "AdditionalFlags": [],
+        "FloatStats": [],
+        "InterpolationBases": [],
+        "AdditionalStats": [358, 5827, 150],
+        "StatInterpolations": [1, 1, 1],
+        "FloatStatsValues": []
+      },
+      {
+        "_index": 23028,
+        "StatSet": 2440,
+        "GemLevel": 2,
+        "PlayerLevelReq": 27,
+        "SpellCritChance": 0,
+        "AttackCritChance": 0,
+        "BaseMultiplier": 0,
+        "DamageEffectiveness": 0,
+        "BaseResolvedValues": [],
+        "AdditionalStatsValues": [8200, 1, -18],
+        "GrantedEffects": [
+          {
+            "kind": "ref",
+            "table": "GrantedEffects",
+            "key": "Conductivity",
+            "rowIndex": 2430
+          }
+        ],
+        "AdditionalFlags": [],
+        "FloatStats": [],
+        "InterpolationBases": [],
+        "AdditionalStats": [358, 5827, 150],
+        "StatInterpolations": [1, 1, 1],
+        "FloatStatsValues": []
+      },
+      {
+        "_index": 23029,
+        "StatSet": 2440,
+        "GemLevel": 3,
+        "PlayerLevelReq": 30,
+        "SpellCritChance": 0,
+        "AttackCritChance": 0,
+        "BaseMultiplier": 0,
+        "DamageEffectiveness": 0,
+        "BaseResolvedValues": [],
+        "AdditionalStatsValues": [8400, 1, -19],
+        "GrantedEffects": [
+          {
+            "kind": "ref",
+            "table": "GrantedEffects",
+            "key": "Conductivity",
+            "rowIndex": 2430
+          }
+        ],
+        "AdditionalFlags": [],
+        "FloatStats": [],
+        "InterpolationBases": [],
+        "AdditionalStats": [358, 5827, 150],
+        "StatInterpolations": [1, 1, 1],
+        "FloatStatsValues": []
+      },
+      {
+        "_index": 23030,
+        "StatSet": 2440,
+        "GemLevel": 4,
+        "PlayerLevelReq": 33,
+        "SpellCritChance": 0,
+        "AttackCritChance": 0,
+        "BaseMultiplier": 0,
+        "DamageEffectiveness": 0,
+        "BaseResolvedValues": [],
+        "AdditionalStatsValues": [8600, 2, -20],
+        "GrantedEffects": [
+          {
+            "kind": "ref",
+            "table": "GrantedEffects",
+            "key": "Conductivity",
+            "rowIndex": 2430
+          }
+        ],
+        "AdditionalFlags": [],
+        "FloatStats": [],
+        "InterpolationBases": [],
+        "AdditionalStats": [358, 5827, 150],
+        "StatInterpolations": [1, 1, 1],
+        "FloatStatsValues": []
+      },
+      {
+        "_index": 23031,
+        "StatSet": 2440,
+        "GemLevel": 5,
+        "PlayerLevelReq": 36,
+        "SpellCritChance": 0,
+        "AttackCritChance": 0,
+        "BaseMultiplier": 0,
+        "DamageEffectiveness": 0,
+        "BaseResolvedValues": [],
+        "AdditionalStatsValues": [8800, 2, -21],
+        "GrantedEffects": [
+          {
+            "kind": "ref",
+            "table": "GrantedEffects",
+            "key": "Conductivity",
+            "rowIndex": 2430
+          }
+        ],
+        "AdditionalFlags": [],
+        "FloatStats": [],
+        "InterpolationBases": [],
+        "AdditionalStats": [358, 5827, 150],
+        "StatInterpolations": [1, 1, 1],
+        "FloatStatsValues": []
+      },
+      {
+        "_index": 23032,
+        "StatSet": 2440,
+        "GemLevel": 6,
+        "PlayerLevelReq": 39,
+        "SpellCritChance": 0,
+        "AttackCritChance": 0,
+        "BaseMultiplier": 0,
+        "DamageEffectiveness": 0,
+        "BaseResolvedValues": [],
+        "AdditionalStatsValues": [9000, 3, -22],
+        "GrantedEffects": [
+          {
+            "kind": "ref",
+            "table": "GrantedEffects",
+            "key": "Conductivity",
+            "rowIndex": 2430
+          }
+        ],
+        "AdditionalFlags": [],
+        "FloatStats": [],
+        "InterpolationBases": [],
+        "AdditionalStats": [358, 5827, 150],
+        "StatInterpolations": [1, 1, 1],
+        "FloatStatsValues": []
+      },
+      {
+        "_index": 23033,
+        "StatSet": 2440,
+        "GemLevel": 7,
+        "PlayerLevelReq": 42,
+        "SpellCritChance": 0,
+        "AttackCritChance": 0,
+        "BaseMultiplier": 0,
+        "DamageEffectiveness": 0,
+        "BaseResolvedValues": [],
+        "AdditionalStatsValues": [9200, 3, -23],
+        "GrantedEffects": [
+          {
+            "kind": "ref",
+            "table": "GrantedEffects",
+            "key": "Conductivity",
+            "rowIndex": 2430
+          }
+        ],
+        "AdditionalFlags": [],
+        "FloatStats": [],
+        "InterpolationBases": [],
+        "AdditionalStats": [358, 5827, 150],
+        "StatInterpolations": [1, 1, 1],
+        "FloatStatsValues": []
+      },
+      {
+        "_index": 23034,
+        "StatSet": 2440,
+        "GemLevel": 8,
+        "PlayerLevelReq": 45,
+        "SpellCritChance": 0,
+        "AttackCritChance": 0,
+        "BaseMultiplier": 0,
+        "DamageEffectiveness": 0,
+        "BaseResolvedValues": [],
+        "AdditionalStatsValues": [9400, 4, -24],
+        "GrantedEffects": [
+          {
+            "kind": "ref",
+            "table": "GrantedEffects",
+            "key": "Conductivity",
+            "rowIndex": 2430
+          }
+        ],
+        "AdditionalFlags": [],
+        "FloatStats": [],
+        "InterpolationBases": [],
+        "AdditionalStats": [358, 5827, 150],
+        "StatInterpolations": [1, 1, 1],
+        "FloatStatsValues": []
+      },
+      {
+        "_index": 23035,
+        "StatSet": 2440,
+        "GemLevel": 9,
+        "PlayerLevelReq": 48,
+        "SpellCritChance": 0,
+        "AttackCritChance": 0,
+        "BaseMultiplier": 0,
+        "DamageEffectiveness": 0,
+        "BaseResolvedValues": [],
+        "AdditionalStatsValues": [9600, 4, -25],
+        "GrantedEffects": [
+          {
+            "kind": "ref",
+            "table": "GrantedEffects",
+            "key": "Conductivity",
+            "rowIndex": 2430
+          }
+        ],
+        "AdditionalFlags": [],
+        "FloatStats": [],
+        "InterpolationBases": [],
+        "AdditionalStats": [358, 5827, 150],
+        "StatInterpolations": [1, 1, 1],
+        "FloatStatsValues": []
+      },
+      {
+        "_index": 23036,
+        "StatSet": 2440,
+        "GemLevel": 10,
+        "PlayerLevelReq": 50,
+        "SpellCritChance": 0,
+        "AttackCritChance": 0,
+        "BaseMultiplier": 0,
+        "DamageEffectiveness": 0,
+        "BaseResolvedValues": [],
+        "AdditionalStatsValues": [9800, 5, -26],
+        "GrantedEffects": [
+          {
+            "kind": "ref",
+            "table": "GrantedEffects",
+            "key": "Conductivity",
+            "rowIndex": 2430
+          }
+        ],
+        "AdditionalFlags": [],
+        "FloatStats": [],
+        "InterpolationBases": [],
+        "AdditionalStats": [358, 5827, 150],
+        "StatInterpolations": [1, 1, 1],
+        "FloatStatsValues": []
+      },
+      {
+        "_index": 23037,
+        "StatSet": 2440,
+        "GemLevel": 11,
+        "PlayerLevelReq": 52,
+        "SpellCritChance": 0,
+        "AttackCritChance": 0,
+        "BaseMultiplier": 0,
+        "DamageEffectiveness": 0,
+        "BaseResolvedValues": [],
+        "AdditionalStatsValues": [10000, 5, -27],
+        "GrantedEffects": [
+          {
+            "kind": "ref",
+            "table": "GrantedEffects",
+            "key": "Conductivity",
+            "rowIndex": 2430
+          }
+        ],
+        "AdditionalFlags": [],
+        "FloatStats": [],
+        "InterpolationBases": [],
+        "AdditionalStats": [358, 5827, 150],
+        "StatInterpolations": [1, 1, 1],
+        "FloatStatsValues": []
+      },
+      {
+        "_index": 23038,
+        "StatSet": 2440,
+        "GemLevel": 12,
+        "PlayerLevelReq": 54,
+        "SpellCritChance": 0,
+        "AttackCritChance": 0,
+        "BaseMultiplier": 0,
+        "DamageEffectiveness": 0,
+        "BaseResolvedValues": [],
+        "AdditionalStatsValues": [10200, 6, -28],
+        "GrantedEffects": [
+          {
+            "kind": "ref",
+            "table": "GrantedEffects",
+            "key": "Conductivity",
+            "rowIndex": 2430
+          }
+        ],
+        "AdditionalFlags": [],
+        "FloatStats": [],
+        "InterpolationBases": [],
+        "AdditionalStats": [358, 5827, 150],
+        "StatInterpolations": [1, 1, 1],
+        "FloatStatsValues": []
+      },
+      {
+        "_index": 23039,
+        "StatSet": 2440,
+        "GemLevel": 13,
+        "PlayerLevelReq": 56,
+        "SpellCritChance": 0,
+        "AttackCritChance": 0,
+        "BaseMultiplier": 0,
+        "DamageEffectiveness": 0,
+        "BaseResolvedValues": [],
+        "AdditionalStatsValues": [10400, 6, -29],
+        "GrantedEffects": [
+          {
+            "kind": "ref",
+            "table": "GrantedEffects",
+            "key": "Conductivity",
+            "rowIndex": 2430
+          }
+        ],
+        "AdditionalFlags": [],
+        "FloatStats": [],
+        "InterpolationBases": [],
+        "AdditionalStats": [358, 5827, 150],
+        "StatInterpolations": [1, 1, 1],
+        "FloatStatsValues": []
+      },
+      {
+        "_index": 23040,
+        "StatSet": 2440,
+        "GemLevel": 14,
+        "PlayerLevelReq": 58,
+        "SpellCritChance": 0,
+        "AttackCritChance": 0,
+        "BaseMultiplier": 0,
+        "DamageEffectiveness": 0,
+        "BaseResolvedValues": [],
+        "AdditionalStatsValues": [10600, 7, -30],
+        "GrantedEffects": [
+          {
+            "kind": "ref",
+            "table": "GrantedEffects",
+            "key": "Conductivity",
+            "rowIndex": 2430
+          }
+        ],
+        "AdditionalFlags": [],
+        "FloatStats": [],
+        "InterpolationBases": [],
+        "AdditionalStats": [358, 5827, 150],
+        "StatInterpolations": [1, 1, 1],
+        "FloatStatsValues": []
+      },
+      {
+        "_index": 23041,
+        "StatSet": 2440,
+        "GemLevel": 15,
+        "PlayerLevelReq": 60,
+        "SpellCritChance": 0,
+        "AttackCritChance": 0,
+        "BaseMultiplier": 0,
+        "DamageEffectiveness": 0,
+        "BaseResolvedValues": [],
+        "AdditionalStatsValues": [10800, 7, -31],
+        "GrantedEffects": [
+          {
+            "kind": "ref",
+            "table": "GrantedEffects",
+            "key": "Conductivity",
+            "rowIndex": 2430
+          }
+        ],
+        "AdditionalFlags": [],
+        "FloatStats": [],
+        "InterpolationBases": [],
+        "AdditionalStats": [358, 5827, 150],
+        "StatInterpolations": [1, 1, 1],
+        "FloatStatsValues": []
+      },
+      {
+        "_index": 23042,
+        "StatSet": 2440,
+        "GemLevel": 16,
+        "PlayerLevelReq": 62,
+        "SpellCritChance": 0,
+        "AttackCritChance": 0,
+        "BaseMultiplier": 0,
+        "DamageEffectiveness": 0,
+        "BaseResolvedValues": [],
+        "AdditionalStatsValues": [11000, 8, -32],
+        "GrantedEffects": [
+          {
+            "kind": "ref",
+            "table": "GrantedEffects",
+            "key": "Conductivity",
+            "rowIndex": 2430
+          }
+        ],
+        "AdditionalFlags": [],
+        "FloatStats": [],
+        "InterpolationBases": [],
+        "AdditionalStats": [358, 5827, 150],
+        "StatInterpolations": [1, 1, 1],
+        "FloatStatsValues": []
+      },
+      {
+        "_index": 23043,
+        "StatSet": 2440,
+        "GemLevel": 17,
+        "PlayerLevelReq": 64,
+        "SpellCritChance": 0,
+        "AttackCritChance": 0,
+        "BaseMultiplier": 0,
+        "DamageEffectiveness": 0,
+        "BaseResolvedValues": [],
+        "AdditionalStatsValues": [11200, 8, -33],
+        "GrantedEffects": [
+          {
+            "kind": "ref",
+            "table": "GrantedEffects",
+            "key": "Conductivity",
+            "rowIndex": 2430
+          }
+        ],
+        "AdditionalFlags": [],
+        "FloatStats": [],
+        "InterpolationBases": [],
+        "AdditionalStats": [358, 5827, 150],
+        "StatInterpolations": [1, 1, 1],
+        "FloatStatsValues": []
+      },
+      {
+        "_index": 23044,
+        "StatSet": 2440,
+        "GemLevel": 18,
+        "PlayerLevelReq": 66,
+        "SpellCritChance": 0,
+        "AttackCritChance": 0,
+        "BaseMultiplier": 0,
+        "DamageEffectiveness": 0,
+        "BaseResolvedValues": [],
+        "AdditionalStatsValues": [11400, 9, -34],
+        "GrantedEffects": [
+          {
+            "kind": "ref",
+            "table": "GrantedEffects",
+            "key": "Conductivity",
+            "rowIndex": 2430
+          }
+        ],
+        "AdditionalFlags": [],
+        "FloatStats": [],
+        "InterpolationBases": [],
+        "AdditionalStats": [358, 5827, 150],
+        "StatInterpolations": [1, 1, 1],
+        "FloatStatsValues": []
+      },
+      {
+        "_index": 23045,
+        "StatSet": 2440,
+        "GemLevel": 19,
+        "PlayerLevelReq": 68,
+        "SpellCritChance": 0,
+        "AttackCritChance": 0,
+        "BaseMultiplier": 0,
+        "DamageEffectiveness": 0,
+        "BaseResolvedValues": [],
+        "AdditionalStatsValues": [11600, 9, -35],
+        "GrantedEffects": [
+          {
+            "kind": "ref",
+            "table": "GrantedEffects",
+            "key": "Conductivity",
+            "rowIndex": 2430
+          }
+        ],
+        "AdditionalFlags": [],
+        "FloatStats": [],
+        "InterpolationBases": [],
+        "AdditionalStats": [358, 5827, 150],
+        "StatInterpolations": [1, 1, 1],
+        "FloatStatsValues": []
+      },
+      {
+        "_index": 23046,
+        "StatSet": 2440,
+        "GemLevel": 20,
+        "PlayerLevelReq": 70,
+        "SpellCritChance": 0,
+        "AttackCritChance": 0,
+        "BaseMultiplier": 0,
+        "DamageEffectiveness": 0,
+        "BaseResolvedValues": [],
+        "AdditionalStatsValues": [11800, 10, -36],
+        "GrantedEffects": [
+          {
+            "kind": "ref",
+            "table": "GrantedEffects",
+            "key": "Conductivity",
+            "rowIndex": 2430
+          }
+        ],
+        "AdditionalFlags": [],
+        "FloatStats": [],
+        "InterpolationBases": [],
+        "AdditionalStats": [358, 5827, 150],
+        "StatInterpolations": [1, 1, 1],
+        "FloatStatsValues": []
       }
     ],
     "GrantedEffectsPerLevel": [
@@ -3387,6 +4068,192 @@
         "@unknown:28": true,
         "TransfigureBase": null,
         "@unknown:30": ""
+      },
+      {
+        "_index": 307,
+        "Id": "conductivity",
+        "DisplayedName": "Conductivity",
+        "Description": "Curses all targets in an area, lowering their lightning resistance and giving them a chance to be shocked when hit.",
+        "ActionType": {
+          "kind": "source-ref",
+          "table": "ActionTypes",
+          "rowIndex": 160,
+          "sourceColumn": "ActionType"
+        },
+        "Icon_DDSFile": "Art/2DArt/SkillIcons/Conductivity.dds",
+        "ActiveSkillTargetTypes": [1, 2, 22],
+        "ActiveSkillTypes": [
+          {
+            "kind": "ref",
+            "table": "ActiveSkillType",
+            "key": "Spell",
+            "rowIndex": 1
+          },
+          {
+            "kind": "ref",
+            "table": "ActiveSkillType",
+            "key": "Area",
+            "rowIndex": 7
+          },
+          {
+            "kind": "ref",
+            "table": "ActiveSkillType",
+            "key": "Duration",
+            "rowIndex": 8
+          },
+          {
+            "kind": "ref",
+            "table": "ActiveSkillType",
+            "key": "Trappable",
+            "rowIndex": 13
+          },
+          {
+            "kind": "ref",
+            "table": "ActiveSkillType",
+            "key": "Totemable",
+            "rowIndex": 14
+          },
+          {
+            "kind": "ref",
+            "table": "ActiveSkillType",
+            "key": "Mineable",
+            "rowIndex": 15
+          },
+          {
+            "kind": "ref",
+            "table": "ActiveSkillType",
+            "key": "Multicastable",
+            "rowIndex": 21
+          },
+          {
+            "kind": "ref",
+            "table": "ActiveSkillType",
+            "key": "Triggerable",
+            "rowIndex": 31
+          },
+          {
+            "kind": "ref",
+            "table": "ActiveSkillType",
+            "key": "Lightning",
+            "rowIndex": 30
+          },
+          {
+            "kind": "ref",
+            "table": "ActiveSkillType",
+            "key": "Cascadable",
+            "rowIndex": 55
+          },
+          {
+            "kind": "ref",
+            "table": "ActiveSkillType",
+            "key": "AppliesCurse",
+            "rowIndex": 68
+          },
+          {
+            "kind": "ref",
+            "table": "ActiveSkillType",
+            "key": "CanRapidFire",
+            "rowIndex": 69
+          },
+          {
+            "kind": "ref",
+            "table": "ActiveSkillType",
+            "key": "AreaSpell",
+            "rowIndex": 71
+          },
+          {
+            "kind": "ref",
+            "table": "ActiveSkillType",
+            "key": "InstantNoRepeatWhenHeld",
+            "rowIndex": 84
+          },
+          {
+            "kind": "ref",
+            "table": "ActiveSkillType",
+            "key": "InstantShiftAttackForLeftMouse",
+            "rowIndex": 85
+          },
+          {
+            "kind": "ref",
+            "table": "ActiveSkillType",
+            "key": "Hex",
+            "rowIndex": 96
+          }
+        ],
+        "WeaponRestriction_ItemClassesKeys": [],
+        "WebsiteDescription": "",
+        "WebsiteImage": "http://s3.amazonaws.com/pathofexile/image/skills/intelligence/lightningweakness.jpg",
+        "HideOnWebsite": false,
+        "GrantedEffect": "Conductivity",
+        "@unknown:12": true,
+        "SkillTotemId": 22,
+        "IsManuallyCasted": true,
+        "Input_StatKeys": [
+          {
+            "kind": "ref",
+            "table": "Stats",
+            "key": "conductivity_curse_effect_+%",
+            "rowIndex": 4370
+          },
+          {
+            "kind": "ref",
+            "table": "Stats",
+            "key": "conductivity_duration_+%",
+            "rowIndex": 4412
+          },
+          {
+            "kind": "ref",
+            "table": "Stats",
+            "key": "conductivity_mana_reservation_+%",
+            "rowIndex": 7047
+          },
+          {
+            "kind": "ref",
+            "table": "Stats",
+            "key": "conductivity_no_reservation",
+            "rowIndex": 15260
+          }
+        ],
+        "Output_StatKeys": [
+          {
+            "kind": "ref",
+            "table": "Stats",
+            "key": "curse_effect_+%",
+            "rowIndex": 1393
+          },
+          {
+            "kind": "ref",
+            "table": "Stats",
+            "key": "skill_effect_duration_+%",
+            "rowIndex": 217
+          },
+          {
+            "kind": "ref",
+            "table": "Stats",
+            "key": "mana_reservation_+%_with_curse_skills",
+            "rowIndex": 11722
+          },
+          {
+            "kind": "ref",
+            "table": "Stats",
+            "key": "base_skill_no_reservation",
+            "rowIndex": 14217
+          }
+        ],
+        "MinionActiveSkillTypes": [],
+        "@unknown:18": true,
+        "IsGem": true,
+        "SecondarySkillSpecificStats": [],
+        "SkillMine": 8,
+        "AlternateSkillTargetingBehavioursKey": null,
+        "@unknown:23": false,
+        "AIFile": "",
+        "StatContextFlags": [],
+        "@unknown:26": false,
+        "@unknown:27": false,
+        "@unknown:28": true,
+        "TransfigureBase": null,
+        "@unknown:30": ""
       }
     ],
     "GemEffects": [
@@ -3481,6 +4348,74 @@
           "rowIndex": 14583
         },
         "ItemColor": 5
+      },
+      {
+        "_index": 322,
+        "Id": "Conductivity",
+        "Name": "",
+        "GrantedEffect": {
+          "kind": "ref",
+          "table": "GrantedEffects",
+          "key": "Conductivity",
+          "rowIndex": 2430
+        },
+        "GrantedEffectHardmode": null,
+        "GrantedEffect2": null,
+        "GrantedEffect2Hardmode": null,
+        "SupportText": "",
+        "SupportName": "",
+        "GemTags": [
+          {
+            "kind": "ref",
+            "table": "GemTags",
+            "key": "intelligence",
+            "rowIndex": 11
+          },
+          {
+            "kind": "ref",
+            "table": "GemTags",
+            "key": "grants_active_skill",
+            "rowIndex": 25
+          },
+          {
+            "kind": "ref",
+            "table": "GemTags",
+            "key": "spell",
+            "rowIndex": 4
+          },
+          {
+            "kind": "ref",
+            "table": "GemTags",
+            "key": "area",
+            "rowIndex": 14
+          },
+          {
+            "kind": "ref",
+            "table": "GemTags",
+            "key": "duration",
+            "rowIndex": 15
+          },
+          {
+            "kind": "ref",
+            "table": "GemTags",
+            "key": "lightning",
+            "rowIndex": 2
+          },
+          {
+            "kind": "ref",
+            "table": "GemTags",
+            "key": "curse",
+            "rowIndex": 17
+          },
+          {
+            "kind": "ref",
+            "table": "GemTags",
+            "key": "hex",
+            "rowIndex": 42
+          }
+        ],
+        "Consumed_ModsKey": null,
+        "ItemColor": 5
       }
     ],
     "BaseItemTypes": [
@@ -3561,6 +4496,62 @@
         },
         "HASH32": 1255849548,
         "VendorRecipe_AchievementItems": [],
+        "Inflection": "",
+        "Equip_AchievementItemsKey": null,
+        "IsCorrupted": false,
+        "Identify_AchievementItems": [],
+        "IdentifyMagic_AchievementItems": [],
+        "FragmentBaseItemTypesKey": null,
+        "@unknown:22": false,
+        "SoundEffect2": null,
+        "ItemStance": null,
+        "@unknown:25": false,
+        "Unmodifiable": false,
+        "Achievement1": [],
+        "Achievement2": [],
+        "IgnoreQuantBonus": false,
+        "@unknown:30": false,
+        "ShopTag": null,
+        "@unknown:32": [],
+        "@unknown:33": [],
+        "@unknown:34": [],
+        "TalismanEnchants": []
+      },
+      {
+        "_index": 1809,
+        "Id": "Metadata/Items/Gems/SkillGemConductivity",
+        "ItemClassesKey": {
+          "kind": "ref",
+          "table": "ItemClasses",
+          "key": "Active Skill Gem",
+          "rowIndex": 18
+        },
+        "Width": 1,
+        "Height": 1,
+        "Name": "Conductivity",
+        "InheritsFrom": "Metadata/Items/Gems/ActiveSkillGem",
+        "DropLevel": 24,
+        "FlavourTextKey": null,
+        "Implicit_ModsKeys": [],
+        "SizeOnGround": 1,
+        "SoundEffect": null,
+        "TagsKeys": [],
+        "ModDomain": 43,
+        "ItemVisualIdentity": {
+          "kind": "source-ref",
+          "table": "ItemVisualIdentity",
+          "rowIndex": 9607,
+          "sourceColumn": "ItemVisualIdentity"
+        },
+        "HASH32": 3434227077,
+        "VendorRecipe_AchievementItems": [
+          {
+            "kind": "source-ref",
+            "table": "AchievementItems",
+            "rowIndex": 8659,
+            "sourceColumn": "VendorRecipe_AchievementItems"
+          }
+        ],
         "Inflection": "",
         "Equip_AchievementItemsKey": null,
         "IsCorrupted": false,
@@ -3680,6 +4671,52 @@
             "rowIndex": 171
           }
         ]
+      },
+      {
+        "_index": 184,
+        "BaseItemTypesKey": {
+          "kind": "ref",
+          "table": "BaseItemTypes",
+          "key": "Metadata/Items/Gems/SkillGemConductivity",
+          "rowIndex": 1809
+        },
+        "StrengthRequirementPercent": 0,
+        "DexterityRequirementPercent": 0,
+        "IntelligenceRequirementPercent": 100,
+        "VaalVariant_BaseItemTypesKey": null,
+        "IsVaalVariant": false,
+        "MinionGlobalSkillLevelStat": null,
+        "IsSupport": false,
+        "@unknown:8": false,
+        "@unknown:9": false,
+        "@unknown:10": false,
+        "RegisterPrimaryGrantedEffect": true,
+        "RegisterSecondaryGrantedEffect": true,
+        "AwakenedVariant": null,
+        "RegularVariant": null,
+        "GemColour": 3,
+        "ItemExperienceType": {
+          "kind": "ref",
+          "table": "ItemExperienceTypes",
+          "key": "GemProgression24",
+          "rowIndex": 7
+        },
+        "MtxSlotTypes": [
+          {
+            "kind": "source-ref",
+            "table": "MicrotransactionSkillGemEffectSlotTypes",
+            "rowIndex": 0,
+            "sourceColumn": "MtxSlotTypes"
+          }
+        ],
+        "GemVariants": [
+          {
+            "kind": "ref",
+            "table": "GemEffects",
+            "key": "Conductivity",
+            "rowIndex": 322
+          }
+        ]
       }
     ],
     "ActiveSkillType": [
@@ -3787,6 +4824,56 @@
         "_index": 104,
         "Id": "FixedCastTime",
         "FlagStat": null
+      },
+      {
+        "_index": 7,
+        "Id": "Area",
+        "FlagStat": {
+          "kind": "ref",
+          "table": "Stats",
+          "key": "skill_is_area_skill",
+          "rowIndex": 9895
+        }
+      },
+      {
+        "_index": 55,
+        "Id": "Cascadable",
+        "FlagStat": null
+      },
+      {
+        "_index": 68,
+        "Id": "AppliesCurse",
+        "FlagStat": {
+          "kind": "ref",
+          "table": "Stats",
+          "key": "skill_is_curse",
+          "rowIndex": 2531
+        }
+      },
+      {
+        "_index": 71,
+        "Id": "AreaSpell",
+        "FlagStat": null
+      },
+      {
+        "_index": 84,
+        "Id": "InstantNoRepeatWhenHeld",
+        "FlagStat": null
+      },
+      {
+        "_index": 85,
+        "Id": "InstantShiftAttackForLeftMouse",
+        "FlagStat": null
+      },
+      {
+        "_index": 96,
+        "Id": "Hex",
+        "FlagStat": {
+          "kind": "ref",
+          "table": "Stats",
+          "key": "skill_is_hex_skill",
+          "rowIndex": 12752
+        }
       }
     ]
   }

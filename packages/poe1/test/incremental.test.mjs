@@ -50,6 +50,15 @@ const shock = (magnitudePercent = 20, uptimePercent = 100, id = 'synthetic-shock
   uptimePercent,
   source: { kind: 'scenario', id, line: 1 },
 });
+const conductivity = (gemLevel = 1, enabled = true, increasedEffectPercent = 0) => ({
+  id: 'Conductivity',
+  gemLevel,
+  quality: 0,
+  enabled,
+  increasedEffectPercent,
+  source: { kind: 'scenario', id: 'synthetic-conductivity', line: 1 },
+  effectSource: { kind: 'scenario', id: 'synthetic-curse-effect', line: 1 },
+});
 function configuredInput(
   baseResistancePercent = 0,
   exposures = [],
@@ -203,6 +212,7 @@ test('new gem-level effectiveness invalidates scaled added damage while retainin
   delete synthetic.critical;
   delete synthetic.resistance;
   delete synthetic.shock;
+  delete synthetic.conductivity;
   synthetic.levels.find((level) => level.gemLevel === 1).addedDamageEffectiveness = 0.5;
   synthetic.identity.snapshotId += '-synthetic-effectiveness';
   const input = {
@@ -661,6 +671,333 @@ test('Faster Casting facts and sources are captured independently in either data
   checkUpdate(session, expected);
 });
 
+test('Conductivity level, enabled state and effect changes refresh the resistance chain only', () => {
+  const input = configuredInput(100, [exposure(-10)]);
+  input.configuration.ailmentMode = 'excluded';
+  input.configuration.lightningResistance.conductivity = conductivity();
+  input.modifiers.push(modifier('base_reduce_enemy_lightning_resistance_%', 15, 17));
+  const session = value(createSelectedSkillSession(input, dataset));
+  assert.deepEqual(session.current.calculation, value(calculateSelectedSkill(input, dataset)));
+  const first = session.current.calculation.resistanceEffects.conductivity;
+  const firstLevel = dataset.conductivity.levels.find((level) => level.gemLevel === 1);
+  assert.equal(first.baseLightningResistancePercent, firstLevel.baseLightningResistancePercent);
+  assert.equal(first.appliedLightningResistancePercent, firstLevel.baseLightningResistancePercent);
+  assert.equal(first.durationMilliseconds, firstLevel.durationMilliseconds);
+  assert.equal(first.radiusIncrement, firstLevel.radiusIncrement);
+  assert.equal(first.excludedShockChance.basePercent, 25);
+  assert.equal(first.excludedShockChance.appliedToSelectedHit, false);
+  assert.equal(
+    session.current.calculation.resistanceEffects.uncappedResistancePercent,
+    100 - 10 + first.appliedLightningResistancePercent,
+  );
+  const state = input.configuration.lightningResistance.conductivity;
+  state.gemLevel = 20;
+  const leveled = checkUpdate(session, input);
+  assert.deepEqual(leveled.recalculated, [
+    'conductivity-effects',
+    'uncapped-resistance',
+    'capped-resistance',
+    'effective-resistance',
+    'resistance-effects',
+    'damage-after-resistance',
+    'critical-effects',
+    'shock-effects',
+    'selected-skill',
+  ]);
+  assert.ok(!leveled.recalculated.includes('lightning-exposure'));
+  assert.ok(!leveled.recalculated.includes('lightning-penetration'));
+  assert.ok(!leveled.recalculated.includes('damage-before-resistance'));
+  assert.ok(!leveled.recalculated.includes('cast-rate'));
+  state.enabled = false;
+  const disabled = checkUpdate(session, input).calculation;
+  assert.equal(disabled.resistanceEffects.conductivity.appliedLightningResistancePercent, 0);
+  assert.equal(disabled.resistanceEffects.effectiveResistancePercent, 75);
+  state.enabled = true;
+  state.increasedEffectPercent = 33;
+  const scaled = checkUpdate(session, input).calculation.resistanceEffects.conductivity;
+  assert.equal(scaled.effectMultiplier, 1.33);
+  assert.equal(
+    scaled.scaledLightningResistancePercent,
+    scaled.baseLightningResistancePercent * 1.33,
+  );
+  assert.equal(
+    scaled.roundedLightningResistancePercent,
+    Math.floor(scaled.scaledLightningResistancePercent * 100 + 0.5) / 100,
+  );
+  assert.equal(
+    scaled.truncatedLightningResistancePercent,
+    Math.trunc(scaled.roundedLightningResistancePercent),
+  );
+  assert.equal(
+    scaled.appliedLightningResistancePercent,
+    scaled.truncatedLightningResistancePercent,
+  );
+  state.increasedEffectPercent = -100;
+  assert.equal(
+    checkUpdate(session, input).calculation.resistanceEffects.conductivity
+      .appliedLightningResistancePercent,
+    0,
+  );
+  state.increasedEffectPercent = 200;
+  checkUpdate(session, input);
+  state.source.id = 'moved-conductivity-source';
+  state.effectSource.id = 'moved-curse-effect-source';
+  const movedReport = checkUpdate(session, input);
+  assert.deepEqual(movedReport.recalculated, [
+    'conductivity-effects',
+    'uncapped-resistance',
+    'capped-resistance',
+    'effective-resistance',
+    'resistance-effects',
+    'damage-after-resistance',
+    'critical-effects',
+    'shock-effects',
+    'selected-skill',
+  ]);
+  const moved = movedReport.calculation.resistanceEffects.conductivity;
+  assert.equal(moved.resistanceContribution.source.id, 'moved-conductivity-source');
+  assert.equal(moved.effectContribution.source.id, 'moved-curse-effect-source');
+  delete input.configuration.lightningResistance.conductivity;
+  const removed = checkUpdate(session, input);
+  assert.equal(removed.calculation.resistanceEffects.conductivity, null);
+  assert.equal(removed.calculation.resistanceEffects.effectiveResistancePercent, 75);
+});
+
+test('Conductivity combines before caps with exposure and remains separate from penetration and casts', () => {
+  const input = configuredInput(-195, [exposure(-10)]);
+  input.configuration.criticalStrikeMode = 'average';
+  input.configuration.ailmentMode = 'configured-shock';
+  input.configuration.shock = shock(30, 40);
+  input.configuration.lightningResistance.conductivity = conductivity(20, true, 25);
+  input.skill.supports = [support(), fasterCasting()];
+  input.addedLightningDamage = [added(2, 8)];
+  input.modifiers.push(modifier('base_reduce_enemy_lightning_resistance_%', 20, 17));
+  const session = value(createSelectedSkillSession(input, dataset));
+  const first = session.current.calculation;
+  assert.deepEqual(first, value(calculateSelectedSkill(input, dataset)));
+  assert.equal(
+    first.resistanceEffects.uncappedResistancePercent,
+    -195 - 10 + first.resistanceEffects.conductivity.appliedLightningResistancePercent,
+  );
+  assert.equal(first.resistanceEffects.cappedResistancePercent, -200);
+  assert.equal(first.resistanceEffects.effectiveResistancePercent, -220);
+  input.modifiers[3].value = 30;
+  const penetration = checkUpdate(session, input);
+  assert.equal(penetration.calculation.resistanceEffects.effectiveResistancePercent, -230);
+  assert.ok(!penetration.recalculated.includes('conductivity-effects'));
+  assert.ok(!penetration.recalculated.includes('uncapped-resistance'));
+  input.modifiers[0].statId = 'base_reduce_enemy_lightning_resistance_%';
+  const reclassified = checkUpdate(session, input);
+  assert.deepEqual(reclassified.dependencies['lightning-penetration'], [
+    'modifier:0',
+    'modifier:3',
+  ]);
+  assert.ok(!reclassified.recalculated.includes('conductivity-effects'));
+  input.configuration.criticalStrikeMode = 'disabled';
+  assert.deepEqual(checkUpdate(session, input).recalculated, [
+    'critical-effects',
+    'shock-effects',
+    'selected-skill',
+  ]);
+  input.skill.supports[1].enabled = false;
+  assert.ok(!checkUpdate(session, input).recalculated.includes('conductivity-effects'));
+  input.configuration.lightningResistance.baseResistancePercent = 100;
+  checkUpdate(session, input);
+  input.configuration.lightningResistance.conductivity.enabled = false;
+  const disabled = checkUpdate(session, input);
+  assert.equal(disabled.calculation.resistanceEffects.uncappedResistancePercent, 90);
+  assert.equal(disabled.calculation.resistanceEffects.effectiveResistancePercent, 40);
+});
+
+test('Conductivity rejects unsupported profiles, conditions and missing facts atomically', () => {
+  const initial = configuredInput(50);
+  initial.configuration.ailmentMode = 'excluded';
+  initial.configuration.lightningResistance.conductivity = conductivity();
+  const session = value(createSelectedSkillSession(initial, dataset));
+  const before = session.current;
+  for (const mutate of [
+    (input) => {
+      delete input.configuration.ailmentMode;
+    },
+    (input) => {
+      input.configuration.lightningResistance.conductivity.id = 'ElementalWeakness';
+    },
+    (input) => {
+      input.configuration.lightningResistance.conductivity.gemLevel = 0;
+    },
+    (input) => {
+      input.configuration.lightningResistance.conductivity.gemLevel = 21;
+    },
+    (input) => {
+      input.configuration.lightningResistance.conductivity.quality = 1;
+    },
+    (input) => {
+      input.configuration.lightningResistance.conductivity.enabled = 'false';
+    },
+    (input) => {
+      input.configuration.lightningResistance.conductivity.increasedEffectPercent = -101;
+    },
+    (input) => {
+      input.configuration.lightningResistance.conductivity.increasedEffectPercent = 201;
+    },
+    (input) => {
+      input.configuration.lightningResistance.conductivity.increasedEffectPercent = 0.5;
+    },
+    (input) => {
+      delete input.configuration.lightningResistance.conductivity.effectSource;
+    },
+    (input) => {
+      input.configuration.lightningResistance.conductivity.source.kind = 'item';
+    },
+    (input) => {
+      input.configuration.lightningResistance.conductivity.effectSource.kind = 'skill';
+    },
+    (input) => {
+      input.configuration.lightningResistance.conductivity.source = Object.create(
+        input.configuration.lightningResistance.conductivity.source,
+      );
+    },
+    (input) => {
+      input.configuration.lightningResistance.conductivity.curseLimit = 2;
+    },
+    (input) => {
+      input.configuration.lightningResistance.conductivity = null;
+    },
+    (input) => {
+      const state = input.configuration.lightningResistance.conductivity;
+      delete input.configuration.lightningResistance.conductivity;
+      Object.setPrototypeOf(input.configuration.lightningResistance, { conductivity: state });
+    },
+    (input) => {
+      delete input.configuration.lightningResistance.conductivity;
+      Object.setPrototypeOf(input.configuration.lightningResistance, { conductivity: null });
+    },
+    (input) => {
+      input.modifiers.push(modifier('base_lightning_damage_resistance_%', -20, 18));
+    },
+    (input) => {
+      input.modifiers.push(modifier('curse_effect_+%', 25, 18));
+    },
+    (input) => {
+      input.modifiers.push(modifier('chance_to_be_shocked_%', 25, 18));
+    },
+  ]) {
+    const input = structuredClone(initial);
+    mutate(input);
+    assert.equal(calculateSelectedSkill(input, dataset).ok, false);
+    assert.equal(createSelectedSkillSession(input, dataset).ok, false);
+    assert.equal(session.recalculate(input).ok, false);
+    assert.equal(session.current, before);
+  }
+  const legacy = structuredClone(basic);
+  legacy.configuration.conductivity = conductivity();
+  assert.equal(calculateSelectedSkill(legacy, dataset).ok, false);
+  assert.equal(session.recalculate(legacy).ok, false);
+  assert.equal(session.current, before);
+  const unavailable = structuredClone(dataset);
+  delete unavailable.conductivity;
+  const noCurse = configuredInput(50);
+  noCurse.configuration.ailmentMode = 'excluded';
+  const incomplete = value(createSelectedSkillSession(noCurse, unavailable));
+  const last = incomplete.current;
+  for (const enabled of [true, false]) {
+    const input = structuredClone(initial);
+    input.configuration.lightningResistance.conductivity.enabled = enabled;
+    assert.equal(calculateSelectedSkill(input, unavailable).ok, false);
+    assert.equal(incomplete.recalculate(input).ok, false);
+    assert.equal(incomplete.current, last);
+  }
+  const recovered = structuredClone(noCurse);
+  recovered.configuration.lightningResistance.baseResistancePercent = 60;
+  assert.deepEqual(
+    value(incomplete.recalculate(recovered)).calculation,
+    value(calculateSelectedSkill(recovered, unavailable)),
+  );
+});
+
+test('Conductivity configuration, effect provenance and normalized rows have independent ownership', () => {
+  const input = configuredInput(80);
+  input.configuration.ailmentMode = 'excluded';
+  input.configuration.lightningResistance.conductivity = conductivity();
+  const expected = structuredClone(input);
+  const ownedDataset = structuredClone(dataset);
+  const session = value(createSelectedSkillSession(input, ownedDataset));
+  const original = structuredClone(session.current.calculation);
+  input.configuration.lightningResistance.conductivity.source.id = 'host-curse-source';
+  input.configuration.lightningResistance.conductivity.effectSource.id = 'host-effect-source';
+  ownedDataset.conductivity.ruleSource.id = 'host-curse-rule';
+  ownedDataset.conductivity.levels[0].baseLightningResistancePercent = -99;
+  ownedDataset.conductivity.sourceRows[0].key = 'host-curse-row';
+  ownedDataset.conductivity.levels[0].sourceRows[0].key = 'host-curse-level-row';
+  assert.deepEqual(session.current.calculation, original);
+  const current = session.current.calculation.resistanceEffects.conductivity;
+  for (const target of [
+    current.configuration.source,
+    current.configuration.effectSource,
+    current.resistanceContribution.source,
+    current.effectContribution.source,
+    current.excludedShockChance.source,
+    current.ruleSource,
+  ]) {
+    assert.throws(() => {
+      target.id = 'changed';
+    }, TypeError);
+  }
+  expected.configuration.lightningResistance.conductivity.gemLevel = 20;
+  checkUpdate(session, expected);
+  expected.configuration.lightningResistance.conductivity.increasedEffectPercent = -0;
+  checkUpdate(session, expected);
+  delete expected.configuration.lightningResistance.conductivity;
+  const removed = checkUpdate(session, expected);
+  assert.equal(removed.calculation.resistanceEffects.conductivity, null);
+});
+
+test('Conductivity facts reject inherited, sparse, cyclic and mismatched records', () => {
+  for (const select of [
+    (data) => data.conductivity,
+    (data) => data.conductivity.identity,
+    (data) => data.conductivity.ruleSource,
+    (data) => data.conductivity.levels[0],
+    (data) => data.conductivity.sourceRows[0],
+    (data) => data.conductivity.levels[0].sourceRows[0],
+  ]) {
+    const malformed = structuredClone(dataset);
+    const target = select(malformed);
+    target.extra = {};
+    target.extra.self = target.extra;
+    assert.equal(calculateSelectedSkill(basic, malformed).ok, false);
+    assert.equal(createSelectedSkillSession(basic, malformed).ok, false);
+  }
+  for (const mutate of [
+    (data) => {
+      data.conductivity.identity.snapshotId += '-different';
+    },
+    (data) => {
+      data.conductivity.chanceToBeShockedPercent = 26;
+    },
+    (data) => {
+      delete data.conductivity.levels[0];
+    },
+    (data) => {
+      data.conductivity.levels[1].gemLevel = data.conductivity.levels[0].gemLevel;
+    },
+    (data) => {
+      data.conductivity.sourceRows[0] = Object.create(data.conductivity.sourceRows[0]);
+    },
+    (data) => {
+      delete data.conductivity.levels[0].sourceRows[0];
+    },
+    (data) => {
+      data.conductivity.ruleSource.id = 'unverified-curse-rule';
+    },
+  ]) {
+    const malformed = structuredClone(dataset);
+    mutate(malformed);
+    assert.equal(calculateSelectedSkill(basic, malformed).ok, false);
+    assert.equal(createSelectedSkillSession(basic, malformed).ok, false);
+  }
+});
+
 test('critical chance and multiplier edits retain separate applicability sets and normal-hit caches', () => {
   const input = structuredClone(basic);
   input.configuration.criticalStrikeMode = 'average';
@@ -790,6 +1127,7 @@ test('selected level changes refresh critical base chance while preserving modif
   delete synthetic.supports;
   delete synthetic.resistance;
   delete synthetic.shock;
+  delete synthetic.conductivity;
   synthetic.identity.snapshotId += '-synthetic-critical-level';
   synthetic.critical.identity = { ...synthetic.identity };
   synthetic.levels.find((level) => level.gemLevel === 1).baseCriticalStrikeChancePercent = 10;
@@ -1639,6 +1977,7 @@ test('scaled-added and combined-base overflow reject atomically before publishin
     delete synthetic.critical;
     delete synthetic.resistance;
     delete synthetic.shock;
+    delete synthetic.conductivity;
     synthetic.identity.snapshotId += combinedOverflow ? '-combined-overflow' : '-scaled-overflow';
     const level = synthetic.levels.find((entry) => entry.gemLevel === 20);
     level.addedDamageEffectiveness = combinedOverflow ? 1e307 : 1e308;

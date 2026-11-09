@@ -11,13 +11,32 @@ function value(result) {
   return result.value;
 }
 
+/** Object field order is immaterial; array positions, own fields and signed numbers are not. */
+function sameResult(left, right) {
+  if (Object.is(left, right)) return true;
+  if (
+    left === null ||
+    right === null ||
+    typeof left !== 'object' ||
+    typeof right !== 'object' ||
+    Array.isArray(left) !== Array.isArray(right) ||
+    (Array.isArray(left) && left.length !== right.length)
+  )
+    return false;
+  const keys = Object.keys(left);
+  return (
+    keys.length === Object.keys(right).length &&
+    keys.every((key) => Object.hasOwn(right, key) && sameResult(left[key], right[key]))
+  );
+}
+
 /** Hosts provide all I/O; this demonstration also runs unchanged in the browser. */
 export async function runSelectedSparkDemo(readShard, readXml) {
   const reader = await loadCatalog(readShard);
   const dataset = value(await loadSparkDataset(reader));
   const imported = importPobXml({
     format: 'pob-xml',
-    xml: await readXml('support-faster-casting-combined'),
+    xml: await readXml('conductivity-combined'),
     target: reader.identity,
     buildId: 'browser-synthetic-spark',
     configurationId: 'explicit-nonboss-25',
@@ -48,9 +67,11 @@ export async function runSelectedSparkDemo(readShard, readXml) {
       'Expected explicit average critical hits and Controlled Destruction less crit.',
     );
   if (
-    initial.resistanceEffects.cappedResistancePercent !== 90 ||
+    initial.resistanceEffects.cappedResistancePercent !== 50 ||
     initial.resistanceEffects.penetrationPercent !== 20 ||
-    initial.resistanceEffects.effectiveResistancePercent !== 70
+    initial.resistanceEffects.effectiveResistancePercent !== 30 ||
+    initial.resistanceEffects.conductivity.appliedLightningResistancePercent !== -45 ||
+    initial.resistanceEffects.conductivity.excludedShockChance.appliedToSelectedHit !== false
   )
     throw new Error('Expected exposure before the cap and penetration after it.');
   if (
@@ -64,6 +85,39 @@ export async function runSelectedSparkDemo(readShard, readXml) {
   const next = structuredClone(imported.selectedSkill);
   const reports = [];
   for (const change of [
+    () => {
+      next.configuration.lightningResistance.conductivity.gemLevel = 1;
+    },
+    () => {
+      next.configuration.lightningResistance.conductivity.increasedEffectPercent = -50;
+    },
+    () => {
+      next.configuration.lightningResistance.conductivity.increasedEffectPercent = 200;
+    },
+    () => {
+      next.configuration.lightningResistance.conductivity.enabled = false;
+    },
+    () => {
+      next.configuration.lightningResistance.conductivity.enabled = true;
+      next.configuration.lightningResistance.conductivity.source.label =
+        'Explicit already-active curse';
+      next.configuration.lightningResistance.conductivity.effectSource.label =
+        'Explicit increased curse effect';
+    },
+    () => {
+      delete next.configuration.lightningResistance.conductivity;
+    },
+    () => {
+      next.configuration.lightningResistance.conductivity = {
+        id: 'Conductivity',
+        gemLevel: 20,
+        quality: 0,
+        enabled: true,
+        increasedEffectPercent: 25,
+        source: { kind: 'scenario', id: 'browser-restored-conductivity' },
+        effectSource: { kind: 'scenario', id: 'browser-restored-curse-effect' },
+      };
+    },
     () => {
       next.skill.supports.find((support) => support.id === 'SupportFasterCasting').gemLevel = 1;
     },
@@ -197,16 +251,14 @@ export async function runSelectedSparkDemo(readShard, readXml) {
   ]) {
     change();
     const report = value(session.recalculate(next));
-    if (
-      JSON.stringify(report.calculation) !==
-      JSON.stringify(value(calculateSelectedSkill(next, dataset)))
-    )
+    if (!sameResult(report.calculation, value(calculateSelectedSkill(next, dataset))))
       throw new Error('Incremental result differs from full recomputation.');
     reports.push({
       recalculated: report.recalculated,
       combinedDps: report.calculation.combinedDps,
       shockEffects: report.calculation.shockEffects,
       resistanceEffects: {
+        conductivity: report.calculation.resistanceEffects.conductivity,
         baseResistancePercent: report.calculation.resistanceEffects.baseResistancePercent,
         exposurePercent: report.calculation.resistanceEffects.exposurePercent,
         uncappedResistancePercent: report.calculation.resistanceEffects.uncappedResistancePercent,

@@ -10,6 +10,8 @@ The configured lightning-resistance slice selects the strongest explicitly activ
 
 An explicit configured-shock policy accepts fixed magnitude and host uptime, retaining unshocked/shocked means and scenario provenance. Partial uptime uses a documented blend of separately executed pinned PoB endpoints; no shock application or uptime is inferred from Spark hits.
 
+One explicitly active normal Conductivity uses a supplied curse-effect percentage, with separate curse/effect provenance and visible excluded shock chance. Its scaled, truncated resistance delta joins exposure before caps and penetration. Curse application, uptime, immunity and boss-effect rules remain outside this slice.
+
 ## Packages
 
 | Package                   | Responsibility                                                                      | Initial status                |

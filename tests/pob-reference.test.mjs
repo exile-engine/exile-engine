@@ -272,6 +272,68 @@ test('critical chance uses client rows while the base player multiplier keeps ex
   }
 });
 
+test('Conductivity levels and excluded side stats retain exact same-snapshot client provenance', async () => {
+  const fact = reference.conductivityReference;
+  const normalized = dataset.conductivity;
+  assert.deepEqual(normalized.identity, reference.identity);
+  assert.equal(normalized.id, fact.id);
+  assert.equal(normalized.gemId, fact.gameItemId);
+  assert.equal(normalized.chanceToBeShockedPercent, fact.baseChanceToBeShockedPercent);
+  assert.deepEqual(normalized.ruleSource, fact.ruleSource);
+  for (const source of [...Object.values(fact.sourceRows), ...fact.statRows]) {
+    const raw = await reader.getRecord(source.table, source.key);
+    assert.equal(raw.rowIndex, source.rowIndex);
+    assert.ok(
+      normalized.sourceRows.some(
+        (row) =>
+          row.table === source.table && row.key === source.key && row.rowIndex === source.rowIndex,
+      ),
+    );
+  }
+  const effect = await reader.getRecord('GrantedEffects', fact.id);
+  const set = await reader.resolve(effect.fields.StatSet1);
+  assert.equal(effect.fields.IsSupport, false);
+  assert.equal(effect.fields.ActiveSkill.key, 'conductivity');
+  assert.deepEqual(
+    set.fields.ImplicitStats.map((stat) => stat.key),
+    ['base_deal_no_damage'],
+  );
+  assert.deepEqual(
+    set.fields.ConstantStats.map((stat) => stat.key),
+    [fact.chanceStatId],
+  );
+  assert.deepEqual(set.fields.ConstantStatsValues, [25]);
+  const levels = await reader.getTable('GrantedEffectStatSetsPerLevel');
+  assert.equal(normalized.levels.length, 20);
+  for (const [index, resistance] of fact.resistanceByLevel.entries()) {
+    const gemLevel = index + 1;
+    const raw = levels.find(
+      (row) => row.fields.StatSet?.key === fact.id && row.fields.GemLevel === gemLevel,
+    );
+    assert.deepEqual(
+      raw.fields.AdditionalStats.map((stat) => stat.key),
+      ['base_skill_effect_duration', 'active_skill_base_radius_+', fact.resistanceStatId],
+    );
+    assert.deepEqual(raw.fields.AdditionalStatsValues, [
+      fact.durationMillisecondsByLevel[index],
+      fact.radiusIncrementByLevel[index],
+      resistance,
+    ]);
+    const value = normalized.levels.find((row) => row.gemLevel === gemLevel);
+    assert.equal(value.baseLightningResistancePercent, resistance);
+    assert.equal(value.durationMilliseconds, fact.durationMillisecondsByLevel[index]);
+    assert.equal(value.radiusIncrement, fact.radiusIncrementByLevel[index]);
+    assert.ok(
+      value.sourceRows.some(
+        (row) =>
+          row.table === 'GrantedEffectStatSetsPerLevel' &&
+          row.key === raw.key &&
+          row.rowIndex === raw.rowIndex,
+      ),
+    );
+  }
+});
+
 test('penetration and exposure keep exact stat identities and negative authored exposure values', async () => {
   const fact = reference.resistanceReference;
   assert.deepEqual(dataset.resistance.identity, reference.identity);
@@ -351,12 +413,52 @@ for (const expected of reference.cases) {
     assert.equal(rawResistance.baseResistancePercent, expected.rawResistancePercent);
     assert.equal(rawResistance.maximumResistanceMode, expected.maximumResistanceMode);
     assert.deepEqual(rawResistance.exposures, expected.exposures);
+    assert.deepEqual(rawResistance.conductivity, expected.conductivity);
     assert.deepEqual(rawResistance.source, {
       kind: 'scenario',
       id: 'pob-config:enemyLightningResist',
       label: `enemyLightningResist=${expected.rawResistancePercent}`,
     });
     const resistance = value.resistanceEffects;
+    const curse = resistance.conductivity;
+    if (expected.conductivity) {
+      assert.ok(curse);
+      assert.deepEqual(curse.configuration, expected.conductivity);
+      for (const [key, wanted] of Object.entries(expected.conductivityEffects))
+        close(curse[key], wanted, `conductivity.${key}`);
+      assert.deepEqual(curse.ruleSource, reference.conductivityReference.ruleSource);
+      assert.deepEqual(curse.resistanceContribution, {
+        statId: reference.conductivityReference.resistanceStatId,
+        value: expected.conductivityEffects.appliedLightningResistancePercent,
+        source: expected.conductivity.source,
+        scope: 'global',
+      });
+      assert.deepEqual(curse.effectContribution, {
+        statId: reference.conductivityReference.effectStatId,
+        value: expected.conductivity.increasedEffectPercent,
+        source: expected.conductivity.effectSource,
+        scope: 'global',
+      });
+      assert.deepEqual(curse.excludedShockChance, {
+        statId: reference.conductivityReference.chanceStatId,
+        basePercent: 25,
+        scaledPercent: Math.trunc(
+          Math.floor(25 * (1 + expected.conductivity.increasedEffectPercent / 100) * 100 + 0.5) /
+            100,
+        ),
+        appliedToSelectedHit: false,
+        source: expected.conductivity.source,
+      });
+      for (const source of reference.conductivityReference.statRows)
+        assert.ok(
+          curse.sourceRows.some(
+            (row) =>
+              row.table === source.table &&
+              row.key === source.key &&
+              row.rowIndex === source.rowIndex,
+          ),
+        );
+    } else assert.equal(curse, null);
     for (const [key, wanted] of Object.entries(expected.resistanceEffects)) {
       if (typeof wanted === 'number') close(resistance[key], wanted, `resistance.${key}`);
       else assert.deepEqual(resistance[key], wanted, `resistance.${key}`);
@@ -605,10 +707,20 @@ for (const expected of reference.cases) {
             reference.resistanceReference.constants.hardMaximumPercent,
           );
     const refPenetration = expected.penetrationModifiers.reduce((sum, mod) => sum + mod.value, 0);
+    const refCurse = expected.conductivity?.enabled
+      ? Math.trunc(
+          Math.floor(
+            reference.conductivityReference.resistanceByLevel[expected.conductivity.gemLevel - 1] *
+              (1 + expected.conductivity.increasedEffectPercent / 100) *
+              100 +
+              0.5,
+          ) / 100,
+        )
+      : 0;
     const refResistance =
       Math.max(
         reference.resistanceReference.constants.minimumPercent,
-        Math.min(expected.rawResistancePercent + refExposure, refMaximum),
+        Math.min(expected.rawResistancePercent + refExposure + refCurse, refMaximum),
       ) - refPenetration;
     close(
       resistance.effectiveResistancePercent,
@@ -624,6 +736,87 @@ for (const expected of reference.cases) {
     close(value.combinedDps, dps, 'independent pinned-source CombinedDPS branch');
     const observedShocked = oracle[expected.fixture];
     const observed = observedShocked.unshocked ?? observedShocked;
+    if (expected.conductivity) {
+      const configured = expected.conductivity;
+      const fact = reference.conductivityReference;
+      assert.deepEqual(observed.conductivityGems, [
+        {
+          skillId: 'Conductivity',
+          gemId: fact.gameItemId,
+          gameId: fact.gameItemId,
+          nameSpec: 'Conductivity',
+          level: configured.gemLevel,
+          quality: 0,
+          enabled: configured.enabled,
+        },
+      ]);
+      const sortedCurseStats = (entries) =>
+        entries.toSorted((left, right) => left.name.localeCompare(right.name));
+      assert.deepEqual(
+        observed.conductivityActiveSkills,
+        configured.enabled
+          ? [
+              {
+                id: 'Conductivity',
+                increasedCurseEffectPercent: configured.increasedEffectPercent,
+                moreCurseEffectMultiplier: 1,
+                rawBuffContributions: [
+                  { name: 'SelfShockChance', source: 'Skill:Conductivity', value: 25 },
+                  {
+                    name: 'LightningResist',
+                    source: 'Skill:Conductivity',
+                    value: fact.resistanceByLevel[configured.gemLevel - 1],
+                  },
+                ],
+              },
+            ]
+          : [],
+      );
+      const appliedStats = [
+        {
+          name: 'LightningResist',
+          value: expected.conductivityEffects.appliedLightningResistancePercent,
+          source: 'Skill:Conductivity',
+        },
+        {
+          name: 'SelfShockChance',
+          value: curse.excludedShockChance.scaledPercent,
+          source: 'Skill:Conductivity',
+        },
+      ].filter((row) => row.value !== 0);
+      assert.deepEqual(
+        observed.appliedCurseSlots.map((row) => ({
+          name: row.name,
+          contributions: sortedCurseStats(row.contributions),
+        })),
+        configured.enabled
+          ? [{ name: 'Conductivity', contributions: sortedCurseStats(appliedStats) }]
+          : [],
+      );
+      close(
+        observed.enemySelfShockChancePercent,
+        configured.enabled ? curse.excludedShockChance.scaledPercent : 0,
+        'native excluded chance-to-be-shocked stat',
+      );
+      assert.deepEqual(
+        observed.enemyLightningResistanceContributions.filter(
+          (row) => row.source === 'Skill:Conductivity',
+        ),
+        configured.enabled && refCurse !== 0
+          ? [{ name: 'LightningResist', value: refCurse, source: 'Skill:Conductivity' }]
+          : [],
+      );
+      assert.deepEqual(
+        observed.customModifierBlocks.filter((row) => row.title === 'Conductivity Effect'),
+        [{ title: 'Conductivity Effect', enabled: true, text: configured.effectSource.label }],
+      );
+      assert.equal(observed.ailmentFlags.CannotShock, true);
+    } else {
+      assert.deepEqual(observed.conductivityGems, []);
+      assert.deepEqual(observed.conductivityActiveSkills, []);
+      assert.deepEqual(observed.appliedCurseSlots, []);
+      assert.equal(observed.enemySelfShockChancePercent, 0);
+    }
     assert.equal(observedShocked.sourceXmlSha256, expected.xmlSha256);
     if (expected.shock) {
       assert.equal(expected.comparisonKind, 'host-weighted-executed-pob-endpoints');

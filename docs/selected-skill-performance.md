@@ -4,28 +4,29 @@
 
 ## Dependency tracking
 
-The twenty-one derived nodes are `base`, `added-lightning`, `effective-added-lightning`, `combined-base`, `damage-increase`, `cast-speed-increase`, `support-effects`, `critical-chance-increase`, `critical-multiplier-increase`, `lightning-exposure`, `lightning-penetration`, `uncapped-resistance`, `capped-resistance`, `effective-resistance`, `resistance-effects`, `damage-before-resistance`, `damage-after-resistance`, `cast-rate`, `critical-effects`, `shock-effects` and `selected-skill`.
+The twenty-two derived nodes are `base`, `added-lightning`, `effective-added-lightning`, `combined-base`, `damage-increase`, `cast-speed-increase`, `support-effects`, `critical-chance-increase`, `critical-multiplier-increase`, `lightning-exposure`, `lightning-penetration`, `conductivity-effects`, `uncapped-resistance`, `capped-resistance`, `effective-resistance`, `resistance-effects`, `damage-before-resistance`, `damage-after-resistance`, `cast-rate`, `critical-effects`, `shock-effects` and `selected-skill`.
 
 Reports expose each node's reads and the derived nodes actually evaluated in dependency order. Input comparisons and validation run for every update and are excluded from `recalculated`. The final node assembles the complete result and selected hit/combined DPS.
 
-| Change                                      | Derived work                                                                                                                                              |
-| ------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Damage modifier                             | Damage increase, normal hit before/after resistance, critical effects, shock effects, result                                                              |
-| Cast-speed modifier                         | Cast-speed increase, cast rate, result                                                                                                                    |
-| Added-lightning group                       | Raw/effective added lightning, combined base, normal hit before/after resistance, critical effects, shock effects, result                                 |
-| Support level/enabled/source/order          | Support effects, normal hit before/after resistance, cast rate, critical effects, shock effects, result                                                   |
-| Critical chance or multiplier modifier      | Corresponding critical aggregate, critical effects, shock effects, result                                                                                 |
-| Critical chance modifier becomes multiplier | Both critical aggregates, critical effects, shock effects, result                                                                                         |
-| Critical mode                               | Critical effects, shock effects, result                                                                                                                   |
-| Configured base resistance                  | Uncapped resistance, cap/floor, effective resistance, resistance trace, hit after resistance, critical effects, shock effects, result                     |
-| Exposure strength/enabled/membership        | Exposure selection, uncapped resistance, cap/floor, effective resistance, resistance trace, hit after resistance, critical effects, shock effects, result |
-| Maximum-resistance mode                     | Cap/floor, effective resistance, resistance trace, hit after resistance, critical effects, shock effects, result                                          |
-| Lightning penetration                       | Penetration aggregate, effective resistance, resistance trace, hit after resistance, critical effects, shock effects, result                              |
-| Resistance configuration source             | Resistance trace, result                                                                                                                                  |
-| Legacy configuration ID                     | Resistance trace, result                                                                                                                                  |
-| Shock magnitude/uptime/source/mode          | Shock effects, result                                                                                                                                     |
-| Selected level/quality                      | Base facts, effective added lightning, combined base, normal hit before/after resistance, cast rate, critical effects, shock effects, result              |
-| Identical input                             | None                                                                                                                                                      |
+| Change                                              | Derived work                                                                                                                                                |
+| --------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Damage modifier                                     | Damage increase, normal hit before/after resistance, critical effects, shock effects, result                                                                |
+| Cast-speed modifier                                 | Cast-speed increase, cast rate, result                                                                                                                      |
+| Added-lightning group                               | Raw/effective added lightning, combined base, normal hit before/after resistance, critical effects, shock effects, result                                   |
+| Support level/enabled/source/order                  | Support effects, normal hit before/after resistance, cast rate, critical effects, shock effects, result                                                     |
+| Critical chance or multiplier modifier              | Corresponding critical aggregate, critical effects, shock effects, result                                                                                   |
+| Critical chance modifier becomes multiplier         | Both critical aggregates, critical effects, shock effects, result                                                                                           |
+| Critical mode                                       | Critical effects, shock effects, result                                                                                                                     |
+| Configured base resistance                          | Uncapped resistance, cap/floor, effective resistance, resistance trace, hit after resistance, critical effects, shock effects, result                       |
+| Exposure strength/enabled/membership                | Exposure selection, uncapped resistance, cap/floor, effective resistance, resistance trace, hit after resistance, critical effects, shock effects, result   |
+| Conductivity level/effect/enabled/source/membership | Conductivity effects, uncapped resistance, cap/floor, effective resistance, resistance trace, hit after resistance, critical effects, shock effects, result |
+| Maximum-resistance mode                             | Cap/floor, effective resistance, resistance trace, hit after resistance, critical effects, shock effects, result                                            |
+| Lightning penetration                               | Penetration aggregate, effective resistance, resistance trace, hit after resistance, critical effects, shock effects, result                                |
+| Resistance configuration source                     | Resistance trace, result                                                                                                                                    |
+| Legacy configuration ID                             | Resistance trace, result                                                                                                                                    |
+| Shock magnitude/uptime/source/mode                  | Shock effects, result                                                                                                                                       |
+| Selected level/quality                              | Base facts, effective added lightning, combined base, normal hit before/after resistance, cast rate, critical effects, shock effects, result                |
+| Identical input                                     | None                                                                                                                                                        |
 
 Each modifier remains a separate input leaf identified by array position. Exact stat IDs classify four increased-damage categories, cast speed, two increased-critical-chance categories, added critical multiplier and lightning penetration. Reclassifying, adding or removing a contribution replaces the applicable aggregate dependencies. Reordering contributions can cause additional work. Authored values, ordered added-damage groups and individual sources remain visible.
 
@@ -43,15 +44,25 @@ Average critical mode requires an explicit ailment profile: `ailmentMode: 'exclu
 
 ## Resistance stages
 
-The earlier profile accepts already-effective resistance explicitly. Its cap fields are `null`, with no exposure/cap/penetration inference. Combining that profile with penetration or configured resistance is rejected.
+The earlier profile accepts already-effective resistance explicitly. Its cap fields are `null`, with no exposure/cap/penetration inference. Combining that profile with penetration, Conductivity or configured resistance is rejected.
 
 The configured profile requires a bounded integer base resistance, an explicit maximum mode, a scenario source and an explicit exposure list. Every exposure candidate is retained, including disabled entries. `lightning-exposure` reads all candidates, selects the strongest enabled negative magnitude, records all tied indices and applies that magnitude once. It does not sum exposures. Changing membership rebuilds its reads; tests cover former weaker candidates becoming strongest, ties and removals.
 
-Uncapped resistance is base plus selected exposure. The configured maximum follows the pinned PoB configuration behavior, `min(max(base, 75), 90)`; `default75` instead uses 75. The cap/floor node then applies the maximum and the -200 floor. Penetration is subtracted afterward, without another floor. For example, -205 uncapped becomes -200, then 20 penetration produces -220 effective resistance. Normal and critical damage use the same effective value.
+Uncapped resistance is base plus selected exposure plus the already-active Conductivity resistance contribution, in that order. The configured maximum follows the pinned PoB configuration behavior, `min(max(base, 75), 90)`; `default75` instead uses 75. The cap/floor node then applies the maximum and the -200 floor. Penetration is subtracted afterward, without another floor. For example, -205 uncapped becomes -200, then 20 penetration produces -220 effective resistance. Normal and critical damage use the same effective value.
 
-Base changes reuse exposure selection. Maximum-mode changes reuse the uncapped value. Penetration changes reuse exposure, uncapped resistance, cap/floor, normal damage before resistance and cast rate. Scenario-source changes only rebuild metadata and the result. The resistance trace exposes every intermediate and retains the exact penetration contributions, exposure sources, selected indices, configuration source and pinned rule source.
+Base changes reuse exposure selection and Conductivity effects. Maximum-mode changes reuse the uncapped value. Penetration changes reuse exposure, Conductivity effects, uncapped resistance, cap/floor, normal damage before resistance and cast rate. Scenario-source changes only rebuild metadata and the result. The resistance trace exposes every intermediate and retains the exact penetration contributions, exposure sources, selected indices, configuration source and pinned rule source.
 
 Tests compare entire results against fresh recomputation after each mutation, including provenance and intermediate values. They cover zero damage, chance bounds, multiplier floor, resistance bounds/crossings, post-penetration values below -200, missing facts/configuration, malformed and inherited inputs, unsafe integer cancellation, signed zero, immutable ownership and recovery after rejected updates.
+
+## Configured Conductivity
+
+Only normal Conductivity levels 1–20 at quality zero are accepted. Its already-active state is nested under configured lightning resistance, with an enabled flag, an explicit increased-effect value from -100% through 200%, a scenario source and a separate effect source. The earlier already-effective resistance profile cannot combine with a configured curse. Other curses, global curse-effect item modifiers and automatic curse application remain unsupported.
+
+`conductivity-effects` resolves the exact snapshot's level facts. It scales the negative lightning-resistance stat by `1 + increasedEffectPercent / 100`, rounds to two decimals and then truncates toward zero. The enabled state selects that value or zero as the applied contribution. Absent Conductivity produces an explicit `null` trace. Disabled state and -100% effect preserve their raw facts and provenance while contributing zero resistance reduction. The trace exposes base, scaled, rounded, truncated and applied values, plus the exact `base_lightning_damage_resistance_%` and `curse_effect_+%` contributions with their separate sources.
+
+The applied reduction joins base resistance and strongest exposure before maximum resistance and the -200 floor. Penetration follows afterward. Duration and radius remain source metadata for the already-active scenario; casting, reapplication, curse limits and uptime are not inferred. Conductivity's authored 25% chance to be shocked is retained, including its scaled value and source, with `appliedToSelectedHit: false`. An explicit excluded or configured-shock ailment policy is required; the chance never generates an assumed shock state.
+
+Level, effect, enabled-state, source and membership changes refresh the curse and downstream resistance/hit stages, preserving base damage, damage increases, cast speed, support effects and exposure selection. Penetration changes reuse the curse calculation. Source-only curse changes currently use the same conservative downstream invalidation even when the numeric reduction remains equal. Tests verify source ownership, negative rounding, cap/floor masking, post-penetration resistance below -200, removal, missing facts and atomic recovery.
 
 ## Configured shock stage
 
@@ -67,36 +78,41 @@ Magnitude, uptime, source and mode changes evaluate only `shock-effects` and res
 
 ## Reproducible benchmark
 
-Run `npm run build` followed by `node scripts/benchmark-selected-skill.mjs`. The host script uses the recorded PoE1 client fixture (`local-client-fixture`, snapshot `poe1-spark-client-fixture-v1`) with 36 individual item contributions, including three critical modifiers and one penetration modifier; one grouped added-lightning range; enabled level-one Controlled Destruction and Faster Casting; level 20 Spark; average critical mode; and configured shock of 20% magnitude with 50% supplied uptime. The enemy starts at 100 base resistance, configured maximum mode, two exposure candidates (-10 enabled and -25 disabled), and 15 penetration.
+Run `npm run build` followed by `node scripts/benchmark-selected-skill.mjs`. The host script uses the recorded PoE1 client fixture (`local-client-fixture`, snapshot `poe1-spark-client-fixture-v1`) with 36 individual item contributions, including three critical modifiers and one penetration modifier; one grouped added-lightning range; enabled level-one Controlled Destruction and Faster Casting; level 20 Spark; average critical mode; and configured shock of 20% magnitude with 50% supplied uptime. The enemy starts at 100 base resistance, configured maximum mode, two exposure candidates (-10 enabled and -25 disabled), 15 penetration, and enabled level-one Conductivity with zero increased effect.
 
-Twenty-one separate batches each contain 1,000 mutations. Every state is compared completely to fresh recomputation outside the timed region. There are 100 warmup updates, five timed trials, alternating full/incremental trial order and a median per path. Session creation, XML parsing and snapshot loading are excluded; validation, input capture, graph reconstruction/planning and result construction are included. A DPS checksum keeps results observable.
+Twenty-six separate batches each contain 1,000 mutations. Every state is compared completely to fresh recomputation outside the timed region. There are 100 warmup updates, five timed trials, alternating full/incremental trial order and a median per path. Session creation, XML parsing and snapshot loading are excluded; validation, input capture, graph reconstruction/planning and result construction are included. A DPS checksum keeps results observable.
 
-Recorded November 10, 2026, on Windows x64, Node 24.6.0 and npm 11.5.1; engine rule revision `poe1-selected-spark-v7`, working implementation based on Git revision `747a80b2ee68eef856ad070eb5a9b1036021668c`:
+Recorded November 10, 2026, on Windows x64, Node 24.6.0 and npm 11.5.1; engine rule revision `poe1-selected-spark-v8`, working implementation based on Git revision `94fdb5d633de9ec6b01d8f19bd06392488160ca6`:
 
 | Batch, 1,000 updates                     | Full median | Incremental median | Incremental / full |
 | ---------------------------------------- | ----------: | -----------------: | -----------------: |
-| Item damage value                        |    50.71 ms |          111.59 ms |               2.20 |
-| Enemy base resistance                    |    49.48 ms |          113.26 ms |               2.29 |
-| Damage/cast-speed applicability          |    49.12 ms |          110.60 ms |               2.25 |
-| Added-lightning range                    |    46.46 ms |          107.61 ms |               2.32 |
-| Controlled Destruction level             |    45.83 ms |          116.99 ms |               2.55 |
-| Controlled Destruction enabled           |    46.38 ms |          114.46 ms |               2.47 |
-| Critical chance                          |    45.69 ms |          110.88 ms |               2.43 |
-| Critical multiplier                      |    44.42 ms |          113.16 ms |               2.55 |
-| Critical mode                            |    49.09 ms |          117.24 ms |               2.39 |
-| Critical chance/multiplier applicability |    49.64 ms |          119.54 ms |               2.41 |
-| Exposure strength                        |    54.38 ms |          137.92 ms |               2.54 |
-| Exposure enabled state                   |    53.82 ms |          132.91 ms |               2.47 |
-| Lightning penetration                    |    56.92 ms |          136.07 ms |               2.39 |
-| Penetration/damage applicability         |    51.46 ms |          128.51 ms |               2.50 |
-| Item cast speed only                     |    49.35 ms |          114.47 ms |               2.32 |
-| Shock magnitude                          |    49.66 ms |          110.34 ms |               2.22 |
-| Shock uptime                             |    49.99 ms |          112.42 ms |               2.25 |
-| Shock mode                               |    51.60 ms |          112.62 ms |               2.18 |
-| Faster Casting level                     |    49.39 ms |          125.19 ms |               2.53 |
-| Faster Casting enabled                   |    48.94 ms |          125.45 ms |               2.56 |
-| Support order                            |    48.52 ms |          125.93 ms |               2.60 |
+| Item damage value                        |    61.57 ms |          115.17 ms |               1.87 |
+| Enemy base resistance                    |    59.60 ms |          119.48 ms |               2.00 |
+| Damage/cast-speed applicability          |   110.29 ms |          208.79 ms |               1.89 |
+| Added-lightning range                    |   111.33 ms |          214.16 ms |               1.92 |
+| Controlled Destruction level             |   122.11 ms |          237.89 ms |               1.95 |
+| Controlled Destruction enabled           |   110.63 ms |          232.25 ms |               2.10 |
+| Critical chance                          |   112.79 ms |          224.75 ms |               1.99 |
+| Critical multiplier                      |   111.41 ms |          223.52 ms |               2.01 |
+| Critical mode                            |   116.54 ms |          232.48 ms |               1.99 |
+| Critical chance/multiplier applicability |   111.83 ms |          217.68 ms |               1.95 |
+| Exposure strength                        |   113.35 ms |          235.12 ms |               2.07 |
+| Exposure enabled state                   |   115.47 ms |          237.12 ms |               2.05 |
+| Lightning penetration                    |   112.26 ms |          238.56 ms |               2.13 |
+| Penetration/damage applicability         |   124.47 ms |          241.16 ms |               1.94 |
+| Item cast speed only                     |   127.60 ms |          265.47 ms |               2.08 |
+| Shock magnitude                          |   151.43 ms |          279.97 ms |               1.85 |
+| Shock uptime                             |   116.30 ms |          230.82 ms |               1.98 |
+| Shock mode                               |   141.42 ms |          254.31 ms |               1.80 |
+| Faster Casting level                     |   112.10 ms |          239.14 ms |               2.13 |
+| Faster Casting enabled                   |   114.83 ms |          240.77 ms |               2.10 |
+| Support order                            |   117.55 ms |          224.75 ms |               1.91 |
+| Conductivity level                       |   121.17 ms |          250.49 ms |               2.07 |
+| Conductivity enabled                     |   107.80 ms |          255.06 ms |               2.37 |
+| Conductivity effect                      |   135.69 ms |          291.55 ms |               2.15 |
+| Conductivity source                      |   118.91 ms |          258.63 ms |               2.17 |
+| Conductivity membership                  |   113.44 ms |          244.48 ms |               2.16 |
 
-All 21,000 comparisons passed. The first damage/cast applicability, Controlled Destruction level/enabled, critical-mode, critical-applicability, penetration-applicability, shock-mode, Faster Casting level/enabled and support-order states equal their initial states, so 999 updates in each of those ten batches evaluated derived nodes. The other eleven batches evaluated the reported nodes 1,000 times. No benchmark mutation recalculated base facts. Penetration-only updates retained all earlier resistance stages. Shock edits evaluated only shock effects and result assembly; item cast-speed-only edits reused shock means. Support changes used the conservative aggregate invalidation described above.
+All 26,000 comparisons passed. Thirteen batches begin with a state equal to the initial input and evaluate derived nodes for 999 subsequent updates; the other thirteen evaluate the reported nodes 1,000 times. No benchmark mutation recalculated base facts. The five Conductivity batches evaluated exactly the curse node and its eight downstream consumers. All other batches retained the curse cache. Penetration-only updates retained earlier resistance stages. Shock edits evaluated only shock effects and result assembly; item cast-speed-only edits reused shock means. Support changes used the conservative aggregate invalidation described above.
 
 These are development-machine measurements without CPU isolation; batches and repeated runs vary. The incremental path is slower for this small rule set because input validation, capture and graph maintenance outweigh the avoided arithmetic. This demonstrates selective work and equality, not a speedup or production latency guarantee. Both paths retain linear validation work. Full recomputation remains the simple default. Measure a larger supported workload before optimizing graph reuse or introducing keyed patches; these measurements do not justify expanding mechanic coverage.

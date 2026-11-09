@@ -65,6 +65,17 @@ const fixtures = Object.fromEntries(
         'tick-cap',
         'rescued',
       ].map((suffix) => `support-faster-casting-${suffix}`),
+      ...[
+        'level1',
+        'level20',
+        'disabled',
+        'rounded',
+        'reduced',
+        'zero-effect',
+        'overcap',
+        'floor',
+        'combined',
+      ].map((suffix) => `conductivity-${suffix}`),
     ].map(async (name) => [
       name,
       await readFile(new URL(`./fixtures/pob/${name}.xml`, import.meta.url), 'utf8'),
@@ -95,7 +106,7 @@ const rawResistance = (
 });
 
 test('PoB capability advertises exactly the bounded XML profile', () => {
-  assert.equal(pobAdapterVersion, 'poe1-spark-xml-v7');
+  assert.equal(pobAdapterVersion, 'poe1-spark-xml-v8');
   assert.equal(pobCompatibility.status, 'bounded-poe1-spark-xml');
   assert.equal(pobCompatibility.xmlImportImplemented, true);
   assert.equal(pobCompatibility.shareCodeImportImplemented, false);
@@ -469,6 +480,94 @@ test('fractional and unsafe XML percentage item lines retain diagnostics rather 
       assert.equal(result.rawXml, xml);
       assert.ok(result.unresolved.some((entry) => entry.raw === `${amount}% increased ${suffix}`));
     }
+  }
+});
+
+test('configured Conductivity adapts one separate curse group and explicit effect provenance', () => {
+  for (const suffix of [
+    'level1',
+    'level20',
+    'disabled',
+    'rounded',
+    'reduced',
+    'zero-effect',
+    'overcap',
+    'floor',
+    'combined',
+  ]) {
+    const xml = fixtures[`conductivity-${suffix}`];
+    const result = importPobXml(source(xml, suffix === 'combined' ? 40 : undefined));
+    assert.equal(result.complete, true, suffix + JSON.stringify(result.diagnostics));
+    assert.equal(result.selectedSkill.skill.id, 'Spark');
+    assert.equal(result.skills.length, 1);
+    const curse = result.selectedSkill.configuration.lightningResistance.conductivity;
+    assert.equal(curse.id, 'Conductivity');
+    assert.equal(curse.quality, 0);
+    assert.equal(curse.enabled, suffix !== 'disabled');
+    assert.equal(curse.gemLevel, ['level1', 'rounded', 'reduced'].includes(suffix) ? 1 : 20);
+    assert.equal(
+      curse.increasedEffectPercent,
+      { rounded: 25, reduced: -50, 'zero-effect': -100, floor: 200, combined: 25 }[suffix] ?? 0,
+    );
+    assert.deepEqual(curse.source, { kind: 'scenario', id: 'pob-gem:2:1', label: 'Conductivity' });
+    assert.equal(curse.effectSource.id, 'pob-config:conductivity-effect');
+    assert.equal(curse.effectSource.kind, 'scenario');
+    assert.equal(curse.effectSource.line, 1);
+    assert.match(curse.effectSource.label, /% (increased|reduced) Effect of your Curses$/);
+    assert.equal(result.selectedSkill.configuration.criticalStrikeMode, 'average');
+    assert.equal(result.selectedSkill.buildId, 'synthetic-spark');
+    assert.deepEqual(result.selectedSkill.identity, target);
+    assert.equal(result.rawXml, xml);
+    assert.equal(
+      result.modifiers.some((mod) => mod.statId === 'curse_effect_+%'),
+      false,
+    );
+  }
+});
+
+test('ambiguous Conductivity application, effect, gems and extra curse mechanics remain unresolved', () => {
+  const xml = fixtures['conductivity-level20'];
+  const curseGroup = xml.match(
+    /    <Skill enabled="true" mainActiveSkill="1" skillPart="1">\r?\n      <Gem skillId="Conductivity"[\s\S]*?<\/Skill>/,
+  )[0];
+  const effectBlock = xml.match(
+    /    <CustomModifierBlock title="Conductivity Effect"[^>]*>[^<]*<\/CustomModifierBlock>/,
+  )[0];
+  const gem = curseGroup.match(/<Gem[^>]*\/>/)[0];
+  const candidates = [
+    xml.replace(curseGroup, ''),
+    xml.replace(effectBlock, ''),
+    xml.replace('Cannot inflict Elemental Ailments', 'Never deal Critical Strikes'),
+    xml.replace(curseGroup, curseGroup.replace('enabled="true"', 'enabled="false"')),
+    xml.replace(curseGroup, curseGroup.replace('level="20"', 'level="21"')),
+    xml.replace(curseGroup, curseGroup.replace('quality="0"', 'quality="1"')),
+    xml.replace(
+      curseGroup,
+      curseGroup.replace('SkillGemConductivity', 'SkillGemElementalWeakness'),
+    ),
+    xml.replace(
+      curseGroup,
+      curseGroup.replace('skillId="Conductivity"', 'skillId="ConductivityAltX"'),
+    ),
+    xml.replace(curseGroup, curseGroup.replace(gem, gem + gem)),
+    xml.replace(curseGroup, curseGroup + curseGroup),
+    xml.replace(effectBlock, effectBlock.replace('enabled="true"', 'enabled="false"')),
+    xml.replace(effectBlock, effectBlock + effectBlock),
+    ...[
+      '201% increased Effect of your Curses',
+      '101% reduced Effect of your Curses',
+      '12.5% increased Effect of your Curses',
+      '0% increased Effect of your Curses\nEnemies can have 1 additional Curse',
+    ].map((text) => xml.replace('0% increased Effect of your Curses', text)),
+    xml.replace('string="None"', 'string="Pinnacle"'),
+    xml.replace('</Config>', '<Input name="enemyIsHexproof" boolean="true"/></Config>'),
+  ];
+  for (const candidate of candidates) {
+    const result = importPobXml(source(candidate));
+    assert.equal(result.complete, false, candidate);
+    assert.equal('selectedSkill' in result, false);
+    assert.ok(result.unresolved.length);
+    assert.equal(result.rawXml, candidate);
   }
 });
 

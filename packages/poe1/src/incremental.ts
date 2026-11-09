@@ -29,6 +29,7 @@ import {
   type LightningResistanceStages,
 } from './resistance.js';
 import { calculateSelectedSkillShockEffects } from './shock.js';
+import { calculateSelectedConductivity, copyConductivityTrace } from './conductivity.js';
 
 export interface IncrementalSelectedSkillReport {
   readonly calculation: SelectedSkillCalculation;
@@ -63,6 +64,7 @@ const DERIVED = new Set([
   'critical-multiplier-increase',
   'lightning-exposure',
   'lightning-penetration',
+  'conductivity-effects',
   'uncapped-resistance',
   'capped-resistance',
   'effective-resistance',
@@ -114,6 +116,17 @@ function copyInput(input: SelectedSkillInput): SelectedSkillInput {
             lightningResistance: {
               ...input.configuration.lightningResistance,
               source: { ...input.configuration.lightningResistance.source },
+              ...(input.configuration.lightningResistance.conductivity === undefined
+                ? {}
+                : {
+                    conductivity: {
+                      ...input.configuration.lightningResistance.conductivity,
+                      source: { ...input.configuration.lightningResistance.conductivity.source },
+                      effectSource: {
+                        ...input.configuration.lightningResistance.conductivity.effectSource,
+                      },
+                    },
+                  }),
               exposures: input.configuration.lightningResistance.exposures.map((exposure) => ({
                 ...exposure,
                 source: { ...exposure.source },
@@ -252,6 +265,29 @@ function copyDataset(dataset: SparkDataset): SparkDataset {
             sourceRows: copyRows(dataset.shock.sourceRows),
           },
         }),
+    ...(dataset.conductivity === undefined
+      ? {}
+      : {
+          conductivity: {
+            identity: {
+              game: dataset.conductivity.identity.game,
+              build: dataset.conductivity.identity.build,
+              snapshotId: dataset.conductivity.identity.snapshotId,
+            },
+            id: dataset.conductivity.id,
+            gemId: dataset.conductivity.gemId,
+            chanceToBeShockedPercent: dataset.conductivity.chanceToBeShockedPercent,
+            levels: dataset.conductivity.levels.map((level) => ({
+              gemLevel: level.gemLevel,
+              baseLightningResistancePercent: level.baseLightningResistancePercent,
+              durationMilliseconds: level.durationMilliseconds,
+              radiusIncrement: level.radiusIncrement,
+              sourceRows: copyRows(level.sourceRows),
+            })),
+            ruleSource: { ...dataset.conductivity.ruleSource },
+            sourceRows: copyRows(dataset.conductivity.sourceRows),
+          },
+        }),
   };
 }
 
@@ -278,6 +314,7 @@ function copyResistanceEffects(
 ): SelectedSkillCalculation['resistanceEffects'] {
   return {
     ...effects,
+    conductivity: copyConductivityTrace(effects.conductivity),
     exposureContributions: effects.exposureContributions.map((exposure) => ({
       ...exposure,
       source: { ...exposure.source },
@@ -379,6 +416,13 @@ function inputNodes(input: SelectedSkillInput): Readonly<Record<string, unknown>
     ],
     ['input.resistance-maximum', resistance?.maximumResistanceMode ?? 'already-effective'],
     [
+      'input.conductivity',
+      [
+        resistance !== undefined && Object.hasOwn(resistance, 'conductivity'),
+        resistance?.conductivity,
+      ],
+    ],
+    [
       'input.resistance-source',
       resistance?.source ?? { kind: 'scenario', id: input.configuration.id },
     ],
@@ -422,7 +466,8 @@ function graph(input: SelectedSkillInput): CalculationDependencies {
       (_, index) => `exposure:${index}`,
     ),
     'lightning-penetration': penetration,
-    'uncapped-resistance': ['input.resistance', 'lightning-exposure'],
+    'conductivity-effects': ['input.conductivity'],
+    'uncapped-resistance': ['input.resistance', 'lightning-exposure', 'conductivity-effects'],
     'capped-resistance': ['input.resistance', 'input.resistance-maximum', 'uncapped-resistance'],
     'effective-resistance': ['capped-resistance', 'lightning-penetration'],
     'resistance-effects': [
@@ -431,6 +476,7 @@ function graph(input: SelectedSkillInput): CalculationDependencies {
       'input.resistance-source',
       'lightning-exposure',
       'lightning-penetration',
+      'conductivity-effects',
       'uncapped-resistance',
       'capped-resistance',
       'effective-resistance',
@@ -457,6 +503,7 @@ function graph(input: SelectedSkillInput): CalculationDependencies {
       'input.resistance',
       'input.resistance-maximum',
       'input.resistance-source',
+      'input.conductivity',
       ...input.modifiers.map((_, index) => `modifier:${index}`),
       ...(input.addedLightningDamage ?? []).map((_, index) => `added-lightning:${index}`),
       'base',
@@ -559,6 +606,7 @@ export function createSelectedSkillSession(
     shockEffects: copyShockEffects(full.value.shockEffects),
     resistanceStages: {
       exposurePercent: full.value.resistanceEffects.exposurePercent,
+      conductivity: copyConductivityTrace(full.value.resistanceEffects.conductivity),
       selectedExposureIndices: [...full.value.resistanceEffects.selectedExposureIndices],
       uncappedResistancePercent: full.value.resistanceEffects.uncappedResistancePercent,
       maximumResistancePercent: full.value.resistanceEffects.maximumResistancePercent,
@@ -645,6 +693,7 @@ export function createSelectedSkillSession(
     } = cache;
     let {
       exposurePercent,
+      conductivity,
       selectedExposureIndices,
       uncappedResistancePercent,
       maximumResistancePercent,
@@ -717,11 +766,19 @@ export function createSelectedSkillSession(
             .filter((modifier) => modifier.statId === LIGHTNING_PENETRATION)
             .reduce((sum, modifier) => sum + modifier.value, 0);
           break;
+        case 'conductivity-effects': {
+          const effects = calculateSelectedConductivity(next, captured.conductivity);
+          if (!effects.ok) return effects;
+          conductivity = effects.value;
+          break;
+        }
         case 'uncapped-resistance':
           uncappedResistancePercent =
             next.configuration.lightningResistance === undefined
               ? next.configuration.effectiveLightningResistancePercent!
-              : next.configuration.lightningResistance.baseResistancePercent + exposurePercent;
+              : next.configuration.lightningResistance.baseResistancePercent +
+                exposurePercent +
+                (conductivity?.appliedLightningResistancePercent ?? 0);
           break;
         case 'capped-resistance': {
           const raw = next.configuration.lightningResistance;
@@ -750,6 +807,7 @@ export function createSelectedSkillSession(
         case 'resistance-effects': {
           const effects = assembleSelectedSkillResistance(next, captured, {
             exposurePercent,
+            conductivity,
             selectedExposureIndices,
             uncappedResistancePercent,
             maximumResistancePercent,
@@ -923,6 +981,7 @@ export function createSelectedSkillSession(
       shockEffects,
       resistanceStages: {
         exposurePercent,
+        conductivity,
         selectedExposureIndices,
         uncappedResistancePercent,
         maximumResistancePercent,

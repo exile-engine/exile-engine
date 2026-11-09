@@ -47,7 +47,10 @@
       "CannotScorch": false,
       "CannotShock": false
     },
+    "appliedCurseSlots": [],
     "baseCriticalChancePercent": 6,
+    "conductivityActiveSkills": [],
+    "conductivityGems": [],
     "contributions": [],
     "criticalContributions": [
       {
@@ -71,6 +74,7 @@
     "enemyDamageTakenPercent": 0,
     "enemyLightningResistanceBeforeClampPercent": 0,
     "enemyLightningResistanceContributions": [],
+    "enemySelfShockChancePercent": 0,
     "enemyShockConfigured": false,
     "increasedCastSpeedPercent": 0,
     "increasedCriticalChancePercent": 0,
@@ -181,7 +185,10 @@
       "CannotScorch": false,
       "CannotShock": false
     },
+    "appliedCurseSlots": [],
     "baseCriticalChancePercent": 6,
+    "conductivityActiveSkills": [],
+    "conductivityGems": [],
     "contributions": [
       {
         "flags": 0,
@@ -247,6 +254,7 @@
         "value": 25
       }
     ],
+    "enemySelfShockChancePercent": 0,
     "enemyShockConfigured": false,
     "increasedCastSpeedPercent": 25,
     "increasedCriticalChancePercent": 0,
@@ -413,7 +421,10 @@
       "CannotScorch": false,
       "CannotShock": false
     },
+    "appliedCurseSlots": [],
     "baseCriticalChancePercent": 6,
+    "conductivityActiveSkills": [],
+    "conductivityGems": [],
     "contributions": [],
     "criticalContributions": [
       {
@@ -437,6 +448,7 @@
     "enemyDamageTakenPercent": 0,
     "enemyLightningResistanceBeforeClampPercent": 0,
     "enemyLightningResistanceContributions": [],
+    "enemySelfShockChancePercent": 0,
     "enemyShockConfigured": false,
     "increasedCastSpeedPercent": 0,
     "increasedCriticalChancePercent": 0,
@@ -561,7 +573,10 @@
       "CannotScorch": false,
       "CannotShock": false
     },
+    "appliedCurseSlots": [],
     "baseCriticalChancePercent": 6,
+    "conductivityActiveSkills": [],
+    "conductivityGems": [],
     "contributions": [],
     "criticalContributions": [
       {
@@ -585,6 +600,7 @@
     "enemyDamageTakenPercent": 0,
     "enemyLightningResistanceBeforeClampPercent": 0,
     "enemyLightningResistanceContributions": [],
+    "enemySelfShockChancePercent": 0,
     "enemyShockConfigured": false,
     "increasedCastSpeedPercent": 0,
     "increasedCriticalChancePercent": 0,
@@ -712,7 +728,10 @@
       "CannotScorch": false,
       "CannotShock": false
     },
+    "appliedCurseSlots": [],
     "baseCriticalChancePercent": 6,
+    "conductivityActiveSkills": [],
+    "conductivityGems": [],
     "contributions": [
       {
         "flags": 2,
@@ -744,6 +763,7 @@
     "enemyDamageTakenPercent": 0,
     "enemyLightningResistanceBeforeClampPercent": 0,
     "enemyLightningResistanceContributions": [],
+    "enemySelfShockChancePercent": 0,
     "enemyShockConfigured": false,
     "increasedCastSpeedPercent": 0,
     "increasedCriticalChancePercent": 0,
@@ -850,7 +870,10 @@
       "CannotScorch": false,
       "CannotShock": false
     },
+    "appliedCurseSlots": [],
     "baseCriticalChancePercent": 6,
+    "conductivityActiveSkills": [],
+    "conductivityGems": [],
     "contributions": [],
     "criticalContributions": [
       {
@@ -874,6 +897,7 @@
     "enemyDamageTakenPercent": 0,
     "enemyLightningResistanceBeforeClampPercent": 0,
     "enemyLightningResistanceContributions": [],
+    "enemySelfShockChancePercent": 0,
     "enemyShockConfigured": false,
     "increasedCastSpeedPercent": 0,
     "increasedCriticalChancePercent": 0,
@@ -967,7 +991,10 @@
       "CannotScorch": false,
       "CannotShock": false
     },
+    "appliedCurseSlots": [],
     "baseCriticalChancePercent": 6,
+    "conductivityActiveSkills": [],
+    "conductivityGems": [],
     "contributions": [],
     "criticalContributions": [
       {
@@ -991,6 +1018,7 @@
     "enemyDamageTakenPercent": 0,
     "enemyLightningResistanceBeforeClampPercent": 0,
     "enemyLightningResistanceContributions": [],
+    "enemySelfShockChancePercent": 0,
     "enemyShockConfigured": false,
     "increasedCastSpeedPercent": 0,
     "increasedCriticalChancePercent": 0,
@@ -1066,7 +1094,10 @@
       "CannotScorch": false,
       "CannotShock": false
     },
+    "appliedCurseSlots": [],
     "baseCriticalChancePercent": 6,
+    "conductivityActiveSkills": [],
+    "conductivityGems": [],
     "contributions": [
       {
         "flags": 16,
@@ -1098,6 +1129,7 @@
     "enemyDamageTakenPercent": 0,
     "enemyLightningResistanceBeforeClampPercent": 0,
     "enemyLightningResistanceContributions": [],
+    "enemySelfShockChancePercent": 0,
     "enemyShockConfigured": false,
     "increasedCastSpeedPercent": 25,
     "increasedCriticalChancePercent": 0,
@@ -1152,6 +1184,2216 @@
     "supportTotalCastTime": 0,
     "sourceXmlSha256": "13955d0779ddcea6040925602e18a25669023040a641bc46585a51a4767f06d0"
   },
+  "conductivity-combined": {
+    "ActionSpeedMod": 1,
+    "AverageDamage": 2513.8385999999996,
+    "AverageHit": 2513.8385999999996,
+    "CombinedDPS": 6871.158839999999,
+    "CritChance": 3,
+    "CritEffect": 1.03,
+    "CritMultiplier": 2,
+    "CurrentShock": 17,
+    "HitChance": 100,
+    "LightningCritAverage": 4881.24,
+    "LightningHitAverage": 2440.62,
+    "LightningMaxBase": 2021,
+    "LightningMinBase": 123,
+    "MaximumShock": 50,
+    "PreEffectiveCritChance": 3,
+    "Speed": 2.7333333333333334,
+    "Time": 0.36585365853658536,
+    "TotalDPS": 6871.158839999999,
+    "TotalMax": 4601.142,
+    "TotalMin": 280.09799999999996,
+    "addedContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 131072,
+        "name": "LightningMin",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 10
+      },
+      {
+        "flags": 0,
+        "keywordFlags": 131072,
+        "name": "LightningMax",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 20
+      }
+    ],
+    "addedMaximum": 20,
+    "addedMinimum": 10,
+    "ailmentFlags": {
+      "CannotBrittle": true,
+      "CannotChill": true,
+      "CannotFreeze": true,
+      "CannotIgnite": true,
+      "CannotSap": true,
+      "CannotScorch": true,
+      "CannotShock": true
+    },
+    "appliedCurseSlots": [
+      {
+        "contributions": [
+          {
+            "name": "LightningResist",
+            "source": "Skill:Conductivity",
+            "value": -45
+          },
+          {
+            "name": "SelfShockChance",
+            "source": "Skill:Conductivity",
+            "value": 31
+          }
+        ],
+        "name": "Conductivity"
+      }
+    ],
+    "baseCriticalChancePercent": 6,
+    "conductivityActiveSkills": [
+      {
+        "id": "Conductivity",
+        "increasedCurseEffectPercent": 25,
+        "moreCurseEffectMultiplier": 1,
+        "rawBuffContributions": [
+          {
+            "name": "SelfShockChance",
+            "source": "Skill:Conductivity",
+            "value": 25
+          },
+          {
+            "name": "LightningResist",
+            "source": "Skill:Conductivity",
+            "value": -36
+          }
+        ]
+      }
+    ],
+    "conductivityGems": [
+      {
+        "enabled": true,
+        "gameId": "Metadata/Items/Gems/SkillGemConductivity",
+        "gemId": "Metadata/Items/Gems/SkillGemConductivity",
+        "level": 20,
+        "nameSpec": "Conductivity",
+        "quality": 0,
+        "skillId": "Conductivity"
+      }
+    ],
+    "configuredShockEffectPercent": 17,
+    "contributions": [
+      {
+        "flags": 16,
+        "keywordFlags": 0,
+        "name": "Speed",
+        "source": "Skill:SupportFasterCasting",
+        "value": 39
+      },
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "Damage",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 10
+      },
+      {
+        "flags": 2,
+        "keywordFlags": 0,
+        "name": "Damage",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 20
+      },
+      {
+        "flags": 1024,
+        "keywordFlags": 0,
+        "name": "Damage",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 40
+      },
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "LightningDamage",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 30
+      },
+      {
+        "flags": 16,
+        "keywordFlags": 0,
+        "name": "Speed",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 25
+      }
+    ],
+    "criticalContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritChance",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "type": "INC",
+        "value": 100
+      },
+      {
+        "flags": 2,
+        "keywordFlags": 0,
+        "name": "CritChance",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "type": "INC",
+        "value": 50
+      },
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritMultiplier",
+        "source": "Base",
+        "type": "BASE",
+        "value": 50
+      },
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritMultiplier",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "type": "BASE",
+        "value": 50
+      }
+    ],
+    "criticalMultiplierExtraPercent": 100,
+    "customModifierBlocks": [
+      {
+        "enabled": true,
+        "text": "Cannot inflict Elemental Ailments",
+        "title": "Exile Engine Assumptions"
+      },
+      {
+        "enabled": true,
+        "text": "Inflict Lightning Exposure on Hit, applying -15% to Lightning Resistance",
+        "title": "Exposure 1"
+      },
+      {
+        "enabled": true,
+        "text": "25% increased Effect of your Curses",
+        "title": "Conductivity Effect"
+      }
+    ],
+    "damageEffectiveness": 1.9,
+    "enemyDamageTakenPercent": 17,
+    "enemyLightningResistanceBeforeClampPercent": 50,
+    "enemyLightningResistanceContributions": [
+      {
+        "name": "LightningResist",
+        "source": "EnemyConfig",
+        "value": 110
+      },
+      {
+        "name": "LightningResist",
+        "source": "Skill:Conductivity",
+        "value": -45
+      },
+      {
+        "name": "LightningResist",
+        "source": "Custom:Exposure 1",
+        "value": -15
+      }
+    ],
+    "enemySelfShockChancePercent": 31,
+    "enemyShockConfigured": true,
+    "increasedCastSpeedPercent": 64,
+    "increasedCriticalChancePercent": 150,
+    "increasedDamagePercent": 100,
+    "itemModifierLines": [
+      {
+        "line": "Adds 10 to 20 Lightning Damage to Spells",
+        "mods": [
+          {
+            "flags": 0,
+            "keywordFlags": 131072,
+            "name": "LightningMin",
+            "value": 10
+          },
+          {
+            "flags": 0,
+            "keywordFlags": 131072,
+            "name": "LightningMax",
+            "value": 20
+          }
+        ]
+      },
+      {
+        "line": "10% increased Damage",
+        "mods": [
+          {
+            "flags": 0,
+            "keywordFlags": 0,
+            "name": "Damage",
+            "value": 10
+          }
+        ]
+      },
+      {
+        "line": "20% increased Spell Damage",
+        "mods": [
+          {
+            "flags": 2,
+            "keywordFlags": 0,
+            "name": "Damage",
+            "value": 20
+          }
+        ]
+      },
+      {
+        "line": "30% increased Lightning Damage",
+        "mods": [
+          {
+            "flags": 0,
+            "keywordFlags": 0,
+            "name": "LightningDamage",
+            "value": 30
+          }
+        ]
+      },
+      {
+        "line": "40% increased Projectile Damage",
+        "mods": [
+          {
+            "flags": 1024,
+            "keywordFlags": 0,
+            "name": "Damage",
+            "value": 40
+          }
+        ]
+      },
+      {
+        "line": "25% increased Cast Speed",
+        "mods": [
+          {
+            "flags": 16,
+            "keywordFlags": 0,
+            "name": "Speed",
+            "value": 25
+          }
+        ]
+      },
+      {
+        "line": "100% increased Critical Strike Chance",
+        "mods": [
+          {
+            "flags": 0,
+            "keywordFlags": 0,
+            "name": "CritChance",
+            "value": 100
+          }
+        ]
+      },
+      {
+        "line": "50% increased Critical Strike Chance for Spells",
+        "mods": [
+          {
+            "flags": 2,
+            "keywordFlags": 0,
+            "name": "CritChance",
+            "value": 50
+          }
+        ]
+      },
+      {
+        "line": "+50% to Global Critical Strike Multiplier",
+        "mods": [
+          {
+            "flags": 0,
+            "keywordFlags": 0,
+            "name": "CritMultiplier",
+            "value": 50
+          }
+        ]
+      },
+      {
+        "line": "Damage Penetrates 20% Lightning Resistance",
+        "mods": [
+          {
+            "flags": 0,
+            "keywordFlags": 0,
+            "name": "LightningPenetration",
+            "value": 20
+          }
+        ]
+      }
+    ],
+    "lightningBreakdown": {
+      "1": "Base damage:",
+      "2": "104 to 1983 ^8(base damage from skill)",
+      "3": "+ 10 to 20 ^8(added damage)",
+      "4": "x 1.90 ^8(damage effectiveness)",
+      "5": "= 123.0 to 2021.0",
+      "6": "Hit damage:",
+      "7": "342 to 5618 ^8(total damage)",
+      "8": "x 0.819 ^8(effective DPS modifier)",
+      "9": "= 280 to 4601",
+      "10": "Portion of total damage: 100%",
+      "damageTypes": [
+        {
+          "base": "123 to 2021",
+          "convSrc": false,
+          "inc": "x 2",
+          "more": "x 1.39",
+          "source": "Lightning",
+          "total": "342 to 5618"
+        }
+      ]
+    },
+    "lightningDamageMultiplier": 0.819,
+    "lightningExposureCandidates": [
+      {
+        "source": "Custom:Exposure 1",
+        "value": -15
+      }
+    ],
+    "lightningPenetrationPercent": 20,
+    "maximumResistanceMode": "configured",
+    "penetrationContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "LightningPenetration",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 20
+      }
+    ],
+    "rawEnemyLightningResistancePercent": 110,
+    "selectedPart": 1,
+    "selectedSkillId": "Spark",
+    "shockContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "DamageTaken",
+        "source": "Shock",
+        "value": 17
+      }
+    ],
+    "supportContributions": [
+      {
+        "flags": 2,
+        "keywordFlags": 0,
+        "name": "Damage",
+        "source": "Skill:SupportControlledDestruction",
+        "value": 39
+      },
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritChance",
+        "source": "Skill:SupportControlledDestruction",
+        "value": -80
+      },
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "SupportManaMultiplier",
+        "source": "Skill:SupportControlledDestruction",
+        "value": 40
+      },
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "SupportManaMultiplier",
+        "source": "Skill:SupportFasterCasting",
+        "value": 10
+      }
+    ],
+    "supportCriticalChanceMultiplier": 0.2,
+    "supportDamageMultiplier": 1.39,
+    "supportGems": [
+      {
+        "enabled": true,
+        "gameId": "Metadata/Items/Gems/SupportGemControlledDestruction",
+        "gemId": "Metadata/Items/Gems/SkillGemSupportControlledDestruction",
+        "level": 20,
+        "nameSpec": "Controlled Destruction",
+        "quality": 0,
+        "skillId": "SupportControlledDestruction"
+      },
+      {
+        "enabled": true,
+        "gameId": "Metadata/Items/Gems/SupportGemFasterCast",
+        "gemId": "Metadata/Items/Gems/SkillGemSupportFasterCasting",
+        "level": 20,
+        "nameSpec": "Faster Casting",
+        "quality": 0,
+        "skillId": "SupportFasterCasting"
+      }
+    ],
+    "supportManaCostMultiplier": 1.54,
+    "supportSpeedMultiplier": 1,
+    "supportTotalCastTime": 0,
+    "unshocked": {
+      "ActionSpeedMod": 1,
+      "AverageDamage": 2148.58,
+      "AverageHit": 2148.58,
+      "CombinedDPS": 5872.785333333333,
+      "CritChance": 3,
+      "CritEffect": 1.03,
+      "CritMultiplier": 2,
+      "CurrentShock": 0,
+      "HitChance": 100,
+      "LightningCritAverage": 4172,
+      "LightningHitAverage": 2086,
+      "LightningMaxBase": 2021,
+      "LightningMinBase": 123,
+      "MaximumShock": 50,
+      "PreEffectiveCritChance": 3,
+      "Speed": 2.7333333333333334,
+      "Time": 0.36585365853658536,
+      "TotalDPS": 5872.785333333333,
+      "TotalMax": 3932.6,
+      "TotalMin": 239.39999999999998,
+      "addedContributions": [
+        {
+          "flags": 0,
+          "keywordFlags": 131072,
+          "name": "LightningMin",
+          "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+          "value": 10
+        },
+        {
+          "flags": 0,
+          "keywordFlags": 131072,
+          "name": "LightningMax",
+          "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+          "value": 20
+        }
+      ],
+      "addedMaximum": 20,
+      "addedMinimum": 10,
+      "ailmentFlags": {
+        "CannotBrittle": true,
+        "CannotChill": true,
+        "CannotFreeze": true,
+        "CannotIgnite": true,
+        "CannotSap": true,
+        "CannotScorch": true,
+        "CannotShock": true
+      },
+      "appliedCurseSlots": [
+        {
+          "contributions": [
+            {
+              "name": "LightningResist",
+              "source": "Skill:Conductivity",
+              "value": -45
+            },
+            {
+              "name": "SelfShockChance",
+              "source": "Skill:Conductivity",
+              "value": 31
+            }
+          ],
+          "name": "Conductivity"
+        }
+      ],
+      "baseCriticalChancePercent": 6,
+      "conductivityActiveSkills": [
+        {
+          "id": "Conductivity",
+          "increasedCurseEffectPercent": 25,
+          "moreCurseEffectMultiplier": 1,
+          "rawBuffContributions": [
+            {
+              "name": "SelfShockChance",
+              "source": "Skill:Conductivity",
+              "value": 25
+            },
+            {
+              "name": "LightningResist",
+              "source": "Skill:Conductivity",
+              "value": -36
+            }
+          ]
+        }
+      ],
+      "conductivityGems": [
+        {
+          "enabled": true,
+          "gameId": "Metadata/Items/Gems/SkillGemConductivity",
+          "gemId": "Metadata/Items/Gems/SkillGemConductivity",
+          "level": 20,
+          "nameSpec": "Conductivity",
+          "quality": 0,
+          "skillId": "Conductivity"
+        }
+      ],
+      "configuredShockEffectPercent": 17,
+      "contributions": [
+        {
+          "flags": 16,
+          "keywordFlags": 0,
+          "name": "Speed",
+          "source": "Skill:SupportFasterCasting",
+          "value": 39
+        },
+        {
+          "flags": 0,
+          "keywordFlags": 0,
+          "name": "Damage",
+          "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+          "value": 10
+        },
+        {
+          "flags": 2,
+          "keywordFlags": 0,
+          "name": "Damage",
+          "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+          "value": 20
+        },
+        {
+          "flags": 1024,
+          "keywordFlags": 0,
+          "name": "Damage",
+          "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+          "value": 40
+        },
+        {
+          "flags": 0,
+          "keywordFlags": 0,
+          "name": "LightningDamage",
+          "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+          "value": 30
+        },
+        {
+          "flags": 16,
+          "keywordFlags": 0,
+          "name": "Speed",
+          "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+          "value": 25
+        }
+      ],
+      "criticalContributions": [
+        {
+          "flags": 0,
+          "keywordFlags": 0,
+          "name": "CritChance",
+          "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+          "type": "INC",
+          "value": 100
+        },
+        {
+          "flags": 2,
+          "keywordFlags": 0,
+          "name": "CritChance",
+          "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+          "type": "INC",
+          "value": 50
+        },
+        {
+          "flags": 0,
+          "keywordFlags": 0,
+          "name": "CritMultiplier",
+          "source": "Base",
+          "type": "BASE",
+          "value": 50
+        },
+        {
+          "flags": 0,
+          "keywordFlags": 0,
+          "name": "CritMultiplier",
+          "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+          "type": "BASE",
+          "value": 50
+        }
+      ],
+      "criticalMultiplierExtraPercent": 100,
+      "customModifierBlocks": [
+        {
+          "enabled": true,
+          "text": "Cannot inflict Elemental Ailments",
+          "title": "Exile Engine Assumptions"
+        },
+        {
+          "enabled": true,
+          "text": "Inflict Lightning Exposure on Hit, applying -15% to Lightning Resistance",
+          "title": "Exposure 1"
+        },
+        {
+          "enabled": true,
+          "text": "25% increased Effect of your Curses",
+          "title": "Conductivity Effect"
+        }
+      ],
+      "damageEffectiveness": 1.9,
+      "enemyDamageTakenPercent": 0,
+      "enemyLightningResistanceBeforeClampPercent": 50,
+      "enemyLightningResistanceContributions": [
+        {
+          "name": "LightningResist",
+          "source": "EnemyConfig",
+          "value": 110
+        },
+        {
+          "name": "LightningResist",
+          "source": "Skill:Conductivity",
+          "value": -45
+        },
+        {
+          "name": "LightningResist",
+          "source": "Custom:Exposure 1",
+          "value": -15
+        }
+      ],
+      "enemySelfShockChancePercent": 31,
+      "enemyShockConfigured": false,
+      "increasedCastSpeedPercent": 64,
+      "increasedCriticalChancePercent": 150,
+      "increasedDamagePercent": 100,
+      "itemModifierLines": [
+        {
+          "line": "Adds 10 to 20 Lightning Damage to Spells",
+          "mods": [
+            {
+              "flags": 0,
+              "keywordFlags": 131072,
+              "name": "LightningMin",
+              "value": 10
+            },
+            {
+              "flags": 0,
+              "keywordFlags": 131072,
+              "name": "LightningMax",
+              "value": 20
+            }
+          ]
+        },
+        {
+          "line": "10% increased Damage",
+          "mods": [
+            {
+              "flags": 0,
+              "keywordFlags": 0,
+              "name": "Damage",
+              "value": 10
+            }
+          ]
+        },
+        {
+          "line": "20% increased Spell Damage",
+          "mods": [
+            {
+              "flags": 2,
+              "keywordFlags": 0,
+              "name": "Damage",
+              "value": 20
+            }
+          ]
+        },
+        {
+          "line": "30% increased Lightning Damage",
+          "mods": [
+            {
+              "flags": 0,
+              "keywordFlags": 0,
+              "name": "LightningDamage",
+              "value": 30
+            }
+          ]
+        },
+        {
+          "line": "40% increased Projectile Damage",
+          "mods": [
+            {
+              "flags": 1024,
+              "keywordFlags": 0,
+              "name": "Damage",
+              "value": 40
+            }
+          ]
+        },
+        {
+          "line": "25% increased Cast Speed",
+          "mods": [
+            {
+              "flags": 16,
+              "keywordFlags": 0,
+              "name": "Speed",
+              "value": 25
+            }
+          ]
+        },
+        {
+          "line": "100% increased Critical Strike Chance",
+          "mods": [
+            {
+              "flags": 0,
+              "keywordFlags": 0,
+              "name": "CritChance",
+              "value": 100
+            }
+          ]
+        },
+        {
+          "line": "50% increased Critical Strike Chance for Spells",
+          "mods": [
+            {
+              "flags": 2,
+              "keywordFlags": 0,
+              "name": "CritChance",
+              "value": 50
+            }
+          ]
+        },
+        {
+          "line": "+50% to Global Critical Strike Multiplier",
+          "mods": [
+            {
+              "flags": 0,
+              "keywordFlags": 0,
+              "name": "CritMultiplier",
+              "value": 50
+            }
+          ]
+        },
+        {
+          "line": "Damage Penetrates 20% Lightning Resistance",
+          "mods": [
+            {
+              "flags": 0,
+              "keywordFlags": 0,
+              "name": "LightningPenetration",
+              "value": 20
+            }
+          ]
+        }
+      ],
+      "lightningBreakdown": {
+        "1": "Base damage:",
+        "2": "104 to 1983 ^8(base damage from skill)",
+        "3": "+ 10 to 20 ^8(added damage)",
+        "4": "x 1.90 ^8(damage effectiveness)",
+        "5": "= 123.0 to 2021.0",
+        "6": "Hit damage:",
+        "7": "342 to 5618 ^8(total damage)",
+        "8": "x 0.700 ^8(effective DPS modifier)",
+        "9": "= 239 to 3932",
+        "10": "Portion of total damage: 100%",
+        "damageTypes": [
+          {
+            "base": "123 to 2021",
+            "convSrc": false,
+            "inc": "x 2",
+            "more": "x 1.39",
+            "source": "Lightning",
+            "total": "342 to 5618"
+          }
+        ]
+      },
+      "lightningDamageMultiplier": 0.7,
+      "lightningExposureCandidates": [
+        {
+          "source": "Custom:Exposure 1",
+          "value": -15
+        }
+      ],
+      "lightningPenetrationPercent": 20,
+      "maximumResistanceMode": "configured",
+      "penetrationContributions": [
+        {
+          "flags": 0,
+          "keywordFlags": 0,
+          "name": "LightningPenetration",
+          "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+          "value": 20
+        }
+      ],
+      "rawEnemyLightningResistancePercent": 110,
+      "selectedPart": 1,
+      "selectedSkillId": "Spark",
+      "shockContributions": [],
+      "supportContributions": [
+        {
+          "flags": 2,
+          "keywordFlags": 0,
+          "name": "Damage",
+          "source": "Skill:SupportControlledDestruction",
+          "value": 39
+        },
+        {
+          "flags": 0,
+          "keywordFlags": 0,
+          "name": "CritChance",
+          "source": "Skill:SupportControlledDestruction",
+          "value": -80
+        },
+        {
+          "flags": 0,
+          "keywordFlags": 0,
+          "name": "SupportManaMultiplier",
+          "source": "Skill:SupportControlledDestruction",
+          "value": 40
+        },
+        {
+          "flags": 0,
+          "keywordFlags": 0,
+          "name": "SupportManaMultiplier",
+          "source": "Skill:SupportFasterCasting",
+          "value": 10
+        }
+      ],
+      "supportCriticalChanceMultiplier": 0.2,
+      "supportDamageMultiplier": 1.39,
+      "supportGems": [
+        {
+          "enabled": true,
+          "gameId": "Metadata/Items/Gems/SupportGemControlledDestruction",
+          "gemId": "Metadata/Items/Gems/SkillGemSupportControlledDestruction",
+          "level": 20,
+          "nameSpec": "Controlled Destruction",
+          "quality": 0,
+          "skillId": "SupportControlledDestruction"
+        },
+        {
+          "enabled": true,
+          "gameId": "Metadata/Items/Gems/SupportGemFasterCast",
+          "gemId": "Metadata/Items/Gems/SkillGemSupportFasterCasting",
+          "level": 20,
+          "nameSpec": "Faster Casting",
+          "quality": 0,
+          "skillId": "SupportFasterCasting"
+        }
+      ],
+      "supportManaCostMultiplier": 1.54,
+      "supportSpeedMultiplier": 1,
+      "supportTotalCastTime": 0,
+      "sourceXmlSha256": "af85e057368e56a0d6cd7966c1ea7a0fc49ee39535b57e1b593dee5f450cfb95",
+      "xmlTransformation": "replace the sole conditionEnemyShocked boolean true with false; all other XML bytes unchanged"
+    },
+    "sourceXmlSha256": "e7ca9041c24252c2d9e798ae8f9a06623c629535cfccf507b9597c9389891ef1"
+  },
+  "conductivity-disabled": {
+    "ActionSpeedMod": 1,
+    "AverageDamage": 268.70125,
+    "AverageHit": 268.70125,
+    "CombinedDPS": 447.83541666666673,
+    "CritChance": 6,
+    "CritEffect": 1.03,
+    "CritMultiplier": 1.5,
+    "CurrentShock": 0,
+    "HitChance": 100,
+    "LightningCritAverage": 391.3125,
+    "LightningHitAverage": 260.875,
+    "LightningMaxBase": 1983,
+    "LightningMinBase": 104,
+    "MaximumShock": 50,
+    "PreEffectiveCritChance": 6,
+    "Speed": 1.6666666666666667,
+    "Time": 0.6,
+    "TotalDPS": 447.83541666666673,
+    "TotalMax": 495.75,
+    "TotalMin": 26,
+    "addedContributions": [],
+    "addedMaximum": 0,
+    "addedMinimum": 0,
+    "ailmentFlags": {
+      "CannotBrittle": true,
+      "CannotChill": true,
+      "CannotFreeze": true,
+      "CannotIgnite": true,
+      "CannotSap": true,
+      "CannotScorch": true,
+      "CannotShock": true
+    },
+    "appliedCurseSlots": [],
+    "baseCriticalChancePercent": 6,
+    "conductivityActiveSkills": [],
+    "conductivityGems": [
+      {
+        "enabled": false,
+        "gameId": "Metadata/Items/Gems/SkillGemConductivity",
+        "gemId": "Metadata/Items/Gems/SkillGemConductivity",
+        "level": 20,
+        "nameSpec": "Conductivity",
+        "quality": 0,
+        "skillId": "Conductivity"
+      }
+    ],
+    "contributions": [],
+    "criticalContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritMultiplier",
+        "source": "Base",
+        "type": "BASE",
+        "value": 50
+      }
+    ],
+    "criticalMultiplierExtraPercent": 50,
+    "customModifierBlocks": [
+      {
+        "enabled": true,
+        "text": "Cannot inflict Elemental Ailments",
+        "title": "Exile Engine Assumptions"
+      },
+      {
+        "enabled": true,
+        "text": "0% increased Effect of your Curses",
+        "title": "Conductivity Effect"
+      }
+    ],
+    "damageEffectiveness": 1.9,
+    "enemyDamageTakenPercent": 0,
+    "enemyLightningResistanceBeforeClampPercent": 75,
+    "enemyLightningResistanceContributions": [
+      {
+        "name": "LightningResist",
+        "source": "EnemyConfig",
+        "value": 75
+      }
+    ],
+    "enemySelfShockChancePercent": 0,
+    "enemyShockConfigured": false,
+    "increasedCastSpeedPercent": 0,
+    "increasedCriticalChancePercent": 0,
+    "increasedDamagePercent": 0,
+    "itemModifierLines": [],
+    "lightningBreakdown": {
+      "1": "Base damage:",
+      "2": "104 to 1983 ^8(base damage from skill)",
+      "3": "= 104.0 to 1983.0",
+      "4": "Hit damage:",
+      "5": "104 to 1983 ^8(total damage)",
+      "6": "x 0.250 ^8(effective DPS modifier)",
+      "7": "= 26 to 495",
+      "8": "Portion of total damage: 100%",
+      "damageTypes": [
+        {
+          "base": "104 to 1983",
+          "convSrc": false,
+          "inc": false,
+          "more": false,
+          "source": "Lightning",
+          "total": "104 to 1983"
+        }
+      ]
+    },
+    "lightningDamageMultiplier": 0.25,
+    "lightningExposureCandidates": [],
+    "lightningPenetrationPercent": 0,
+    "maximumResistanceMode": "configured",
+    "penetrationContributions": [],
+    "rawEnemyLightningResistancePercent": 75,
+    "selectedPart": 1,
+    "selectedSkillId": "Spark",
+    "shockContributions": [],
+    "supportContributions": [],
+    "supportCriticalChanceMultiplier": 1,
+    "supportDamageMultiplier": 1,
+    "supportGems": [],
+    "supportManaCostMultiplier": 1,
+    "supportSpeedMultiplier": 1,
+    "supportTotalCastTime": 0,
+    "sourceXmlSha256": "b3aadaa69f57cb2bab2e1ed36e42c108dd1f243ca41a3ce318e8bb8847e6f713"
+  },
+  "conductivity-floor": {
+    "ActionSpeedMod": 1,
+    "AverageDamage": 3439.376,
+    "AverageHit": 3439.376,
+    "CombinedDPS": 5732.293333333334,
+    "CritChance": 6,
+    "CritEffect": 1.03,
+    "CritMultiplier": 1.5,
+    "CurrentShock": 0,
+    "HitChance": 100,
+    "LightningCritAverage": 5008.8,
+    "LightningHitAverage": 3339.2000000000003,
+    "LightningMaxBase": 1983,
+    "LightningMinBase": 104,
+    "MaximumShock": 50,
+    "PreEffectiveCritChance": 6,
+    "Speed": 1.6666666666666667,
+    "Time": 0.6,
+    "TotalDPS": 5732.293333333334,
+    "TotalMax": 6345.6,
+    "TotalMin": 332.8,
+    "addedContributions": [],
+    "addedMaximum": 0,
+    "addedMinimum": 0,
+    "ailmentFlags": {
+      "CannotBrittle": true,
+      "CannotChill": true,
+      "CannotFreeze": true,
+      "CannotIgnite": true,
+      "CannotSap": true,
+      "CannotScorch": true,
+      "CannotShock": true
+    },
+    "appliedCurseSlots": [
+      {
+        "contributions": [
+          {
+            "name": "LightningResist",
+            "source": "Skill:Conductivity",
+            "value": -108
+          },
+          {
+            "name": "SelfShockChance",
+            "source": "Skill:Conductivity",
+            "value": 75
+          }
+        ],
+        "name": "Conductivity"
+      }
+    ],
+    "baseCriticalChancePercent": 6,
+    "conductivityActiveSkills": [
+      {
+        "id": "Conductivity",
+        "increasedCurseEffectPercent": 200,
+        "moreCurseEffectMultiplier": 1,
+        "rawBuffContributions": [
+          {
+            "name": "SelfShockChance",
+            "source": "Skill:Conductivity",
+            "value": 25
+          },
+          {
+            "name": "LightningResist",
+            "source": "Skill:Conductivity",
+            "value": -36
+          }
+        ]
+      }
+    ],
+    "conductivityGems": [
+      {
+        "enabled": true,
+        "gameId": "Metadata/Items/Gems/SkillGemConductivity",
+        "gemId": "Metadata/Items/Gems/SkillGemConductivity",
+        "level": 20,
+        "nameSpec": "Conductivity",
+        "quality": 0,
+        "skillId": "Conductivity"
+      }
+    ],
+    "contributions": [],
+    "criticalContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritMultiplier",
+        "source": "Base",
+        "type": "BASE",
+        "value": 50
+      }
+    ],
+    "criticalMultiplierExtraPercent": 50,
+    "customModifierBlocks": [
+      {
+        "enabled": true,
+        "text": "Cannot inflict Elemental Ailments",
+        "title": "Exile Engine Assumptions"
+      },
+      {
+        "enabled": true,
+        "text": "Inflict Lightning Exposure on Hit, applying -30% to Lightning Resistance",
+        "title": "Exposure 1"
+      },
+      {
+        "enabled": true,
+        "text": "200% increased Effect of your Curses",
+        "title": "Conductivity Effect"
+      }
+    ],
+    "damageEffectiveness": 1.9,
+    "enemyDamageTakenPercent": 0,
+    "enemyLightningResistanceBeforeClampPercent": -328,
+    "enemyLightningResistanceContributions": [
+      {
+        "name": "LightningResist",
+        "source": "EnemyConfig",
+        "value": -190
+      },
+      {
+        "name": "LightningResist",
+        "source": "Skill:Conductivity",
+        "value": -108
+      },
+      {
+        "name": "LightningResist",
+        "source": "Custom:Exposure 1",
+        "value": -30
+      }
+    ],
+    "enemySelfShockChancePercent": 75,
+    "enemyShockConfigured": false,
+    "increasedCastSpeedPercent": 0,
+    "increasedCriticalChancePercent": 0,
+    "increasedDamagePercent": 0,
+    "itemModifierLines": [
+      {
+        "line": "Damage Penetrates 20% Lightning Resistance",
+        "mods": [
+          {
+            "flags": 0,
+            "keywordFlags": 0,
+            "name": "LightningPenetration",
+            "value": 20
+          }
+        ]
+      }
+    ],
+    "lightningBreakdown": {
+      "1": "Base damage:",
+      "2": "104 to 1983 ^8(base damage from skill)",
+      "3": "= 104.0 to 1983.0",
+      "4": "Hit damage:",
+      "5": "104 to 1983 ^8(total damage)",
+      "6": "x 3.200 ^8(effective DPS modifier)",
+      "7": "= 332 to 6345",
+      "8": "Portion of total damage: 100%",
+      "damageTypes": [
+        {
+          "base": "104 to 1983",
+          "convSrc": false,
+          "inc": false,
+          "more": false,
+          "source": "Lightning",
+          "total": "104 to 1983"
+        }
+      ]
+    },
+    "lightningDamageMultiplier": 3.2,
+    "lightningExposureCandidates": [
+      {
+        "source": "Custom:Exposure 1",
+        "value": -30
+      }
+    ],
+    "lightningPenetrationPercent": 20,
+    "maximumResistanceMode": "configured",
+    "penetrationContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "LightningPenetration",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 20
+      }
+    ],
+    "rawEnemyLightningResistancePercent": -190,
+    "selectedPart": 1,
+    "selectedSkillId": "Spark",
+    "shockContributions": [],
+    "supportContributions": [],
+    "supportCriticalChanceMultiplier": 1,
+    "supportDamageMultiplier": 1,
+    "supportGems": [],
+    "supportManaCostMultiplier": 1,
+    "supportSpeedMultiplier": 1,
+    "supportTotalCastTime": 0,
+    "sourceXmlSha256": "c42a5bded261c4a70437e2f348dd28ac4a98fc18690dd208d76eee2fd1eaca43"
+  },
+  "conductivity-level1": {
+    "ActionSpeedMod": 1,
+    "AverageDamage": 451.41810000000004,
+    "AverageHit": 451.41810000000004,
+    "CombinedDPS": 752.3635,
+    "CritChance": 6,
+    "CritEffect": 1.03,
+    "CritMultiplier": 1.5,
+    "CurrentShock": 0,
+    "HitChance": 100,
+    "LightningCritAverage": 657.4050000000001,
+    "LightningHitAverage": 438.27000000000004,
+    "LightningMaxBase": 1983,
+    "LightningMinBase": 104,
+    "MaximumShock": 50,
+    "PreEffectiveCritChance": 6,
+    "Speed": 1.6666666666666667,
+    "Time": 0.6,
+    "TotalDPS": 752.3635,
+    "TotalMax": 832.8600000000001,
+    "TotalMin": 43.68000000000001,
+    "addedContributions": [],
+    "addedMaximum": 0,
+    "addedMinimum": 0,
+    "ailmentFlags": {
+      "CannotBrittle": true,
+      "CannotChill": true,
+      "CannotFreeze": true,
+      "CannotIgnite": true,
+      "CannotSap": true,
+      "CannotScorch": true,
+      "CannotShock": true
+    },
+    "appliedCurseSlots": [
+      {
+        "contributions": [
+          {
+            "name": "LightningResist",
+            "source": "Skill:Conductivity",
+            "value": -17
+          },
+          {
+            "name": "SelfShockChance",
+            "source": "Skill:Conductivity",
+            "value": 25
+          }
+        ],
+        "name": "Conductivity"
+      }
+    ],
+    "baseCriticalChancePercent": 6,
+    "conductivityActiveSkills": [
+      {
+        "id": "Conductivity",
+        "increasedCurseEffectPercent": 0,
+        "moreCurseEffectMultiplier": 1,
+        "rawBuffContributions": [
+          {
+            "name": "SelfShockChance",
+            "source": "Skill:Conductivity",
+            "value": 25
+          },
+          {
+            "name": "LightningResist",
+            "source": "Skill:Conductivity",
+            "value": -17
+          }
+        ]
+      }
+    ],
+    "conductivityGems": [
+      {
+        "enabled": true,
+        "gameId": "Metadata/Items/Gems/SkillGemConductivity",
+        "gemId": "Metadata/Items/Gems/SkillGemConductivity",
+        "level": 1,
+        "nameSpec": "Conductivity",
+        "quality": 0,
+        "skillId": "Conductivity"
+      }
+    ],
+    "contributions": [],
+    "criticalContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritMultiplier",
+        "source": "Base",
+        "type": "BASE",
+        "value": 50
+      }
+    ],
+    "criticalMultiplierExtraPercent": 50,
+    "customModifierBlocks": [
+      {
+        "enabled": true,
+        "text": "Cannot inflict Elemental Ailments",
+        "title": "Exile Engine Assumptions"
+      },
+      {
+        "enabled": true,
+        "text": "0% increased Effect of your Curses",
+        "title": "Conductivity Effect"
+      }
+    ],
+    "damageEffectiveness": 1.9,
+    "enemyDamageTakenPercent": 0,
+    "enemyLightningResistanceBeforeClampPercent": 58,
+    "enemyLightningResistanceContributions": [
+      {
+        "name": "LightningResist",
+        "source": "EnemyConfig",
+        "value": 75
+      },
+      {
+        "name": "LightningResist",
+        "source": "Skill:Conductivity",
+        "value": -17
+      }
+    ],
+    "enemySelfShockChancePercent": 25,
+    "enemyShockConfigured": false,
+    "increasedCastSpeedPercent": 0,
+    "increasedCriticalChancePercent": 0,
+    "increasedDamagePercent": 0,
+    "itemModifierLines": [],
+    "lightningBreakdown": {
+      "1": "Base damage:",
+      "2": "104 to 1983 ^8(base damage from skill)",
+      "3": "= 104.0 to 1983.0",
+      "4": "Hit damage:",
+      "5": "104 to 1983 ^8(total damage)",
+      "6": "x 0.420 ^8(effective DPS modifier)",
+      "7": "= 43 to 832",
+      "8": "Portion of total damage: 100%",
+      "damageTypes": [
+        {
+          "base": "104 to 1983",
+          "convSrc": false,
+          "inc": false,
+          "more": false,
+          "source": "Lightning",
+          "total": "104 to 1983"
+        }
+      ]
+    },
+    "lightningDamageMultiplier": 0.42000000000000004,
+    "lightningExposureCandidates": [],
+    "lightningPenetrationPercent": 0,
+    "maximumResistanceMode": "configured",
+    "penetrationContributions": [],
+    "rawEnemyLightningResistancePercent": 75,
+    "selectedPart": 1,
+    "selectedSkillId": "Spark",
+    "shockContributions": [],
+    "supportContributions": [],
+    "supportCriticalChanceMultiplier": 1,
+    "supportDamageMultiplier": 1,
+    "supportGems": [],
+    "supportManaCostMultiplier": 1,
+    "supportSpeedMultiplier": 1,
+    "supportTotalCastTime": 0,
+    "sourceXmlSha256": "9ba17439b87fc073290fbcab74e4229b9530685da90375f4c4be8b0316e920a4"
+  },
+  "conductivity-level20": {
+    "ActionSpeedMod": 1,
+    "AverageDamage": 655.63105,
+    "AverageHit": 655.63105,
+    "CombinedDPS": 1092.7184166666666,
+    "CritChance": 6,
+    "CritEffect": 1.03,
+    "CritMultiplier": 1.5,
+    "CurrentShock": 0,
+    "HitChance": 100,
+    "LightningCritAverage": 954.8025,
+    "LightningHitAverage": 636.535,
+    "LightningMaxBase": 1983,
+    "LightningMinBase": 104,
+    "MaximumShock": 50,
+    "PreEffectiveCritChance": 6,
+    "Speed": 1.6666666666666667,
+    "Time": 0.6,
+    "TotalDPS": 1092.7184166666666,
+    "TotalMax": 1209.6299999999999,
+    "TotalMin": 63.44,
+    "addedContributions": [],
+    "addedMaximum": 0,
+    "addedMinimum": 0,
+    "ailmentFlags": {
+      "CannotBrittle": true,
+      "CannotChill": true,
+      "CannotFreeze": true,
+      "CannotIgnite": true,
+      "CannotSap": true,
+      "CannotScorch": true,
+      "CannotShock": true
+    },
+    "appliedCurseSlots": [
+      {
+        "contributions": [
+          {
+            "name": "LightningResist",
+            "source": "Skill:Conductivity",
+            "value": -36
+          },
+          {
+            "name": "SelfShockChance",
+            "source": "Skill:Conductivity",
+            "value": 25
+          }
+        ],
+        "name": "Conductivity"
+      }
+    ],
+    "baseCriticalChancePercent": 6,
+    "conductivityActiveSkills": [
+      {
+        "id": "Conductivity",
+        "increasedCurseEffectPercent": 0,
+        "moreCurseEffectMultiplier": 1,
+        "rawBuffContributions": [
+          {
+            "name": "SelfShockChance",
+            "source": "Skill:Conductivity",
+            "value": 25
+          },
+          {
+            "name": "LightningResist",
+            "source": "Skill:Conductivity",
+            "value": -36
+          }
+        ]
+      }
+    ],
+    "conductivityGems": [
+      {
+        "enabled": true,
+        "gameId": "Metadata/Items/Gems/SkillGemConductivity",
+        "gemId": "Metadata/Items/Gems/SkillGemConductivity",
+        "level": 20,
+        "nameSpec": "Conductivity",
+        "quality": 0,
+        "skillId": "Conductivity"
+      }
+    ],
+    "contributions": [],
+    "criticalContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritMultiplier",
+        "source": "Base",
+        "type": "BASE",
+        "value": 50
+      }
+    ],
+    "criticalMultiplierExtraPercent": 50,
+    "customModifierBlocks": [
+      {
+        "enabled": true,
+        "text": "Cannot inflict Elemental Ailments",
+        "title": "Exile Engine Assumptions"
+      },
+      {
+        "enabled": true,
+        "text": "0% increased Effect of your Curses",
+        "title": "Conductivity Effect"
+      }
+    ],
+    "damageEffectiveness": 1.9,
+    "enemyDamageTakenPercent": 0,
+    "enemyLightningResistanceBeforeClampPercent": 39,
+    "enemyLightningResistanceContributions": [
+      {
+        "name": "LightningResist",
+        "source": "EnemyConfig",
+        "value": 75
+      },
+      {
+        "name": "LightningResist",
+        "source": "Skill:Conductivity",
+        "value": -36
+      }
+    ],
+    "enemySelfShockChancePercent": 25,
+    "enemyShockConfigured": false,
+    "increasedCastSpeedPercent": 0,
+    "increasedCriticalChancePercent": 0,
+    "increasedDamagePercent": 0,
+    "itemModifierLines": [],
+    "lightningBreakdown": {
+      "1": "Base damage:",
+      "2": "104 to 1983 ^8(base damage from skill)",
+      "3": "= 104.0 to 1983.0",
+      "4": "Hit damage:",
+      "5": "104 to 1983 ^8(total damage)",
+      "6": "x 0.610 ^8(effective DPS modifier)",
+      "7": "= 63 to 1209",
+      "8": "Portion of total damage: 100%",
+      "damageTypes": [
+        {
+          "base": "104 to 1983",
+          "convSrc": false,
+          "inc": false,
+          "more": false,
+          "source": "Lightning",
+          "total": "104 to 1983"
+        }
+      ]
+    },
+    "lightningDamageMultiplier": 0.61,
+    "lightningExposureCandidates": [],
+    "lightningPenetrationPercent": 0,
+    "maximumResistanceMode": "configured",
+    "penetrationContributions": [],
+    "rawEnemyLightningResistancePercent": 75,
+    "selectedPart": 1,
+    "selectedSkillId": "Spark",
+    "shockContributions": [],
+    "supportContributions": [],
+    "supportCriticalChanceMultiplier": 1,
+    "supportDamageMultiplier": 1,
+    "supportGems": [],
+    "supportManaCostMultiplier": 1,
+    "supportSpeedMultiplier": 1,
+    "supportTotalCastTime": 0,
+    "sourceXmlSha256": "b7157a85ed9b2163a22fbde98207b2d815add58e28d46f88adf0cb69acbedc69"
+  },
+  "conductivity-overcap": {
+    "ActionSpeedMod": 1,
+    "AverageDamage": 655.63105,
+    "AverageHit": 655.63105,
+    "CombinedDPS": 1092.7184166666666,
+    "CritChance": 6,
+    "CritEffect": 1.03,
+    "CritMultiplier": 1.5,
+    "CurrentShock": 0,
+    "HitChance": 100,
+    "LightningCritAverage": 954.8025,
+    "LightningHitAverage": 636.535,
+    "LightningMaxBase": 1983,
+    "LightningMinBase": 104,
+    "MaximumShock": 50,
+    "PreEffectiveCritChance": 6,
+    "Speed": 1.6666666666666667,
+    "Time": 0.6,
+    "TotalDPS": 1092.7184166666666,
+    "TotalMax": 1209.6299999999999,
+    "TotalMin": 63.44,
+    "addedContributions": [],
+    "addedMaximum": 0,
+    "addedMinimum": 0,
+    "ailmentFlags": {
+      "CannotBrittle": true,
+      "CannotChill": true,
+      "CannotFreeze": true,
+      "CannotIgnite": true,
+      "CannotSap": true,
+      "CannotScorch": true,
+      "CannotShock": true
+    },
+    "appliedCurseSlots": [
+      {
+        "contributions": [
+          {
+            "name": "LightningResist",
+            "source": "Skill:Conductivity",
+            "value": -36
+          },
+          {
+            "name": "SelfShockChance",
+            "source": "Skill:Conductivity",
+            "value": 25
+          }
+        ],
+        "name": "Conductivity"
+      }
+    ],
+    "baseCriticalChancePercent": 6,
+    "conductivityActiveSkills": [
+      {
+        "id": "Conductivity",
+        "increasedCurseEffectPercent": 0,
+        "moreCurseEffectMultiplier": 1,
+        "rawBuffContributions": [
+          {
+            "name": "SelfShockChance",
+            "source": "Skill:Conductivity",
+            "value": 25
+          },
+          {
+            "name": "LightningResist",
+            "source": "Skill:Conductivity",
+            "value": -36
+          }
+        ]
+      }
+    ],
+    "conductivityGems": [
+      {
+        "enabled": true,
+        "gameId": "Metadata/Items/Gems/SkillGemConductivity",
+        "gemId": "Metadata/Items/Gems/SkillGemConductivity",
+        "level": 20,
+        "nameSpec": "Conductivity",
+        "quality": 0,
+        "skillId": "Conductivity"
+      }
+    ],
+    "contributions": [],
+    "criticalContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritMultiplier",
+        "source": "Base",
+        "type": "BASE",
+        "value": 50
+      }
+    ],
+    "criticalMultiplierExtraPercent": 50,
+    "customModifierBlocks": [
+      {
+        "enabled": true,
+        "text": "Cannot inflict Elemental Ailments",
+        "title": "Exile Engine Assumptions"
+      },
+      {
+        "enabled": true,
+        "text": "Inflict Lightning Exposure on Hit, applying -15% to Lightning Resistance",
+        "title": "Exposure 1"
+      },
+      {
+        "enabled": true,
+        "text": "0% increased Effect of your Curses",
+        "title": "Conductivity Effect"
+      }
+    ],
+    "damageEffectiveness": 1.9,
+    "enemyDamageTakenPercent": 0,
+    "enemyLightningResistanceBeforeClampPercent": 59,
+    "enemyLightningResistanceContributions": [
+      {
+        "name": "LightningResist",
+        "source": "EnemyConfig",
+        "value": 110
+      },
+      {
+        "name": "LightningResist",
+        "source": "Skill:Conductivity",
+        "value": -36
+      },
+      {
+        "name": "LightningResist",
+        "source": "Custom:Exposure 1",
+        "value": -15
+      }
+    ],
+    "enemySelfShockChancePercent": 25,
+    "enemyShockConfigured": false,
+    "increasedCastSpeedPercent": 0,
+    "increasedCriticalChancePercent": 0,
+    "increasedDamagePercent": 0,
+    "itemModifierLines": [
+      {
+        "line": "Damage Penetrates 20% Lightning Resistance",
+        "mods": [
+          {
+            "flags": 0,
+            "keywordFlags": 0,
+            "name": "LightningPenetration",
+            "value": 20
+          }
+        ]
+      }
+    ],
+    "lightningBreakdown": {
+      "1": "Base damage:",
+      "2": "104 to 1983 ^8(base damage from skill)",
+      "3": "= 104.0 to 1983.0",
+      "4": "Hit damage:",
+      "5": "104 to 1983 ^8(total damage)",
+      "6": "x 0.610 ^8(effective DPS modifier)",
+      "7": "= 63 to 1209",
+      "8": "Portion of total damage: 100%",
+      "damageTypes": [
+        {
+          "base": "104 to 1983",
+          "convSrc": false,
+          "inc": false,
+          "more": false,
+          "source": "Lightning",
+          "total": "104 to 1983"
+        }
+      ]
+    },
+    "lightningDamageMultiplier": 0.61,
+    "lightningExposureCandidates": [
+      {
+        "source": "Custom:Exposure 1",
+        "value": -15
+      }
+    ],
+    "lightningPenetrationPercent": 20,
+    "maximumResistanceMode": "configured",
+    "penetrationContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "LightningPenetration",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 20
+      }
+    ],
+    "rawEnemyLightningResistancePercent": 110,
+    "selectedPart": 1,
+    "selectedSkillId": "Spark",
+    "shockContributions": [],
+    "supportContributions": [],
+    "supportCriticalChanceMultiplier": 1,
+    "supportDamageMultiplier": 1,
+    "supportGems": [],
+    "supportManaCostMultiplier": 1,
+    "supportSpeedMultiplier": 1,
+    "supportTotalCastTime": 0,
+    "sourceXmlSha256": "0c1b5fb3191971c739b75416e2a1020c86834a9d64eb8035d945a3154bb03337"
+  },
+  "conductivity-reduced": {
+    "ActionSpeedMod": 1,
+    "AverageDamage": 354.6856499999999,
+    "AverageHit": 354.6856499999999,
+    "CombinedDPS": 591.1427499999999,
+    "CritChance": 6,
+    "CritEffect": 1.03,
+    "CritMultiplier": 1.5,
+    "CurrentShock": 0,
+    "HitChance": 100,
+    "LightningCritAverage": 516.5324999999999,
+    "LightningHitAverage": 344.35499999999996,
+    "LightningMaxBase": 1983,
+    "LightningMinBase": 104,
+    "MaximumShock": 50,
+    "PreEffectiveCritChance": 6,
+    "Speed": 1.6666666666666667,
+    "Time": 0.6,
+    "TotalDPS": 591.1427499999999,
+    "TotalMax": 654.3899999999999,
+    "TotalMin": 34.31999999999999,
+    "addedContributions": [],
+    "addedMaximum": 0,
+    "addedMinimum": 0,
+    "ailmentFlags": {
+      "CannotBrittle": true,
+      "CannotChill": true,
+      "CannotFreeze": true,
+      "CannotIgnite": true,
+      "CannotSap": true,
+      "CannotScorch": true,
+      "CannotShock": true
+    },
+    "appliedCurseSlots": [
+      {
+        "contributions": [
+          {
+            "name": "LightningResist",
+            "source": "Skill:Conductivity",
+            "value": -8
+          },
+          {
+            "name": "SelfShockChance",
+            "source": "Skill:Conductivity",
+            "value": 12
+          }
+        ],
+        "name": "Conductivity"
+      }
+    ],
+    "baseCriticalChancePercent": 6,
+    "conductivityActiveSkills": [
+      {
+        "id": "Conductivity",
+        "increasedCurseEffectPercent": -50,
+        "moreCurseEffectMultiplier": 1,
+        "rawBuffContributions": [
+          {
+            "name": "SelfShockChance",
+            "source": "Skill:Conductivity",
+            "value": 25
+          },
+          {
+            "name": "LightningResist",
+            "source": "Skill:Conductivity",
+            "value": -17
+          }
+        ]
+      }
+    ],
+    "conductivityGems": [
+      {
+        "enabled": true,
+        "gameId": "Metadata/Items/Gems/SkillGemConductivity",
+        "gemId": "Metadata/Items/Gems/SkillGemConductivity",
+        "level": 1,
+        "nameSpec": "Conductivity",
+        "quality": 0,
+        "skillId": "Conductivity"
+      }
+    ],
+    "contributions": [],
+    "criticalContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritMultiplier",
+        "source": "Base",
+        "type": "BASE",
+        "value": 50
+      }
+    ],
+    "criticalMultiplierExtraPercent": 50,
+    "customModifierBlocks": [
+      {
+        "enabled": true,
+        "text": "Cannot inflict Elemental Ailments",
+        "title": "Exile Engine Assumptions"
+      },
+      {
+        "enabled": true,
+        "text": "50% reduced Effect of your Curses",
+        "title": "Conductivity Effect"
+      }
+    ],
+    "damageEffectiveness": 1.9,
+    "enemyDamageTakenPercent": 0,
+    "enemyLightningResistanceBeforeClampPercent": 67,
+    "enemyLightningResistanceContributions": [
+      {
+        "name": "LightningResist",
+        "source": "EnemyConfig",
+        "value": 75
+      },
+      {
+        "name": "LightningResist",
+        "source": "Skill:Conductivity",
+        "value": -8
+      }
+    ],
+    "enemySelfShockChancePercent": 12,
+    "enemyShockConfigured": false,
+    "increasedCastSpeedPercent": 0,
+    "increasedCriticalChancePercent": 0,
+    "increasedDamagePercent": 0,
+    "itemModifierLines": [],
+    "lightningBreakdown": {
+      "1": "Base damage:",
+      "2": "104 to 1983 ^8(base damage from skill)",
+      "3": "= 104.0 to 1983.0",
+      "4": "Hit damage:",
+      "5": "104 to 1983 ^8(total damage)",
+      "6": "x 0.330 ^8(effective DPS modifier)",
+      "7": "= 34 to 654",
+      "8": "Portion of total damage: 100%",
+      "damageTypes": [
+        {
+          "base": "104 to 1983",
+          "convSrc": false,
+          "inc": false,
+          "more": false,
+          "source": "Lightning",
+          "total": "104 to 1983"
+        }
+      ]
+    },
+    "lightningDamageMultiplier": 0.32999999999999996,
+    "lightningExposureCandidates": [],
+    "lightningPenetrationPercent": 0,
+    "maximumResistanceMode": "configured",
+    "penetrationContributions": [],
+    "rawEnemyLightningResistancePercent": 75,
+    "selectedPart": 1,
+    "selectedSkillId": "Spark",
+    "shockContributions": [],
+    "supportContributions": [],
+    "supportCriticalChanceMultiplier": 1,
+    "supportDamageMultiplier": 1,
+    "supportGems": [],
+    "supportManaCostMultiplier": 1,
+    "supportSpeedMultiplier": 1,
+    "supportTotalCastTime": 0,
+    "sourceXmlSha256": "e68e9e73b579f3ccc39f099e35f02989d775a9dd8623afce5aed483c4b2bad01"
+  },
+  "conductivity-rounded": {
+    "ActionSpeedMod": 1,
+    "AverageDamage": 494.4102999999999,
+    "AverageHit": 494.41029999999995,
+    "CombinedDPS": 824.0171666666665,
+    "CritChance": 6,
+    "CritEffect": 1.03,
+    "CritMultiplier": 1.5,
+    "CurrentShock": 0,
+    "HitChance": 100,
+    "LightningCritAverage": 720.015,
+    "LightningHitAverage": 480.01,
+    "LightningMaxBase": 1983,
+    "LightningMinBase": 104,
+    "MaximumShock": 50,
+    "PreEffectiveCritChance": 6,
+    "Speed": 1.6666666666666667,
+    "Time": 0.6,
+    "TotalDPS": 824.0171666666665,
+    "TotalMax": 912.18,
+    "TotalMin": 47.839999999999996,
+    "addedContributions": [],
+    "addedMaximum": 0,
+    "addedMinimum": 0,
+    "ailmentFlags": {
+      "CannotBrittle": true,
+      "CannotChill": true,
+      "CannotFreeze": true,
+      "CannotIgnite": true,
+      "CannotSap": true,
+      "CannotScorch": true,
+      "CannotShock": true
+    },
+    "appliedCurseSlots": [
+      {
+        "contributions": [
+          {
+            "name": "LightningResist",
+            "source": "Skill:Conductivity",
+            "value": -21
+          },
+          {
+            "name": "SelfShockChance",
+            "source": "Skill:Conductivity",
+            "value": 31
+          }
+        ],
+        "name": "Conductivity"
+      }
+    ],
+    "baseCriticalChancePercent": 6,
+    "conductivityActiveSkills": [
+      {
+        "id": "Conductivity",
+        "increasedCurseEffectPercent": 25,
+        "moreCurseEffectMultiplier": 1,
+        "rawBuffContributions": [
+          {
+            "name": "SelfShockChance",
+            "source": "Skill:Conductivity",
+            "value": 25
+          },
+          {
+            "name": "LightningResist",
+            "source": "Skill:Conductivity",
+            "value": -17
+          }
+        ]
+      }
+    ],
+    "conductivityGems": [
+      {
+        "enabled": true,
+        "gameId": "Metadata/Items/Gems/SkillGemConductivity",
+        "gemId": "Metadata/Items/Gems/SkillGemConductivity",
+        "level": 1,
+        "nameSpec": "Conductivity",
+        "quality": 0,
+        "skillId": "Conductivity"
+      }
+    ],
+    "contributions": [],
+    "criticalContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritMultiplier",
+        "source": "Base",
+        "type": "BASE",
+        "value": 50
+      }
+    ],
+    "criticalMultiplierExtraPercent": 50,
+    "customModifierBlocks": [
+      {
+        "enabled": true,
+        "text": "Cannot inflict Elemental Ailments",
+        "title": "Exile Engine Assumptions"
+      },
+      {
+        "enabled": true,
+        "text": "25% increased Effect of your Curses",
+        "title": "Conductivity Effect"
+      }
+    ],
+    "damageEffectiveness": 1.9,
+    "enemyDamageTakenPercent": 0,
+    "enemyLightningResistanceBeforeClampPercent": 54,
+    "enemyLightningResistanceContributions": [
+      {
+        "name": "LightningResist",
+        "source": "EnemyConfig",
+        "value": 75
+      },
+      {
+        "name": "LightningResist",
+        "source": "Skill:Conductivity",
+        "value": -21
+      }
+    ],
+    "enemySelfShockChancePercent": 31,
+    "enemyShockConfigured": false,
+    "increasedCastSpeedPercent": 0,
+    "increasedCriticalChancePercent": 0,
+    "increasedDamagePercent": 0,
+    "itemModifierLines": [],
+    "lightningBreakdown": {
+      "1": "Base damage:",
+      "2": "104 to 1983 ^8(base damage from skill)",
+      "3": "= 104.0 to 1983.0",
+      "4": "Hit damage:",
+      "5": "104 to 1983 ^8(total damage)",
+      "6": "x 0.460 ^8(effective DPS modifier)",
+      "7": "= 47 to 912",
+      "8": "Portion of total damage: 100%",
+      "damageTypes": [
+        {
+          "base": "104 to 1983",
+          "convSrc": false,
+          "inc": false,
+          "more": false,
+          "source": "Lightning",
+          "total": "104 to 1983"
+        }
+      ]
+    },
+    "lightningDamageMultiplier": 0.45999999999999996,
+    "lightningExposureCandidates": [],
+    "lightningPenetrationPercent": 0,
+    "maximumResistanceMode": "configured",
+    "penetrationContributions": [],
+    "rawEnemyLightningResistancePercent": 75,
+    "selectedPart": 1,
+    "selectedSkillId": "Spark",
+    "shockContributions": [],
+    "supportContributions": [],
+    "supportCriticalChanceMultiplier": 1,
+    "supportDamageMultiplier": 1,
+    "supportGems": [],
+    "supportManaCostMultiplier": 1,
+    "supportSpeedMultiplier": 1,
+    "supportTotalCastTime": 0,
+    "sourceXmlSha256": "6aaf20c6d8743ec23df4927d1dee2d20bb91c827b972ace4295922253e7982c0"
+  },
+  "conductivity-zero-effect": {
+    "ActionSpeedMod": 1,
+    "AverageDamage": 268.70125,
+    "AverageHit": 268.70125,
+    "CombinedDPS": 447.83541666666673,
+    "CritChance": 6,
+    "CritEffect": 1.03,
+    "CritMultiplier": 1.5,
+    "CurrentShock": 0,
+    "HitChance": 100,
+    "LightningCritAverage": 391.3125,
+    "LightningHitAverage": 260.875,
+    "LightningMaxBase": 1983,
+    "LightningMinBase": 104,
+    "MaximumShock": 50,
+    "PreEffectiveCritChance": 6,
+    "Speed": 1.6666666666666667,
+    "Time": 0.6,
+    "TotalDPS": 447.83541666666673,
+    "TotalMax": 495.75,
+    "TotalMin": 26,
+    "addedContributions": [],
+    "addedMaximum": 0,
+    "addedMinimum": 0,
+    "ailmentFlags": {
+      "CannotBrittle": true,
+      "CannotChill": true,
+      "CannotFreeze": true,
+      "CannotIgnite": true,
+      "CannotSap": true,
+      "CannotScorch": true,
+      "CannotShock": true
+    },
+    "appliedCurseSlots": [
+      {
+        "contributions": [],
+        "name": "Conductivity"
+      }
+    ],
+    "baseCriticalChancePercent": 6,
+    "conductivityActiveSkills": [
+      {
+        "id": "Conductivity",
+        "increasedCurseEffectPercent": -100,
+        "moreCurseEffectMultiplier": 1,
+        "rawBuffContributions": [
+          {
+            "name": "SelfShockChance",
+            "source": "Skill:Conductivity",
+            "value": 25
+          },
+          {
+            "name": "LightningResist",
+            "source": "Skill:Conductivity",
+            "value": -36
+          }
+        ]
+      }
+    ],
+    "conductivityGems": [
+      {
+        "enabled": true,
+        "gameId": "Metadata/Items/Gems/SkillGemConductivity",
+        "gemId": "Metadata/Items/Gems/SkillGemConductivity",
+        "level": 20,
+        "nameSpec": "Conductivity",
+        "quality": 0,
+        "skillId": "Conductivity"
+      }
+    ],
+    "contributions": [],
+    "criticalContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritMultiplier",
+        "source": "Base",
+        "type": "BASE",
+        "value": 50
+      }
+    ],
+    "criticalMultiplierExtraPercent": 50,
+    "customModifierBlocks": [
+      {
+        "enabled": true,
+        "text": "Cannot inflict Elemental Ailments",
+        "title": "Exile Engine Assumptions"
+      },
+      {
+        "enabled": true,
+        "text": "100% reduced Effect of your Curses",
+        "title": "Conductivity Effect"
+      }
+    ],
+    "damageEffectiveness": 1.9,
+    "enemyDamageTakenPercent": 0,
+    "enemyLightningResistanceBeforeClampPercent": 75,
+    "enemyLightningResistanceContributions": [
+      {
+        "name": "LightningResist",
+        "source": "EnemyConfig",
+        "value": 75
+      }
+    ],
+    "enemySelfShockChancePercent": 0,
+    "enemyShockConfigured": false,
+    "increasedCastSpeedPercent": 0,
+    "increasedCriticalChancePercent": 0,
+    "increasedDamagePercent": 0,
+    "itemModifierLines": [],
+    "lightningBreakdown": {
+      "1": "Base damage:",
+      "2": "104 to 1983 ^8(base damage from skill)",
+      "3": "= 104.0 to 1983.0",
+      "4": "Hit damage:",
+      "5": "104 to 1983 ^8(total damage)",
+      "6": "x 0.250 ^8(effective DPS modifier)",
+      "7": "= 26 to 495",
+      "8": "Portion of total damage: 100%",
+      "damageTypes": [
+        {
+          "base": "104 to 1983",
+          "convSrc": false,
+          "inc": false,
+          "more": false,
+          "source": "Lightning",
+          "total": "104 to 1983"
+        }
+      ]
+    },
+    "lightningDamageMultiplier": 0.25,
+    "lightningExposureCandidates": [],
+    "lightningPenetrationPercent": 0,
+    "maximumResistanceMode": "configured",
+    "penetrationContributions": [],
+    "rawEnemyLightningResistancePercent": 75,
+    "selectedPart": 1,
+    "selectedSkillId": "Spark",
+    "shockContributions": [],
+    "supportContributions": [],
+    "supportCriticalChanceMultiplier": 1,
+    "supportDamageMultiplier": 1,
+    "supportGems": [],
+    "supportManaCostMultiplier": 1,
+    "supportSpeedMultiplier": 1,
+    "supportTotalCastTime": 0,
+    "sourceXmlSha256": "cab1cb0673d4dc6e512648d66d0e71e3798e7985cb88747b081bb7aa6ab248cb"
+  },
   "crit-baseline": {
     "ActionSpeedMod": 1,
     "AverageDamage": 1074.805,
@@ -1185,7 +3427,10 @@
       "CannotScorch": true,
       "CannotShock": true
     },
+    "appliedCurseSlots": [],
     "baseCriticalChancePercent": 6,
+    "conductivityActiveSkills": [],
+    "conductivityGems": [],
     "contributions": [],
     "criticalContributions": [
       {
@@ -1209,6 +3454,7 @@
     "enemyDamageTakenPercent": 0,
     "enemyLightningResistanceBeforeClampPercent": 0,
     "enemyLightningResistanceContributions": [],
+    "enemySelfShockChancePercent": 0,
     "enemyShockConfigured": false,
     "increasedCastSpeedPercent": 0,
     "increasedCriticalChancePercent": 0,
@@ -1284,7 +3530,10 @@
       "CannotScorch": true,
       "CannotShock": true
     },
+    "appliedCurseSlots": [],
     "baseCriticalChancePercent": 6,
+    "conductivityActiveSkills": [],
+    "conductivityGems": [],
     "contributions": [],
     "criticalContributions": [
       {
@@ -1316,6 +3565,7 @@
     "enemyDamageTakenPercent": 0,
     "enemyLightningResistanceBeforeClampPercent": 0,
     "enemyLightningResistanceContributions": [],
+    "enemySelfShockChancePercent": 0,
     "enemyShockConfigured": false,
     "increasedCastSpeedPercent": 0,
     "increasedCriticalChancePercent": 2000,
@@ -1418,7 +3668,10 @@
       "CannotScorch": true,
       "CannotShock": true
     },
+    "appliedCurseSlots": [],
     "baseCriticalChancePercent": 6,
+    "conductivityActiveSkills": [],
+    "conductivityGems": [],
     "contributions": [
       {
         "flags": 0,
@@ -1508,6 +3761,7 @@
         "value": 25
       }
     ],
+    "enemySelfShockChancePercent": 0,
     "enemyShockConfigured": false,
     "increasedCastSpeedPercent": 25,
     "increasedCriticalChancePercent": 150,
@@ -1724,7 +3978,10 @@
       "CannotScorch": true,
       "CannotShock": true
     },
+    "appliedCurseSlots": [],
     "baseCriticalChancePercent": 6,
+    "conductivityActiveSkills": [],
+    "conductivityGems": [],
     "contributions": [],
     "criticalContributions": [
       {
@@ -1748,6 +4005,7 @@
     "enemyDamageTakenPercent": 0,
     "enemyLightningResistanceBeforeClampPercent": 0,
     "enemyLightningResistanceContributions": [],
+    "enemySelfShockChancePercent": 0,
     "enemyShockConfigured": false,
     "increasedCastSpeedPercent": 0,
     "increasedCriticalChancePercent": 0,
@@ -1855,7 +4113,10 @@
       "CannotScorch": true,
       "CannotShock": true
     },
+    "appliedCurseSlots": [],
     "baseCriticalChancePercent": 6,
+    "conductivityActiveSkills": [],
+    "conductivityGems": [],
     "contributions": [],
     "criticalContributions": [
       {
@@ -1887,6 +4148,7 @@
     "enemyDamageTakenPercent": 0,
     "enemyLightningResistanceBeforeClampPercent": 0,
     "enemyLightningResistanceContributions": [],
+    "enemySelfShockChancePercent": 0,
     "enemyShockConfigured": false,
     "increasedCastSpeedPercent": 0,
     "increasedCriticalChancePercent": 2000,
@@ -2006,7 +4268,10 @@
       "CannotScorch": true,
       "CannotShock": true
     },
+    "appliedCurseSlots": [],
     "baseCriticalChancePercent": 6,
+    "conductivityActiveSkills": [],
+    "conductivityGems": [],
     "contributions": [],
     "criticalContributions": [
       {
@@ -2030,6 +4295,7 @@
     "enemyDamageTakenPercent": 0,
     "enemyLightningResistanceBeforeClampPercent": 0,
     "enemyLightningResistanceContributions": [],
+    "enemySelfShockChancePercent": 0,
     "enemyShockConfigured": false,
     "increasedCastSpeedPercent": 0,
     "increasedCriticalChancePercent": 0,
@@ -2115,7 +4381,10 @@
       "CannotScorch": true,
       "CannotShock": true
     },
+    "appliedCurseSlots": [],
     "baseCriticalChancePercent": 6,
+    "conductivityActiveSkills": [],
+    "conductivityGems": [],
     "contributions": [],
     "criticalContributions": [
       {
@@ -2155,6 +4424,7 @@
     "enemyDamageTakenPercent": 0,
     "enemyLightningResistanceBeforeClampPercent": 0,
     "enemyLightningResistanceContributions": [],
+    "enemySelfShockChancePercent": 0,
     "enemyShockConfigured": false,
     "increasedCastSpeedPercent": 0,
     "increasedCriticalChancePercent": 150,
@@ -2253,7 +4523,10 @@
       "CannotScorch": true,
       "CannotShock": true
     },
+    "appliedCurseSlots": [],
     "baseCriticalChancePercent": 6,
+    "conductivityActiveSkills": [],
+    "conductivityGems": [],
     "contributions": [],
     "criticalContributions": [
       {
@@ -2285,6 +4558,7 @@
     "enemyDamageTakenPercent": 0,
     "enemyLightningResistanceBeforeClampPercent": 0,
     "enemyLightningResistanceContributions": [],
+    "enemySelfShockChancePercent": 0,
     "enemyShockConfigured": false,
     "increasedCastSpeedPercent": 0,
     "increasedCriticalChancePercent": 0,
@@ -2372,7 +4646,10 @@
       "CannotScorch": true,
       "CannotShock": true
     },
+    "appliedCurseSlots": [],
     "baseCriticalChancePercent": 6,
+    "conductivityActiveSkills": [],
+    "conductivityGems": [],
     "contributions": [],
     "criticalContributions": [
       {
@@ -2412,6 +4689,7 @@
     "enemyDamageTakenPercent": 0,
     "enemyLightningResistanceBeforeClampPercent": 0,
     "enemyLightningResistanceContributions": [],
+    "enemySelfShockChancePercent": 0,
     "enemyShockConfigured": false,
     "increasedCastSpeedPercent": 0,
     "increasedCriticalChancePercent": 17,
@@ -2542,7 +4820,10 @@
       "CannotScorch": true,
       "CannotShock": true
     },
+    "appliedCurseSlots": [],
     "baseCriticalChancePercent": 6,
+    "conductivityActiveSkills": [],
+    "conductivityGems": [],
     "contributions": [],
     "criticalContributions": [
       {
@@ -2574,6 +4855,7 @@
     "enemyDamageTakenPercent": 0,
     "enemyLightningResistanceBeforeClampPercent": 0,
     "enemyLightningResistanceContributions": [],
+    "enemySelfShockChancePercent": 0,
     "enemyShockConfigured": false,
     "increasedCastSpeedPercent": 0,
     "increasedCriticalChancePercent": -100,
@@ -2661,7 +4943,10 @@
       "CannotScorch": false,
       "CannotShock": false
     },
+    "appliedCurseSlots": [],
     "baseCriticalChancePercent": 6,
+    "conductivityActiveSkills": [],
+    "conductivityGems": [],
     "contributions": [
       {
         "flags": 0,
@@ -2714,6 +4999,7 @@
     "enemyDamageTakenPercent": 0,
     "enemyLightningResistanceBeforeClampPercent": 0,
     "enemyLightningResistanceContributions": [],
+    "enemySelfShockChancePercent": 0,
     "enemyShockConfigured": false,
     "increasedCastSpeedPercent": 0,
     "increasedCriticalChancePercent": 0,
@@ -2834,7 +5120,10 @@
       "CannotScorch": false,
       "CannotShock": false
     },
+    "appliedCurseSlots": [],
     "baseCriticalChancePercent": 6,
+    "conductivityActiveSkills": [],
+    "conductivityGems": [],
     "contributions": [],
     "criticalContributions": [
       {
@@ -2874,6 +5163,7 @@
         "value": -15
       }
     ],
+    "enemySelfShockChancePercent": 0,
     "enemyShockConfigured": false,
     "increasedCastSpeedPercent": 0,
     "increasedCriticalChancePercent": 0,
@@ -2955,7 +5245,10 @@
       "CannotScorch": false,
       "CannotShock": false
     },
+    "appliedCurseSlots": [],
     "baseCriticalChancePercent": 6,
+    "conductivityActiveSkills": [],
+    "conductivityGems": [],
     "contributions": [],
     "criticalContributions": [
       {
@@ -3000,6 +5293,7 @@
         "value": -10
       }
     ],
+    "enemySelfShockChancePercent": 0,
     "enemyShockConfigured": false,
     "increasedCastSpeedPercent": 0,
     "increasedCriticalChancePercent": 0,
@@ -3081,7 +5375,10 @@
       "CannotScorch": false,
       "CannotShock": false
     },
+    "appliedCurseSlots": [],
     "baseCriticalChancePercent": 6,
+    "conductivityActiveSkills": [],
+    "conductivityGems": [],
     "contributions": [],
     "criticalContributions": [
       {
@@ -3126,6 +5423,7 @@
         "value": -25
       }
     ],
+    "enemySelfShockChancePercent": 0,
     "enemyShockConfigured": false,
     "increasedCastSpeedPercent": 0,
     "increasedCriticalChancePercent": 0,
@@ -3211,7 +5509,10 @@
       "CannotScorch": false,
       "CannotShock": false
     },
+    "appliedCurseSlots": [],
     "baseCriticalChancePercent": 6,
+    "conductivityActiveSkills": [],
+    "conductivityGems": [],
     "contributions": [],
     "criticalContributions": [
       {
@@ -3251,6 +5552,7 @@
         "value": -15
       }
     ],
+    "enemySelfShockChancePercent": 0,
     "enemyShockConfigured": false,
     "increasedCastSpeedPercent": 0,
     "increasedCriticalChancePercent": 0,
@@ -3352,7 +5654,10 @@
       "CannotScorch": false,
       "CannotShock": false
     },
+    "appliedCurseSlots": [],
     "baseCriticalChancePercent": 6,
+    "conductivityActiveSkills": [],
+    "conductivityGems": [],
     "contributions": [],
     "criticalContributions": [
       {
@@ -3392,6 +5697,7 @@
         "value": -30
       }
     ],
+    "enemySelfShockChancePercent": 0,
     "enemyShockConfigured": false,
     "increasedCastSpeedPercent": 0,
     "increasedCriticalChancePercent": 0,
@@ -3493,7 +5799,10 @@
       "CannotScorch": false,
       "CannotShock": false
     },
+    "appliedCurseSlots": [],
     "baseCriticalChancePercent": 6,
+    "conductivityActiveSkills": [],
+    "conductivityGems": [],
     "contributions": [],
     "criticalContributions": [
       {
@@ -3533,6 +5842,7 @@
         "value": -15
       }
     ],
+    "enemySelfShockChancePercent": 0,
     "enemyShockConfigured": false,
     "increasedCastSpeedPercent": 0,
     "increasedCriticalChancePercent": 0,
@@ -3634,7 +5944,10 @@
       "CannotScorch": false,
       "CannotShock": false
     },
+    "appliedCurseSlots": [],
     "baseCriticalChancePercent": 6,
+    "conductivityActiveSkills": [],
+    "conductivityGems": [],
     "contributions": [],
     "criticalContributions": [
       {
@@ -3674,6 +5987,7 @@
         "value": -15
       }
     ],
+    "enemySelfShockChancePercent": 0,
     "enemyShockConfigured": false,
     "increasedCastSpeedPercent": 0,
     "increasedCriticalChancePercent": 0,
@@ -3775,7 +6089,10 @@
       "CannotScorch": false,
       "CannotShock": false
     },
+    "appliedCurseSlots": [],
     "baseCriticalChancePercent": 6,
+    "conductivityActiveSkills": [],
+    "conductivityGems": [],
     "contributions": [],
     "criticalContributions": [
       {
@@ -3805,6 +6122,7 @@
         "value": 75
       }
     ],
+    "enemySelfShockChancePercent": 0,
     "enemyShockConfigured": false,
     "increasedCastSpeedPercent": 0,
     "increasedCriticalChancePercent": 0,
@@ -3901,7 +6219,10 @@
       "CannotScorch": false,
       "CannotShock": false
     },
+    "appliedCurseSlots": [],
     "baseCriticalChancePercent": 6,
+    "conductivityActiveSkills": [],
+    "conductivityGems": [],
     "contributions": [],
     "criticalContributions": [
       {
@@ -3931,6 +6252,7 @@
         "value": 75
       }
     ],
+    "enemySelfShockChancePercent": 0,
     "enemyShockConfigured": false,
     "increasedCastSpeedPercent": 0,
     "increasedCriticalChancePercent": 0,
@@ -4060,7 +6382,10 @@
       "CannotScorch": true,
       "CannotShock": true
     },
+    "appliedCurseSlots": [],
     "baseCriticalChancePercent": 6,
+    "conductivityActiveSkills": [],
+    "conductivityGems": [],
     "contributions": [
       {
         "flags": 0,
@@ -4160,6 +6485,7 @@
         "value": -15
       }
     ],
+    "enemySelfShockChancePercent": 0,
     "enemyShockConfigured": false,
     "increasedCastSpeedPercent": 25,
     "increasedCriticalChancePercent": 150,
@@ -4400,7 +6726,10 @@
       "CannotScorch": false,
       "CannotShock": false
     },
+    "appliedCurseSlots": [],
     "baseCriticalChancePercent": 6,
+    "conductivityActiveSkills": [],
+    "conductivityGems": [],
     "contributions": [
       {
         "flags": 0,
@@ -4432,6 +6761,7 @@
     "enemyDamageTakenPercent": 0,
     "enemyLightningResistanceBeforeClampPercent": 0,
     "enemyLightningResistanceContributions": [],
+    "enemySelfShockChancePercent": 0,
     "enemyShockConfigured": false,
     "increasedCastSpeedPercent": 0,
     "increasedCriticalChancePercent": 0,
@@ -4517,7 +6847,10 @@
       "CannotScorch": false,
       "CannotShock": false
     },
+    "appliedCurseSlots": [],
     "baseCriticalChancePercent": 6,
+    "conductivityActiveSkills": [],
+    "conductivityGems": [],
     "contributions": [
       {
         "flags": 0,
@@ -4583,6 +6916,7 @@
         "value": 25
       }
     ],
+    "enemySelfShockChancePercent": 0,
     "enemyShockConfigured": false,
     "increasedCastSpeedPercent": 25,
     "increasedCriticalChancePercent": 0,
@@ -4730,7 +7064,10 @@
       "CannotScorch": true,
       "CannotShock": true
     },
+    "appliedCurseSlots": [],
     "baseCriticalChancePercent": 6,
+    "conductivityActiveSkills": [],
+    "conductivityGems": [],
     "configuredShockEffectPercent": 17,
     "contributions": [
       {
@@ -4831,6 +7168,7 @@
         "value": -15
       }
     ],
+    "enemySelfShockChancePercent": 0,
     "enemyShockConfigured": true,
     "increasedCastSpeedPercent": 25,
     "increasedCriticalChancePercent": 150,
@@ -5092,7 +7430,10 @@
         "CannotScorch": true,
         "CannotShock": true
       },
+      "appliedCurseSlots": [],
       "baseCriticalChancePercent": 6,
+      "conductivityActiveSkills": [],
+      "conductivityGems": [],
       "configuredShockEffectPercent": 17,
       "contributions": [
         {
@@ -5193,6 +7534,7 @@
           "value": -15
         }
       ],
+      "enemySelfShockChancePercent": 0,
       "enemyShockConfigured": false,
       "increasedCastSpeedPercent": 25,
       "increasedCriticalChancePercent": 150,
@@ -5436,7 +7778,10 @@
       "CannotScorch": false,
       "CannotShock": false
     },
+    "appliedCurseSlots": [],
     "baseCriticalChancePercent": 6,
+    "conductivityActiveSkills": [],
+    "conductivityGems": [],
     "configuredShockEffectPercent": 20,
     "contributions": [],
     "criticalContributions": [
@@ -5461,6 +7806,7 @@
     "enemyDamageTakenPercent": 20,
     "enemyLightningResistanceBeforeClampPercent": 0,
     "enemyLightningResistanceContributions": [],
+    "enemySelfShockChancePercent": 0,
     "enemyShockConfigured": true,
     "increasedCastSpeedPercent": 0,
     "increasedCriticalChancePercent": 0,
@@ -5543,7 +7889,10 @@
         "CannotScorch": false,
         "CannotShock": false
       },
+      "appliedCurseSlots": [],
       "baseCriticalChancePercent": 6,
+      "conductivityActiveSkills": [],
+      "conductivityGems": [],
       "configuredShockEffectPercent": 20,
       "contributions": [],
       "criticalContributions": [
@@ -5568,6 +7917,7 @@
       "enemyDamageTakenPercent": 0,
       "enemyLightningResistanceBeforeClampPercent": 0,
       "enemyLightningResistanceContributions": [],
+      "enemySelfShockChancePercent": 0,
       "enemyShockConfigured": false,
       "increasedCastSpeedPercent": 0,
       "increasedCriticalChancePercent": 0,
@@ -5646,7 +7996,10 @@
       "CannotScorch": false,
       "CannotShock": false
     },
+    "appliedCurseSlots": [],
     "baseCriticalChancePercent": 6,
+    "conductivityActiveSkills": [],
+    "conductivityGems": [],
     "configuredShockEffectPercent": 50,
     "contributions": [],
     "criticalContributions": [
@@ -5671,6 +8024,7 @@
     "enemyDamageTakenPercent": 50,
     "enemyLightningResistanceBeforeClampPercent": 0,
     "enemyLightningResistanceContributions": [],
+    "enemySelfShockChancePercent": 0,
     "enemyShockConfigured": true,
     "increasedCastSpeedPercent": 0,
     "increasedCriticalChancePercent": 0,
@@ -5753,7 +8107,10 @@
         "CannotScorch": false,
         "CannotShock": false
       },
+      "appliedCurseSlots": [],
       "baseCriticalChancePercent": 6,
+      "conductivityActiveSkills": [],
+      "conductivityGems": [],
       "configuredShockEffectPercent": 50,
       "contributions": [],
       "criticalContributions": [
@@ -5778,6 +8135,7 @@
       "enemyDamageTakenPercent": 0,
       "enemyLightningResistanceBeforeClampPercent": 0,
       "enemyLightningResistanceContributions": [],
+      "enemySelfShockChancePercent": 0,
       "enemyShockConfigured": false,
       "increasedCastSpeedPercent": 0,
       "increasedCriticalChancePercent": 0,
@@ -5856,7 +8214,10 @@
       "CannotScorch": false,
       "CannotShock": false
     },
+    "appliedCurseSlots": [],
     "baseCriticalChancePercent": 6,
+    "conductivityActiveSkills": [],
+    "conductivityGems": [],
     "configuredShockEffectPercent": 1,
     "contributions": [],
     "criticalContributions": [
@@ -5881,6 +8242,7 @@
     "enemyDamageTakenPercent": 1,
     "enemyLightningResistanceBeforeClampPercent": 0,
     "enemyLightningResistanceContributions": [],
+    "enemySelfShockChancePercent": 0,
     "enemyShockConfigured": true,
     "increasedCastSpeedPercent": 0,
     "increasedCriticalChancePercent": 0,
@@ -5963,7 +8325,10 @@
         "CannotScorch": false,
         "CannotShock": false
       },
+      "appliedCurseSlots": [],
       "baseCriticalChancePercent": 6,
+      "conductivityActiveSkills": [],
+      "conductivityGems": [],
       "configuredShockEffectPercent": 1,
       "contributions": [],
       "criticalContributions": [
@@ -5988,6 +8353,7 @@
       "enemyDamageTakenPercent": 0,
       "enemyLightningResistanceBeforeClampPercent": 0,
       "enemyLightningResistanceContributions": [],
+      "enemySelfShockChancePercent": 0,
       "enemyShockConfigured": false,
       "increasedCastSpeedPercent": 0,
       "increasedCriticalChancePercent": 0,
@@ -6066,7 +8432,10 @@
       "CannotScorch": false,
       "CannotShock": false
     },
+    "appliedCurseSlots": [],
     "baseCriticalChancePercent": 6,
+    "conductivityActiveSkills": [],
+    "conductivityGems": [],
     "configuredShockEffectPercent": 20,
     "contributions": [
       {
@@ -6099,6 +8468,7 @@
     "enemyDamageTakenPercent": 20,
     "enemyLightningResistanceBeforeClampPercent": 0,
     "enemyLightningResistanceContributions": [],
+    "enemySelfShockChancePercent": 0,
     "enemyShockConfigured": true,
     "increasedCastSpeedPercent": 0,
     "increasedCriticalChancePercent": 0,
@@ -6190,7 +8560,10 @@
         "CannotScorch": false,
         "CannotShock": false
       },
+      "appliedCurseSlots": [],
       "baseCriticalChancePercent": 6,
+      "conductivityActiveSkills": [],
+      "conductivityGems": [],
       "configuredShockEffectPercent": 20,
       "contributions": [
         {
@@ -6223,6 +8596,7 @@
       "enemyDamageTakenPercent": 0,
       "enemyLightningResistanceBeforeClampPercent": 0,
       "enemyLightningResistanceContributions": [],
+      "enemySelfShockChancePercent": 0,
       "enemyShockConfigured": false,
       "increasedCastSpeedPercent": 0,
       "increasedCriticalChancePercent": 0,
@@ -6311,7 +8685,10 @@
       "CannotScorch": false,
       "CannotShock": false
     },
+    "appliedCurseSlots": [],
     "baseCriticalChancePercent": 6,
+    "conductivityActiveSkills": [],
+    "conductivityGems": [],
     "configuredShockEffectPercent": 20,
     "contributions": [],
     "criticalContributions": [
@@ -6336,6 +8713,7 @@
     "enemyDamageTakenPercent": 20,
     "enemyLightningResistanceBeforeClampPercent": 0,
     "enemyLightningResistanceContributions": [],
+    "enemySelfShockChancePercent": 0,
     "enemyShockConfigured": true,
     "increasedCastSpeedPercent": 0,
     "increasedCriticalChancePercent": 0,
@@ -6418,7 +8796,10 @@
         "CannotScorch": false,
         "CannotShock": false
       },
+      "appliedCurseSlots": [],
       "baseCriticalChancePercent": 6,
+      "conductivityActiveSkills": [],
+      "conductivityGems": [],
       "configuredShockEffectPercent": 20,
       "contributions": [],
       "criticalContributions": [
@@ -6443,6 +8824,7 @@
       "enemyDamageTakenPercent": 0,
       "enemyLightningResistanceBeforeClampPercent": 0,
       "enemyLightningResistanceContributions": [],
+      "enemySelfShockChancePercent": 0,
       "enemyShockConfigured": false,
       "increasedCastSpeedPercent": 0,
       "increasedCriticalChancePercent": 0,
@@ -6521,7 +8903,10 @@
       "CannotScorch": false,
       "CannotShock": false
     },
+    "appliedCurseSlots": [],
     "baseCriticalChancePercent": 6,
+    "conductivityActiveSkills": [],
+    "conductivityGems": [],
     "configuredShockEffectPercent": 0,
     "contributions": [],
     "criticalContributions": [
@@ -6546,6 +8931,7 @@
     "enemyDamageTakenPercent": 0,
     "enemyLightningResistanceBeforeClampPercent": 0,
     "enemyLightningResistanceContributions": [],
+    "enemySelfShockChancePercent": 0,
     "enemyShockConfigured": true,
     "increasedCastSpeedPercent": 0,
     "increasedCriticalChancePercent": 0,
@@ -6619,7 +9005,10 @@
         "CannotScorch": false,
         "CannotShock": false
       },
+      "appliedCurseSlots": [],
       "baseCriticalChancePercent": 6,
+      "conductivityActiveSkills": [],
+      "conductivityGems": [],
       "configuredShockEffectPercent": 0,
       "contributions": [],
       "criticalContributions": [
@@ -6644,6 +9033,7 @@
       "enemyDamageTakenPercent": 0,
       "enemyLightningResistanceBeforeClampPercent": 0,
       "enemyLightningResistanceContributions": [],
+      "enemySelfShockChancePercent": 0,
       "enemyShockConfigured": false,
       "increasedCastSpeedPercent": 0,
       "increasedCriticalChancePercent": 0,
@@ -6722,7 +9112,10 @@
       "CannotScorch": false,
       "CannotShock": false
     },
+    "appliedCurseSlots": [],
     "baseCriticalChancePercent": 6,
+    "conductivityActiveSkills": [],
+    "conductivityGems": [],
     "configuredShockEffectPercent": 20,
     "contributions": [],
     "criticalContributions": [
@@ -6747,6 +9140,7 @@
     "enemyDamageTakenPercent": 20,
     "enemyLightningResistanceBeforeClampPercent": 0,
     "enemyLightningResistanceContributions": [],
+    "enemySelfShockChancePercent": 0,
     "enemyShockConfigured": true,
     "increasedCastSpeedPercent": 0,
     "increasedCriticalChancePercent": 0,
@@ -6829,7 +9223,10 @@
         "CannotScorch": false,
         "CannotShock": false
       },
+      "appliedCurseSlots": [],
       "baseCriticalChancePercent": 6,
+      "conductivityActiveSkills": [],
+      "conductivityGems": [],
       "configuredShockEffectPercent": 20,
       "contributions": [],
       "criticalContributions": [
@@ -6854,6 +9251,7 @@
       "enemyDamageTakenPercent": 0,
       "enemyLightningResistanceBeforeClampPercent": 0,
       "enemyLightningResistanceContributions": [],
+      "enemySelfShockChancePercent": 0,
       "enemyShockConfigured": false,
       "increasedCastSpeedPercent": 0,
       "increasedCriticalChancePercent": 0,
@@ -6947,7 +9345,10 @@
       "CannotScorch": false,
       "CannotShock": false
     },
+    "appliedCurseSlots": [],
     "baseCriticalChancePercent": 6,
+    "conductivityActiveSkills": [],
+    "conductivityGems": [],
     "contributions": [
       {
         "flags": 0,
@@ -7013,6 +9414,7 @@
         "value": 25
       }
     ],
+    "enemySelfShockChancePercent": 0,
     "enemyShockConfigured": false,
     "increasedCastSpeedPercent": 25,
     "increasedCriticalChancePercent": 0,
@@ -7196,7 +9598,10 @@
       "CannotScorch": false,
       "CannotShock": false
     },
+    "appliedCurseSlots": [],
     "baseCriticalChancePercent": 6,
+    "conductivityActiveSkills": [],
+    "conductivityGems": [],
     "contributions": [],
     "criticalContributions": [
       {
@@ -7220,6 +9625,7 @@
     "enemyDamageTakenPercent": 0,
     "enemyLightningResistanceBeforeClampPercent": 0,
     "enemyLightningResistanceContributions": [],
+    "enemySelfShockChancePercent": 0,
     "enemyShockConfigured": false,
     "increasedCastSpeedPercent": 0,
     "increasedCriticalChancePercent": 0,
@@ -7305,7 +9711,10 @@
       "CannotScorch": false,
       "CannotShock": false
     },
+    "appliedCurseSlots": [],
     "baseCriticalChancePercent": 6,
+    "conductivityActiveSkills": [],
+    "conductivityGems": [],
     "contributions": [],
     "criticalContributions": [
       {
@@ -7329,6 +9738,7 @@
     "enemyDamageTakenPercent": 0,
     "enemyLightningResistanceBeforeClampPercent": 0,
     "enemyLightningResistanceContributions": [],
+    "enemySelfShockChancePercent": 0,
     "enemyShockConfigured": false,
     "increasedCastSpeedPercent": 0,
     "increasedCriticalChancePercent": 0,
@@ -7436,7 +9846,10 @@
       "CannotScorch": false,
       "CannotShock": false
     },
+    "appliedCurseSlots": [],
     "baseCriticalChancePercent": 6,
+    "conductivityActiveSkills": [],
+    "conductivityGems": [],
     "contributions": [],
     "criticalContributions": [
       {
@@ -7460,6 +9873,7 @@
     "enemyDamageTakenPercent": 0,
     "enemyLightningResistanceBeforeClampPercent": 0,
     "enemyLightningResistanceContributions": [],
+    "enemySelfShockChancePercent": 0,
     "enemyShockConfigured": false,
     "increasedCastSpeedPercent": 0,
     "increasedCriticalChancePercent": 0,
@@ -7582,7 +9996,10 @@
       "CannotScorch": false,
       "CannotShock": false
     },
+    "appliedCurseSlots": [],
     "baseCriticalChancePercent": 6,
+    "conductivityActiveSkills": [],
+    "conductivityGems": [],
     "contributions": [
       {
         "flags": 2,
@@ -7614,6 +10031,7 @@
     "enemyDamageTakenPercent": 0,
     "enemyLightningResistanceBeforeClampPercent": 0,
     "enemyLightningResistanceContributions": [],
+    "enemySelfShockChancePercent": 0,
     "enemyShockConfigured": false,
     "increasedCastSpeedPercent": 0,
     "increasedCriticalChancePercent": 0,
@@ -7752,7 +10170,10 @@
       "CannotScorch": false,
       "CannotShock": false
     },
+    "appliedCurseSlots": [],
     "baseCriticalChancePercent": 6,
+    "conductivityActiveSkills": [],
+    "conductivityGems": [],
     "contributions": [
       {
         "flags": 16,
@@ -7784,6 +10205,7 @@
     "enemyDamageTakenPercent": 0,
     "enemyLightningResistanceBeforeClampPercent": 0,
     "enemyLightningResistanceContributions": [],
+    "enemySelfShockChancePercent": 0,
     "enemyShockConfigured": false,
     "increasedCastSpeedPercent": 39,
     "increasedCriticalChancePercent": 0,
@@ -7907,7 +10329,10 @@
       "CannotScorch": false,
       "CannotShock": false
     },
+    "appliedCurseSlots": [],
     "baseCriticalChancePercent": 6,
+    "conductivityActiveSkills": [],
+    "conductivityGems": [],
     "contributions": [
       {
         "flags": 16,
@@ -7939,6 +10364,7 @@
     "enemyDamageTakenPercent": 0,
     "enemyLightningResistanceBeforeClampPercent": 0,
     "enemyLightningResistanceContributions": [],
+    "enemySelfShockChancePercent": 0,
     "enemyShockConfigured": false,
     "increasedCastSpeedPercent": 39,
     "increasedCriticalChancePercent": 0,
@@ -8077,7 +10503,10 @@
       "CannotScorch": true,
       "CannotShock": true
     },
+    "appliedCurseSlots": [],
     "baseCriticalChancePercent": 6,
+    "conductivityActiveSkills": [],
+    "conductivityGems": [],
     "configuredShockEffectPercent": 17,
     "contributions": [
       {
@@ -8185,6 +10614,7 @@
         "value": -15
       }
     ],
+    "enemySelfShockChancePercent": 0,
     "enemyShockConfigured": true,
     "increasedCastSpeedPercent": 64,
     "increasedCriticalChancePercent": 150,
@@ -8462,7 +10892,10 @@
         "CannotScorch": true,
         "CannotShock": true
       },
+      "appliedCurseSlots": [],
       "baseCriticalChancePercent": 6,
+      "conductivityActiveSkills": [],
+      "conductivityGems": [],
       "configuredShockEffectPercent": 17,
       "contributions": [
         {
@@ -8570,6 +11003,7 @@
           "value": -15
         }
       ],
+      "enemySelfShockChancePercent": 0,
       "enemyShockConfigured": false,
       "increasedCastSpeedPercent": 64,
       "increasedCriticalChancePercent": 150,
@@ -8829,7 +11263,10 @@
       "CannotScorch": false,
       "CannotShock": false
     },
+    "appliedCurseSlots": [],
     "baseCriticalChancePercent": 6,
+    "conductivityActiveSkills": [],
+    "conductivityGems": [],
     "contributions": [],
     "criticalContributions": [
       {
@@ -8853,6 +11290,7 @@
     "enemyDamageTakenPercent": 0,
     "enemyLightningResistanceBeforeClampPercent": 0,
     "enemyLightningResistanceContributions": [],
+    "enemySelfShockChancePercent": 0,
     "enemyShockConfigured": false,
     "increasedCastSpeedPercent": 0,
     "increasedCriticalChancePercent": 0,
@@ -8938,7 +11376,10 @@
       "CannotScorch": false,
       "CannotShock": false
     },
+    "appliedCurseSlots": [],
     "baseCriticalChancePercent": 6,
+    "conductivityActiveSkills": [],
+    "conductivityGems": [],
     "contributions": [
       {
         "flags": 16,
@@ -8970,6 +11411,7 @@
     "enemyDamageTakenPercent": 0,
     "enemyLightningResistanceBeforeClampPercent": 0,
     "enemyLightningResistanceContributions": [],
+    "enemySelfShockChancePercent": 0,
     "enemyShockConfigured": false,
     "increasedCastSpeedPercent": 20,
     "increasedCriticalChancePercent": 0,
@@ -9063,7 +11505,10 @@
       "CannotScorch": false,
       "CannotShock": false
     },
+    "appliedCurseSlots": [],
     "baseCriticalChancePercent": 6,
+    "conductivityActiveSkills": [],
+    "conductivityGems": [],
     "contributions": [
       {
         "flags": 16,
@@ -9095,6 +11540,7 @@
     "enemyDamageTakenPercent": 0,
     "enemyLightningResistanceBeforeClampPercent": 0,
     "enemyLightningResistanceContributions": [],
+    "enemySelfShockChancePercent": 0,
     "enemyShockConfigured": false,
     "increasedCastSpeedPercent": 39,
     "increasedCriticalChancePercent": 0,
@@ -9188,7 +11634,10 @@
       "CannotScorch": false,
       "CannotShock": false
     },
+    "appliedCurseSlots": [],
     "baseCriticalChancePercent": 6,
+    "conductivityActiveSkills": [],
+    "conductivityGems": [],
     "contributions": [
       {
         "flags": 16,
@@ -9227,6 +11676,7 @@
     "enemyDamageTakenPercent": 0,
     "enemyLightningResistanceBeforeClampPercent": 0,
     "enemyLightningResistanceContributions": [],
+    "enemySelfShockChancePercent": 0,
     "enemyShockConfigured": false,
     "increasedCastSpeedPercent": -90,
     "increasedCriticalChancePercent": 0,
@@ -9332,7 +11782,10 @@
       "CannotScorch": false,
       "CannotShock": false
     },
+    "appliedCurseSlots": [],
     "baseCriticalChancePercent": 6,
+    "conductivityActiveSkills": [],
+    "conductivityGems": [],
     "contributions": [
       {
         "flags": 16,
@@ -9371,6 +11824,7 @@
     "enemyDamageTakenPercent": 0,
     "enemyLightningResistanceBeforeClampPercent": 0,
     "enemyLightningResistanceContributions": [],
+    "enemySelfShockChancePercent": 0,
     "enemyShockConfigured": false,
     "increasedCastSpeedPercent": 51,
     "increasedCriticalChancePercent": 0,
@@ -9476,7 +11930,10 @@
       "CannotScorch": false,
       "CannotShock": false
     },
+    "appliedCurseSlots": [],
     "baseCriticalChancePercent": 6,
+    "conductivityActiveSkills": [],
+    "conductivityGems": [],
     "contributions": [
       {
         "flags": 16,
@@ -9515,6 +11972,7 @@
     "enemyDamageTakenPercent": 0,
     "enemyLightningResistanceBeforeClampPercent": 0,
     "enemyLightningResistanceContributions": [],
+    "enemySelfShockChancePercent": 0,
     "enemyShockConfigured": false,
     "increasedCastSpeedPercent": 2039,
     "increasedCriticalChancePercent": 0,

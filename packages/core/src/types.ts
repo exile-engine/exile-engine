@@ -126,6 +126,7 @@ export interface SparkDataset {
   readonly critical?: import('./selected-skill.js').SelectedSkillCriticalDataset;
   readonly resistance?: import('./selected-skill.js').SelectedSkillResistanceDataset;
   readonly shock?: import('./selected-skill.js').SelectedSkillShockDataset;
+  readonly conductivity?: import('./selected-skill.js').SelectedConductivityDataset;
 }
 
 export interface DamageRange {
