@@ -11,6 +11,7 @@ import {
 } from '@exile-engine/core';
 import { loadControlledDestructionDataset } from './supports.js';
 import { loadSelectedSkillCriticalDataset } from './critical.js';
+import { loadSelectedSkillResistanceDataset } from './resistance.js';
 
 export const game = 'poe1' as const;
 
@@ -22,10 +23,13 @@ export async function loadSparkDataset(reader: CatalogReader) {
   if (!support.ok) return support;
   const critical = await loadSelectedSkillCriticalDataset(reader);
   if (!critical.ok) return critical;
+  const resistance = await loadSelectedSkillResistanceDataset(reader);
+  if (!resistance.ok) return resistance;
   if (
     !sameSnapshot(loaded.value.identity, support.value.identity) ||
     !sameSnapshot(loaded.value.identity, reader.identity) ||
-    !sameSnapshot(loaded.value.identity, critical.value.identity)
+    !sameSnapshot(loaded.value.identity, critical.value.identity) ||
+    !sameSnapshot(loaded.value.identity, resistance.value.identity)
   )
     return failure(
       errorDiagnostic(
@@ -37,6 +41,7 @@ export async function loadSparkDataset(reader: CatalogReader) {
     ...loaded.value,
     supports: [support.value],
     critical: critical.value,
+    resistance: resistance.value,
   });
 }
 
@@ -59,6 +64,10 @@ export type {
   SelectedSkillSupportDataset,
   SelectedSkillCriticalTrace,
   SelectedSkillCriticalDataset,
+  SelectedLightningExposure,
+  SelectedLightningResistanceConfiguration,
+  SelectedSkillResistanceDataset,
+  SelectedSkillResistanceTrace,
 } from '@exile-engine/core';
 export { createSelectedSkillSession } from './incremental.js';
 export type { IncrementalSelectedSkillReport, SelectedSkillSession } from './incremental.js';

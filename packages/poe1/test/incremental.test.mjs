@@ -32,6 +32,27 @@ const support = (gemLevel = 1, enabled = true) => ({
   enabled,
   source: { kind: 'skill', id: 'synthetic-support-1', line: 1 },
 });
+const exposure = (value = -10, enabled = true, id = 'synthetic-exposure-1') => ({
+  statId: 'lightning_exposure_on_hit_magnitude',
+  value,
+  enabled,
+  source: { kind: 'scenario', id, line: 1 },
+});
+function configuredInput(
+  baseResistancePercent = 0,
+  exposures = [],
+  maximumResistanceMode = 'configured',
+) {
+  const input = structuredClone(basic);
+  delete input.configuration.effectiveLightningResistancePercent;
+  input.configuration.lightningResistance = {
+    baseResistancePercent,
+    maximumResistanceMode,
+    source: { kind: 'scenario', id: 'synthetic-enemy-resistance', line: 1 },
+    exposures,
+  };
+  return input;
+}
 const basic = {
   identity: dataset.identity,
   buildId: 'synthetic-incremental',
@@ -71,12 +92,19 @@ test('incremental item and enemy changes equal full recomputation with selective
   ]);
   input.configuration.effectiveLightningResistancePercent = -25;
   assert.deepEqual(checkUpdate(session, input).recalculated, [
+    'uncapped-resistance',
+    'capped-resistance',
+    'effective-resistance',
+    'resistance-effects',
     'damage-after-resistance',
     'critical-effects',
     'selected-skill',
   ]);
   input.configuration.id = 'enemy-2';
-  assert.deepEqual(checkUpdate(session, input).recalculated, ['selected-skill']);
+  assert.deepEqual(checkUpdate(session, input).recalculated, [
+    'resistance-effects',
+    'selected-skill',
+  ]);
 });
 
 test('applicability sets are replaced when a contribution moves categories or is added/removed', () => {
@@ -158,6 +186,7 @@ test('new gem-level effectiveness invalidates scaled added damage while retainin
   const synthetic = structuredClone(dataset);
   delete synthetic.supports;
   delete synthetic.critical;
+  delete synthetic.resistance;
   synthetic.levels.find((level) => level.gemLevel === 1).addedDamageEffectiveness = 0.5;
   synthetic.identity.snapshotId += '-synthetic-effectiveness';
   const input = {
@@ -498,6 +527,7 @@ test('critical rounding, caps, resistance and zero damage match fresh recomputat
 test('selected level changes refresh critical base chance while preserving modifier aggregates', () => {
   const synthetic = structuredClone(dataset);
   delete synthetic.supports;
+  delete synthetic.resistance;
   synthetic.identity.snapshotId += '-synthetic-critical-level';
   synthetic.critical.identity = { ...synthetic.identity };
   synthetic.levels.find((level) => level.gemLevel === 1).baseCriticalStrikeChancePercent = 10;
@@ -694,6 +724,348 @@ test('critical facts reject hidden cycles, inherited rows and mismatched source 
   }
 });
 
+test('exposure selection retains strongest membership, ties and ordered provenance', () => {
+  const input = configuredInput(100, [exposure(-10), exposure(-25, false, 'exposure-2')]);
+  input.modifiers.push(modifier('base_reduce_enemy_lightning_resistance_%', 15, 17));
+  const session = value(createSelectedSkillSession(input, dataset));
+  assert.deepEqual(session.current.calculation, value(calculateSelectedSkill(input, dataset)));
+  const first = session.current.calculation.resistanceEffects;
+  assert.equal(first.profile, 'configured');
+  assert.equal(first.exposurePercent, -10);
+  assert.equal(first.uncappedResistancePercent, 90);
+  assert.equal(first.maximumResistancePercent, 90);
+  assert.equal(first.cappedResistancePercent, 90);
+  assert.equal(first.effectiveResistancePercent, 75);
+  assert.deepEqual(first.selectedExposureIndices, [0]);
+  const raw = input.configuration.lightningResistance;
+  raw.baseResistancePercent = 80;
+  const baseChanged = checkUpdate(session, input);
+  assert.equal(baseChanged.calculation.resistanceEffects.effectiveResistancePercent, 55);
+  assert.ok(!baseChanged.recalculated.includes('lightning-exposure'));
+  assert.ok(!baseChanged.recalculated.includes('damage-before-resistance'));
+  assert.ok(!baseChanged.recalculated.includes('cast-rate'));
+  raw.exposures[0].value = -30;
+  assert.equal(
+    checkUpdate(session, input).calculation.resistanceEffects.effectiveResistancePercent,
+    35,
+  );
+  raw.exposures[1].enabled = true;
+  checkUpdate(session, input);
+  raw.exposures[1].value = -40;
+  assert.deepEqual(
+    checkUpdate(session, input).calculation.resistanceEffects.selectedExposureIndices,
+    [1],
+  );
+  raw.exposures[1].enabled = false;
+  checkUpdate(session, input);
+  raw.exposures.push(exposure(-30, true, 'exposure-3'));
+  const tied = checkUpdate(session, input);
+  assert.deepEqual(tied.calculation.resistanceEffects.selectedExposureIndices, [0, 2]);
+  assert.equal(tied.calculation.resistanceEffects.exposurePercent, -30);
+  assert.equal(tied.calculation.resistanceEffects.effectiveResistancePercent, 35);
+  raw.exposures.splice(0, 1);
+  const removed = checkUpdate(session, input);
+  assert.deepEqual(removed.calculation.resistanceEffects.selectedExposureIndices, [1]);
+  assert.deepEqual(removed.dependencies['lightning-exposure'], ['exposure:0', 'exposure:1']);
+  raw.exposures = [];
+  const none = checkUpdate(session, input);
+  assert.equal(none.calculation.resistanceEffects.exposurePercent, 0);
+  assert.equal(none.calculation.resistanceEffects.effectiveResistancePercent, 65);
+  assert.deepEqual(none.dependencies['lightning-exposure'], []);
+  raw.source.id = 'moved-resistance-source';
+  assert.deepEqual(checkUpdate(session, input).recalculated, [
+    'resistance-effects',
+    'selected-skill',
+  ]);
+});
+
+test('resistance cap/floor precede penetration for both normal and critical damage', () => {
+  const input = configuredInput(1000);
+  input.configuration.criticalStrikeMode = 'average';
+  input.configuration.ailmentMode = 'excluded';
+  input.skill.supports = [support()];
+  input.modifiers.push(modifier('base_reduce_enemy_lightning_resistance_%', 20, 17));
+  const session = value(createSelectedSkillSession(input, dataset));
+  assert.equal(session.current.calculation.resistanceEffects.cappedResistancePercent, 90);
+  assert.equal(session.current.calculation.resistanceEffects.effectiveResistancePercent, 70);
+  const raw = input.configuration.lightningResistance;
+  raw.maximumResistanceMode = 'default75';
+  const defaultCap = checkUpdate(session, input);
+  assert.equal(defaultCap.calculation.resistanceEffects.cappedResistancePercent, 75);
+  assert.equal(defaultCap.calculation.resistanceEffects.effectiveResistancePercent, 55);
+  assert.ok(!defaultCap.recalculated.includes('uncapped-resistance'));
+  raw.baseResistancePercent = -195;
+  raw.exposures = [exposure(-10)];
+  const belowFloor = checkUpdate(session, input).calculation;
+  assert.equal(belowFloor.resistanceEffects.uncappedResistancePercent, -205);
+  assert.equal(belowFloor.resistanceEffects.cappedResistancePercent, -200);
+  assert.equal(belowFloor.resistanceEffects.effectiveResistancePercent, -220);
+  assert.equal(belowFloor.hit.effectiveLightningResistancePercent, -220);
+  assert.equal(
+    belowFloor.hit.nonCriticalHitAfterResistance.mean,
+    belowFloor.hit.nonCriticalHitBeforeResistance.mean * 3.2,
+  );
+  assert.equal(
+    belowFloor.criticalEffects.criticalHitAfterResistance.mean,
+    belowFloor.criticalEffects.criticalHitBeforeResistance.mean * 3.2,
+  );
+  input.modifiers[3].value = 30;
+  const changed = checkUpdate(session, input);
+  assert.equal(changed.calculation.resistanceEffects.effectiveResistancePercent, -230);
+  assert.deepEqual(changed.recalculated, [
+    'lightning-penetration',
+    'effective-resistance',
+    'resistance-effects',
+    'damage-after-resistance',
+    'critical-effects',
+    'selected-skill',
+  ]);
+  input.modifiers[0].statId = 'base_reduce_enemy_lightning_resistance_%';
+  const reclassified = checkUpdate(session, input);
+  assert.deepEqual(reclassified.dependencies['lightning-penetration'], [
+    'modifier:0',
+    'modifier:3',
+  ]);
+  assert.deepEqual(reclassified.dependencies['damage-increase'], ['modifier:1']);
+  input.modifiers[3].statId = 'critical_strike_chance_+%';
+  const intoCritical = checkUpdate(session, input);
+  assert.deepEqual(intoCritical.dependencies['lightning-penetration'], ['modifier:0']);
+  assert.deepEqual(intoCritical.dependencies['critical-chance-increase'], ['modifier:3']);
+  input.modifiers.splice(0, 1);
+  const noPenetration = checkUpdate(session, input);
+  assert.deepEqual(noPenetration.dependencies['lightning-penetration'], []);
+  assert.equal(noPenetration.calculation.resistanceEffects.effectiveResistancePercent, -200);
+  input.configuration.criticalStrikeMode = 'disabled';
+  assert.deepEqual(checkUpdate(session, input).recalculated, [
+    'critical-effects',
+    'selected-skill',
+  ]);
+});
+
+test('configured resistance rejects ambiguous profiles and unsupported mechanics atomically', () => {
+  const initial = configuredInput(50, [exposure(-10)]);
+  const session = value(createSelectedSkillSession(initial, dataset));
+  const original = session.current;
+  for (const mutate of [
+    (input) => {
+      input.configuration.effectiveLightningResistancePercent = 25;
+    },
+    (input) => {
+      input.configuration.effectiveLightningResistancePercent = undefined;
+    },
+    (input) => {
+      input.configuration.lightningResistance.baseResistancePercent = 1001;
+    },
+    (input) => {
+      input.configuration.lightningResistance.baseResistancePercent = -1001;
+    },
+    (input) => {
+      input.configuration.lightningResistance.maximumResistanceMode = 'inferred';
+    },
+    (input) => {
+      delete input.configuration.lightningResistance.source;
+    },
+    (input) => {
+      delete input.configuration.lightningResistance.exposures;
+    },
+    (input) => {
+      input.configuration.lightningResistance.exposures = Array.from({ length: 9 }, () =>
+        exposure(),
+      );
+    },
+    (input) => {
+      input.configuration.lightningResistance.exposures[0].value = 10;
+    },
+    (input) => {
+      input.configuration.lightningResistance.exposures[0].value = -101;
+    },
+    (input) => {
+      input.configuration.lightningResistance.exposures[0].value = -0.5;
+    },
+    (input) => {
+      input.configuration.lightningResistance.exposures[0].enabled = 'false';
+    },
+    (input) => {
+      input.configuration.lightningResistance.exposures[0].statId = 'display-lightning-exposure';
+    },
+    (input) => {
+      input.configuration.lightningResistance.exposures[0].source.kind = 'item';
+    },
+    (input) => {
+      input.modifiers.push(modifier('base_reduce_enemy_lightning_resistance_%', 201, 17));
+    },
+    (input) => {
+      input.modifiers.push(modifier('base_reduce_enemy_lightning_resistance_%', -1, 17));
+    },
+    (input) => {
+      input.modifiers.push(modifier('base_reduce_enemy_lightning_resistance_%', 1.5, 17));
+    },
+    (input) => {
+      input.modifiers.push(
+        modifier('base_reduce_enemy_lightning_resistance_%', 200, 17),
+        modifier('base_reduce_enemy_lightning_resistance_%', 1, 18),
+      );
+    },
+    (input) => {
+      input.modifiers.push(modifier('reduce_enemy_lightning_resistance_%', 10, 17));
+    },
+    (input) => {
+      input.modifiers.push(modifier('lightning_exposure_on_hit_magnitude', -10, 17));
+    },
+    (input) => {
+      delete input.configuration.lightningResistance.exposures[0];
+    },
+    (input) => {
+      input.configuration.lightningResistance.source = Object.create(
+        input.configuration.lightningResistance.source,
+      );
+    },
+  ]) {
+    const input = structuredClone(initial);
+    mutate(input);
+    assert.equal(calculateSelectedSkill(input, dataset).ok, false);
+    assert.equal(session.recalculate(input).ok, false);
+    assert.equal(session.current, original);
+  }
+  for (const amount of [0, 10]) {
+    const legacy = structuredClone(basic);
+    legacy.modifiers.push(modifier('base_reduce_enemy_lightning_resistance_%', amount, 17));
+    assert.equal(calculateSelectedSkill(legacy, dataset).ok, false);
+    assert.equal(session.recalculate(legacy).ok, false);
+    assert.equal(session.current, original);
+  }
+  const unavailable = structuredClone(dataset);
+  delete unavailable.resistance;
+  const legacy = value(createSelectedSkillSession(basic, unavailable));
+  const before = legacy.current;
+  assert.equal(calculateSelectedSkill(initial, unavailable).ok, false);
+  assert.equal(legacy.recalculate(initial).ok, false);
+  assert.equal(legacy.current, before);
+  const recovered = structuredClone(basic);
+  recovered.configuration.effectiveLightningResistancePercent = 50;
+  assert.deepEqual(
+    value(legacy.recalculate(recovered)).calculation,
+    value(calculateSelectedSkill(recovered, unavailable)),
+  );
+});
+
+test('resistance profile transitions and captured exposure/rule ownership match fresh results', () => {
+  const input = configuredInput(80, [exposure(-10), exposure(-25, false, 'exposure-2')]);
+  input.modifiers.push(modifier('base_reduce_enemy_lightning_resistance_%', 10, 17));
+  const expected = structuredClone(input);
+  const ownedDataset = structuredClone(dataset);
+  const session = value(createSelectedSkillSession(input, ownedDataset));
+  const original = structuredClone(session.current.calculation);
+  input.configuration.lightningResistance.source.id = 'host-config-mutated';
+  input.configuration.lightningResistance.exposures[0].source.id = 'host-exposure-mutated';
+  ownedDataset.resistance.ruleSource.id = 'host-rule-mutated';
+  ownedDataset.resistance.sourceRows[0].key = 'host-row-mutated';
+  assert.deepEqual(session.current.calculation, original);
+  assert.throws(() => {
+    session.current.calculation.resistanceEffects.exposureContributions[0].source.id = 'mutated';
+  }, TypeError);
+  assert.throws(() => {
+    session.current.calculation.resistanceEffects.ruleSource.id = 'mutated';
+  }, TypeError);
+  expected.configuration.lightningResistance.exposures[1].enabled = true;
+  checkUpdate(session, expected);
+  const legacy = structuredClone(basic);
+  const switched = checkUpdate(session, legacy);
+  assert.equal(switched.calculation.resistanceEffects.profile, 'effective');
+  assert.equal(switched.calculation.resistanceEffects.maximumResistancePercent, null);
+  assert.equal(switched.calculation.resistanceEffects.minimumResistancePercent, null);
+  assert.deepEqual(switched.dependencies['lightning-exposure'], []);
+  assert.deepEqual(switched.dependencies['lightning-penetration'], []);
+  checkUpdate(session, expected);
+});
+
+test('resistance facts reject hidden cycles, inherited identities and wrong stat provenance', () => {
+  for (const select of [
+    (data) => data.resistance,
+    (data) => data.resistance.identity,
+    (data) => data.resistance.ruleSource,
+    (data) => data.resistance.sourceRows[0],
+  ]) {
+    const malformed = structuredClone(dataset);
+    const target = select(malformed);
+    target.extra = {};
+    target.extra.self = target.extra;
+    assert.equal(calculateSelectedSkill(basic, malformed).ok, false);
+    assert.equal(createSelectedSkillSession(basic, malformed).ok, false);
+  }
+  for (const mutate of [
+    (data) => {
+      data.resistance.identity.snapshotId += '-different';
+    },
+    (data) => {
+      data.resistance.identity = Object.create(data.resistance.identity);
+    },
+    (data) => {
+      data.resistance.sourceRows[0] = Object.create(data.resistance.sourceRows[0]);
+    },
+    (data) => {
+      delete data.resistance.sourceRows[0];
+    },
+    (data) => {
+      data.resistance.sourceRows[0].key = 'reduce_enemy_lightning_resistance_%';
+    },
+    (data) => {
+      data.resistance.ruleSource.id = 'unverified-resistance-rule';
+    },
+  ]) {
+    const malformed = structuredClone(dataset);
+    mutate(malformed);
+    assert.equal(calculateSelectedSkill(basic, malformed).ok, false);
+    assert.equal(createSelectedSkillSession(basic, malformed).ok, false);
+  }
+});
+
+test('configured resistance keeps signed-zero candidate and penetration provenance', () => {
+  const input = configuredInput(0, [exposure(0)]);
+  input.modifiers.push(modifier('base_reduce_enemy_lightning_resistance_%', 0, 17));
+  const session = value(createSelectedSkillSession(input, dataset));
+  input.configuration.lightningResistance.baseResistancePercent = -0;
+  checkUpdate(session, input);
+  input.configuration.lightningResistance.exposures[0].value = -0;
+  checkUpdate(session, input);
+  input.modifiers[3].value = -0;
+  checkUpdate(session, input);
+});
+
+test('inherited conflicting resistance profiles reject atomically and recover with fresh parity', () => {
+  const initial = configuredInput(50, [exposure(-10)]);
+  const session = value(createSelectedSkillSession(initial, dataset));
+  const candidates = [];
+  const inheritedNull = structuredClone(basic);
+  Object.setPrototypeOf(inheritedNull.configuration, { lightningResistance: null });
+  candidates.push(inheritedNull);
+  const inheritedRaw = structuredClone(basic);
+  Object.setPrototypeOf(inheritedRaw.configuration, {
+    lightningResistance: structuredClone(initial.configuration.lightningResistance),
+  });
+  candidates.push(inheritedRaw);
+  const inheritedEffective = structuredClone(initial);
+  Object.setPrototypeOf(inheritedEffective.configuration, {
+    effectiveLightningResistancePercent: 25,
+  });
+  candidates.push(inheritedEffective);
+  const inheritedNullEffective = structuredClone(initial);
+  Object.setPrototypeOf(inheritedNullEffective.configuration, {
+    effectiveLightningResistancePercent: null,
+  });
+  candidates.push(inheritedNullEffective);
+  for (const [index, input] of candidates.entries()) {
+    const before = session.current;
+    assert.equal(calculateSelectedSkill(input, dataset).ok, false);
+    assert.equal(createSelectedSkillSession(input, dataset).ok, false);
+    assert.equal(session.recalculate(input).ok, false);
+    assert.equal(session.current, before);
+    const recovered = structuredClone(initial);
+    recovered.configuration.lightningResistance.baseResistancePercent = 60 + index;
+    checkUpdate(session, recovered);
+  }
+});
+
 test('invalid added-lightning groups fail atomically and retain the accepted dependency set', () => {
   const input = { ...structuredClone(basic), addedLightningDamage: [added(2, 8)] };
   const session = value(createSelectedSkillSession(input, dataset));
@@ -755,6 +1127,7 @@ test('scaled-added and combined-base overflow reject atomically before publishin
     const synthetic = structuredClone(dataset);
     delete synthetic.supports;
     delete synthetic.critical;
+    delete synthetic.resistance;
     synthetic.identity.snapshotId += combinedOverflow ? '-combined-overflow' : '-scaled-overflow';
     const level = synthetic.levels.find((entry) => entry.gemLevel === 20);
     level.addedDamageEffectiveness = combinedOverflow ? 1e307 : 1e308;

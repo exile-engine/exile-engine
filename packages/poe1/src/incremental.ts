@@ -22,6 +22,12 @@ import {
   validateSelectedSkillInput,
 } from './selected-skill.js';
 import { planCalculationGraph, type CalculationDependencies } from './graph.js';
+import {
+  assembleSelectedSkillResistance,
+  capLightningResistance,
+  selectLightningExposure,
+  type LightningResistanceStages,
+} from './resistance.js';
 
 export interface IncrementalSelectedSkillReport {
   readonly calculation: SelectedSkillCalculation;
@@ -38,6 +44,7 @@ export interface SelectedSkillSession {
 
 const CAST_SPEED = 'base_cast_speed_+%';
 const CRITICAL_MULTIPLIER = 'base_critical_strike_multiplier_+';
+const LIGHTNING_PENETRATION = 'base_reduce_enemy_lightning_resistance_%';
 const DAMAGE_STATS = new Set<string>(SPARK_MODIFIER_STAT_IDS.filter((id) => id !== CAST_SPEED));
 const CRITICAL_CHANCE_STATS = new Set([
   'critical_strike_chance_+%',
@@ -53,6 +60,12 @@ const DERIVED = new Set([
   'support-effects',
   'critical-chance-increase',
   'critical-multiplier-increase',
+  'lightning-exposure',
+  'lightning-penetration',
+  'uncapped-resistance',
+  'capped-resistance',
+  'effective-resistance',
+  'resistance-effects',
   'damage-before-resistance',
   'damage-after-resistance',
   'cast-rate',
@@ -83,7 +96,21 @@ function copyInput(input: SelectedSkillInput): SelectedSkillInput {
           }
         : {}),
     },
-    configuration: { ...input.configuration },
+    configuration: {
+      ...input.configuration,
+      ...(input.configuration.lightningResistance === undefined
+        ? {}
+        : {
+            lightningResistance: {
+              ...input.configuration.lightningResistance,
+              source: { ...input.configuration.lightningResistance.source },
+              exposures: input.configuration.lightningResistance.exposures.map((exposure) => ({
+                ...exposure,
+                source: { ...exposure.source },
+              })),
+            },
+          }),
+    },
     modifiers: input.modifiers.map(copyModifier),
     ...(input.addedLightningDamage === undefined
       ? {}
@@ -173,6 +200,40 @@ function copyDataset(dataset: SparkDataset): SparkDataset {
             sourceRows: copyRows(dataset.critical.sourceRows),
           },
         }),
+    ...(dataset.resistance === undefined
+      ? {}
+      : {
+          resistance: {
+            identity: {
+              game: dataset.resistance.identity.game,
+              build: dataset.resistance.identity.build,
+              snapshotId: dataset.resistance.identity.snapshotId,
+            },
+            ruleSource: { ...dataset.resistance.ruleSource },
+            sourceRows: copyRows(dataset.resistance.sourceRows),
+          },
+        }),
+  };
+}
+
+function copyResistanceEffects(
+  effects: SelectedSkillCalculation['resistanceEffects'],
+): SelectedSkillCalculation['resistanceEffects'] {
+  return {
+    ...effects,
+    exposureContributions: effects.exposureContributions.map((exposure) => ({
+      ...exposure,
+      source: { ...exposure.source },
+    })),
+    selectedExposureIndices: [...effects.selectedExposureIndices],
+    penetrationContributions: effects.penetrationContributions.map(copyModifier),
+    configurationSource: { ...effects.configurationSource },
+    ruleSource: { ...effects.ruleSource },
+    sourceRows: effects.sourceRows.map((row) => ({
+      table: row.table,
+      key: row.key,
+      rowIndex: row.rowIndex,
+    })),
   };
 }
 
@@ -228,6 +289,7 @@ function inputNodes(input: SelectedSkillInput): Readonly<Record<string, unknown>
   const baseSkill = Object.fromEntries(
     Object.entries(input.skill).filter(([key]) => key !== 'supports'),
   );
+  const resistance = input.configuration.lightningResistance;
   return Object.fromEntries([
     ['input.metadata', [input.identity, input.buildId, input.configuration.id]],
     ['input.skill', baseSkill],
@@ -241,7 +303,22 @@ function inputNodes(input: SelectedSkillInput): Readonly<Record<string, unknown>
         input.configuration.ailmentMode,
       ],
     ],
-    ['input.resistance', input.configuration.effectiveLightningResistancePercent],
+    [
+      'input.resistance',
+      [
+        Object.hasOwn(input.configuration, 'effectiveLightningResistancePercent'),
+        input.configuration.effectiveLightningResistancePercent,
+        Object.hasOwn(input.configuration, 'lightningResistance'),
+        resistance === undefined ? 'effective' : 'configured',
+        resistance?.baseResistancePercent,
+      ],
+    ],
+    ['input.resistance-maximum', resistance?.maximumResistanceMode ?? 'already-effective'],
+    [
+      'input.resistance-source',
+      resistance?.source ?? { kind: 'scenario', id: input.configuration.id },
+    ],
+    ...(resistance?.exposures ?? []).map((exposure, index) => [`exposure:${index}`, exposure]),
     ...input.modifiers.map((modifier, index) => [`modifier:${index}`, modifier]),
     ...(input.addedLightningDamage ?? []).map((group, index) => [
       `added-lightning:${index}`,
@@ -256,11 +333,13 @@ function graph(input: SelectedSkillInput): CalculationDependencies {
   const speed: string[] = [];
   const criticalChance: string[] = [];
   const criticalMultiplier: string[] = [];
+  const penetration: string[] = [];
   input.modifiers.forEach((modifier, index) => {
     if (modifier.statId === CAST_SPEED) speed.push(`modifier:${index}`);
     else if (DAMAGE_STATS.has(modifier.statId)) damage.push(`modifier:${index}`);
     else if (CRITICAL_CHANCE_STATS.has(modifier.statId)) criticalChance.push(`modifier:${index}`);
     else if (modifier.statId === CRITICAL_MULTIPLIER) criticalMultiplier.push(`modifier:${index}`);
+    else if (modifier.statId === LIGHTNING_PENETRATION) penetration.push(`modifier:${index}`);
   });
   return {
     ...Object.fromEntries(Object.keys(roots).map((id) => [id, []])),
@@ -275,8 +354,25 @@ function graph(input: SelectedSkillInput): CalculationDependencies {
     'support-effects': ['input.supports'],
     'critical-chance-increase': criticalChance,
     'critical-multiplier-increase': criticalMultiplier,
+    'lightning-exposure': (input.configuration.lightningResistance?.exposures ?? []).map(
+      (_, index) => `exposure:${index}`,
+    ),
+    'lightning-penetration': penetration,
+    'uncapped-resistance': ['input.resistance', 'lightning-exposure'],
+    'capped-resistance': ['input.resistance', 'input.resistance-maximum', 'uncapped-resistance'],
+    'effective-resistance': ['capped-resistance', 'lightning-penetration'],
+    'resistance-effects': [
+      'input.resistance',
+      'input.resistance-maximum',
+      'input.resistance-source',
+      'lightning-exposure',
+      'lightning-penetration',
+      'uncapped-resistance',
+      'capped-resistance',
+      'effective-resistance',
+    ],
     'damage-before-resistance': ['combined-base', 'damage-increase', 'support-effects'],
-    'damage-after-resistance': ['damage-before-resistance', 'input.resistance'],
+    'damage-after-resistance': ['damage-before-resistance', 'effective-resistance'],
     'cast-rate': ['base', 'cast-speed-increase', 'support-effects'],
     'critical-effects': [
       'base',
@@ -285,6 +381,7 @@ function graph(input: SelectedSkillInput): CalculationDependencies {
       'critical-multiplier-increase',
       'damage-after-resistance',
       'input.critical-configuration',
+      'effective-resistance',
     ],
     'selected-skill': [
       'input.metadata',
@@ -292,6 +389,8 @@ function graph(input: SelectedSkillInput): CalculationDependencies {
       'input.supports',
       'input.critical-configuration',
       'input.resistance',
+      'input.resistance-maximum',
+      'input.resistance-source',
       ...input.modifiers.map((_, index) => `modifier:${index}`),
       ...(input.addedLightningDamage ?? []).map((_, index) => `added-lightning:${index}`),
       'base',
@@ -303,6 +402,7 @@ function graph(input: SelectedSkillInput): CalculationDependencies {
       'support-effects',
       'critical-chance-increase',
       'critical-multiplier-increase',
+      'resistance-effects',
       'damage-before-resistance',
       'damage-after-resistance',
       'cast-rate',
@@ -346,6 +446,8 @@ interface Cache {
   readonly increasedChancePercent: number;
   readonly addedMultiplierPercent: number;
   readonly criticalEffects: SelectedSkillCalculation['criticalEffects'];
+  readonly resistanceEffects: SelectedSkillCalculation['resistanceEffects'];
+  readonly resistanceStages: LightningResistanceStages;
   readonly before: DamageRange;
   readonly after: DamageRange;
   readonly castTime: number;
@@ -383,6 +485,17 @@ export function createSelectedSkillSession(
     increasedChancePercent: full.value.criticalEffects.increasedChancePercent,
     addedMultiplierPercent: full.value.criticalEffects.addedMultiplierPercent,
     criticalEffects: copyCriticalEffects(full.value.criticalEffects),
+    resistanceEffects: copyResistanceEffects(full.value.resistanceEffects),
+    resistanceStages: {
+      exposurePercent: full.value.resistanceEffects.exposurePercent,
+      selectedExposureIndices: [...full.value.resistanceEffects.selectedExposureIndices],
+      uncappedResistancePercent: full.value.resistanceEffects.uncappedResistancePercent,
+      maximumResistancePercent: full.value.resistanceEffects.maximumResistancePercent,
+      minimumResistancePercent: full.value.resistanceEffects.minimumResistancePercent,
+      cappedResistancePercent: full.value.resistanceEffects.cappedResistancePercent,
+      penetrationPercent: full.value.resistanceEffects.penetrationPercent,
+      effectiveResistancePercent: full.value.resistanceEffects.effectiveResistancePercent,
+    },
     before: hit.nonCriticalHitBeforeResistance,
     after: hit.nonCriticalHitAfterResistance,
     castTime: hit.castTimeSeconds,
@@ -394,6 +507,7 @@ export function createSelectedSkillSession(
       skill: accepted.skill,
       supportEffects: cache.supportEffects,
       criticalEffects: cache.criticalEffects,
+      resistanceEffects: cache.resistanceEffects,
       hit: {
         ...full.value.hit,
         sourceRows: full.value.hit.sourceRows.map((row) => ({ ...row })),
@@ -450,11 +564,22 @@ export function createSelectedSkillSession(
       increasedChancePercent,
       addedMultiplierPercent,
       criticalEffects,
+      resistanceEffects,
       before,
       after,
       castTime,
       casts,
     } = cache;
+    let {
+      exposurePercent,
+      selectedExposureIndices,
+      uncappedResistancePercent,
+      maximumResistancePercent,
+      minimumResistancePercent,
+      cappedResistancePercent,
+      penetrationPercent,
+      effectiveResistancePercent,
+    } = cache.resistanceStages;
     for (const id of recalculated) {
       switch (id) {
         case 'base': {
@@ -506,6 +631,64 @@ export function createSelectedSkillSession(
             .filter((modifier) => modifier.statId === CRITICAL_MULTIPLIER)
             .reduce((sum, modifier) => sum + modifier.value, 0);
           break;
+        case 'lightning-exposure': {
+          const selected = selectLightningExposure(
+            next.configuration.lightningResistance?.exposures ?? [],
+          );
+          exposurePercent = selected.exposurePercent;
+          selectedExposureIndices = selected.selectedExposureIndices;
+          break;
+        }
+        case 'lightning-penetration':
+          penetrationPercent = next.modifiers
+            .filter((modifier) => modifier.statId === LIGHTNING_PENETRATION)
+            .reduce((sum, modifier) => sum + modifier.value, 0);
+          break;
+        case 'uncapped-resistance':
+          uncappedResistancePercent =
+            next.configuration.lightningResistance === undefined
+              ? next.configuration.effectiveLightningResistancePercent!
+              : next.configuration.lightningResistance.baseResistancePercent + exposurePercent;
+          break;
+        case 'capped-resistance': {
+          const raw = next.configuration.lightningResistance;
+          if (raw === undefined) {
+            maximumResistancePercent = null;
+            minimumResistancePercent = null;
+            cappedResistancePercent = uncappedResistancePercent;
+          } else {
+            const capped = capLightningResistance(
+              raw.baseResistancePercent,
+              uncappedResistancePercent,
+              raw.maximumResistanceMode,
+            );
+            maximumResistancePercent = capped.maximumResistancePercent;
+            minimumResistancePercent = capped.minimumResistancePercent;
+            cappedResistancePercent = capped.cappedResistancePercent;
+          }
+          break;
+        }
+        case 'effective-resistance':
+          effectiveResistancePercent =
+            next.configuration.lightningResistance === undefined
+              ? next.configuration.effectiveLightningResistancePercent!
+              : cappedResistancePercent - penetrationPercent;
+          break;
+        case 'resistance-effects': {
+          const effects = assembleSelectedSkillResistance(next, captured, {
+            exposurePercent,
+            selectedExposureIndices,
+            uncappedResistancePercent,
+            maximumResistancePercent,
+            minimumResistancePercent,
+            cappedResistancePercent,
+            penetrationPercent,
+            effectiveResistancePercent,
+          });
+          if (!effects.ok) return effects;
+          resistanceEffects = effects.value;
+          break;
+        }
         case 'damage-before-resistance': {
           const scale = Math.max(0, 1 + damageIncrease / 100);
           before = range(
@@ -515,7 +698,7 @@ export function createSelectedSkillSession(
           break;
         }
         case 'damage-after-resistance': {
-          const scale = 1 - next.configuration.effectiveLightningResistancePercent / 100;
+          const scale = 1 - effectiveResistancePercent / 100;
           after = { min: before.min * scale, max: before.max * scale, mean: before.mean * scale };
           break;
         }
@@ -540,6 +723,7 @@ export function createSelectedSkillSession(
             baseChancePercent,
             captured.critical,
             { increasedChancePercent, addedMultiplierPercent },
+            resistanceEffects,
           );
           if (!effects.ok) return effects;
           criticalEffects = effects.value;
@@ -590,7 +774,7 @@ export function createSelectedSkillSession(
         nonCriticalHitAfterResistance: after,
         castTimeSeconds: castTime,
         castsPerSecond: casts,
-        effectiveLightningResistancePercent: next.configuration.effectiveLightningResistancePercent,
+        effectiveLightningResistancePercent: resistanceEffects.effectiveResistancePercent,
         increasedDamagePercent: damageIncrease,
         increasedCastSpeedPercent: speedIncrease,
         modifierContributions: next.modifiers
@@ -613,6 +797,7 @@ export function createSelectedSkillSession(
       },
       supportEffects,
       criticalEffects,
+      resistanceEffects,
     );
     if (!assembled.ok) return assembled;
     accepted = next;
@@ -630,6 +815,17 @@ export function createSelectedSkillSession(
       increasedChancePercent,
       addedMultiplierPercent,
       criticalEffects,
+      resistanceEffects,
+      resistanceStages: {
+        exposurePercent,
+        selectedExposureIndices,
+        uncappedResistancePercent,
+        maximumResistancePercent,
+        minimumResistancePercent,
+        cappedResistancePercent,
+        penetrationPercent,
+        effectiveResistancePercent,
+      },
       before,
       after,
       castTime,

@@ -124,6 +124,7 @@ export interface SparkDataset {
   /** Optional PoE1 selected-skill facts, loaded by the PoE1 host-facing normalizer. */
   readonly supports?: readonly import('./selected-skill.js').SelectedSkillSupportDataset[];
   readonly critical?: import('./selected-skill.js').SelectedSkillCriticalDataset;
+  readonly resistance?: import('./selected-skill.js').SelectedSkillResistanceDataset;
 }
 
 export interface DamageRange {

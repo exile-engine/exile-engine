@@ -59,4 +59,20 @@ The ordered `modifiers` array also accepts `critical_strike_chance_+%`, `spell_c
 
 `createSelectedSkillSession(input, dataset)` returns a validated session. `session.recalculate(nextInput)` returns the calculation, `recalculated` node names and the current `dependencies`. The session captures immutable dataset facts, tracks changing applicability sets, and retains its last accepted state on invalid updates. `planCalculationGraph` rejects cycles/feedback explicitly instead of assuming every future mechanic is acyclic.
 
+Lightning exposure, caps and penetration use an explicit raw configuration, exclusive with the previous already-effective value:
+
+```js
+lightningResistance: {
+  baseResistancePercent: 110,
+  maximumResistanceMode: 'configured',
+  source: { kind: 'scenario', id: 'enemy-base-resistance' },
+  exposures: [{ statId: 'lightning_exposure_on_hit_magnitude', value: -15, enabled: true,
+    source: { kind: 'scenario', id: 'already-active-exposure' } }],
+}
+```
+
+Add penetration as sourced `modifiers` with the exact ID `base_reduce_enemy_lightning_resistance_%`, such as value 20. The strongest active exposure lowers uncapped resistance first; the reviewed maximum and -200% floor apply next; penetration subtracts last without another floor. The example resolves to 70% effective resistance. `'default75'` instead of `'configured'` fixes the maximum at 75% and resolves the example to 55%; configured mode derives the maximum as `min(max(raw, 75), 90)` to match the pinned PoB profile. Both normal and critical hits share the result.
+
+Raw resistance is an integer in -1000…1000, up to eight exposure candidates have signed integer magnitudes -100…0, and penetration values/sum are integers in 0…200. Candidates are explicit already-active state, with no on-hit chance or uptime inference. `resistanceEffects` retains all stages, individual penetration sources, exposure candidates/ties, rule attribution and source rows. Already-effective configurations retain their old behavior and reject any penetration occurrence to prevent ambiguous double application. Other caps, curses, conditional/critical-only penetration and resistance mechanics remain unsupported; see the full scope document for XML profiles and exact validation limits.
+
 See [supported scope](../../docs/supported-mechanics.md), [executed pinned reference comparison](../../docs/pob-reference.md), and [measured performance](../../docs/selected-skill-performance.md). No Lua, host I/O or PoB runtime is part of this package.

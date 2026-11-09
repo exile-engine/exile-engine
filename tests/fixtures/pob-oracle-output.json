@@ -58,7 +58,16 @@
       }
     ],
     "criticalMultiplierExtraPercent": 50,
+    "customModifierBlocks": [
+      {
+        "enabled": true,
+        "text": "Never deal Critical Strikes",
+        "title": "Default"
+      }
+    ],
     "damageEffectiveness": 1.8999999999999999,
+    "enemyLightningResistanceBeforeClampPercent": 0,
+    "enemyLightningResistanceContributions": [],
     "increasedCastSpeedPercent": 0,
     "increasedCriticalChancePercent": 0,
     "increasedDamagePercent": 0,
@@ -102,6 +111,12 @@
         }
       ]
     },
+    "lightningDamageMultiplier": 1,
+    "lightningExposureCandidates": [],
+    "lightningPenetrationPercent": 0,
+    "maximumResistanceMode": "configured",
+    "penetrationContributions": [],
+    "rawEnemyLightningResistancePercent": 0,
     "selectedPart": 1,
     "selectedSkillId": "Spark",
     "supportContributions": [],
@@ -207,7 +222,22 @@
       }
     ],
     "criticalMultiplierExtraPercent": 50,
+    "customModifierBlocks": [
+      {
+        "enabled": true,
+        "text": "Never deal Critical Strikes",
+        "title": "Default"
+      }
+    ],
     "damageEffectiveness": 1.8999999999999999,
+    "enemyLightningResistanceBeforeClampPercent": 25,
+    "enemyLightningResistanceContributions": [
+      {
+        "name": "LightningResist",
+        "source": "EnemyConfig",
+        "value": 25
+      }
+    ],
     "increasedCastSpeedPercent": 25,
     "increasedCriticalChancePercent": 0,
     "increasedDamagePercent": 100,
@@ -307,6 +337,12 @@
         }
       ]
     },
+    "lightningDamageMultiplier": 0.75,
+    "lightningExposureCandidates": [],
+    "lightningPenetrationPercent": 0,
+    "maximumResistanceMode": "configured",
+    "penetrationContributions": [],
+    "rawEnemyLightningResistancePercent": 25,
     "selectedPart": 1,
     "selectedSkillId": "Spark",
     "supportContributions": [],
@@ -376,7 +412,16 @@
       }
     ],
     "criticalMultiplierExtraPercent": 50,
+    "customModifierBlocks": [
+      {
+        "enabled": true,
+        "text": "Never deal Critical Strikes",
+        "title": "Default"
+      }
+    ],
     "damageEffectiveness": 1.8999999999999999,
+    "enemyLightningResistanceBeforeClampPercent": 0,
+    "enemyLightningResistanceContributions": [],
     "increasedCastSpeedPercent": 0,
     "increasedCriticalChancePercent": 0,
     "increasedDamagePercent": 0,
@@ -420,6 +465,12 @@
         }
       ]
     },
+    "lightningDamageMultiplier": 1,
+    "lightningExposureCandidates": [],
+    "lightningPenetrationPercent": 0,
+    "maximumResistanceMode": "configured",
+    "penetrationContributions": [],
+    "rawEnemyLightningResistancePercent": 0,
     "selectedPart": 1,
     "selectedSkillId": "Spark",
     "supportContributions": [],
@@ -503,7 +554,16 @@
       }
     ],
     "criticalMultiplierExtraPercent": 50,
+    "customModifierBlocks": [
+      {
+        "enabled": true,
+        "text": "Never deal Critical Strikes",
+        "title": "Default"
+      }
+    ],
     "damageEffectiveness": 1.8999999999999999,
+    "enemyLightningResistanceBeforeClampPercent": 0,
+    "enemyLightningResistanceContributions": [],
     "increasedCastSpeedPercent": 0,
     "increasedCriticalChancePercent": 0,
     "increasedDamagePercent": 0,
@@ -564,6 +624,12 @@
         }
       ]
     },
+    "lightningDamageMultiplier": 1,
+    "lightningExposureCandidates": [],
+    "lightningPenetrationPercent": 0,
+    "maximumResistanceMode": "configured",
+    "penetrationContributions": [],
+    "rawEnemyLightningResistancePercent": 0,
     "selectedPart": 1,
     "selectedSkillId": "Spark",
     "supportContributions": [],
@@ -641,7 +707,16 @@
       }
     ],
     "criticalMultiplierExtraPercent": 50,
+    "customModifierBlocks": [
+      {
+        "enabled": true,
+        "text": "Never deal Critical Strikes",
+        "title": "Default"
+      }
+    ],
     "damageEffectiveness": 1.8999999999999999,
+    "enemyLightningResistanceBeforeClampPercent": 0,
+    "enemyLightningResistanceContributions": [],
     "increasedCastSpeedPercent": 0,
     "increasedCriticalChancePercent": 0,
     "increasedDamagePercent": 25,
@@ -696,6 +771,12 @@
         }
       ]
     },
+    "lightningDamageMultiplier": 1,
+    "lightningExposureCandidates": [],
+    "lightningPenetrationPercent": 0,
+    "maximumResistanceMode": "configured",
+    "penetrationContributions": [],
+    "rawEnemyLightningResistancePercent": 0,
     "selectedPart": 1,
     "selectedSkillId": "Spark",
     "supportContributions": [],
@@ -750,7 +831,16 @@
       }
     ],
     "criticalMultiplierExtraPercent": 50,
+    "customModifierBlocks": [
+      {
+        "enabled": true,
+        "text": "Never deal Critical Strikes",
+        "title": "Default"
+      }
+    ],
     "damageEffectiveness": 1.8999999999999999,
+    "enemyLightningResistanceBeforeClampPercent": 0,
+    "enemyLightningResistanceContributions": [],
     "increasedCastSpeedPercent": 0,
     "increasedCriticalChancePercent": 0,
     "increasedDamagePercent": 0,
@@ -792,6 +882,12 @@
         }
       ]
     },
+    "lightningDamageMultiplier": 1,
+    "lightningExposureCandidates": [],
+    "lightningPenetrationPercent": 0,
+    "maximumResistanceMode": "configured",
+    "penetrationContributions": [],
+    "rawEnemyLightningResistancePercent": 0,
     "selectedPart": 1,
     "selectedSkillId": "Spark",
     "supportContributions": [],
@@ -846,7 +942,16 @@
       }
     ],
     "criticalMultiplierExtraPercent": 50,
+    "customModifierBlocks": [
+      {
+        "enabled": true,
+        "text": "Never deal Critical Strikes",
+        "title": "Default"
+      }
+    ],
     "damageEffectiveness": 1.8999999999999999,
+    "enemyLightningResistanceBeforeClampPercent": 0,
+    "enemyLightningResistanceContributions": [],
     "increasedCastSpeedPercent": 0,
     "increasedCriticalChancePercent": 0,
     "increasedDamagePercent": 0,
@@ -870,6 +975,12 @@
         }
       ]
     },
+    "lightningDamageMultiplier": 1,
+    "lightningExposureCandidates": [],
+    "lightningPenetrationPercent": 0,
+    "maximumResistanceMode": "configured",
+    "penetrationContributions": [],
+    "rawEnemyLightningResistancePercent": 0,
     "selectedPart": 1,
     "selectedSkillId": "Spark",
     "supportContributions": [],
@@ -932,7 +1043,16 @@
       }
     ],
     "criticalMultiplierExtraPercent": 50,
+    "customModifierBlocks": [
+      {
+        "enabled": true,
+        "text": "Never deal Critical Strikes",
+        "title": "Default"
+      }
+    ],
     "damageEffectiveness": 1.8999999999999999,
+    "enemyLightningResistanceBeforeClampPercent": 0,
+    "enemyLightningResistanceContributions": [],
     "increasedCastSpeedPercent": 25,
     "increasedCriticalChancePercent": 0,
     "increasedDamagePercent": 0,
@@ -968,6 +1088,12 @@
         }
       ]
     },
+    "lightningDamageMultiplier": 1,
+    "lightningExposureCandidates": [],
+    "lightningPenetrationPercent": 0,
+    "maximumResistanceMode": "configured",
+    "penetrationContributions": [],
+    "rawEnemyLightningResistancePercent": 0,
     "selectedPart": 1,
     "selectedSkillId": "Spark",
     "supportContributions": [],
@@ -1022,7 +1148,16 @@
       }
     ],
     "criticalMultiplierExtraPercent": 50,
+    "customModifierBlocks": [
+      {
+        "enabled": true,
+        "text": "Cannot inflict Elemental Ailments",
+        "title": "Default"
+      }
+    ],
     "damageEffectiveness": 1.8999999999999999,
+    "enemyLightningResistanceBeforeClampPercent": 0,
+    "enemyLightningResistanceContributions": [],
     "increasedCastSpeedPercent": 0,
     "increasedCriticalChancePercent": 0,
     "increasedDamagePercent": 0,
@@ -1046,6 +1181,12 @@
         }
       ]
     },
+    "lightningDamageMultiplier": 1,
+    "lightningExposureCandidates": [],
+    "lightningPenetrationPercent": 0,
+    "maximumResistanceMode": "configured",
+    "penetrationContributions": [],
+    "rawEnemyLightningResistancePercent": 0,
     "selectedPart": 1,
     "selectedSkillId": "Spark",
     "supportContributions": [],
@@ -1108,7 +1249,16 @@
       }
     ],
     "criticalMultiplierExtraPercent": 50,
+    "customModifierBlocks": [
+      {
+        "enabled": true,
+        "text": "Cannot inflict Elemental Ailments",
+        "title": "Default"
+      }
+    ],
     "damageEffectiveness": 1.8999999999999999,
+    "enemyLightningResistanceBeforeClampPercent": 0,
+    "enemyLightningResistanceContributions": [],
     "increasedCastSpeedPercent": 0,
     "increasedCriticalChancePercent": 2000,
     "increasedDamagePercent": 0,
@@ -1144,6 +1294,12 @@
         }
       ]
     },
+    "lightningDamageMultiplier": 1,
+    "lightningExposureCandidates": [],
+    "lightningPenetrationPercent": 0,
+    "maximumResistanceMode": "configured",
+    "penetrationContributions": [],
+    "rawEnemyLightningResistancePercent": 0,
     "selectedPart": 1,
     "selectedSkillId": "Spark",
     "supportContributions": [],
@@ -1273,7 +1429,22 @@
       }
     ],
     "criticalMultiplierExtraPercent": 100,
+    "customModifierBlocks": [
+      {
+        "enabled": true,
+        "text": "Cannot inflict Elemental Ailments",
+        "title": "Default"
+      }
+    ],
     "damageEffectiveness": 1.8999999999999999,
+    "enemyLightningResistanceBeforeClampPercent": 25,
+    "enemyLightningResistanceContributions": [
+      {
+        "name": "LightningResist",
+        "source": "EnemyConfig",
+        "value": 25
+      }
+    ],
     "increasedCastSpeedPercent": 25,
     "increasedCriticalChancePercent": 150,
     "increasedDamagePercent": 100,
@@ -1406,6 +1577,12 @@
         }
       ]
     },
+    "lightningDamageMultiplier": 0.75,
+    "lightningExposureCandidates": [],
+    "lightningPenetrationPercent": 0,
+    "maximumResistanceMode": "configured",
+    "penetrationContributions": [],
+    "rawEnemyLightningResistancePercent": 25,
     "selectedPart": 1,
     "selectedSkillId": "Spark",
     "supportContributions": [
@@ -1492,7 +1669,16 @@
       }
     ],
     "criticalMultiplierExtraPercent": 50,
+    "customModifierBlocks": [
+      {
+        "enabled": true,
+        "text": "Cannot inflict Elemental Ailments",
+        "title": "Default"
+      }
+    ],
     "damageEffectiveness": 1.8999999999999999,
+    "enemyLightningResistanceBeforeClampPercent": 0,
+    "enemyLightningResistanceContributions": [],
     "increasedCastSpeedPercent": 0,
     "increasedCriticalChancePercent": 0,
     "increasedDamagePercent": 0,
@@ -1516,6 +1702,12 @@
         }
       ]
     },
+    "lightningDamageMultiplier": 1,
+    "lightningExposureCandidates": [],
+    "lightningPenetrationPercent": 0,
+    "maximumResistanceMode": "configured",
+    "penetrationContributions": [],
+    "rawEnemyLightningResistancePercent": 0,
     "selectedPart": 1,
     "selectedSkillId": "Spark",
     "supportContributions": [
@@ -1610,7 +1802,16 @@
       }
     ],
     "criticalMultiplierExtraPercent": 50,
+    "customModifierBlocks": [
+      {
+        "enabled": true,
+        "text": "Cannot inflict Elemental Ailments",
+        "title": "Default"
+      }
+    ],
     "damageEffectiveness": 1.8999999999999999,
+    "enemyLightningResistanceBeforeClampPercent": 0,
+    "enemyLightningResistanceContributions": [],
     "increasedCastSpeedPercent": 0,
     "increasedCriticalChancePercent": 2000,
     "increasedDamagePercent": 0,
@@ -1646,6 +1847,12 @@
         }
       ]
     },
+    "lightningDamageMultiplier": 1,
+    "lightningExposureCandidates": [],
+    "lightningPenetrationPercent": 0,
+    "maximumResistanceMode": "configured",
+    "penetrationContributions": [],
+    "rawEnemyLightningResistancePercent": 0,
     "selectedPart": 1,
     "selectedSkillId": "Spark",
     "supportContributions": [
@@ -1732,7 +1939,16 @@
       }
     ],
     "criticalMultiplierExtraPercent": 50,
+    "customModifierBlocks": [
+      {
+        "enabled": true,
+        "text": "Cannot inflict Elemental Ailments",
+        "title": "Default"
+      }
+    ],
     "damageEffectiveness": 1.8999999999999999,
+    "enemyLightningResistanceBeforeClampPercent": 0,
+    "enemyLightningResistanceContributions": [],
     "increasedCastSpeedPercent": 0,
     "increasedCriticalChancePercent": 0,
     "increasedDamagePercent": 0,
@@ -1756,6 +1972,12 @@
         }
       ]
     },
+    "lightningDamageMultiplier": 1,
+    "lightningExposureCandidates": [],
+    "lightningPenetrationPercent": 0,
+    "maximumResistanceMode": "configured",
+    "penetrationContributions": [],
+    "rawEnemyLightningResistancePercent": 0,
     "selectedPart": 1,
     "selectedSkillId": "Spark",
     "supportContributions": [],
@@ -1836,7 +2058,16 @@
       }
     ],
     "criticalMultiplierExtraPercent": 50,
+    "customModifierBlocks": [
+      {
+        "enabled": true,
+        "text": "Cannot inflict Elemental Ailments",
+        "title": "Default"
+      }
+    ],
     "damageEffectiveness": 1.8999999999999999,
+    "enemyLightningResistanceBeforeClampPercent": 0,
+    "enemyLightningResistanceContributions": [],
     "increasedCastSpeedPercent": 0,
     "increasedCriticalChancePercent": 150,
     "increasedDamagePercent": 0,
@@ -1883,6 +2114,12 @@
         }
       ]
     },
+    "lightningDamageMultiplier": 1,
+    "lightningExposureCandidates": [],
+    "lightningPenetrationPercent": 0,
+    "maximumResistanceMode": "configured",
+    "penetrationContributions": [],
+    "rawEnemyLightningResistancePercent": 0,
     "selectedPart": 1,
     "selectedSkillId": "Spark",
     "supportContributions": [],
@@ -1945,7 +2182,16 @@
       }
     ],
     "criticalMultiplierExtraPercent": 100,
+    "customModifierBlocks": [
+      {
+        "enabled": true,
+        "text": "Cannot inflict Elemental Ailments",
+        "title": "Default"
+      }
+    ],
     "damageEffectiveness": 1.8999999999999999,
+    "enemyLightningResistanceBeforeClampPercent": 0,
+    "enemyLightningResistanceContributions": [],
     "increasedCastSpeedPercent": 0,
     "increasedCriticalChancePercent": 0,
     "increasedDamagePercent": 0,
@@ -1981,6 +2227,12 @@
         }
       ]
     },
+    "lightningDamageMultiplier": 1,
+    "lightningExposureCandidates": [],
+    "lightningPenetrationPercent": 0,
+    "maximumResistanceMode": "configured",
+    "penetrationContributions": [],
+    "rawEnemyLightningResistancePercent": 0,
     "selectedPart": 1,
     "selectedSkillId": "Spark",
     "supportContributions": [],
@@ -2051,7 +2303,16 @@
       }
     ],
     "criticalMultiplierExtraPercent": 100,
+    "customModifierBlocks": [
+      {
+        "enabled": true,
+        "text": "Cannot inflict Elemental Ailments",
+        "title": "Default"
+      }
+    ],
     "damageEffectiveness": 1.8999999999999999,
+    "enemyLightningResistanceBeforeClampPercent": 0,
+    "enemyLightningResistanceContributions": [],
     "increasedCastSpeedPercent": 0,
     "increasedCriticalChancePercent": 17,
     "increasedDamagePercent": 0,
@@ -2098,6 +2359,12 @@
         }
       ]
     },
+    "lightningDamageMultiplier": 1,
+    "lightningExposureCandidates": [],
+    "lightningPenetrationPercent": 0,
+    "maximumResistanceMode": "configured",
+    "penetrationContributions": [],
+    "rawEnemyLightningResistancePercent": 0,
     "selectedPart": 1,
     "selectedSkillId": "Spark",
     "supportContributions": [
@@ -2192,7 +2459,16 @@
       }
     ],
     "criticalMultiplierExtraPercent": 50,
+    "customModifierBlocks": [
+      {
+        "enabled": true,
+        "text": "Cannot inflict Elemental Ailments",
+        "title": "Default"
+      }
+    ],
     "damageEffectiveness": 1.8999999999999999,
+    "enemyLightningResistanceBeforeClampPercent": 0,
+    "enemyLightningResistanceContributions": [],
     "increasedCastSpeedPercent": 0,
     "increasedCriticalChancePercent": -100,
     "increasedDamagePercent": 0,
@@ -2228,6 +2504,12 @@
         }
       ]
     },
+    "lightningDamageMultiplier": 1,
+    "lightningExposureCandidates": [],
+    "lightningPenetrationPercent": 0,
+    "maximumResistanceMode": "configured",
+    "penetrationContributions": [],
+    "rawEnemyLightningResistancePercent": 0,
     "selectedPart": 1,
     "selectedSkillId": "Spark",
     "supportContributions": [],
@@ -2311,7 +2593,16 @@
       }
     ],
     "criticalMultiplierExtraPercent": 50,
+    "customModifierBlocks": [
+      {
+        "enabled": true,
+        "text": "Never deal Critical Strikes",
+        "title": "Default"
+      }
+    ],
     "damageEffectiveness": 1.8999999999999999,
+    "enemyLightningResistanceBeforeClampPercent": 0,
+    "enemyLightningResistanceContributions": [],
     "increasedCastSpeedPercent": 0,
     "increasedCriticalChancePercent": 0,
     "increasedDamagePercent": 100,
@@ -2380,6 +2671,12 @@
         }
       ]
     },
+    "lightningDamageMultiplier": 1,
+    "lightningExposureCandidates": [],
+    "lightningPenetrationPercent": 0,
+    "maximumResistanceMode": "configured",
+    "penetrationContributions": [],
+    "rawEnemyLightningResistancePercent": 0,
     "selectedPart": 1,
     "selectedSkillId": "Spark",
     "supportContributions": [],
@@ -2387,6 +2684,1512 @@
     "supportDamageMultiplier": 1,
     "supportGems": [],
     "supportManaCostMultiplier": 1,
+    "supportSpeedMultiplier": 1,
+    "supportTotalCastTime": 0
+  },
+  "lightning-exposure": {
+    "ActionSpeedMod": 1,
+    "AverageDamage": 417.39999999999998,
+    "AverageHit": 417.40000000000003,
+    "CombinedDPS": 695.66666666666663,
+    "CritChance": 0,
+    "CritEffect": 1,
+    "CritMultiplier": 0,
+    "HitChance": 100,
+    "LightningCritAverage": 0,
+    "LightningHitAverage": 417.40000000000003,
+    "LightningMaxBase": 1983,
+    "LightningMinBase": 104,
+    "PreEffectiveCritChance": 0,
+    "Speed": 1.6666666666666667,
+    "Time": 0.59999999999999998,
+    "TotalDPS": 695.66666666666663,
+    "TotalMax": 793.20000000000005,
+    "TotalMin": 41.600000000000001,
+    "addedContributions": [],
+    "addedMaximum": 0,
+    "addedMinimum": 0,
+    "ailmentFlags": {
+      "CannotBrittle": false,
+      "CannotChill": false,
+      "CannotFreeze": false,
+      "CannotIgnite": false,
+      "CannotSap": false,
+      "CannotScorch": false,
+      "CannotShock": false
+    },
+    "baseCriticalChancePercent": 6,
+    "contributions": [],
+    "criticalContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritMultiplier",
+        "source": "Base",
+        "type": "BASE",
+        "value": 50
+      }
+    ],
+    "criticalMultiplierExtraPercent": 50,
+    "customModifierBlocks": [
+      {
+        "enabled": true,
+        "text": "Never deal Critical Strikes",
+        "title": "Exile Engine Assumptions"
+      },
+      {
+        "enabled": true,
+        "text": "Inflict Lightning Exposure on Hit, applying -15% to Lightning Resistance",
+        "title": "Exposure 1"
+      }
+    ],
+    "damageEffectiveness": 1.8999999999999999,
+    "enemyLightningResistanceBeforeClampPercent": 60,
+    "enemyLightningResistanceContributions": [
+      {
+        "name": "LightningResist",
+        "source": "EnemyConfig",
+        "value": 75
+      },
+      {
+        "name": "LightningResist",
+        "source": "Custom:Exposure 1",
+        "value": -15
+      }
+    ],
+    "increasedCastSpeedPercent": 0,
+    "increasedCriticalChancePercent": 0,
+    "increasedDamagePercent": 0,
+    "itemModifierLines": [],
+    "lightningBreakdown": {
+      "1": "Base damage:",
+      "2": "104 to 1983 ^8(base damage from skill)",
+      "3": "= 104.0 to 1983.0",
+      "4": "Hit damage:",
+      "5": "104 to 1983 ^8(total damage)",
+      "6": "x 0.400 ^8(effective DPS modifier)",
+      "7": "= 41 to 793",
+      "8": "Portion of total damage: 100%",
+      "damageTypes": [
+        {
+          "base": "104 to 1983",
+          "convSrc": false,
+          "inc": false,
+          "more": false,
+          "source": "Lightning",
+          "total": "104 to 1983"
+        }
+      ]
+    },
+    "lightningDamageMultiplier": 0.40000000000000002,
+    "lightningExposureCandidates": [
+      {
+        "source": "Custom:Exposure 1",
+        "value": -15
+      }
+    ],
+    "lightningPenetrationPercent": 0,
+    "maximumResistanceMode": "configured",
+    "penetrationContributions": [],
+    "rawEnemyLightningResistancePercent": 75,
+    "selectedPart": 1,
+    "selectedSkillId": "Spark",
+    "supportContributions": [],
+    "supportCriticalChanceMultiplier": 1,
+    "supportDamageMultiplier": 1,
+    "supportGems": [],
+    "supportManaCostMultiplier": 1,
+    "supportSpeedMultiplier": 1,
+    "supportTotalCastTime": 0
+  },
+  "lightning-exposure-disabled": {
+    "ActionSpeedMod": 1,
+    "AverageDamage": 365.22500000000002,
+    "AverageHit": 365.22499999999997,
+    "CombinedDPS": 608.70833333333337,
+    "CritChance": 0,
+    "CritEffect": 1,
+    "CritMultiplier": 0,
+    "HitChance": 100,
+    "LightningCritAverage": 0,
+    "LightningHitAverage": 365.22499999999997,
+    "LightningMaxBase": 1983,
+    "LightningMinBase": 104,
+    "PreEffectiveCritChance": 0,
+    "Speed": 1.6666666666666667,
+    "Time": 0.59999999999999998,
+    "TotalDPS": 608.70833333333337,
+    "TotalMax": 694.04999999999995,
+    "TotalMin": 36.399999999999999,
+    "addedContributions": [],
+    "addedMaximum": 0,
+    "addedMinimum": 0,
+    "ailmentFlags": {
+      "CannotBrittle": false,
+      "CannotChill": false,
+      "CannotFreeze": false,
+      "CannotIgnite": false,
+      "CannotSap": false,
+      "CannotScorch": false,
+      "CannotShock": false
+    },
+    "baseCriticalChancePercent": 6,
+    "contributions": [],
+    "criticalContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritMultiplier",
+        "source": "Base",
+        "type": "BASE",
+        "value": 50
+      }
+    ],
+    "criticalMultiplierExtraPercent": 50,
+    "customModifierBlocks": [
+      {
+        "enabled": true,
+        "text": "Never deal Critical Strikes",
+        "title": "Exile Engine Assumptions"
+      },
+      {
+        "enabled": true,
+        "text": "Inflict Lightning Exposure on Hit, applying -10% to Lightning Resistance",
+        "title": "Exposure 1"
+      },
+      {
+        "enabled": false,
+        "text": "Inflict Lightning Exposure on Hit, applying -25% to Lightning Resistance",
+        "title": "Exposure 2"
+      }
+    ],
+    "damageEffectiveness": 1.8999999999999999,
+    "enemyLightningResistanceBeforeClampPercent": 65,
+    "enemyLightningResistanceContributions": [
+      {
+        "name": "LightningResist",
+        "source": "EnemyConfig",
+        "value": 75
+      },
+      {
+        "name": "LightningResist",
+        "source": "Custom:Exposure 1",
+        "value": -10
+      }
+    ],
+    "increasedCastSpeedPercent": 0,
+    "increasedCriticalChancePercent": 0,
+    "increasedDamagePercent": 0,
+    "itemModifierLines": [],
+    "lightningBreakdown": {
+      "1": "Base damage:",
+      "2": "104 to 1983 ^8(base damage from skill)",
+      "3": "= 104.0 to 1983.0",
+      "4": "Hit damage:",
+      "5": "104 to 1983 ^8(total damage)",
+      "6": "x 0.350 ^8(effective DPS modifier)",
+      "7": "= 36 to 694",
+      "8": "Portion of total damage: 100%",
+      "damageTypes": [
+        {
+          "base": "104 to 1983",
+          "convSrc": false,
+          "inc": false,
+          "more": false,
+          "source": "Lightning",
+          "total": "104 to 1983"
+        }
+      ]
+    },
+    "lightningDamageMultiplier": 0.34999999999999998,
+    "lightningExposureCandidates": [
+      {
+        "source": "Custom:Exposure 1",
+        "value": -10
+      }
+    ],
+    "lightningPenetrationPercent": 0,
+    "maximumResistanceMode": "configured",
+    "penetrationContributions": [],
+    "rawEnemyLightningResistancePercent": 75,
+    "selectedPart": 1,
+    "selectedSkillId": "Spark",
+    "supportContributions": [],
+    "supportCriticalChanceMultiplier": 1,
+    "supportDamageMultiplier": 1,
+    "supportGems": [],
+    "supportManaCostMultiplier": 1,
+    "supportSpeedMultiplier": 1,
+    "supportTotalCastTime": 0
+  },
+  "lightning-exposure-strongest": {
+    "ActionSpeedMod": 1,
+    "AverageDamage": 521.75,
+    "AverageHit": 521.75,
+    "CombinedDPS": 869.58333333333337,
+    "CritChance": 0,
+    "CritEffect": 1,
+    "CritMultiplier": 0,
+    "HitChance": 100,
+    "LightningCritAverage": 0,
+    "LightningHitAverage": 521.75,
+    "LightningMaxBase": 1983,
+    "LightningMinBase": 104,
+    "PreEffectiveCritChance": 0,
+    "Speed": 1.6666666666666667,
+    "Time": 0.59999999999999998,
+    "TotalDPS": 869.58333333333337,
+    "TotalMax": 991.5,
+    "TotalMin": 52,
+    "addedContributions": [],
+    "addedMaximum": 0,
+    "addedMinimum": 0,
+    "ailmentFlags": {
+      "CannotBrittle": false,
+      "CannotChill": false,
+      "CannotFreeze": false,
+      "CannotIgnite": false,
+      "CannotSap": false,
+      "CannotScorch": false,
+      "CannotShock": false
+    },
+    "baseCriticalChancePercent": 6,
+    "contributions": [],
+    "criticalContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritMultiplier",
+        "source": "Base",
+        "type": "BASE",
+        "value": 50
+      }
+    ],
+    "criticalMultiplierExtraPercent": 50,
+    "customModifierBlocks": [
+      {
+        "enabled": true,
+        "text": "Never deal Critical Strikes",
+        "title": "Exile Engine Assumptions"
+      },
+      {
+        "enabled": true,
+        "text": "Inflict Lightning Exposure on Hit, applying -10% to Lightning Resistance",
+        "title": "Exposure 1"
+      },
+      {
+        "enabled": true,
+        "text": "Inflict Lightning Exposure on Hit, applying -25% to Lightning Resistance",
+        "title": "Exposure 2"
+      }
+    ],
+    "damageEffectiveness": 1.8999999999999999,
+    "enemyLightningResistanceBeforeClampPercent": 50,
+    "enemyLightningResistanceContributions": [
+      {
+        "name": "LightningResist",
+        "source": "EnemyConfig",
+        "value": 75
+      },
+      {
+        "name": "LightningResist",
+        "source": "Custom:Exposure 2",
+        "value": -25
+      }
+    ],
+    "increasedCastSpeedPercent": 0,
+    "increasedCriticalChancePercent": 0,
+    "increasedDamagePercent": 0,
+    "itemModifierLines": [],
+    "lightningBreakdown": {
+      "1": "Base damage:",
+      "2": "104 to 1983 ^8(base damage from skill)",
+      "3": "= 104.0 to 1983.0",
+      "4": "Hit damage:",
+      "5": "104 to 1983 ^8(total damage)",
+      "6": "x 0.500 ^8(effective DPS modifier)",
+      "7": "= 52 to 991",
+      "8": "Portion of total damage: 100%",
+      "damageTypes": [
+        {
+          "base": "104 to 1983",
+          "convSrc": false,
+          "inc": false,
+          "more": false,
+          "source": "Lightning",
+          "total": "104 to 1983"
+        }
+      ]
+    },
+    "lightningDamageMultiplier": 0.5,
+    "lightningExposureCandidates": [
+      {
+        "source": "Custom:Exposure 1",
+        "value": -10
+      },
+      {
+        "source": "Custom:Exposure 2",
+        "value": -25
+      }
+    ],
+    "lightningPenetrationPercent": 0,
+    "maximumResistanceMode": "configured",
+    "penetrationContributions": [],
+    "rawEnemyLightningResistancePercent": 75,
+    "selectedPart": 1,
+    "selectedSkillId": "Spark",
+    "supportContributions": [],
+    "supportCriticalChanceMultiplier": 1,
+    "supportDamageMultiplier": 1,
+    "supportGems": [],
+    "supportManaCostMultiplier": 1,
+    "supportSpeedMultiplier": 1,
+    "supportTotalCastTime": 0
+  },
+  "lightning-fixed-cap": {
+    "ActionSpeedMod": 1,
+    "AverageDamage": 469.57499999999993,
+    "AverageHit": 469.57499999999993,
+    "CombinedDPS": 782.62499999999989,
+    "CritChance": 0,
+    "CritEffect": 1,
+    "CritMultiplier": 0,
+    "HitChance": 100,
+    "LightningCritAverage": 0,
+    "LightningHitAverage": 469.57499999999993,
+    "LightningMaxBase": 1983,
+    "LightningMinBase": 104,
+    "PreEffectiveCritChance": 0,
+    "Speed": 1.6666666666666667,
+    "Time": 0.59999999999999998,
+    "TotalDPS": 782.62499999999989,
+    "TotalMax": 892.34999999999991,
+    "TotalMin": 46.799999999999997,
+    "addedContributions": [],
+    "addedMaximum": 0,
+    "addedMinimum": 0,
+    "ailmentFlags": {
+      "CannotBrittle": false,
+      "CannotChill": false,
+      "CannotFreeze": false,
+      "CannotIgnite": false,
+      "CannotSap": false,
+      "CannotScorch": false,
+      "CannotShock": false
+    },
+    "baseCriticalChancePercent": 6,
+    "contributions": [],
+    "criticalContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritMultiplier",
+        "source": "Base",
+        "type": "BASE",
+        "value": 50
+      }
+    ],
+    "criticalMultiplierExtraPercent": 50,
+    "customModifierBlocks": [
+      {
+        "enabled": true,
+        "text": "Never deal Critical Strikes",
+        "title": "Exile Engine Assumptions"
+      },
+      {
+        "enabled": true,
+        "text": "Inflict Lightning Exposure on Hit, applying -15% to Lightning Resistance",
+        "title": "Exposure 1"
+      }
+    ],
+    "damageEffectiveness": 1.8999999999999999,
+    "enemyLightningResistanceBeforeClampPercent": 95,
+    "enemyLightningResistanceContributions": [
+      {
+        "name": "LightningResist",
+        "source": "EnemyConfig",
+        "value": 110
+      },
+      {
+        "name": "LightningResist",
+        "source": "Custom:Exposure 1",
+        "value": -15
+      }
+    ],
+    "increasedCastSpeedPercent": 0,
+    "increasedCriticalChancePercent": 0,
+    "increasedDamagePercent": 0,
+    "itemModifierLines": [
+      {
+        "line": "Damage Penetrates 20% Lightning Resistance",
+        "mods": [
+          {
+            "flags": 0,
+            "keywordFlags": 0,
+            "name": "LightningPenetration",
+            "value": 20
+          }
+        ]
+      }
+    ],
+    "lightningBreakdown": {
+      "1": "Base damage:",
+      "2": "104 to 1983 ^8(base damage from skill)",
+      "3": "= 104.0 to 1983.0",
+      "4": "Hit damage:",
+      "5": "104 to 1983 ^8(total damage)",
+      "6": "x 0.450 ^8(effective DPS modifier)",
+      "7": "= 46 to 892",
+      "8": "Portion of total damage: 100%",
+      "damageTypes": [
+        {
+          "base": "104 to 1983",
+          "convSrc": false,
+          "inc": false,
+          "more": false,
+          "source": "Lightning",
+          "total": "104 to 1983"
+        }
+      ]
+    },
+    "lightningDamageMultiplier": 0.44999999999999996,
+    "lightningExposureCandidates": [
+      {
+        "source": "Custom:Exposure 1",
+        "value": -15
+      }
+    ],
+    "lightningPenetrationPercent": 20,
+    "maximumResistanceMode": "default75",
+    "penetrationContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "LightningPenetration",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 20
+      }
+    ],
+    "rawEnemyLightningResistancePercent": 110,
+    "selectedPart": 1,
+    "selectedSkillId": "Spark",
+    "supportContributions": [],
+    "supportCriticalChanceMultiplier": 1,
+    "supportDamageMultiplier": 1,
+    "supportGems": [],
+    "supportManaCostMultiplier": 1,
+    "supportSpeedMultiplier": 1,
+    "supportTotalCastTime": 0
+  },
+  "lightning-floor": {
+    "ActionSpeedMod": 1,
+    "AverageDamage": 3339.1999999999998,
+    "AverageHit": 3339.2000000000003,
+    "CombinedDPS": 5565.333333333333,
+    "CritChance": 0,
+    "CritEffect": 1,
+    "CritMultiplier": 0,
+    "HitChance": 100,
+    "LightningCritAverage": 0,
+    "LightningHitAverage": 3339.2000000000003,
+    "LightningMaxBase": 1983,
+    "LightningMinBase": 104,
+    "PreEffectiveCritChance": 0,
+    "Speed": 1.6666666666666667,
+    "Time": 0.59999999999999998,
+    "TotalDPS": 5565.333333333333,
+    "TotalMax": 6345.6000000000004,
+    "TotalMin": 332.80000000000001,
+    "addedContributions": [],
+    "addedMaximum": 0,
+    "addedMinimum": 0,
+    "ailmentFlags": {
+      "CannotBrittle": false,
+      "CannotChill": false,
+      "CannotFreeze": false,
+      "CannotIgnite": false,
+      "CannotSap": false,
+      "CannotScorch": false,
+      "CannotShock": false
+    },
+    "baseCriticalChancePercent": 6,
+    "contributions": [],
+    "criticalContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritMultiplier",
+        "source": "Base",
+        "type": "BASE",
+        "value": 50
+      }
+    ],
+    "criticalMultiplierExtraPercent": 50,
+    "customModifierBlocks": [
+      {
+        "enabled": true,
+        "text": "Never deal Critical Strikes",
+        "title": "Exile Engine Assumptions"
+      },
+      {
+        "enabled": true,
+        "text": "Inflict Lightning Exposure on Hit, applying -30% to Lightning Resistance",
+        "title": "Exposure 1"
+      }
+    ],
+    "damageEffectiveness": 1.8999999999999999,
+    "enemyLightningResistanceBeforeClampPercent": -220,
+    "enemyLightningResistanceContributions": [
+      {
+        "name": "LightningResist",
+        "source": "EnemyConfig",
+        "value": -190
+      },
+      {
+        "name": "LightningResist",
+        "source": "Custom:Exposure 1",
+        "value": -30
+      }
+    ],
+    "increasedCastSpeedPercent": 0,
+    "increasedCriticalChancePercent": 0,
+    "increasedDamagePercent": 0,
+    "itemModifierLines": [
+      {
+        "line": "Damage Penetrates 20% Lightning Resistance",
+        "mods": [
+          {
+            "flags": 0,
+            "keywordFlags": 0,
+            "name": "LightningPenetration",
+            "value": 20
+          }
+        ]
+      }
+    ],
+    "lightningBreakdown": {
+      "1": "Base damage:",
+      "2": "104 to 1983 ^8(base damage from skill)",
+      "3": "= 104.0 to 1983.0",
+      "4": "Hit damage:",
+      "5": "104 to 1983 ^8(total damage)",
+      "6": "x 3.200 ^8(effective DPS modifier)",
+      "7": "= 332 to 6345",
+      "8": "Portion of total damage: 100%",
+      "damageTypes": [
+        {
+          "base": "104 to 1983",
+          "convSrc": false,
+          "inc": false,
+          "more": false,
+          "source": "Lightning",
+          "total": "104 to 1983"
+        }
+      ]
+    },
+    "lightningDamageMultiplier": 3.2000000000000002,
+    "lightningExposureCandidates": [
+      {
+        "source": "Custom:Exposure 1",
+        "value": -30
+      }
+    ],
+    "lightningPenetrationPercent": 20,
+    "maximumResistanceMode": "configured",
+    "penetrationContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "LightningPenetration",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 20
+      }
+    ],
+    "rawEnemyLightningResistancePercent": -190,
+    "selectedPart": 1,
+    "selectedSkillId": "Spark",
+    "supportContributions": [],
+    "supportCriticalChanceMultiplier": 1,
+    "supportDamageMultiplier": 1,
+    "supportGems": [],
+    "supportManaCostMultiplier": 1,
+    "supportSpeedMultiplier": 1,
+    "supportTotalCastTime": 0
+  },
+  "lightning-negative": {
+    "ActionSpeedMod": 1,
+    "AverageDamage": 1930.4749999999999,
+    "AverageHit": 1930.4750000000001,
+    "CombinedDPS": 3217.4583333333335,
+    "CritChance": 0,
+    "CritEffect": 1,
+    "CritMultiplier": 0,
+    "HitChance": 100,
+    "LightningCritAverage": 0,
+    "LightningHitAverage": 1930.4750000000001,
+    "LightningMaxBase": 1983,
+    "LightningMinBase": 104,
+    "PreEffectiveCritChance": 0,
+    "Speed": 1.6666666666666667,
+    "Time": 0.59999999999999998,
+    "TotalDPS": 3217.4583333333335,
+    "TotalMax": 3668.5500000000002,
+    "TotalMin": 192.40000000000001,
+    "addedContributions": [],
+    "addedMaximum": 0,
+    "addedMinimum": 0,
+    "ailmentFlags": {
+      "CannotBrittle": false,
+      "CannotChill": false,
+      "CannotFreeze": false,
+      "CannotIgnite": false,
+      "CannotSap": false,
+      "CannotScorch": false,
+      "CannotShock": false
+    },
+    "baseCriticalChancePercent": 6,
+    "contributions": [],
+    "criticalContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritMultiplier",
+        "source": "Base",
+        "type": "BASE",
+        "value": 50
+      }
+    ],
+    "criticalMultiplierExtraPercent": 50,
+    "customModifierBlocks": [
+      {
+        "enabled": true,
+        "text": "Never deal Critical Strikes",
+        "title": "Exile Engine Assumptions"
+      },
+      {
+        "enabled": true,
+        "text": "Inflict Lightning Exposure on Hit, applying -15% to Lightning Resistance",
+        "title": "Exposure 1"
+      }
+    ],
+    "damageEffectiveness": 1.8999999999999999,
+    "enemyLightningResistanceBeforeClampPercent": -65,
+    "enemyLightningResistanceContributions": [
+      {
+        "name": "LightningResist",
+        "source": "EnemyConfig",
+        "value": -50
+      },
+      {
+        "name": "LightningResist",
+        "source": "Custom:Exposure 1",
+        "value": -15
+      }
+    ],
+    "increasedCastSpeedPercent": 0,
+    "increasedCriticalChancePercent": 0,
+    "increasedDamagePercent": 0,
+    "itemModifierLines": [
+      {
+        "line": "Damage Penetrates 20% Lightning Resistance",
+        "mods": [
+          {
+            "flags": 0,
+            "keywordFlags": 0,
+            "name": "LightningPenetration",
+            "value": 20
+          }
+        ]
+      }
+    ],
+    "lightningBreakdown": {
+      "1": "Base damage:",
+      "2": "104 to 1983 ^8(base damage from skill)",
+      "3": "= 104.0 to 1983.0",
+      "4": "Hit damage:",
+      "5": "104 to 1983 ^8(total damage)",
+      "6": "x 1.850 ^8(effective DPS modifier)",
+      "7": "= 192 to 3668",
+      "8": "Portion of total damage: 100%",
+      "damageTypes": [
+        {
+          "base": "104 to 1983",
+          "convSrc": false,
+          "inc": false,
+          "more": false,
+          "source": "Lightning",
+          "total": "104 to 1983"
+        }
+      ]
+    },
+    "lightningDamageMultiplier": 1.8500000000000001,
+    "lightningExposureCandidates": [
+      {
+        "source": "Custom:Exposure 1",
+        "value": -15
+      }
+    ],
+    "lightningPenetrationPercent": 20,
+    "maximumResistanceMode": "configured",
+    "penetrationContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "LightningPenetration",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 20
+      }
+    ],
+    "rawEnemyLightningResistancePercent": -50,
+    "selectedPart": 1,
+    "selectedSkillId": "Spark",
+    "supportContributions": [],
+    "supportCriticalChanceMultiplier": 1,
+    "supportDamageMultiplier": 1,
+    "supportGems": [],
+    "supportManaCostMultiplier": 1,
+    "supportSpeedMultiplier": 1,
+    "supportTotalCastTime": 0
+  },
+  "lightning-overcap": {
+    "ActionSpeedMod": 1,
+    "AverageDamage": 313.05000000000007,
+    "AverageHit": 313.05000000000007,
+    "CombinedDPS": 521.75000000000011,
+    "CritChance": 0,
+    "CritEffect": 1,
+    "CritMultiplier": 0,
+    "HitChance": 100,
+    "LightningCritAverage": 0,
+    "LightningHitAverage": 313.05000000000007,
+    "LightningMaxBase": 1983,
+    "LightningMinBase": 104,
+    "PreEffectiveCritChance": 0,
+    "Speed": 1.6666666666666667,
+    "Time": 0.59999999999999998,
+    "TotalDPS": 521.75000000000011,
+    "TotalMax": 594.90000000000009,
+    "TotalMin": 31.200000000000003,
+    "addedContributions": [],
+    "addedMaximum": 0,
+    "addedMinimum": 0,
+    "ailmentFlags": {
+      "CannotBrittle": false,
+      "CannotChill": false,
+      "CannotFreeze": false,
+      "CannotIgnite": false,
+      "CannotSap": false,
+      "CannotScorch": false,
+      "CannotShock": false
+    },
+    "baseCriticalChancePercent": 6,
+    "contributions": [],
+    "criticalContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritMultiplier",
+        "source": "Base",
+        "type": "BASE",
+        "value": 50
+      }
+    ],
+    "criticalMultiplierExtraPercent": 50,
+    "customModifierBlocks": [
+      {
+        "enabled": true,
+        "text": "Never deal Critical Strikes",
+        "title": "Exile Engine Assumptions"
+      },
+      {
+        "enabled": true,
+        "text": "Inflict Lightning Exposure on Hit, applying -15% to Lightning Resistance",
+        "title": "Exposure 1"
+      }
+    ],
+    "damageEffectiveness": 1.8999999999999999,
+    "enemyLightningResistanceBeforeClampPercent": 95,
+    "enemyLightningResistanceContributions": [
+      {
+        "name": "LightningResist",
+        "source": "EnemyConfig",
+        "value": 110
+      },
+      {
+        "name": "LightningResist",
+        "source": "Custom:Exposure 1",
+        "value": -15
+      }
+    ],
+    "increasedCastSpeedPercent": 0,
+    "increasedCriticalChancePercent": 0,
+    "increasedDamagePercent": 0,
+    "itemModifierLines": [
+      {
+        "line": "Damage Penetrates 20% Lightning Resistance",
+        "mods": [
+          {
+            "flags": 0,
+            "keywordFlags": 0,
+            "name": "LightningPenetration",
+            "value": 20
+          }
+        ]
+      }
+    ],
+    "lightningBreakdown": {
+      "1": "Base damage:",
+      "2": "104 to 1983 ^8(base damage from skill)",
+      "3": "= 104.0 to 1983.0",
+      "4": "Hit damage:",
+      "5": "104 to 1983 ^8(total damage)",
+      "6": "x 0.300 ^8(effective DPS modifier)",
+      "7": "= 31 to 594",
+      "8": "Portion of total damage: 100%",
+      "damageTypes": [
+        {
+          "base": "104 to 1983",
+          "convSrc": false,
+          "inc": false,
+          "more": false,
+          "source": "Lightning",
+          "total": "104 to 1983"
+        }
+      ]
+    },
+    "lightningDamageMultiplier": 0.30000000000000004,
+    "lightningExposureCandidates": [
+      {
+        "source": "Custom:Exposure 1",
+        "value": -15
+      }
+    ],
+    "lightningPenetrationPercent": 20,
+    "maximumResistanceMode": "configured",
+    "penetrationContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "LightningPenetration",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 20
+      }
+    ],
+    "rawEnemyLightningResistancePercent": 110,
+    "selectedPart": 1,
+    "selectedSkillId": "Spark",
+    "supportContributions": [],
+    "supportCriticalChanceMultiplier": 1,
+    "supportDamageMultiplier": 1,
+    "supportGems": [],
+    "supportManaCostMultiplier": 1,
+    "supportSpeedMultiplier": 1,
+    "supportTotalCastTime": 0
+  },
+  "lightning-penetration": {
+    "ActionSpeedMod": 1,
+    "AverageDamage": 469.57499999999993,
+    "AverageHit": 469.57499999999993,
+    "CombinedDPS": 782.62499999999989,
+    "CritChance": 0,
+    "CritEffect": 1,
+    "CritMultiplier": 0,
+    "HitChance": 100,
+    "LightningCritAverage": 0,
+    "LightningHitAverage": 469.57499999999993,
+    "LightningMaxBase": 1983,
+    "LightningMinBase": 104,
+    "PreEffectiveCritChance": 0,
+    "Speed": 1.6666666666666667,
+    "Time": 0.59999999999999998,
+    "TotalDPS": 782.62499999999989,
+    "TotalMax": 892.34999999999991,
+    "TotalMin": 46.799999999999997,
+    "addedContributions": [],
+    "addedMaximum": 0,
+    "addedMinimum": 0,
+    "ailmentFlags": {
+      "CannotBrittle": false,
+      "CannotChill": false,
+      "CannotFreeze": false,
+      "CannotIgnite": false,
+      "CannotSap": false,
+      "CannotScorch": false,
+      "CannotShock": false
+    },
+    "baseCriticalChancePercent": 6,
+    "contributions": [],
+    "criticalContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritMultiplier",
+        "source": "Base",
+        "type": "BASE",
+        "value": 50
+      }
+    ],
+    "criticalMultiplierExtraPercent": 50,
+    "customModifierBlocks": [
+      {
+        "enabled": true,
+        "text": "Never deal Critical Strikes",
+        "title": "Default"
+      }
+    ],
+    "damageEffectiveness": 1.8999999999999999,
+    "enemyLightningResistanceBeforeClampPercent": 75,
+    "enemyLightningResistanceContributions": [
+      {
+        "name": "LightningResist",
+        "source": "EnemyConfig",
+        "value": 75
+      }
+    ],
+    "increasedCastSpeedPercent": 0,
+    "increasedCriticalChancePercent": 0,
+    "increasedDamagePercent": 0,
+    "itemModifierLines": [
+      {
+        "line": "Damage Penetrates 20% Lightning Resistance",
+        "mods": [
+          {
+            "flags": 0,
+            "keywordFlags": 0,
+            "name": "LightningPenetration",
+            "value": 20
+          }
+        ]
+      }
+    ],
+    "lightningBreakdown": {
+      "1": "Base damage:",
+      "2": "104 to 1983 ^8(base damage from skill)",
+      "3": "= 104.0 to 1983.0",
+      "4": "Hit damage:",
+      "5": "104 to 1983 ^8(total damage)",
+      "6": "x 0.450 ^8(effective DPS modifier)",
+      "7": "= 46 to 892",
+      "8": "Portion of total damage: 100%",
+      "damageTypes": [
+        {
+          "base": "104 to 1983",
+          "convSrc": false,
+          "inc": false,
+          "more": false,
+          "source": "Lightning",
+          "total": "104 to 1983"
+        }
+      ]
+    },
+    "lightningDamageMultiplier": 0.44999999999999996,
+    "lightningExposureCandidates": [],
+    "lightningPenetrationPercent": 20,
+    "maximumResistanceMode": "configured",
+    "penetrationContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "LightningPenetration",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 20
+      }
+    ],
+    "rawEnemyLightningResistancePercent": 75,
+    "selectedPart": 1,
+    "selectedSkillId": "Spark",
+    "supportContributions": [],
+    "supportCriticalChanceMultiplier": 1,
+    "supportDamageMultiplier": 1,
+    "supportGems": [],
+    "supportManaCostMultiplier": 1,
+    "supportSpeedMultiplier": 1,
+    "supportTotalCastTime": 0
+  },
+  "lightning-penetration-sum": {
+    "ActionSpeedMod": 1,
+    "AverageDamage": 573.92500000000007,
+    "AverageHit": 573.92500000000007,
+    "CombinedDPS": 956.54166666666686,
+    "CritChance": 0,
+    "CritEffect": 1,
+    "CritMultiplier": 0,
+    "HitChance": 100,
+    "LightningCritAverage": 0,
+    "LightningHitAverage": 573.92500000000007,
+    "LightningMaxBase": 1983,
+    "LightningMinBase": 104,
+    "PreEffectiveCritChance": 0,
+    "Speed": 1.6666666666666667,
+    "Time": 0.59999999999999998,
+    "TotalDPS": 956.54166666666686,
+    "TotalMax": 1090.6500000000001,
+    "TotalMin": 57.200000000000003,
+    "addedContributions": [],
+    "addedMaximum": 0,
+    "addedMinimum": 0,
+    "ailmentFlags": {
+      "CannotBrittle": false,
+      "CannotChill": false,
+      "CannotFreeze": false,
+      "CannotIgnite": false,
+      "CannotSap": false,
+      "CannotScorch": false,
+      "CannotShock": false
+    },
+    "baseCriticalChancePercent": 6,
+    "contributions": [],
+    "criticalContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritMultiplier",
+        "source": "Base",
+        "type": "BASE",
+        "value": 50
+      }
+    ],
+    "criticalMultiplierExtraPercent": 50,
+    "customModifierBlocks": [
+      {
+        "enabled": true,
+        "text": "Never deal Critical Strikes",
+        "title": "Default"
+      }
+    ],
+    "damageEffectiveness": 1.8999999999999999,
+    "enemyLightningResistanceBeforeClampPercent": 75,
+    "enemyLightningResistanceContributions": [
+      {
+        "name": "LightningResist",
+        "source": "EnemyConfig",
+        "value": 75
+      }
+    ],
+    "increasedCastSpeedPercent": 0,
+    "increasedCriticalChancePercent": 0,
+    "increasedDamagePercent": 0,
+    "itemModifierLines": [
+      {
+        "line": "Damage Penetrates 10% Lightning Resistance",
+        "mods": [
+          {
+            "flags": 0,
+            "keywordFlags": 0,
+            "name": "LightningPenetration",
+            "value": 10
+          }
+        ]
+      },
+      {
+        "line": "Damage Penetrates 20% Lightning Resistance",
+        "mods": [
+          {
+            "flags": 0,
+            "keywordFlags": 0,
+            "name": "LightningPenetration",
+            "value": 20
+          }
+        ]
+      }
+    ],
+    "lightningBreakdown": {
+      "1": "Base damage:",
+      "2": "104 to 1983 ^8(base damage from skill)",
+      "3": "= 104.0 to 1983.0",
+      "4": "Hit damage:",
+      "5": "104 to 1983 ^8(total damage)",
+      "6": "x 0.550 ^8(effective DPS modifier)",
+      "7": "= 57 to 1090",
+      "8": "Portion of total damage: 100%",
+      "damageTypes": [
+        {
+          "base": "104 to 1983",
+          "convSrc": false,
+          "inc": false,
+          "more": false,
+          "source": "Lightning",
+          "total": "104 to 1983"
+        }
+      ]
+    },
+    "lightningDamageMultiplier": 0.55000000000000004,
+    "lightningExposureCandidates": [],
+    "lightningPenetrationPercent": 30,
+    "maximumResistanceMode": "configured",
+    "penetrationContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "LightningPenetration",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 10
+      },
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "LightningPenetration",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 20
+      }
+    ],
+    "rawEnemyLightningResistancePercent": 75,
+    "selectedPart": 1,
+    "selectedSkillId": "Spark",
+    "supportContributions": [],
+    "supportCriticalChanceMultiplier": 1,
+    "supportDamageMultiplier": 1,
+    "supportGems": [],
+    "supportManaCostMultiplier": 1,
+    "supportSpeedMultiplier": 1,
+    "supportTotalCastTime": 0
+  },
+  "lightning-resistance-combined": {
+    "ActionSpeedMod": 1,
+    "AverageDamage": 920.82000000000005,
+    "AverageHit": 920.82000000000005,
+    "CombinedDPS": 1918.3750000000002,
+    "CritChance": 3,
+    "CritEffect": 1.03,
+    "CritMultiplier": 2,
+    "HitChance": 100,
+    "LightningCritAverage": 1788.0000000000002,
+    "LightningHitAverage": 894.00000000000011,
+    "LightningMaxBase": 2021,
+    "LightningMinBase": 123,
+    "PreEffectiveCritChance": 3,
+    "Speed": 2.0833333333333335,
+    "Time": 0.47999999999999998,
+    "TotalDPS": 1918.3750000000002,
+    "TotalMax": 1685.4000000000003,
+    "TotalMin": 102.60000000000001,
+    "addedContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 131072,
+        "name": "LightningMin",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 10
+      },
+      {
+        "flags": 0,
+        "keywordFlags": 131072,
+        "name": "LightningMax",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 20
+      }
+    ],
+    "addedMaximum": 20,
+    "addedMinimum": 10,
+    "ailmentFlags": {
+      "CannotBrittle": true,
+      "CannotChill": true,
+      "CannotFreeze": true,
+      "CannotIgnite": true,
+      "CannotSap": true,
+      "CannotScorch": true,
+      "CannotShock": true
+    },
+    "baseCriticalChancePercent": 6,
+    "contributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "Damage",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 10
+      },
+      {
+        "flags": 2,
+        "keywordFlags": 0,
+        "name": "Damage",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 20
+      },
+      {
+        "flags": 1024,
+        "keywordFlags": 0,
+        "name": "Damage",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 40
+      },
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "LightningDamage",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 30
+      },
+      {
+        "flags": 16,
+        "keywordFlags": 0,
+        "name": "Speed",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 25
+      }
+    ],
+    "criticalContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritChance",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "type": "INC",
+        "value": 100
+      },
+      {
+        "flags": 2,
+        "keywordFlags": 0,
+        "name": "CritChance",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "type": "INC",
+        "value": 50
+      },
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritMultiplier",
+        "source": "Base",
+        "type": "BASE",
+        "value": 50
+      },
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritMultiplier",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "type": "BASE",
+        "value": 50
+      }
+    ],
+    "criticalMultiplierExtraPercent": 100,
+    "customModifierBlocks": [
+      {
+        "enabled": true,
+        "text": "Cannot inflict Elemental Ailments",
+        "title": "Exile Engine Assumptions"
+      },
+      {
+        "enabled": true,
+        "text": "Inflict Lightning Exposure on Hit, applying -15% to Lightning Resistance",
+        "title": "Exposure 1"
+      }
+    ],
+    "damageEffectiveness": 1.8999999999999999,
+    "enemyLightningResistanceBeforeClampPercent": 95,
+    "enemyLightningResistanceContributions": [
+      {
+        "name": "LightningResist",
+        "source": "EnemyConfig",
+        "value": 110
+      },
+      {
+        "name": "LightningResist",
+        "source": "Custom:Exposure 1",
+        "value": -15
+      }
+    ],
+    "increasedCastSpeedPercent": 25,
+    "increasedCriticalChancePercent": 150,
+    "increasedDamagePercent": 100,
+    "itemModifierLines": [
+      {
+        "line": "Adds 10 to 20 Lightning Damage to Spells",
+        "mods": [
+          {
+            "flags": 0,
+            "keywordFlags": 131072,
+            "name": "LightningMin",
+            "value": 10
+          },
+          {
+            "flags": 0,
+            "keywordFlags": 131072,
+            "name": "LightningMax",
+            "value": 20
+          }
+        ]
+      },
+      {
+        "line": "10% increased Damage",
+        "mods": [
+          {
+            "flags": 0,
+            "keywordFlags": 0,
+            "name": "Damage",
+            "value": 10
+          }
+        ]
+      },
+      {
+        "line": "20% increased Spell Damage",
+        "mods": [
+          {
+            "flags": 2,
+            "keywordFlags": 0,
+            "name": "Damage",
+            "value": 20
+          }
+        ]
+      },
+      {
+        "line": "30% increased Lightning Damage",
+        "mods": [
+          {
+            "flags": 0,
+            "keywordFlags": 0,
+            "name": "LightningDamage",
+            "value": 30
+          }
+        ]
+      },
+      {
+        "line": "40% increased Projectile Damage",
+        "mods": [
+          {
+            "flags": 1024,
+            "keywordFlags": 0,
+            "name": "Damage",
+            "value": 40
+          }
+        ]
+      },
+      {
+        "line": "25% increased Cast Speed",
+        "mods": [
+          {
+            "flags": 16,
+            "keywordFlags": 0,
+            "name": "Speed",
+            "value": 25
+          }
+        ]
+      },
+      {
+        "line": "100% increased Critical Strike Chance",
+        "mods": [
+          {
+            "flags": 0,
+            "keywordFlags": 0,
+            "name": "CritChance",
+            "value": 100
+          }
+        ]
+      },
+      {
+        "line": "50% increased Critical Strike Chance for Spells",
+        "mods": [
+          {
+            "flags": 2,
+            "keywordFlags": 0,
+            "name": "CritChance",
+            "value": 50
+          }
+        ]
+      },
+      {
+        "line": "+50% to Global Critical Strike Multiplier",
+        "mods": [
+          {
+            "flags": 0,
+            "keywordFlags": 0,
+            "name": "CritMultiplier",
+            "value": 50
+          }
+        ]
+      },
+      {
+        "line": "Damage Penetrates 20% Lightning Resistance",
+        "mods": [
+          {
+            "flags": 0,
+            "keywordFlags": 0,
+            "name": "LightningPenetration",
+            "value": 20
+          }
+        ]
+      }
+    ],
+    "lightningBreakdown": {
+      "1": "Base damage:",
+      "2": "104 to 1983 ^8(base damage from skill)",
+      "3": "+ 10 to 20 ^8(added damage)",
+      "4": "x 1.90 ^8(damage effectiveness)",
+      "5": "= 123.0 to 2021.0",
+      "6": "Hit damage:",
+      "7": "342 to 5618 ^8(total damage)",
+      "8": "x 0.300 ^8(effective DPS modifier)",
+      "9": "= 102 to 1685",
+      "10": "Portion of total damage: 100%",
+      "damageTypes": [
+        {
+          "base": "123 to 2021",
+          "convSrc": false,
+          "inc": "x 2",
+          "more": "x 1.39",
+          "source": "Lightning",
+          "total": "342 to 5618"
+        }
+      ]
+    },
+    "lightningDamageMultiplier": 0.30000000000000004,
+    "lightningExposureCandidates": [
+      {
+        "source": "Custom:Exposure 1",
+        "value": -15
+      }
+    ],
+    "lightningPenetrationPercent": 20,
+    "maximumResistanceMode": "configured",
+    "penetrationContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "LightningPenetration",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 20
+      }
+    ],
+    "rawEnemyLightningResistancePercent": 110,
+    "selectedPart": 1,
+    "selectedSkillId": "Spark",
+    "supportContributions": [
+      {
+        "flags": 2,
+        "keywordFlags": 0,
+        "name": "Damage",
+        "source": "Skill:SupportControlledDestruction",
+        "value": 39
+      },
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritChance",
+        "source": "Skill:SupportControlledDestruction",
+        "value": -80
+      },
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "SupportManaMultiplier",
+        "source": "Skill:SupportControlledDestruction",
+        "value": 40
+      }
+    ],
+    "supportCriticalChanceMultiplier": 0.20000000000000001,
+    "supportDamageMultiplier": 1.3899999999999999,
+    "supportGems": [
+      {
+        "enabled": true,
+        "gameId": "Metadata/Items/Gems/SupportGemControlledDestruction",
+        "gemId": "Metadata/Items/Gems/SkillGemSupportControlledDestruction",
+        "level": 20,
+        "nameSpec": "Controlled Destruction",
+        "quality": 0,
+        "skillId": "SupportControlledDestruction"
+      }
+    ],
+    "supportManaCostMultiplier": 1.3999999999999999,
     "supportSpeedMultiplier": 1,
     "supportTotalCastTime": 0
   },
@@ -2442,7 +4245,16 @@
       }
     ],
     "criticalMultiplierExtraPercent": 50,
+    "customModifierBlocks": [
+      {
+        "enabled": true,
+        "text": "Never deal Critical Strikes",
+        "title": "Default"
+      }
+    ],
     "damageEffectiveness": 1.8999999999999999,
+    "enemyLightningResistanceBeforeClampPercent": 0,
+    "enemyLightningResistanceContributions": [],
     "increasedCastSpeedPercent": 0,
     "increasedCriticalChancePercent": 0,
     "increasedDamagePercent": -100,
@@ -2477,6 +4289,11 @@
         }
       ]
     },
+    "lightningExposureCandidates": [],
+    "lightningPenetrationPercent": 0,
+    "maximumResistanceMode": "configured",
+    "penetrationContributions": [],
+    "rawEnemyLightningResistancePercent": 0,
     "selectedPart": 1,
     "selectedSkillId": "Spark",
     "supportContributions": [],
@@ -2567,7 +4384,22 @@
       }
     ],
     "criticalMultiplierExtraPercent": 50,
+    "customModifierBlocks": [
+      {
+        "enabled": true,
+        "text": "Never deal Critical Strikes",
+        "title": "Default"
+      }
+    ],
     "damageEffectiveness": 1.8999999999999999,
+    "enemyLightningResistanceBeforeClampPercent": 25,
+    "enemyLightningResistanceContributions": [
+      {
+        "name": "LightningResist",
+        "source": "EnemyConfig",
+        "value": 25
+      }
+    ],
     "increasedCastSpeedPercent": 25,
     "increasedCriticalChancePercent": 0,
     "increasedDamagePercent": 100,
@@ -2648,6 +4480,12 @@
         }
       ]
     },
+    "lightningDamageMultiplier": 0.75,
+    "lightningExposureCandidates": [],
+    "lightningPenetrationPercent": 0,
+    "maximumResistanceMode": "configured",
+    "penetrationContributions": [],
+    "rawEnemyLightningResistancePercent": 25,
     "selectedPart": 1,
     "selectedSkillId": "Spark",
     "supportContributions": [],
@@ -2753,7 +4591,22 @@
       }
     ],
     "criticalMultiplierExtraPercent": 50,
+    "customModifierBlocks": [
+      {
+        "enabled": true,
+        "text": "Never deal Critical Strikes",
+        "title": "Default"
+      }
+    ],
     "damageEffectiveness": 1.8999999999999999,
+    "enemyLightningResistanceBeforeClampPercent": 25,
+    "enemyLightningResistanceContributions": [
+      {
+        "name": "LightningResist",
+        "source": "EnemyConfig",
+        "value": 25
+      }
+    ],
     "increasedCastSpeedPercent": 25,
     "increasedCriticalChancePercent": 0,
     "increasedDamagePercent": 100,
@@ -2853,6 +4706,12 @@
         }
       ]
     },
+    "lightningDamageMultiplier": 0.75,
+    "lightningExposureCandidates": [],
+    "lightningPenetrationPercent": 0,
+    "maximumResistanceMode": "configured",
+    "penetrationContributions": [],
+    "rawEnemyLightningResistancePercent": 25,
     "selectedPart": 1,
     "selectedSkillId": "Spark",
     "supportContributions": [
@@ -2939,7 +4798,16 @@
       }
     ],
     "criticalMultiplierExtraPercent": 50,
+    "customModifierBlocks": [
+      {
+        "enabled": true,
+        "text": "Never deal Critical Strikes",
+        "title": "Default"
+      }
+    ],
     "damageEffectiveness": 1.8999999999999999,
+    "enemyLightningResistanceBeforeClampPercent": 0,
+    "enemyLightningResistanceContributions": [],
     "increasedCastSpeedPercent": 0,
     "increasedCriticalChancePercent": 0,
     "increasedDamagePercent": 0,
@@ -2963,6 +4831,12 @@
         }
       ]
     },
+    "lightningDamageMultiplier": 1,
+    "lightningExposureCandidates": [],
+    "lightningPenetrationPercent": 0,
+    "maximumResistanceMode": "configured",
+    "penetrationContributions": [],
+    "rawEnemyLightningResistancePercent": 0,
     "selectedPart": 1,
     "selectedSkillId": "Spark",
     "supportContributions": [],
@@ -3027,7 +4901,16 @@
       }
     ],
     "criticalMultiplierExtraPercent": 50,
+    "customModifierBlocks": [
+      {
+        "enabled": true,
+        "text": "Never deal Critical Strikes",
+        "title": "Default"
+      }
+    ],
     "damageEffectiveness": 1.8999999999999999,
+    "enemyLightningResistanceBeforeClampPercent": 0,
+    "enemyLightningResistanceContributions": [],
     "increasedCastSpeedPercent": 0,
     "increasedCriticalChancePercent": 0,
     "increasedDamagePercent": 0,
@@ -3051,6 +4934,12 @@
         }
       ]
     },
+    "lightningDamageMultiplier": 1,
+    "lightningExposureCandidates": [],
+    "lightningPenetrationPercent": 0,
+    "maximumResistanceMode": "configured",
+    "penetrationContributions": [],
+    "rawEnemyLightningResistancePercent": 0,
     "selectedPart": 1,
     "selectedSkillId": "Spark",
     "supportContributions": [
@@ -3137,7 +5026,16 @@
       }
     ],
     "criticalMultiplierExtraPercent": 50,
+    "customModifierBlocks": [
+      {
+        "enabled": true,
+        "text": "Never deal Critical Strikes",
+        "title": "Default"
+      }
+    ],
     "damageEffectiveness": 1.8999999999999999,
+    "enemyLightningResistanceBeforeClampPercent": 0,
+    "enemyLightningResistanceContributions": [],
     "increasedCastSpeedPercent": 0,
     "increasedCriticalChancePercent": 0,
     "increasedDamagePercent": 0,
@@ -3161,6 +5059,12 @@
         }
       ]
     },
+    "lightningDamageMultiplier": 1,
+    "lightningExposureCandidates": [],
+    "lightningPenetrationPercent": 0,
+    "maximumResistanceMode": "configured",
+    "penetrationContributions": [],
+    "rawEnemyLightningResistancePercent": 0,
     "selectedPart": 1,
     "selectedSkillId": "Spark",
     "supportContributions": [
@@ -3270,7 +5174,16 @@
       }
     ],
     "criticalMultiplierExtraPercent": 50,
+    "customModifierBlocks": [
+      {
+        "enabled": true,
+        "text": "Never deal Critical Strikes",
+        "title": "Default"
+      }
+    ],
     "damageEffectiveness": 1.8999999999999999,
+    "enemyLightningResistanceBeforeClampPercent": 0,
+    "enemyLightningResistanceContributions": [],
     "increasedCastSpeedPercent": 0,
     "increasedCriticalChancePercent": 0,
     "increasedDamagePercent": 25,
@@ -3325,6 +5238,12 @@
         }
       ]
     },
+    "lightningDamageMultiplier": 1,
+    "lightningExposureCandidates": [],
+    "lightningPenetrationPercent": 0,
+    "maximumResistanceMode": "configured",
+    "penetrationContributions": [],
+    "rawEnemyLightningResistancePercent": 0,
     "selectedPart": 1,
     "selectedSkillId": "Spark",
     "supportContributions": [

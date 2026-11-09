@@ -169,6 +169,26 @@ test('critical chance uses client rows while the base player multiplier keeps ex
   }
 });
 
+test('penetration and exposure keep exact stat identities and negative authored exposure values', async () => {
+  const fact = reference.resistanceReference;
+  assert.deepEqual(dataset.resistance.identity, reference.identity);
+  assert.deepEqual(dataset.resistance.ruleSource, fact.ruleSource);
+  assert.deepEqual(dataset.resistance.sourceRows, fact.statRows);
+  for (const source of fact.statRows) {
+    const row = await reader.getRecord(source.table, source.key);
+    assert.equal(row.rowIndex, source.rowIndex);
+    assert.equal(row.fields.Id, source.key);
+    assert.equal(row.fields.IsLocal, false);
+    assert.equal(row.fields.IsWeaponLocal, false);
+  }
+  const example = fact.exposureSourceExample;
+  const row = await reader.getRecord(example.table, example.key);
+  assert.equal(row.rowIndex, example.rowIndex);
+  assert.equal(row.fields.StatsKey1.key, example.statId);
+  assert.equal(row.fields.Stat1Min, example.value);
+  assert.equal(row.fields.Stat1Max, example.value);
+});
+
 for (const expected of reference.cases) {
   test(`${expected.fixture}: adapted XML intermediates, contributions and selected hit/combined DPS match executed pinned PoB`, async () => {
     const xml = await readFile(
@@ -204,6 +224,37 @@ for (const expected of reference.cases) {
     assert.deepEqual(value.includedDamage, ['lightning-hit']);
     assert.equal(value.skill.id, 'Spark');
     assert.equal(value.skill.gemLevel, expected.gemLevel);
+    assert.equal(value.configuration.effectiveLightningResistancePercent, undefined);
+    const rawResistance = value.configuration.lightningResistance;
+    assert.equal(rawResistance.baseResistancePercent, expected.rawResistancePercent);
+    assert.equal(rawResistance.maximumResistanceMode, expected.maximumResistanceMode);
+    assert.deepEqual(rawResistance.exposures, expected.exposures);
+    assert.deepEqual(rawResistance.source, {
+      kind: 'scenario',
+      id: 'pob-config:enemyLightningResist',
+      label: `enemyLightningResist=${expected.rawResistancePercent}`,
+    });
+    const resistance = value.resistanceEffects;
+    for (const [key, wanted] of Object.entries(expected.resistanceEffects)) {
+      if (typeof wanted === 'number') close(resistance[key], wanted, `resistance.${key}`);
+      else assert.deepEqual(resistance[key], wanted, `resistance.${key}`);
+    }
+    assert.deepEqual(resistance.ruleSource, reference.resistanceReference.ruleSource);
+    assert.deepEqual(resistance.sourceRows, reference.resistanceReference.statRows);
+    assert.deepEqual(resistance.configurationSource, rawResistance.source);
+    assert.deepEqual(resistance.exposureContributions, expected.exposures);
+    assert.deepEqual(
+      resistance.penetrationContributions.map(({ statId, value, source }) => ({
+        statId,
+        value,
+        source: { kind: source.kind, id: source.id, line: source.line },
+      })),
+      expected.penetrationModifiers.map(({ statId, value, line }) => ({
+        statId,
+        value,
+        source: { kind: 'item', id: 'pob-item:1', line },
+      })),
+    );
     assert.equal(value.configuration.criticalStrikeMode ?? 'disabled', expected.criticalMode);
     if (expected.criticalMode === 'average')
       assert.equal(value.configuration.ailmentMode, 'excluded');
@@ -379,9 +430,36 @@ for (const expected of reference.cases) {
       );
     const nonCritMean = (minimum + maximum) / 2;
     const critMean = (minimum * refMultiplier) / 2 + (maximum * refMultiplier) / 2;
+    const refExposure = Math.min(
+      0,
+      ...expected.exposures
+        .filter((exposure) => exposure.enabled)
+        .map((exposure) => exposure.value),
+    );
+    const refMaximum =
+      expected.maximumResistanceMode === 'default75'
+        ? reference.resistanceReference.constants.defaultMaximumPercent
+        : Math.min(
+            Math.max(
+              expected.rawResistancePercent,
+              reference.resistanceReference.constants.defaultMaximumPercent,
+            ),
+            reference.resistanceReference.constants.hardMaximumPercent,
+          );
+    const refPenetration = expected.penetrationModifiers.reduce((sum, mod) => sum + mod.value, 0);
+    const refResistance =
+      Math.max(
+        reference.resistanceReference.constants.minimumPercent,
+        Math.min(expected.rawResistancePercent + refExposure, refMaximum),
+      ) - refPenetration;
+    close(
+      resistance.effectiveResistancePercent,
+      refResistance,
+      'independent exposure/cap/penetration stages',
+    );
     const dps =
       (nonCritMean * (1 - refChance / 100) + (critMean * refChance) / 100) *
-      (1 - expected.effectiveLightningResistancePercent / 100) *
+      (1 - refResistance / 100) *
       speed;
     close(value.combinedDps, dps, 'independent pinned-source CombinedDPS branch');
     const observed = oracle[expected.fixture];
@@ -415,6 +493,75 @@ for (const expected of reference.cases) {
     );
     assert.equal(observed.HitChance, 100);
     assert.equal(observed.ActionSpeedMod, 1);
+    close(
+      rawResistance.baseResistancePercent,
+      observed.rawEnemyLightningResistancePercent,
+      'PoB raw enemy resistance',
+    );
+    assert.equal(rawResistance.maximumResistanceMode, observed.maximumResistanceMode);
+    close(
+      resistance.uncappedResistancePercent,
+      observed.enemyLightningResistanceBeforeClampPercent,
+      'PoB exposure before clamp',
+    );
+    close(
+      resistance.penetrationPercent,
+      observed.lightningPenetrationPercent,
+      'PoB penetration sum',
+    );
+    if (observed.lightningDamageMultiplier !== undefined)
+      close(
+        resistance.damageMultiplier,
+        observed.lightningDamageMultiplier,
+        'PoB lightning damage multiplier',
+      );
+    assert.deepEqual(
+      observed.lightningExposureCandidates,
+      expected.exposures
+        .filter((exposure) => exposure.enabled && exposure.value !== 0)
+        .map((exposure) => ({
+          value: exposure.value,
+          source: `Custom:${exposure.source.id.slice('pob-config:exposure:'.length)}`,
+        })),
+    );
+    const appliedExposures = observed.enemyLightningResistanceContributions.filter((mod) =>
+      mod.source.startsWith('Custom:Exposure '),
+    );
+    assert.deepEqual(
+      appliedExposures,
+      resistance.exposurePercent < 0
+        ? [
+            {
+              name: 'LightningResist',
+              value: resistance.exposurePercent,
+              source: `Custom:${expected.exposures[resistance.selectedExposureIndices[0]].source.id.slice('pob-config:exposure:'.length)}`,
+            },
+          ]
+        : [],
+    );
+    const observedExposureBlocks = observed.customModifierBlocks.filter((block) =>
+      block.title.startsWith('Exposure '),
+    );
+    assert.deepEqual(
+      observedExposureBlocks,
+      expected.exposures.map((exposure) => ({
+        title: exposure.source.id.slice('pob-config:exposure:'.length),
+        enabled: exposure.enabled,
+        text: exposure.source.label,
+      })),
+    );
+    assert.deepEqual(
+      observed.penetrationContributions,
+      expected.penetrationModifiers
+        .filter((mod) => mod.value !== 0)
+        .map((mod) => ({
+          name: 'LightningPenetration',
+          value: mod.value,
+          source: 'Item:1:Synthetic Spark Fixture, Simple Robe',
+          flags: 0,
+          keywordFlags: 0,
+        })),
+    );
     close(
       supportEffects.spellDamageMultiplier,
       observed.supportDamageMultiplier,

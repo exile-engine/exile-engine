@@ -14,6 +14,7 @@ import {
   type SourceRef,
   type SparkCalculation,
   type SparkDataset,
+  type SelectedSkillResistanceTrace,
 } from '@exile-engine/core';
 
 const BASE_MULTIPLIER_SOURCE: SourceRef = Object.freeze({
@@ -119,6 +120,7 @@ export function calculateSelectedSkillCriticalEffects(
   baseChancePercent: number,
   criticalDataset?: SelectedSkillCriticalDataset,
   cachedTotals?: CriticalModifierTotals,
+  resistanceEffects?: SelectedSkillResistanceTrace,
 ): Result<SelectedSkillCriticalTrace> {
   const mode = input.configuration.criticalStrikeMode ?? 'disabled';
   const modifierContributions = input.modifiers
@@ -173,7 +175,10 @@ export function calculateSelectedSkillCriticalEffects(
     max: criticalMax,
     mean: criticalMin / 2 + criticalMax / 2,
   };
-  const resistanceScale = 1 - input.configuration.effectiveLightningResistancePercent / 100;
+  const resistanceScale =
+    1 -
+    (resistanceEffects?.effectiveResistancePercent ?? hit.effectiveLightningResistancePercent) /
+      100;
   const criticalHitAfterResistance = {
     min: criticalHitBeforeResistance.min * resistanceScale,
     max: criticalHitBeforeResistance.max * resistanceScale,

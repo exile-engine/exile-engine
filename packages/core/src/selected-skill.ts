@@ -18,6 +18,52 @@ export const SELECTED_SPARK_CRITICAL_MODIFIER_STAT_IDS = [
   'base_critical_strike_multiplier_+',
 ] as const;
 
+export const SELECTED_SPARK_LIGHTNING_PENETRATION_STAT_ID =
+  'base_reduce_enemy_lightning_resistance_%' as const;
+export const SELECTED_SPARK_LIGHTNING_EXPOSURE_STAT_ID =
+  'lightning_exposure_on_hit_magnitude' as const;
+
+/** Explicit already-active enemy state; no application chance, first-hit or uptime inference. */
+export interface SelectedLightningExposure {
+  readonly statId: typeof SELECTED_SPARK_LIGHTNING_EXPOSURE_STAT_ID;
+  readonly value: number;
+  readonly enabled: boolean;
+  readonly source: SourceRef;
+}
+
+export interface SelectedLightningResistanceConfiguration {
+  readonly baseResistancePercent: number;
+  readonly maximumResistanceMode: 'configured' | 'default75';
+  readonly source: SourceRef;
+  readonly exposures: readonly SelectedLightningExposure[];
+}
+
+export interface SelectedSkillResistanceDataset {
+  readonly identity: SnapshotIdentity;
+  readonly ruleSource: SourceRef;
+  readonly sourceRows: readonly SourceRowRef[];
+}
+
+export interface SelectedSkillResistanceTrace {
+  readonly profile: 'effective' | 'configured';
+  readonly baseResistancePercent: number;
+  readonly maximumResistanceMode: 'already-effective' | 'configured' | 'default75';
+  readonly maximumResistancePercent: number | null;
+  readonly minimumResistancePercent: number | null;
+  readonly exposurePercent: number;
+  readonly exposureContributions: readonly SelectedLightningExposure[];
+  readonly selectedExposureIndices: readonly number[];
+  readonly uncappedResistancePercent: number;
+  readonly cappedResistancePercent: number;
+  readonly penetrationPercent: number;
+  readonly effectiveResistancePercent: number;
+  readonly damageMultiplier: number;
+  readonly penetrationContributions: readonly StatContribution[];
+  readonly configurationSource: SourceRef;
+  readonly ruleSource: SourceRef;
+  readonly sourceRows: readonly SourceRowRef[];
+}
+
 export interface SelectedSkillCriticalDataset {
   readonly identity: SnapshotIdentity;
   /** Explicit pinned PoE1 player rule, not an invented client constant row. */
@@ -113,7 +159,9 @@ export interface AddedLightningDamageTrace {
 /** Explicit host identity: no enemy defaults or saved PoB output are inferred. */
 export interface SelectedSkillConfiguration {
   readonly id: string;
-  readonly effectiveLightningResistancePercent: number;
+  readonly effectiveLightningResistancePercent?: number;
+  /** Mutually exclusive with already-effective resistance; validated at runtime. */
+  readonly lightningResistance?: SelectedLightningResistanceConfiguration;
   /** Absent retains the earlier explicitly noncritical profile. */
   readonly criticalStrikeMode?: 'disabled' | 'average';
   readonly ailmentMode?: 'excluded';
@@ -143,12 +191,13 @@ export interface SelectedSkillCalculation {
   readonly buildId: string;
   readonly configuration: SelectedSkillConfiguration;
   readonly skill: SelectedSkillSelection;
-  readonly engineRevision: 'poe1-selected-spark-v4';
+  readonly engineRevision: 'poe1-selected-spark-v5';
   readonly metric: 'selected-skill-hit-combined-dps';
   readonly hit: SparkCalculation;
   readonly addedLightningDamage: AddedLightningDamageTrace;
   readonly supportEffects: SelectedSkillSupportTrace;
   readonly criticalEffects: SelectedSkillCriticalTrace;
+  readonly resistanceEffects: SelectedSkillResistanceTrace;
   readonly hitsPerCast: 1;
   readonly hitsPerSecond: number;
   readonly hitDps: number;

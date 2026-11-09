@@ -14,4 +14,6 @@ Exports include `GameId`, `SnapshotIdentity`, `CatalogRecord`, `CatalogRef`, `Ca
 
 Game packages use the portable shared normalization/calculation helpers. Hosts supply data through `CatalogReader`; core never imports a dataset, Node API, filesystem or network client. Every calculated result identifies the exact snapshot and its source rows.
 
+`SelectedLightningResistanceConfiguration` declares raw enemy resistance, a reviewed maximum profile and explicit already-active exposure candidates. `SelectedSkillResistanceTrace` separates exposure selection, uncapped/capped resistance, post-cap penetration and the shared effective damage factor. Exact penetration/exposure stat identities and pinned rule attribution live in `SelectedSkillResistanceDataset`; scenario provenance remains distinct from item modifiers. This does not add on-hit application, curses or arbitrary maximum-resistance rules.
+
 See the root architecture and conventions documentation. Package semver is not a client build ID. Unsupported input produces explicit diagnostics; the package does not contain a full character calculator.

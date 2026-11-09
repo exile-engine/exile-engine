@@ -6,6 +6,8 @@ This first release calculates **ordinary Spark, one noncritical projectile hit**
 
 The PoE1 selected-skill slice additionally accepts ordered spell added-lightning ranges, one normal Controlled Destruction support and explicit average critical hits with ailments excluded. It applies client-derived effectiveness/chance, an attributed player multiplier rule, and reviewed more/less/cast-time rules while retaining raw contributions and provenance. Its XML fixtures are compared with an executed pinned PoB oracle; full and incremental paths are checked against each other. Other damage elements, attacks, other supports and conditional effects remain outside this slice.
 
+The configured lightning-resistance slice selects the strongest explicitly active exposure, applies its reviewed cap/floor profile, then subtracts penetration. It reports each stage and the same effective resistance for normal and critical hits; exposure timing and other resistance mechanics remain outside scope.
+
 ## Packages
 
 | Package                   | Responsibility                                                                      | Initial status                |

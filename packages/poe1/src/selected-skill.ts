@@ -2,6 +2,7 @@ import {
   SPARK_MODIFIER_STAT_IDS,
   SPARK_ADDED_LIGHTNING_STAT_IDS,
   SELECTED_SPARK_CRITICAL_MODIFIER_STAT_IDS,
+  SELECTED_SPARK_LIGHTNING_PENETRATION_STAT_ID,
   calculateSparkForGame,
   errorDiagnostic,
   failure,
@@ -19,13 +20,27 @@ import {
   type SparkInput,
   type SelectedSkillSupportTrace,
   type SelectedSkillCriticalTrace,
+  type SelectedSkillResistanceTrace,
+  type SelectedSkillConfiguration,
 } from '@exile-engine/core';
 import { calculateSelectedSkillSupports, selectedSupportDatasetShape } from './supports.js';
 import { calculateSelectedSkillCriticalEffects, selectedCriticalDatasetShape } from './critical.js';
+import {
+  calculateSelectedSkillResistance,
+  selectedResistanceDatasetShape,
+  validLightningResistanceConfiguration,
+} from './resistance.js';
 export { calculateSelectedSkillSupports } from './supports.js';
 export { calculateSelectedSkillCriticalEffects } from './critical.js';
+export {
+  calculateSelectedSkillResistance,
+  assembleSelectedSkillResistance,
+  selectLightningExposure,
+  capLightningResistance,
+} from './resistance.js';
+export type { LightningResistanceStages } from './resistance.js';
 
-export const selectedSkillEngineRevision = 'poe1-selected-spark-v4' as const;
+export const selectedSkillEngineRevision = 'poe1-selected-spark-v5' as const;
 
 function object(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === 'object' && !Array.isArray(value);
@@ -56,6 +71,24 @@ function denseArray(value: unknown, maximum: number): value is readonly unknown[
   if (!Array.isArray(value) || value.length > maximum) return false;
   for (let index = 0; index < value.length; index++) if (!Object.hasOwn(value, index)) return false;
   return true;
+}
+
+function copyConfiguration(config: SelectedSkillConfiguration): SelectedSkillConfiguration {
+  return {
+    ...config,
+    ...(config.lightningResistance === undefined
+      ? {}
+      : {
+          lightningResistance: {
+            ...config.lightningResistance,
+            source: { ...config.lightningResistance.source },
+            exposures: config.lightningResistance.exposures.map((exposure) => ({
+              ...exposure,
+              source: { ...exposure.source },
+            })),
+          },
+        }),
+  };
 }
 
 /** Reject hidden dataset semantics before capturing or traversing host-owned records. */
@@ -95,6 +128,7 @@ function selectedDatasetShape(dataset: SparkDataset): boolean {
       'ruleProvenance',
       'supports',
       'critical',
+      'resistance',
     ]) &&
     object(dataset.identity) &&
     keys(dataset.identity, ['game', 'build', 'snapshotId']) &&
@@ -142,7 +176,8 @@ function selectedDatasetShape(dataset: SparkDataset): boolean {
     denseArray(dataset.ruleProvenance, 100) &&
     (dataset.supports === undefined || Object.hasOwn(dataset, 'supports')) &&
     selectedSupportDatasetShape(dataset) &&
-    selectedCriticalDatasetShape(dataset)
+    selectedCriticalDatasetShape(dataset) &&
+    selectedResistanceDatasetShape(dataset)
   );
 }
 
@@ -237,10 +272,11 @@ export function validateSelectedSkillInput(input: SelectedSkillInput): Result<Se
   const config = input.configuration;
   if (
     !object(config) ||
-    !ownFields(config, ['id', 'effectiveLightningResistancePercent']) ||
+    !ownFields(config, ['id']) ||
     !keys(config, [
       'id',
       'effectiveLightningResistancePercent',
+      'lightningResistance',
       'criticalStrikeMode',
       'ailmentMode',
     ]) ||
@@ -251,13 +287,21 @@ export function validateSelectedSkillInput(input: SelectedSkillInput): Result<Se
       (!Object.hasOwn(config, 'ailmentMode') || config.ailmentMode !== 'excluded')) ||
     (config.criticalStrikeMode === 'average' && config.ailmentMode !== 'excluded') ||
     !id(config.id) ||
-    !finite(config.effectiveLightningResistancePercent) ||
-    config.effectiveLightningResistancePercent < -200 ||
-    config.effectiveLightningResistancePercent > 90
+    (config.lightningResistance !== undefined && !Object.hasOwn(config, 'lightningResistance')) ||
+    (config.effectiveLightningResistancePercent !== undefined &&
+      !Object.hasOwn(config, 'effectiveLightningResistancePercent')) ||
+    Object.hasOwn(config, 'effectiveLightningResistancePercent') ===
+      Object.hasOwn(config, 'lightningResistance') ||
+    (Object.hasOwn(config, 'effectiveLightningResistancePercent') &&
+      (!finite(config.effectiveLightningResistancePercent) ||
+        config.effectiveLightningResistancePercent < -200 ||
+        config.effectiveLightningResistancePercent > 90)) ||
+    (Object.hasOwn(config, 'lightningResistance') &&
+      !validLightningResistanceConfiguration(config.lightningResistance))
   )
     reject(
       'selected.configuration',
-      'An explicit configuration ID and effective lightning resistance from -200% through 90% are required. Critical mode must be disabled or average; average requires explicitly excluded ailments.',
+      'An explicit configuration ID and exactly one valid lightning resistance profile are required. Average critical mode requires explicitly excluded ailments.',
     );
   if (!Array.isArray(input.modifiers) || input.modifiers.length > 1000) {
     reject('selected.modifiers', 'Expected at most 1000 individual contributions.');
@@ -271,11 +315,14 @@ export function validateSelectedSkillInput(input: SelectedSkillInput): Result<Se
           [
             ...SPARK_MODIFIER_STAT_IDS,
             ...SELECTED_SPARK_CRITICAL_MODIFIER_STAT_IDS,
+            SELECTED_SPARK_LIGHTNING_PENETRATION_STAT_ID,
           ] as readonly unknown[]
         ).includes(mod.statId) ||
         !finite(mod.value) ||
         ((SELECTED_SPARK_CRITICAL_MODIFIER_STAT_IDS as readonly unknown[]).includes(mod.statId) &&
           !Number.isSafeInteger(mod.value)) ||
+        (mod.statId === SELECTED_SPARK_LIGHTNING_PENETRATION_STAT_ID &&
+          (!Number.isSafeInteger(mod.value) || mod.value < 0 || mod.value > 200)) ||
         (mod.scope !== undefined && mod.scope !== 'global') ||
         (mod.conditions !== undefined &&
           (!Array.isArray(mod.conditions) || mod.conditions.length !== 0)) ||
@@ -319,6 +366,19 @@ export function validateSelectedSkillInput(input: SelectedSkillInput): Result<Se
       const multiplier = input.modifiers
         .filter((mod) => mod.statId === 'base_critical_strike_multiplier_+')
         .reduce((sum, mod) => addSafeInteger(sum, mod.value), 0);
+      const penetration = input.modifiers.filter(
+        (mod) => mod.statId === SELECTED_SPARK_LIGHTNING_PENETRATION_STAT_ID,
+      );
+      if (
+        penetration.length &&
+        (!object(config) ||
+          !Object.hasOwn(config, 'lightningResistance') ||
+          penetration.reduce((sum, mod) => sum + mod.value, 0) > 200)
+      )
+        reject(
+          'selected.penetration',
+          'Lightning penetration requires a configured raw-resistance profile and a total between 0 and 200 percentage points.',
+        );
       if (
         !Number.isFinite(damage) ||
         damage < -100 ||
@@ -403,7 +463,7 @@ export function validateSelectedSkillInput(input: SelectedSkillInput): Result<Se
             })),
           }),
     },
-    configuration: { ...input.configuration },
+    configuration: copyConfiguration(input.configuration),
     modifiers: input.modifiers.map((mod) => ({
       ...mod,
       source: { ...mod.source },
@@ -480,7 +540,7 @@ function sparkInput(input: SelectedSkillInput): SparkInput {
     modifiers: input.modifiers.filter((mod) =>
       (SPARK_MODIFIER_STAT_IDS as readonly string[]).includes(mod.statId),
     ),
-    effectiveLightningResistancePercent: input.configuration.effectiveLightningResistancePercent,
+    effectiveLightningResistancePercent: 0,
   };
 }
 
@@ -491,6 +551,7 @@ export function assembleSelectedSkill(
   addedLightningDamage: AddedLightningDamageTrace,
   supportEffects: SelectedSkillSupportTrace,
   criticalEffects: SelectedSkillCriticalTrace,
+  resistanceEffects: SelectedSkillResistanceTrace,
 ): Result<SelectedSkillCalculation> {
   const hitDps = criticalEffects.expectedHitMeanAfterResistance * hit.castsPerSecond;
   if (!Number.isFinite(hitDps) || !Number.isFinite(hit.castsPerSecond) || hit.castsPerSecond <= 0)
@@ -503,7 +564,7 @@ export function assembleSelectedSkill(
   return success({
     identity: { ...input.identity },
     buildId: input.buildId,
-    configuration: { ...input.configuration },
+    configuration: copyConfiguration(input.configuration),
     skill: {
       ...input.skill,
       ...(input.skill.supports === undefined
@@ -531,6 +592,7 @@ export function assembleSelectedSkill(
       })),
     },
     criticalEffects,
+    resistanceEffects,
     hitsPerCast: 1,
     hitsPerSecond: hit.castsPerSecond,
     hitDps,
@@ -562,7 +624,14 @@ export function calculateSelectedSkill(
   if (!added.ok) return added;
   const supportEffects = calculateSelectedSkillSupports(validated.value, dataset);
   if (!supportEffects.ok) return supportEffects;
-  const selectedHit = selectedHitRules(hit.value, added.value.combinedBase, supportEffects.value);
+  const resistanceEffects = calculateSelectedSkillResistance(validated.value, dataset);
+  if (!resistanceEffects.ok) return resistanceEffects;
+  const selectedHit = selectedHitRules(
+    hit.value,
+    added.value.combinedBase,
+    supportEffects.value,
+    resistanceEffects.value,
+  );
   const criticalEffects = calculateSelectedSkillCriticalEffects(
     validated.value,
     selectedHit,
@@ -570,6 +639,8 @@ export function calculateSelectedSkill(
     dataset.levels.find((level) => level.gemLevel === validated.value.skill.gemLevel)!
       .baseCriticalStrikeChancePercent!,
     dataset.critical,
+    undefined,
+    resistanceEffects.value,
   );
   if (!criticalEffects.ok) return criticalEffects;
   return assembleSelectedSkill(
@@ -578,6 +649,7 @@ export function calculateSelectedSkill(
     added.value,
     supportEffects.value,
     criticalEffects.value,
+    resistanceEffects.value,
   );
 }
 
@@ -586,6 +658,7 @@ export function selectedHitRules(
   hit: SparkCalculation,
   combinedBase: DamageRange = hit.baseLightningDamage,
   supportEffects?: SelectedSkillSupportTrace,
+  resistanceEffects?: SelectedSkillResistanceTrace,
 ): SparkCalculation {
   const damageScale = Math.max(0, 1 + hit.increasedDamagePercent / 100);
   const min = Math.floor(
@@ -594,7 +667,9 @@ export function selectedHitRules(
   const max = Math.floor(
     combinedBase.max * damageScale * (supportEffects?.spellDamageMultiplier ?? 1) + 0.5,
   );
-  const scale = 1 - hit.effectiveLightningResistancePercent / 100;
+  const effectiveLightningResistancePercent =
+    resistanceEffects?.effectiveResistancePercent ?? hit.effectiveLightningResistancePercent;
+  const scale = 1 - effectiveLightningResistancePercent / 100;
   const speed = Math.floor((1 + hit.increasedCastSpeedPercent / 100) * 100 + 0.5) / 100;
   const castsPerSecond = Math.min(
     speed / (hit.baseCastTimeSeconds * (supportEffects?.castTimeMultiplier ?? 1)),
@@ -608,6 +683,7 @@ export function selectedHitRules(
       max: max * scale,
       mean: ((min + max) / 2) * scale,
     },
+    effectiveLightningResistancePercent,
     castsPerSecond,
     castTimeSeconds: 1 / castsPerSecond,
     ruleProvenance: [

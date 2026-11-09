@@ -5,13 +5,15 @@ import {
   type Diagnostic,
   type SelectedSkillInput,
   type SelectedSkillSupport,
+  type SelectedLightningExposure,
+  type SourceRef,
   type SnapshotIdentity,
   type StatContribution,
 } from '@exile-engine/core';
 import { parseXml, XmlError, type PobXmlLimits, type XmlElement } from './xml.js';
 
 export { pobXmlLimits, type PobXmlLimits } from './xml.js';
-export const pobAdapterVersion = 'poe1-spark-xml-v4';
+export const pobAdapterVersion = 'poe1-spark-xml-v5';
 export const pobCompatibility = Object.freeze({
   status: 'bounded-poe1-spark-xml' as const,
   xmlImportImplemented: true as const,
@@ -86,6 +88,10 @@ const rules = [
     'spell_critical_strike_chance_+%',
   ],
   [/^\+([0-9]+)% to Global Critical Strike Multiplier$/, 'base_critical_strike_multiplier_+'],
+  [
+    /^Damage Penetrates ([0-9]+)% Lightning Resistance$/,
+    'base_reduce_enemy_lightning_resistance_%',
+  ],
 ] as const;
 const object = (value: unknown): value is Record<string, unknown> =>
   !!value && typeof value === 'object' && !Array.isArray(value);
@@ -385,11 +391,14 @@ export function importPobXml(
   const config = unique(root, 'Config');
   let resistance: number | undefined;
   let averageCriticalStrikes = false;
+  let maximumResistanceMode: 'configured' | 'default75' = 'configured';
+  let resistanceSource: SourceRef | undefined;
+  const exposures: SelectedLightningExposure[] = [];
   if (config) {
-    check(config, [], ['Input']);
+    check(config, [], ['Input', 'CustomModifierBlock']);
     const inputs = new Map<string, XmlElement>();
-    for (const input of config.children) {
-      check(input, ['name', 'number', 'string']);
+    for (const input of config.children.filter((child) => child.name === 'Input')) {
+      check(input, ['name', 'number', 'string', 'boolean']);
       const name = input.attributes.name ?? '';
       if (inputs.has(name))
         problem(
@@ -400,7 +409,7 @@ export function importPobXml(
           'ambiguous-stat',
         );
       inputs.set(name, input);
-      if (!['enemyIsBoss', 'enemyLightningResist', 'customMods'].includes(name))
+      if (!['enemyIsBoss', 'enemyLightningResist', 'enemyMaxResist', 'customMods'].includes(name))
         problem(
           'pob.unsupported-configuration',
           `Unsupported configuration ${name}.`,
@@ -411,17 +420,117 @@ export function importPobXml(
     const boss = inputs.get('enemyIsBoss');
     const crit = inputs.get('customMods');
     const resist = inputs.get('enemyLightningResist');
+    const maximum = inputs.get('enemyMaxResist');
+    const blocks = config.children.filter((child) => child.name === 'CustomModifierBlock');
+    let declaration: string | undefined;
+    if (blocks.length) {
+      if (crit)
+        problem(
+          'pob.ambiguous-assumptions',
+          'Legacy customMods and CustomModifierBlock cannot be mixed: the pinned PoB loader ignores the legacy declaration when blocks exist.',
+          { element: 'Config' },
+          crit.attributes.string ?? '',
+          'ambiguous-stat',
+        );
+      const titles = new Set<string>();
+      let assumptions = 0;
+      if (blocks.length > 9)
+        problem(
+          'pob.exposure-limit',
+          'At most one assumptions block and eight exposure blocks are supported.',
+          { element: 'Config' },
+          String(blocks.length),
+          'malformed-input',
+        );
+      for (const block of blocks) {
+        check(block, ['title', 'enabled'], [], true);
+        const title = block.attributes.title ?? '';
+        const enabled = block.attributes.enabled;
+        const text = block.text.trim();
+        if (
+          !title ||
+          title.length > 128 ||
+          titles.has(title) ||
+          !['true', 'false'].includes(enabled ?? '')
+        ) {
+          problem(
+            'pob.ambiguous-exposure-source',
+            'Modifier block titles must be nonempty, unique and bounded, with explicit enabled state.',
+            { element: 'CustomModifierBlock' },
+            JSON.stringify(block.attributes),
+            'ambiguous-stat',
+          );
+          continue;
+        }
+        titles.add(title);
+        if (title === 'Exile Engine Assumptions') {
+          assumptions++;
+          if (
+            enabled !== 'true' ||
+            !['Never deal Critical Strikes', 'Cannot inflict Elemental Ailments'].includes(text)
+          )
+            problem(
+              'pob.missing-configuration',
+              'The reserved assumptions block must be enabled and contain exactly one supported mode declaration.',
+              { element: 'CustomModifierBlock' },
+              block.text,
+              'malformed-input',
+            );
+          else declaration = text;
+          continue;
+        }
+        const match =
+          /^Inflict Lightning Exposure on Hit, applying -([0-9]+)% to Lightning Resistance$/.exec(
+            text,
+          );
+        const magnitude = match ? Number(match[1]) : NaN;
+        if (!match || !Number.isSafeInteger(magnitude) || magnitude > 100)
+          problem(
+            'pob.unsupported-exposure',
+            'Only an explicitly configured already-active lightning exposure magnitude from 0 through 100 is supported.',
+            { element: 'CustomModifierBlock' },
+            block.text,
+          );
+        else {
+          const line = block.text.split('\n').findIndex((value) => value.trim() !== '') + 1;
+          exposures.push({
+            statId: 'lightning_exposure_on_hit_magnitude',
+            value: -magnitude,
+            enabled: enabled === 'true',
+            source: {
+              kind: 'scenario',
+              id: `pob-config:exposure:${title}`,
+              label: block.text.split('\n')[line - 1]!,
+              line,
+            },
+          });
+        }
+      }
+      if (assumptions !== 1)
+        problem(
+          'pob.missing-configuration',
+          'A block profile requires exactly one reserved Exile Engine Assumptions block.',
+          { element: 'Config' },
+          String(assumptions),
+          'malformed-input',
+        );
+    } else if (
+      crit &&
+      crit.attributes.number === undefined &&
+      crit.attributes.boolean === undefined
+    )
+      declaration = crit.attributes.string;
     if (
       !boss ||
       boss.attributes.string !== 'None' ||
       boss.attributes.number !== undefined ||
-      !crit ||
+      boss.attributes.boolean !== undefined ||
       !['Never deal Critical Strikes', 'Cannot inflict Elemental Ailments'].includes(
-        crit.attributes.string ?? '',
+        declaration ?? '',
       ) ||
-      crit.attributes.number !== undefined ||
       !resist ||
       resist.attributes.string !== undefined ||
+      resist.attributes.boolean !== undefined ||
       !/^-?[0-9]+(?:\.[0-9]+)?$/.test(resist.attributes.number ?? '')
     )
       problem(
@@ -432,18 +541,38 @@ export function importPobXml(
         'malformed-input',
       );
     else {
-      averageCriticalStrikes = crit.attributes.string === 'Cannot inflict Elemental Ailments';
+      averageCriticalStrikes = declaration === 'Cannot inflict Elemental Ailments';
       resistance = Number(resist.attributes.number);
-      if (!Number.isFinite(resistance) || resistance < -200 || resistance > 90) {
+      if (!Number.isSafeInteger(resistance) || resistance < -1000 || resistance > 1000) {
         problem(
           'pob.invalid-resistance',
-          'PoB profile resistance must be between -200 and 90 percent; no cap is inferred.',
+          'Raw enemy lightning resistance must be an integer from -1000 through 1000 percent.',
           { element: 'Input', attribute: 'number' },
           resist.attributes.number ?? '',
           'malformed-input',
         );
         resistance = undefined;
       }
+      resistanceSource = {
+        kind: 'scenario',
+        id: 'pob-config:enemyLightningResist',
+        label: `enemyLightningResist=${resist.attributes.number}`,
+      };
+      if (
+        maximum &&
+        (maximum.attributes.number !== undefined ||
+          maximum.attributes.string !== undefined ||
+          !['true', 'false'].includes(maximum.attributes.boolean ?? ''))
+      )
+        problem(
+          'pob.unsupported-resistance-cap',
+          'enemyMaxResist must be an explicit boolean; arbitrary maximum resistance overrides are unsupported.',
+          { element: 'Input', attribute: 'boolean' },
+          JSON.stringify(maximum.attributes),
+          'malformed-input',
+        );
+      else
+        maximumResistanceMode = maximum?.attributes.boolean === 'true' ? 'default75' : 'configured';
     }
   }
   const items = unique(root, 'Items', false);
@@ -586,7 +715,11 @@ export function importPobXml(
           ((SELECTED_SPARK_CRITICAL_MODIFIER_STAT_IDS as readonly string[]).includes(
             matches[0]?.statId ?? '',
           ) &&
-            !Number.isSafeInteger(matches[0]?.value))
+            !Number.isSafeInteger(matches[0]?.value)) ||
+          (matches[0]?.statId === 'base_reduce_enemy_lightning_resistance_%' &&
+            (!Number.isSafeInteger(matches[0].value) ||
+              matches[0].value < 0 ||
+              matches[0].value > 200))
         )
           problem(
             matches.length > 1 ? 'pob.ambiguous-stat' : 'pob.unsupported-item-line',
@@ -609,7 +742,8 @@ export function importPobXml(
       }
     }
   }
-  if (diagnostics.length || !selected || resistance === undefined) return result();
+  if (diagnostics.length || !selected || resistance === undefined || !resistanceSource)
+    return result();
   return result({
     identity,
     buildId,
@@ -623,7 +757,12 @@ export function importPobXml(
     },
     configuration: {
       id: configurationId,
-      effectiveLightningResistancePercent: resistance,
+      lightningResistance: {
+        baseResistancePercent: resistance,
+        maximumResistanceMode,
+        source: resistanceSource,
+        exposures,
+      },
       ...(averageCriticalStrikes
         ? { criticalStrikeMode: 'average' as const, ailmentMode: 'excluded' as const }
         : {}),

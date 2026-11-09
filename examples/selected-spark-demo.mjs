@@ -17,7 +17,7 @@ export async function runSelectedSparkDemo(readShard, readXml) {
   const dataset = value(await loadSparkDataset(reader));
   const imported = importPobXml({
     format: 'pob-xml',
-    xml: await readXml('crit-combined'),
+    xml: await readXml('lightning-resistance-combined'),
     target: reader.identity,
     buildId: 'browser-synthetic-spark',
     configurationId: 'explicit-nonboss-25',
@@ -43,10 +43,44 @@ export async function runSelectedSparkDemo(readShard, readXml) {
     throw new Error(
       'Expected explicit average critical hits and Controlled Destruction less crit.',
     );
+  if (
+    initial.resistanceEffects.cappedResistancePercent !== 90 ||
+    initial.resistanceEffects.penetrationPercent !== 20 ||
+    initial.resistanceEffects.effectiveResistancePercent !== 70
+  )
+    throw new Error('Expected exposure before the cap and penetration after it.');
   const session = value(createSelectedSkillSession(imported.selectedSkill, dataset));
   const next = structuredClone(imported.selectedSkill);
   const reports = [];
   for (const change of [
+    () => {
+      next.configuration.lightningResistance.exposures[0].value = -25;
+    },
+    () => {
+      next.configuration.lightningResistance.exposures.push({
+        statId: 'lightning_exposure_on_hit_magnitude',
+        value: -30,
+        enabled: true,
+        source: { kind: 'scenario', id: 'browser-extra-exposure' },
+      });
+    },
+    () => {
+      next.configuration.lightningResistance.exposures[0].enabled = false;
+    },
+    () => {
+      next.configuration.lightningResistance.exposures.splice(1, 1);
+    },
+    () => {
+      next.configuration.lightningResistance.exposures[0].enabled = true;
+    },
+    () => {
+      next.configuration.lightningResistance.maximumResistanceMode = 'default75';
+    },
+    () => {
+      next.modifiers.find(
+        (mod) => mod.statId === 'base_reduce_enemy_lightning_resistance_%',
+      ).value += 5;
+    },
     () => {
       next.modifiers.find((mod) => mod.statId === 'critical_strike_chance_+%').value += 25;
     },
@@ -89,7 +123,7 @@ export async function runSelectedSparkDemo(readShard, readXml) {
       next.modifiers[0].value += 10;
     },
     () => {
-      next.configuration.effectiveLightningResistancePercent = 50;
+      next.configuration.lightningResistance.baseResistancePercent = 50;
     },
     () => {
       next.modifiers[0].statId = 'base_cast_speed_+%';
@@ -105,6 +139,15 @@ export async function runSelectedSparkDemo(readShard, readXml) {
     reports.push({
       recalculated: report.recalculated,
       combinedDps: report.calculation.combinedDps,
+      resistanceEffects: {
+        baseResistancePercent: report.calculation.resistanceEffects.baseResistancePercent,
+        exposurePercent: report.calculation.resistanceEffects.exposurePercent,
+        uncappedResistancePercent: report.calculation.resistanceEffects.uncappedResistancePercent,
+        cappedResistancePercent: report.calculation.resistanceEffects.cappedResistancePercent,
+        penetrationPercent: report.calculation.resistanceEffects.penetrationPercent,
+        effectiveResistancePercent: report.calculation.resistanceEffects.effectiveResistancePercent,
+        selectedExposureIndices: report.calculation.resistanceEffects.selectedExposureIndices,
+      },
       addedLightningDamage: report.calculation.addedLightningDamage,
       supportEffects: {
         spellDamageMultiplier: report.calculation.supportEffects.spellDamageMultiplier,

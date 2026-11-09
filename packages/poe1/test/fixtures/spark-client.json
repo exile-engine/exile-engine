@@ -147,6 +147,18 @@
         "Id": "base_critical_strike_multiplier_+",
         "IsLocal": false,
         "IsWeaponLocal": false
+      },
+      {
+        "_index": 597,
+        "Id": "base_reduce_enemy_lightning_resistance_%",
+        "IsLocal": false,
+        "IsWeaponLocal": false
+      },
+      {
+        "_index": 16084,
+        "Id": "lightning_exposure_on_hit_magnitude",
+        "IsLocal": false,
+        "IsWeaponLocal": false
       }
     ],
     "GrantedEffects": [

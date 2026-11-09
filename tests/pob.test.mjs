@@ -36,6 +36,16 @@ const fixtures = Object.fromEntries(
       'crit-zero',
       'crit-rounded',
       'crit-combined',
+      'lightning-penetration',
+      'lightning-exposure',
+      'lightning-exposure-strongest',
+      'lightning-exposure-disabled',
+      'lightning-overcap',
+      'lightning-fixed-cap',
+      'lightning-negative',
+      'lightning-floor',
+      'lightning-penetration-sum',
+      'lightning-resistance-combined',
     ].map(async (name) => [
       name,
       await readFile(new URL(`./fixtures/pob/${name}.xml`, import.meta.url), 'utf8'),
@@ -49,9 +59,23 @@ const source = (xml = fixtures.baseline) => ({
   buildId: 'synthetic-spark',
   configurationId: 'explicit-enemy',
 });
+const rawResistance = (
+  baseResistancePercent,
+  maximumResistanceMode = 'configured',
+  exposures = [],
+) => ({
+  baseResistancePercent,
+  maximumResistanceMode,
+  source: {
+    kind: 'scenario',
+    id: 'pob-config:enemyLightningResist',
+    label: `enemyLightningResist=${baseResistancePercent}`,
+  },
+  exposures,
+});
 
 test('PoB capability advertises exactly the bounded XML profile', () => {
-  assert.equal(pobAdapterVersion, 'poe1-spark-xml-v4');
+  assert.equal(pobAdapterVersion, 'poe1-spark-xml-v5');
   assert.equal(pobCompatibility.status, 'bounded-poe1-spark-xml');
   assert.equal(pobCompatibility.xmlImportImplemented, true);
   assert.equal(pobCompatibility.shareCodeImportImplemented, false);
@@ -208,7 +232,7 @@ test('all bounded added-lightning fixtures adapt raw endpoints without applying 
   assert.equal(combined.modifiers.length, 5);
   assert.equal(combined.addedLightningDamage.length, 1);
   assert.equal(combined.modifiers[0].source.line, 6);
-  assert.equal(combined.selectedSkill.configuration.effectiveLightningResistancePercent, 25);
+  assert.equal(combined.selectedSkill.configuration.lightningResistance.baseResistancePercent, 25);
   const absent = importPobXml(source());
   assert.deepEqual(absent.addedLightningDamage, []);
   assert.equal('addedLightningDamage' in absent.selectedSkill, false);
@@ -273,7 +297,7 @@ test('one same-group normal Controlled Destruction support retains explicit stat
   const combined = importPobXml(source(fixtures['support-controlled-destruction-combined']));
   assert.equal(combined.modifiers.length, 5);
   assert.deepEqual(combined.addedLightningDamage[0].values, [10, 20]);
-  assert.equal(combined.selectedSkill.configuration.effectiveLightningResistancePercent, 25);
+  assert.equal(combined.selectedSkill.configuration.lightningResistance.baseResistancePercent, 25);
   assert.deepEqual(importPobXml(source()).supports, []);
 });
 
@@ -342,7 +366,7 @@ test('average critical fixtures require the exact excluded-ailment declaration a
     assert.equal(imported.complete, true, name + JSON.stringify(imported.diagnostics));
     assert.deepEqual(imported.selectedSkill.configuration, {
       id: 'explicit-enemy',
-      effectiveLightningResistancePercent: name === 'crit-combined' ? 25 : 0,
+      lightningResistance: rawResistance(name === 'crit-combined' ? 25 : 0),
       criticalStrikeMode: 'average',
       ailmentMode: 'excluded',
     });
@@ -361,7 +385,7 @@ test('average critical fixtures require the exact excluded-ailment declaration a
   assert.equal(disabled.complete, true);
   assert.deepEqual(disabled.selectedSkill.configuration, {
     id: 'explicit-enemy',
-    effectiveLightningResistancePercent: 0,
+    lightningResistance: rawResistance(0),
   });
   assert.equal(disabled.modifiers.length, 2);
 });
@@ -462,6 +486,159 @@ test('missing ailment policy, lucky crits, flat crit, charges, local or conditio
   }
 });
 
+test('all lightning resistance fixtures preserve raw configured values, cap mode and scenario identity', () => {
+  const expected = {
+    'lightning-penetration': 75,
+    'lightning-exposure': 75,
+    'lightning-exposure-strongest': 75,
+    'lightning-exposure-disabled': 75,
+    'lightning-overcap': 110,
+    'lightning-fixed-cap': 110,
+    'lightning-negative': -50,
+    'lightning-floor': -190,
+    'lightning-penetration-sum': 75,
+    'lightning-resistance-combined': 110,
+  };
+  for (const [name, resistance] of Object.entries(expected)) {
+    const imported = importPobXml(source(fixtures[name]));
+    assert.equal(imported.complete, true, name + JSON.stringify(imported.diagnostics));
+    assert.equal(
+      'effectiveLightningResistancePercent' in imported.selectedSkill.configuration,
+      false,
+    );
+    const raw = imported.selectedSkill.configuration.lightningResistance;
+    assert.equal(raw.baseResistancePercent, resistance);
+    assert.equal(
+      raw.maximumResistanceMode,
+      name === 'lightning-fixed-cap' ? 'default75' : 'configured',
+    );
+    assert.deepEqual(raw.source, rawResistance(resistance).source);
+    assert.equal(imported.selectedSkill.configuration.id, 'explicit-enemy');
+    assert.equal(imported.rawXml, fixtures[name]);
+  }
+  const legacyXml = importPobXml(source());
+  assert.deepEqual(legacyXml.selectedSkill.configuration.lightningResistance, rawResistance(0));
+  assert.equal(
+    importPobXml(source(fixtures.baseline.replace('number="0"', 'number="100"'))).complete,
+    true,
+  );
+});
+
+test('penetration stays in the ordered scalar list and exposure blocks retain every candidate and enabled state', () => {
+  const pen = importPobXml(source(fixtures['lightning-penetration-sum']));
+  assert.deepEqual(
+    pen.modifiers.map(({ statId, value, source, scope }) => ({ statId, value, source, scope })),
+    [10, 20].map((value, index) => ({
+      statId: 'base_reduce_enemy_lightning_resistance_%',
+      value,
+      scope: 'global',
+      source: {
+        kind: 'item',
+        id: 'pob-item:1',
+        line: index + 5,
+        label: `Damage Penetrates ${value}% Lightning Resistance`,
+      },
+    })),
+  );
+  const exposure = (value, index, enabled = true) => ({
+    statId: 'lightning_exposure_on_hit_magnitude',
+    value,
+    enabled,
+    source: {
+      kind: 'scenario',
+      id: `pob-config:exposure:Exposure ${index + 1}`,
+      label: `Inflict Lightning Exposure on Hit, applying ${value}% to Lightning Resistance`,
+      line: 1,
+    },
+  });
+  const strongest = importPobXml(source(fixtures['lightning-exposure-strongest']));
+  assert.deepEqual(strongest.selectedSkill.configuration.lightningResistance.exposures, [
+    exposure(-10, 0),
+    exposure(-25, 1),
+  ]);
+  const disabled = importPobXml(source(fixtures['lightning-exposure-disabled']));
+  assert.deepEqual(disabled.selectedSkill.configuration.lightningResistance.exposures, [
+    exposure(-10, 0),
+    exposure(-25, 1, false),
+  ]);
+  const combined = importPobXml(source(fixtures['lightning-resistance-combined']));
+  assert.equal(combined.modifiers.length, 9);
+  assert.equal(combined.modifiers.at(-1).statId, 'base_reduce_enemy_lightning_resistance_%');
+  assert.equal(combined.supports[0].enabled, true);
+  assert.equal(combined.selectedSkill.configuration.criticalStrikeMode, 'average');
+  assert.deepEqual(combined.addedLightningDamage[0].values, [10, 20]);
+  const zero = importPobXml(
+    source(fixtures['lightning-exposure'].replace('applying -15%', 'applying -0%')),
+  );
+  assert.equal(zero.complete, true);
+  assert.equal(
+    Object.is(zero.selectedSkill.configuration.lightningResistance.exposures[0].value, -0),
+    true,
+  );
+});
+
+test('mixed custom formats, unknown exposure blocks and unsupported cap or penetration mechanics fail visibly', () => {
+  const exposed = fixtures['lightning-exposure'];
+  const block =
+    '<CustomModifierBlock title="Exposure 1" enabled="true">Inflict Lightning Exposure on Hit, applying -15% to Lightning Resistance</CustomModifierBlock>';
+  assert.ok(exposed.includes(block));
+  const malformed = [
+    exposed.replace(
+      '</Config>',
+      '<Input name="customMods" string="Never deal Critical Strikes"/></Config>',
+    ),
+    exposed.replace(
+      'title="Exile Engine Assumptions" enabled="true"',
+      'title="Exile Engine Assumptions" enabled="false"',
+    ),
+    exposed.replace('title="Exile Engine Assumptions"', 'title="Unknown Assumptions"'),
+    exposed.replace(block, block + block),
+    exposed.replace('applying -15%', 'applying -101%'),
+    exposed.replace('applying -15%', 'applying -15.5%'),
+    exposed.replace('Lightning Exposure', 'Fire Exposure'),
+    exposed.replace(
+      block,
+      block
+        .replace('enabled="true"', 'enabled="false"')
+        .replace(
+          'Inflict Lightning Exposure on Hit, applying -15% to Lightning Resistance',
+          'Damage is Lucky',
+        ),
+    ),
+    exposed.replace('boolean="false"', 'number="75"'),
+    exposed.replace('number="75"', 'number="75.5"'),
+    exposed.replace('number="75"', 'number="-1001"'),
+    exposed.replace(
+      '</Config>',
+      '<Input name="enemyMaximumLightningResist" number="85"/></Config>',
+    ),
+    exposed.replace(
+      block,
+      Array.from({ length: 9 }, (_, index) =>
+        block.replace('Exposure 1', `Exposure ${index + 1}`),
+      ).join(''),
+    ),
+    ...[
+      'Damage Penetrates 201% Lightning Resistance',
+      'Damage Penetrates -1% Lightning Resistance',
+      'Damage Penetrates 10.5% Lightning Resistance',
+      'Damage Penetrates 10% Elemental Resistances',
+      'Damage Penetrates 10% Lightning Resistance while on Full Life',
+      'Damage Penetrates 10% Lightning Resistance (local)',
+    ].map((line) =>
+      fixtures['lightning-penetration'].replace('Damage Penetrates 20% Lightning Resistance', line),
+    ),
+  ];
+  for (const xml of malformed) {
+    const imported = importPobXml(source(xml));
+    assert.equal(imported.complete, false, xml);
+    assert.equal('selectedSkill' in imported, false);
+    assert.ok(imported.unresolved.length);
+    assert.equal(imported.rawXml, xml);
+  }
+  assert.equal(importPobXml(source(malformed[0])).diagnostics[0].code, 'pob.ambiguous-assumptions');
+});
+
 test('ambiguous selection, unsupported version hints and mechanics fail visibly', () => {
   const variants = [
     fixtures.baseline.replace('skillId="Spark"', 'skillId="VaalSpark"'),
@@ -478,7 +655,7 @@ test('ambiguous selection, unsupported version hints and mechanics fail visibly'
       '</Config>',
       '<Input name="conditionEnemyShocked" boolean="true"/></Config>',
     ),
-    fixtures.baseline.replace('number="0"', 'number="100"'),
+    fixtures.baseline.replace('number="0"', 'number="1001"'),
     fixtures.baseline.replace(
       '</PathOfBuilding>',
       '<Tree><Spec nodes="123"/></Tree></PathOfBuilding>',

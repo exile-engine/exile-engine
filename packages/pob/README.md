@@ -2,7 +2,7 @@
 
 Bounded, portable PoE1 normal Spark XML adaptation. This is a deliberately small synthetic fixture profile, not a complete character importer.
 
-`importPobXml({ format: 'pob-xml', xml, target, buildId, configurationId })` returns `complete`, diagnostics, retained unresolved fields, original bounded XML, ordered damage/cast-speed/critical contributions, grouped `addedLightningDamage` contributions, typed `supports` and, only when adaptation is complete, `selectedSkill`. Adapter revision is `poe1-spark-xml-v4`. Pass that canonical input to `calculateSelectedSkill` in `@exile-engine/poe1`. Adaptation does not prove later calculation will succeed (for example, invalid aggregate cast speed or an overflowing added-damage aggregate still fails calculation). `target` is the exact host-reviewed PoE1 game/build/snapshot binding; PoB XML does not establish a client snapshot by itself. Build and configuration IDs are explicit host identities and remain attached to the selected input.
+`importPobXml({ format: 'pob-xml', xml, target, buildId, configurationId })` returns `complete`, diagnostics, retained unresolved fields, original bounded XML, ordered damage/cast-speed/critical/penetration contributions, grouped `addedLightningDamage` contributions, typed `supports` and, only when adaptation is complete, `selectedSkill`. Adapter revision is `poe1-spark-xml-v5`. Pass that canonical input to `calculateSelectedSkill` in `@exile-engine/poe1`. Adaptation does not prove later calculation will succeed (for example, invalid aggregate cast speed, penetration totals above 200 or an overflowing added-damage aggregate still fails calculation). `target` is the exact host-reviewed PoE1 game/build/snapshot binding; PoB XML does not establish a client snapshot by itself. Build and configuration IDs are explicit host identities and remain attached to the selected input.
 
 The accepted profile has explicit `Build targetVersion="3_0"`, one level 1 Witch with no ascendancy or allocated passives; one enabled normal Spark identified by both `Spark` and `Metadata/Items/Gems/SkillGemSpark`; `mainSocketGroup="1"`, `mainActiveSkill="1"`, and explicit legacy `Skill skillPart="1"` selecting **1 Hit**. Missing targetVersion is rejected: the pinned PoB reference otherwise interprets the file as legacy 2_6 and prompts conversion. Levels 1–40 and ordinary quality 0–100 are accepted. `Build/PlayerStat` saved outputs are ignored; they never supply calculation inputs. Optional plain Notes are data only. An omitted Items section means no equipment; an included Items section uses active set 1 and at most one equipped Body Armour item.
 
@@ -10,29 +10,42 @@ Spark must be the first `Gem`. The same selected `Skill` group may contain exact
 
 The adapter does not manufacture support modifiers. The PoE1 calculator resolves this support's client facts and records its more spell damage, less critical chance and explicit cast-time factor 1. Disabled critical mode keeps the less-critical-chance mechanic outside the numeric hit result while retaining its provenance; average critical mode applies it to the chance calculation. Additional supports remain unsupported.
 
-Enemy configuration must explicitly supply `enemyIsBoss` string `None`, `enemyLightningResist` number between -200 and 90, and one of two exact `customMods` strings:
+Enemy configuration must explicitly supply `enemyIsBoss` string `None` and integer `enemyLightningResist` from -1000 through 1000. **Version 5 maps every XML document to raw `configuration.lightningResistance`**, containing the unchanged `baseResistancePercent`, `maximumResistanceMode`, explicit scenario `source`, and `exposures`. This replaces the adapter's earlier effective-resistance output shape; the existing XML fixture bytes and assumptions remain valid. Direct engine callers can still use the separate legacy effective-resistance profile, which must not be combined with penetration or modeled exposure.
+
+Without modifier blocks, configuration also requires one of two exact `customMods` strings:
 
 - **`Never deal Critical Strikes`** preserves the original noncritical profile. Optional canonical critical/ailment fields remain absent, with critical mode defaulting to disabled.
 - **`Cannot inflict Elemental Ailments`** selects `{ criticalStrikeMode: 'average', ailmentMode: 'excluded' }`. The pinned PoB literal excludes elemental ailments so average critical hits do not silently add shock or other ailment effects. This mode includes only the supported chance/multiplier average-hit calculation.
 
-The strings are exact data declarations. Combining them, supplying arbitrary custom modifiers, omitting the explicit policy, adding enemy shock, lucky critical chance, charges or other critical mechanics produces unresolved diagnostics. No other resistance effects are accepted, so configured resistance equals effective resistance. Values above 90 are rejected rather than silently reproducing PoB's cap. Missing configuration fails visibly.
+The strings are exact data declarations. Combining them, supplying arbitrary custom modifiers, omitting the explicit policy, adding enemy shock, lucky critical chance, charges or other critical mechanics produces unresolved diagnostics. Missing configuration fails visibly.
+
+Optional standard input `enemyMaxResist` is strictly boolean. `true` maps to `maximumResistanceMode: 'default75'`; `false` or omission maps to `'configured'`. The pinned configured rule derives the maximum as `min(max(raw base resistance, 75), 90)`, while default75 fixes it at 75. Arbitrary numeric maximum-resistance overrides are unsupported. The base scenario source is `pob-config:enemyLightningResist`, with the original numeric text retained in its label.
+
+Exposure requires the standard **block profile**: direct `Config/CustomModifierBlock` elements, each with a unique nonempty title of at most 128 characters and explicit `enabled="true"` or `"false"`. Exactly one reserved block titled **`Exile Engine Assumptions`** must be enabled and contain one of the two exact mode declarations above. Do not include legacy `Input name="customMods"` when blocks exist: the pinned PoB loader ignores that input in this case, so the adapter rejects the mixture.
+
+Every other block must contain exactly **`Inflict Lightning Exposure on Hit, applying -N% to Lightning Resistance`**, with integer N from 0 through 100. At most eight exposure candidates are accepted. Each becomes `{ statId: 'lightning_exposure_on_hit_magnitude', value: -N, enabled, source }`; scenario source IDs retain the title as `pob-config:exposure:<title>`, plus original text-line label and line number. Disabled candidates and ties remain individual inputs. This configured scenario explicitly assumes exposure is already active. The adapter does not infer on-hit activation, uptime or temporal behavior from Spark or item text. Unknown blocks remain unsupported even when disabled.
+
+The calculation uses the strongest enabled negative exposure once, then clamps resistance to its configured maximum and the -200 floor, then subtracts penetration. Penetration can therefore produce an effective resistance below -200; no second floor is applied. Exposure does not sum, and penetration does not change the configured maximum. Curses, elemental equilibrium, other elements and conditional resistance mechanics remain unsupported.
 
 Item text is restricted to `Rarity: RARE`, `Synthetic Spark Fixture`, `Simple Robe`, `Implicits: 0`, then explicit English modifier lines matching the following table. No affix legality or complete equipment validation is claimed. This narrow grammar is an explicit mapping, not an arbitrary display-label replacement for stat identity. Increased/reduced values map to positive/negative percentage points. Repeated occurrences retain their order, raw line label, item ID and one-based line within the original decoded Item text, including leading empty lines.
 
-| Exact line suffix                                   | Game stat ID                        |
-| --------------------------------------------------- | ----------------------------------- |
-| increased/reduced Damage                            | `damage_+%`                         |
-| increased/reduced Spell Damage                      | `spell_damage_+%`                   |
-| increased/reduced Lightning Damage                  | `lightning_damage_+%`               |
-| increased/reduced Projectile Damage                 | `projectile_damage_+%`              |
-| increased/reduced Cast Speed                        | `base_cast_speed_+%`                |
-| increased/reduced Critical Strike Chance            | `critical_strike_chance_+%`         |
-| increased/reduced Critical Strike Chance for Spells | `spell_critical_strike_chance_+%`   |
-| `+X% to Global Critical Strike Multiplier`          | `base_critical_strike_multiplier_+` |
+| Exact line suffix                                   | Game stat ID                               |
+| --------------------------------------------------- | ------------------------------------------ |
+| increased/reduced Damage                            | `damage_+%`                                |
+| increased/reduced Spell Damage                      | `spell_damage_+%`                          |
+| increased/reduced Lightning Damage                  | `lightning_damage_+%`                      |
+| increased/reduced Projectile Damage                 | `projectile_damage_+%`                     |
+| increased/reduced Cast Speed                        | `base_cast_speed_+%`                       |
+| increased/reduced Critical Strike Chance            | `critical_strike_chance_+%`                |
+| increased/reduced Critical Strike Chance for Spells | `spell_critical_strike_chance_+%`          |
+| `+X% to Global Critical Strike Multiplier`          | `base_critical_strike_multiplier_+`        |
+| `Damage Penetrates N% Lightning Resistance`         | `base_reduce_enemy_lightning_resistance_%` |
 
 Each of the five damage/cast-speed line patterns begins with a nonnegative decimal number followed by `% `.
 
 The three critical line patterns require nonnegative safe integers. The multiplier line begins with a literal `+`, then an integer and `% to Global Critical Strike Multiplier`; its value is additive multiplier percentage points. Decimal critical text is rejected: an executed pinned PoB check found that `12.34% increased Critical Strike Chance for Spells` did not apply as a complete modifier. The rounded-chance fixture instead uses an authored integer 17% spell increase with Controlled Destruction's less critical chance, producing a fractional chance before rounding. Critical entries share the same ordered `modifiers` list as damage and cast speed, retaining every occurrence and original item-line provenance. The calculation separates their applicable effects. Supported critical lines are retained when critical mode is disabled and cannot accidentally become damage increases. Flat base critical chance, attack-only chance, spell-specific multiplier, local or conditional critical effects, lucky chance and charge mechanics are outside this grammar.
+
+Penetration N is an integer from 0 through 200; individual occurrences remain ordered scalar contributions with their original item-line provenance. Fractional, negative, conditional, local or generic elemental penetration text is unsupported. The calculation additionally requires the sum to remain at most 200.
 
 The sole added-damage grammar is **`Adds X to Y Lightning Damage to Spells`**, with nonnegative safe integer endpoints and `X <= Y`, matching the pinned PoB integer parser. This maps to one ordered group: `statIds: ['spell_minimum_added_lightning_damage', 'spell_maximum_added_lightning_damage']`, `values: [X, Y]`, `scope: 'global'`, and one shared item-line source. The adapter retains raw endpoints and repeated groups individually; it does not apply effectiveness or sum, reorder or flatten the pair. A zero pair remains an explicit contribution. The selected calculator applies the client Spark added-damage effectiveness and the documented hit rounding. Decimal, reversed or unsafe endpoints, generic added damage without `to Spells`, attack-only damage, other elements, local and conditional lines remain unsupported or malformed. These groups are separate from `modifiers`; a build without them has an empty imported group list and omits the optional selected-input field.
 

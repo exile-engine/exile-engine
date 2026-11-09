@@ -25,7 +25,7 @@ The PoB package imports a bounded PoE1 XML subset: explicitly selected normal Sp
 
 ## PoE1 selected-skill calculation
 
-`calculateSelectedSkill` and `createSelectedSkillSession` support the five increased-damage/cast-speed IDs above and unconditional spell added lightning, grouped as the exact ordered pair `spell_minimum_added_lightning_damage`, `spell_maximum_added_lightning_damage`. Both require game/build/snapshot, build ID, skill selection and configuration ID. Enemy resistance is explicit effective lightning resistance between -200% and 90%; resistance caps, exposure and penetration are not inferred. Damage totals below -100% and rounded cast-speed multipliers at or below zero are rejected.
+`calculateSelectedSkill` and `createSelectedSkillSession` support the five increased-damage/cast-speed IDs above and unconditional spell added lightning, grouped as the exact ordered pair `spell_minimum_added_lightning_damage`, `spell_maximum_added_lightning_damage`. Both require game/build/snapshot, build ID, skill selection and configuration ID. Configuration chooses exactly one lightning-resistance profile: the previous already-effective value, or the explicit raw/exposure/cap model below. Damage totals below -100% and rounded cast-speed multipliers at or below zero are rejected.
 
 The optional `addedLightningDamage` input holds at most 1,000 groups, each with `statIds`, `values: [minimum, maximum]`, and shared `source` provenance. Endpoints and their aggregate sums must be nonnegative safe integers, with minimum at most maximum. Repeated and zero-valued groups remain separate and ordered. Unpaired endpoint modifiers, generic/attack added lightning, other elements, local/conditional effects and arbitrary added-damage multipliers are unsupported. The XML grammar accepts only `Adds X to Y Lightning Damage to Spells` with integer endpoints; no affix legality is inferred for synthetic items.
 
@@ -66,6 +66,33 @@ Critical endpoints multiply the already rounded noncritical endpoints by the cri
 Chance, multiplier, critical mode and support mutations are checked against fresh full recomputation, including modifier insertion/removal and reclassification between critical, damage and cast categories. A mode-only edit reuses normal damage and cast values. Support less-crit applicability changes with critical mode; missing or unsupported configurations cannot become successful zero-DPS placeholders.
 
 Fresh calculation recomputes all supported rules. Sessions cache derived nodes and report exactly what was recomputed. Item value changes, modifier insertion/removal or damage/cast-speed reclassification, added-range edits and group insertion/removal, resistance changes and skill/quality changes are tested against fresh full results. Gem-level changes invalidate effectiveness/combined base while retaining raw added sums. No conditional rule is accepted. Feedback graphs are explicitly rejected until a bounded solver is defined. See [reference evidence](pob-reference.md) and [performance record](selected-skill-performance.md).
+
+## Lightning resistance, exposure and penetration
+
+The configured profile is `configuration.lightningResistance: { baseResistancePercent, maximumResistanceMode, source, exposures }`, mutually exclusive with `effectiveLightningResistancePercent`. Raw resistance is an integer from -1000% through 1000%, and its source is an explicit scenario `SourceRef`. `maximumResistanceMode` is either `'configured'` or `'default75'`. There is no arbitrary maximum-resistance override, curse, scorch, inversion or critical-only resistance rule in this slice.
+
+Each of at most eight exposure candidates is `{ statId: 'lightning_exposure_on_hit_magnitude', value, enabled, source }`. Values are integers from -100 through 0 percentage points and sources are explicit scenario identities. These are **already-active enemy exposure assumptions**, not predictions of application chance, first-hit timing or uptime. Only the strongest enabled negative magnitude applies. Weaker, disabled and zero candidates remain in the trace; tied strongest indices are all retained while the magnitude applies once. Exposure never stacks additively.
+
+The existing ordered `modifiers` array accepts one additional exact ID, `base_reduce_enemy_lightning_resistance_%`, for unconditional lightning penetration. Every occurrence retains its item/source identity. Values are nonnegative integer percentage points; each and their sum are bounded to 0–200. Penetration is separate from damage increases, chance and cast speed. Local, conditional, weapon-only, critical-only and other-element penetration remain unsupported. A penetration occurrence is rejected with the already-effective profile, including a zero occurrence, because its inclusion in an already-effective number would be ambiguous.
+
+The pinned PoB profile computes these stages, without intermediate damage rounding:
+
+```text
+exposure = strongest enabled negative magnitude, or 0
+uncapped = raw base resistance + exposure
+maximum = configured ? min(max(raw base resistance, 75), 90) : 75
+capped = max(-200, min(uncapped, maximum))
+effective = capped - total lightning penetration
+damage multiplier = 1 - effective / 100
+```
+
+Exposure applies before the resistance cap/floor. Penetration applies after both, with **no second -200% floor**: raw -190%, exposure -30%, and penetration 20% resolves to -220% effective resistance and a 3.2 damage factor. Raw 110%, exposure -15% and penetration 20% resolves to 70% in configured-maximum mode, or 55% in default-75 mode. Configured mode reproduces PoB's explicit enemy-resistance input behavior; this does not model every enemy's maximum resistance. The default-75 mode corresponds to PoB `enemyMaxResist=true`; false or absent uses configured mode. Fixed rule constants and ordering are attributed to the pinned reference, not fabricated client constant rows.
+
+`resistanceEffects` reports raw, exposure, uncapped, maximum/minimum, capped, penetration and effective values, damage factor, every candidate/contribution, selected exposure indices, configuration source, rule source and exact stat rows. Normal and critical hits use the same resolved resistance. The selected path can report effective values below -200%; the original isolated-hit API retains its earlier bounds and input contract.
+
+The adapter now treats every XML `enemyLightningResist` as raw and emits this configured profile, while the previous fixture bytes and DPS values remain unchanged. Exposure fixtures use standard `Config/CustomModifierBlock` records with unique titles and explicit enabled flags. A reserved enabled `Exile Engine Assumptions` block supplies exactly the noncritical or excluded-ailment declaration; exposure blocks contain only `Inflict Lightning Exposure on Hit, applying -N% to Lightning Resistance`. The enabled block explicitly declares an already-active exposure for the comparison. It does not import a probabilistic on-hit mechanic. The pinned PoB loader ignores legacy `Input customMods` when blocks exist, so the adapter rejects mixed block/legacy declarations instead of silently losing the critical/ailment policy.
+
+Direct callers may retain the earlier `effectiveLightningResistancePercent` profile, bounded to -200% through 90%. That number is used as supplied, with null cap/floor trace fields and no inferred exposure or penetration. Configured profiles require matching normalized resistance facts; missing, mixed, inherited or unsupported profile data fails visibly. Fresh and incremental checks cover cap crossings, exposure competition and membership, penetration edits/reclassification, profile transitions and provenance. Cast and pre-resistance damage values are reused for resistance-only updates.
 
 ## Data coverage
 

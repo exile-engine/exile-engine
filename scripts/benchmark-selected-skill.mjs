@@ -38,7 +38,25 @@ const initial = {
   },
   configuration: {
     id: 'benchmark-enemy',
-    effectiveLightningResistancePercent: 25,
+    lightningResistance: {
+      baseResistancePercent: 100,
+      maximumResistanceMode: 'configured',
+      source: { kind: 'scenario', id: 'synthetic-enemy-resistance', line: 1 },
+      exposures: [
+        {
+          statId: 'lightning_exposure_on_hit_magnitude',
+          value: -10,
+          enabled: true,
+          source: { kind: 'scenario', id: 'synthetic-exposure-1', line: 1 },
+        },
+        {
+          statId: 'lightning_exposure_on_hit_magnitude',
+          value: -25,
+          enabled: false,
+          source: { kind: 'scenario', id: 'synthetic-exposure-2', line: 1 },
+        },
+      ],
+    },
     criticalStrikeMode: 'average',
     ailmentMode: 'excluded',
   },
@@ -62,6 +80,11 @@ const initial = {
       statId: 'base_critical_strike_multiplier_+',
       value: 50,
       source: { kind: 'item', id: 'synthetic-critical-multiplier', line: 1 },
+    },
+    {
+      statId: 'base_reduce_enemy_lightning_resistance_%',
+      value: 15,
+      source: { kind: 'item', id: 'synthetic-lightning-penetration', line: 1 },
     },
   ],
   addedLightningDamage: [
@@ -88,13 +111,17 @@ for (const mutation of [
   'critical-multiplier',
   'critical-mode',
   'critical-applicability',
+  'exposure-strength',
+  'exposure-enabled',
+  'lightning-penetration',
+  'penetration-applicability',
 ]) {
   const states = [];
   const next = structuredClone(initial);
   for (let index = 0; index < size; index++) {
     if (mutation === 'item-value') next.modifiers[1].value = index % 101;
     if (mutation === 'enemy-resistance')
-      next.configuration.effectiveLightningResistancePercent = index % 91;
+      next.configuration.lightningResistance.baseResistancePercent = (index % 151) - 25;
     if (mutation === 'applicability')
       next.modifiers[1].statId = index % 2 === 0 ? 'spell_damage_+%' : 'base_cast_speed_+%';
     if (mutation === 'added-lightning-range')
@@ -108,6 +135,14 @@ for (const mutation of [
     if (mutation === 'critical-applicability')
       next.modifiers[32].statId =
         index % 2 === 0 ? 'critical_strike_chance_+%' : 'base_critical_strike_multiplier_+';
+    if (mutation === 'exposure-strength')
+      next.configuration.lightningResistance.exposures[0].value = -(index % 51);
+    if (mutation === 'exposure-enabled')
+      next.configuration.lightningResistance.exposures[1].enabled = index % 2 === 0;
+    if (mutation === 'lightning-penetration') next.modifiers[35].value = index % 101;
+    if (mutation === 'penetration-applicability')
+      next.modifiers[35].statId =
+        index % 2 === 0 ? 'base_reduce_enemy_lightning_resistance_%' : 'spell_damage_+%';
     states.push(structuredClone(next));
   }
   const check = value(createSelectedSkillSession(initial, dataset));
@@ -164,13 +199,14 @@ for (const mutation of [
 console.log(
   JSON.stringify(
     {
-      benchmark: 'selected-skill-batches-v4',
+      benchmark: 'selected-skill-batches-v5',
       engineRevision: selectedSkillEngineRevision,
       node: process.version,
       identity: dataset.identity,
       modifierCount: initial.modifiers.length,
       addedLightningGroupCount: initial.addedLightningDamage.length,
       supportCount: initial.skill.supports.length,
+      exposureCandidateCount: initial.configuration.lightningResistance.exposures.length,
       timing:
         'performance.now; session creation and equality assertions excluded; alternating trial order; median of five warm batches',
       reports,
