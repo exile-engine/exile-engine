@@ -19,3 +19,14 @@ export function calculateSpark(input: SparkInput, dataset: SparkDataset) {
 }
 
 export type { SparkInput, SparkDataset, SparkCalculation } from '@exile-engine/core';
+export { calculateSelectedSkill, selectedSkillEngineRevision } from './selected-skill.js';
+export type {
+  SelectedSkillInput,
+  SelectedSkillCalculation,
+  SelectedSkillConfiguration,
+  SelectedSkillSelection,
+} from '@exile-engine/core';
+export { createSelectedSkillSession } from './incremental.js';
+export type { IncrementalSelectedSkillReport, SelectedSkillSession } from './incremental.js';
+export { planCalculationGraph } from './graph.js';
+export type { CalculationDependencies } from './graph.js';

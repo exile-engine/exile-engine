@@ -38,6 +38,7 @@
     <script type="module">
       import { runSparkDemo } from '/examples/spark-demo.mjs';
       import { pobCompatibility } from '@exile-engine/pob';
+      import { runSelectedSparkDemo } from '/examples/selected-spark-demo.mjs';
       try {
         const results = [];
         for (const game of ['poe1', 'poe2']) {
@@ -49,13 +50,25 @@
             }),
           );
         }
+        const selectedSpark = await runSelectedSparkDemo(
+          async (relative) => {
+            const response = await fetch(`/packages/data-poe1/snapshot/${relative}`);
+            if (!response.ok) throw new Error(`Snapshot HTTP ${response.status}`);
+            return new Uint8Array(await response.arrayBuffer());
+          },
+          async (name) => {
+            const response = await fetch(`/tests/fixtures/pob/${name}.xml`);
+            if (!response.ok) throw new Error(`Fixture HTTP ${response.status}`);
+            return response.text();
+          },
+        );
         document.querySelector('#result').textContent = JSON.stringify(
-          { results, pobCompatibility },
+          { results, pobCompatibility, selectedSpark },
           null,
           2,
         );
         document.querySelector('#status').textContent =
-          'PASS: both games calculated, item text round-tripped, all seven ESM packages imported.';
+          'PASS: both games calculated, item text round-tripped, all seven ESM packages imported; bounded XML and incremental selected Spark equal full recomputation.';
       } catch (error) {
         document.querySelector('#status').textContent = 'FAIL: ' + error.message;
         document.querySelector('#result').textContent = error.stack;

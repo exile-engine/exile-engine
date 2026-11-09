@@ -1,0 +1,288 @@
+{
+  "baseline": {
+    "ActionSpeedMod": 1,
+    "AverageDamage": 1043.5,
+    "AverageHit": 1043.5,
+    "CombinedDPS": 1739.1666666666667,
+    "CritChance": 0,
+    "CritMultiplier": 0,
+    "HitChance": 100,
+    "LightningHitAverage": 1043.5,
+    "LightningMaxBase": 1983,
+    "LightningMinBase": 104,
+    "Speed": 1.6666666666666667,
+    "Time": 0.59999999999999998,
+    "TotalDPS": 1739.1666666666667,
+    "TotalMax": 1983,
+    "TotalMin": 104,
+    "contributions": [],
+    "increasedCastSpeedPercent": 0,
+    "increasedDamagePercent": 0,
+    "lightningBreakdown": {
+      "1": "Base damage:",
+      "2": "104 to 1983 ^8(base damage from skill)",
+      "3": "= 104.0 to 1983.0",
+      "4": "Hit damage:",
+      "5": "104 to 1983 ^8(total damage)",
+      "6": "= 104 to 1983",
+      "7": "Portion of total damage: 100%",
+      "damageTypes": [
+        {
+          "base": "104 to 1983",
+          "convSrc": false,
+          "inc": false,
+          "more": false,
+          "source": "Lightning",
+          "total": "104 to 1983"
+        }
+      ]
+    },
+    "selectedPart": 1,
+    "selectedSkillId": "Spark"
+  },
+  "cast": {
+    "ActionSpeedMod": 1,
+    "AverageDamage": 1043.5,
+    "AverageHit": 1043.5,
+    "CombinedDPS": 2173.9583333333335,
+    "CritChance": 0,
+    "CritMultiplier": 0,
+    "HitChance": 100,
+    "LightningHitAverage": 1043.5,
+    "LightningMaxBase": 1983,
+    "LightningMinBase": 104,
+    "Speed": 2.0833333333333335,
+    "Time": 0.47999999999999998,
+    "TotalDPS": 2173.9583333333335,
+    "TotalMax": 1983,
+    "TotalMin": 104,
+    "contributions": [
+      {
+        "flags": 16,
+        "keywordFlags": 0,
+        "name": "Speed",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 25
+      }
+    ],
+    "increasedCastSpeedPercent": 25,
+    "increasedDamagePercent": 0,
+    "lightningBreakdown": {
+      "1": "Base damage:",
+      "2": "104 to 1983 ^8(base damage from skill)",
+      "3": "= 104.0 to 1983.0",
+      "4": "Hit damage:",
+      "5": "104 to 1983 ^8(total damage)",
+      "6": "= 104 to 1983",
+      "7": "Portion of total damage: 100%",
+      "damageTypes": [
+        {
+          "base": "104 to 1983",
+          "convSrc": false,
+          "inc": false,
+          "more": false,
+          "source": "Lightning",
+          "total": "104 to 1983"
+        }
+      ]
+    },
+    "selectedPart": 1,
+    "selectedSkillId": "Spark"
+  },
+  "increased": {
+    "ActionSpeedMod": 1,
+    "AverageDamage": 2087,
+    "AverageHit": 2087,
+    "CombinedDPS": 3478.3333333333335,
+    "CritChance": 0,
+    "CritMultiplier": 0,
+    "HitChance": 100,
+    "LightningHitAverage": 2087,
+    "LightningMaxBase": 1983,
+    "LightningMinBase": 104,
+    "Speed": 1.6666666666666667,
+    "Time": 0.59999999999999998,
+    "TotalDPS": 3478.3333333333335,
+    "TotalMax": 3966,
+    "TotalMin": 208,
+    "contributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "Damage",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 10
+      },
+      {
+        "flags": 2,
+        "keywordFlags": 0,
+        "name": "Damage",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 20
+      },
+      {
+        "flags": 1024,
+        "keywordFlags": 0,
+        "name": "Damage",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 40
+      },
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "LightningDamage",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 30
+      }
+    ],
+    "increasedCastSpeedPercent": 0,
+    "increasedDamagePercent": 100,
+    "lightningBreakdown": {
+      "1": "Base damage:",
+      "2": "104 to 1983 ^8(base damage from skill)",
+      "3": "= 104.0 to 1983.0",
+      "4": "Hit damage:",
+      "5": "208 to 3966 ^8(total damage)",
+      "6": "= 208 to 3966",
+      "7": "Portion of total damage: 100%",
+      "damageTypes": [
+        {
+          "base": "104 to 1983",
+          "convSrc": false,
+          "inc": "x 2",
+          "more": false,
+          "source": "Lightning",
+          "total": "208 to 3966"
+        }
+      ]
+    },
+    "selectedPart": 1,
+    "selectedSkillId": "Spark"
+  },
+  "no-damage": {
+    "ActionSpeedMod": 1,
+    "AverageDamage": 0,
+    "AverageHit": 0,
+    "CombinedDPS": 0,
+    "CritChance": 0,
+    "CritMultiplier": 0,
+    "HitChance": 100,
+    "LightningHitAverage": 0,
+    "LightningMaxBase": 1983,
+    "LightningMinBase": 104,
+    "Speed": 1.6666666666666667,
+    "Time": 0.59999999999999998,
+    "TotalDPS": 0,
+    "TotalMax": 0,
+    "TotalMin": 0,
+    "contributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "Damage",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": -100
+      }
+    ],
+    "increasedCastSpeedPercent": 0,
+    "increasedDamagePercent": -100,
+    "lightningBreakdown": {
+      "1": "Base damage:",
+      "2": "104 to 1983 ^8(base damage from skill)",
+      "3": "= 104.0 to 1983.0",
+      "4": "Hit damage:",
+      "5": "0 to 0 ^8(total damage)",
+      "6": "= 0 to 0",
+      "damageTypes": [
+        {
+          "base": "104 to 1983",
+          "convSrc": false,
+          "inc": "x 0",
+          "more": false,
+          "source": "Lightning",
+          "total": "0 to 0"
+        }
+      ]
+    },
+    "selectedPart": 1,
+    "selectedSkillId": "Spark"
+  },
+  "resisted": {
+    "ActionSpeedMod": 1,
+    "AverageDamage": 1565.25,
+    "AverageHit": 1565.25,
+    "CombinedDPS": 3260.9375000000005,
+    "CritChance": 0,
+    "CritMultiplier": 0,
+    "HitChance": 100,
+    "LightningHitAverage": 1565.25,
+    "LightningMaxBase": 1983,
+    "LightningMinBase": 104,
+    "Speed": 2.0833333333333335,
+    "Time": 0.47999999999999998,
+    "TotalDPS": 3260.9375000000005,
+    "TotalMax": 2974.5,
+    "TotalMin": 156,
+    "contributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "Damage",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 10
+      },
+      {
+        "flags": 2,
+        "keywordFlags": 0,
+        "name": "Damage",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 20
+      },
+      {
+        "flags": 1024,
+        "keywordFlags": 0,
+        "name": "Damage",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 40
+      },
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "LightningDamage",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 30
+      },
+      {
+        "flags": 16,
+        "keywordFlags": 0,
+        "name": "Speed",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 25
+      }
+    ],
+    "increasedCastSpeedPercent": 25,
+    "increasedDamagePercent": 100,
+    "lightningBreakdown": {
+      "1": "Base damage:",
+      "2": "104 to 1983 ^8(base damage from skill)",
+      "3": "= 104.0 to 1983.0",
+      "4": "Hit damage:",
+      "5": "208 to 3966 ^8(total damage)",
+      "6": "x 0.750 ^8(effective DPS modifier)",
+      "7": "= 156 to 2974",
+      "8": "Portion of total damage: 100%",
+      "damageTypes": [
+        {
+          "base": "104 to 1983",
+          "convSrc": false,
+          "inc": "x 2",
+          "more": false,
+          "source": "Lightning",
+          "total": "208 to 3966"
+        }
+      ]
+    },
+    "selectedPart": 1,
+    "selectedSkillId": "Spark"
+  }
+}

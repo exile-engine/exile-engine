@@ -26,10 +26,20 @@ The producer and validator preserve source exceptions rather than making the dat
 
 ## Runtime and distribution checks
 
-- Source-derived Spark reference cases at levels 1, 20 and 40 match actual client-resolved rows; an independent PoE1 coefficient check covers all 40 levels. PoB was not executed.
+- Source-derived Spark reference cases at levels 1, 20 and 40 match actual client-resolved rows; an independent PoE1 coefficient check covers all 40 levels. PoB was not executed for this initial record; the later bounded comparison below uses a separate oracle.
 - The constructed copied-wand example uses actual base labels and description templates, preserves full scoped candidate catalogs, and reconciles to the same canonical IDs and values in English and Thai for both games.
 - A real desktop browser imported all seven emitted ESM packages and ran both snapshot/item/calculation flows successfully. The same example also runs in Node.
 - Actual npm archives are checked for text-only contents and installed in an isolated temporary consumer. Runtime imports and TypeScript declarations are checked there. Archives are created outside the repository and removed after checking; nothing is published.
 - GitHub Actions runs the aggregate verification and executable example on Linux and Windows with Node 24. Check the [workflow runs](https://github.com/exile-engine/exile-engine/actions/workflows/ci.yml) for the specific commit's hosted result.
 
-This establishes the documented single-hit Spark and item-text slice. It does not establish full-build calculations, support for every data record, unimplemented PoB import, or universal testing across every JavaScript runtime and locale.
+This initial record establishes the documented single-hit Spark and item-text slice. It does not establish full-build calculations, support for every data record, or universal testing across every JavaScript runtime and locale.
+
+## Bounded selected Spark validation, November 9, 2026
+
+The bounded PoE1 XML fixture suite now covers baseline normal Spark, additive damage categories, cast speed, explicit resistance and supported zero damage. Missing configuration, unsupported mechanics, ambiguous selection, legacy target versions and hostile/over-limit XML remain diagnostic failures with no calculable input. Saved PoB output values never supply calculation inputs.
+
+A separate pinned PoB development oracle imported and calculated the same five successful XML fixtures. Its executed outputs, source revision, host identities, fixture fingerprints, intermediate values and modifier contributions are recorded in [the reference evidence](pob-reference.md). Only versioned text evidence belongs to Exile Engine; the oracle source, Lua runtime and native components stay outside the checkout and runtime dependency graph.
+
+Every supported incremental mutation is checked against a fresh full result, including changed applicability, item insertion/removal, resistance, metadata, gem level/quality, rounding, signed zero, invalid-update recovery and dataset ownership. Cyclic or feedback-dependent graphs fail explicitly. [Batch measurements](selected-skill-performance.md) compare 3,000 updates; the incremental path performs less arithmetic but costs about four times as much overall for this small subset.
+
+The original executable example and the bounded XML example run against emitted public exports. A real headless Chrome check using a separate temporary profile imports all seven ESM packages, runs both game/item flows, imports bounded XML, checks three incremental mutations against full results and verifies rejection cases. `npm run test:browser:headless` repeats this check with an installed Chromium browser; `EXILE_ENGINE_BROWSER` can select its executable. Full repository verification includes formatting, emitted-package behavior tests, snapshot validation, source-only policy and isolated archive/declaration consumption. No packages or live services are published.

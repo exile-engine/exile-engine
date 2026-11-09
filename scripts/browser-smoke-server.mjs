@@ -10,6 +10,7 @@ const mime = {
   '.js': 'text/javascript',
   '.mjs': 'text/javascript',
   '.json': 'application/json',
+  '.xml': 'application/xml; charset=utf-8',
 };
 const server = http.createServer(async (request, response) => {
   try {
@@ -20,7 +21,11 @@ const server = http.createServer(async (request, response) => {
     if (
       !file.startsWith(path.resolve(root) + path.sep) ||
       name.split('/').some((part) => part === '..' || part === '.') ||
-      !(name.startsWith('examples/') || /^packages\/[^/]+\/(?:dist|snapshot)\//.test(name)) ||
+      !(
+        name.startsWith('examples/') ||
+        /^packages\/[^/]+\/(?:dist|snapshot)\//.test(name) ||
+        /^tests\/fixtures\/pob\/[a-z-]+\.xml$/.test(name)
+      ) ||
       !mime[path.extname(file)]
     ) {
       response.writeHead(404).end();

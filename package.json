@@ -29,7 +29,10 @@
     "check:policy": "node scripts/check-policy.mjs",
     "check:packages": "node scripts/check-packages.mjs",
     "example": "npm run build && node examples/spark.mjs",
+    "example:pob": "npm run build && node examples/selected-spark.mjs",
+    "benchmark:selected": "npm run build && node scripts/benchmark-selected-skill.mjs",
     "test:browser": "node scripts/browser-smoke-server.mjs",
+    "test:browser:headless": "node scripts/browser-smoke.mjs",
     "verify": "npm run format:check && npm test && npm run data:validate && npm run check:policy && npm run check:packages"
   },
   "devDependencies": {

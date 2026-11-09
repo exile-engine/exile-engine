@@ -6,15 +6,15 @@ This first release calculates **ordinary Spark, one noncritical projectile hit**
 
 ## Packages
 
-| Package                   | Responsibility                                                                      | Initial status                      |
-| ------------------------- | ----------------------------------------------------------------------------------- | ----------------------------------- |
-| `@exile-engine/core`      | Canonical contributions, snapshot identities, diagnostics and calculation contracts | Working                             |
-| `@exile-engine/poe1`      | PoE1 rules and Spark normalization/calculation                                      | Normal Spark single-hit slice       |
-| `@exile-engine/poe2`      | PoE2 rules and Spark normalization/calculation                                      | Spark Base statset slice            |
-| `@exile-engine/item-text` | SD parsing, item-text candidates, reconciliation and formatting                     | English/Thai slice tested           |
-| `@exile-engine/pob`       | PoB XML interchange contracts                                                       | Contracts only; no runtime importer |
-| `@exile-engine/data-poe1` | Versioned PoE1 build catalogs, descriptions, passive topology and item templates    | Installed build snapshot            |
-| `@exile-engine/data-poe2` | Versioned PoE2 build catalogs, descriptions, passive topology and item templates    | Installed build snapshot            |
+| Package                   | Responsibility                                                                      | Initial status                |
+| ------------------------- | ----------------------------------------------------------------------------------- | ----------------------------- |
+| `@exile-engine/core`      | Canonical contributions, snapshot identities, diagnostics and calculation contracts | Working                       |
+| `@exile-engine/poe1`      | PoE1 rules and Spark normalization/calculation                                      | Normal Spark single-hit slice |
+| `@exile-engine/poe2`      | PoE2 rules and Spark normalization/calculation                                      | Spark Base statset slice      |
+| `@exile-engine/item-text` | SD parsing, item-text candidates, reconciliation and formatting                     | English/Thai slice tested     |
+| `@exile-engine/pob`       | Bounded PoE1 PoB XML adaptation                                                     | Synthetic normal Spark subset |
+| `@exile-engine/data-poe1` | Versioned PoE1 build catalogs, descriptions, passive topology and item templates    | Installed build snapshot      |
+| `@exile-engine/data-poe2` | Versioned PoE2 build catalogs, descriptions, passive topology and item templates    | Installed build snapshot      |
 
 All packages start at `0.1.0`. They are prepared for public npm publication but have **not been published** by the scaffold task. The monorepo root is private.
 
@@ -26,6 +26,9 @@ Use Node.js 24 or newer and npm 11.5.1 or newer:
 npm ci --ignore-scripts
 npm run verify
 npm run example
+npm run example:pob
+npm run test:browser:headless
+npm run benchmark:selected
 ```
 
 The package source compiles to ESM JavaScript and declarations with the JavaScript TypeScript 6 compiler (`tsc6`). No bundler or native compiler is installed by this workspace. Compiled output is untracked; library consumers receive emitted JavaScript, not a requirement to execute TypeScript source.
@@ -36,7 +39,7 @@ The package source compiles to ESM JavaScript and declarations with the JavaScri
 
 The application supplies snapshot I/O. Load the matching dataset, normalize Spark once with `loadSparkDataset(reader)`, and call `calculateSpark(input, dataset)` synchronously. The game package returns a discriminated result with diagnostics, source rows and an arithmetic breakdown. Inputs include the exact snapshot identity and an explicit effective enemy lightning resistance.
 
-Keep a copied item's unresolved lines and candidate mappings until reconciliation is complete. A successful modifier match does not establish a complete equipment model. `@exile-engine/pob` deliberately has no working XML or share-code importer yet.
+Keep a copied item's unresolved lines and candidate mappings until reconciliation is complete. A successful modifier match does not establish a complete equipment model. `@exile-engine/pob` imports a bounded synthetic PoE1 XML subset; unsupported or ambiguous data blocks a calculable input. PoE1 additionally exposes fresh and incremental selected-skill hit/combined DPS for normal Spark, counting one noncritical lightning hit per cast. See the [executed pinned reference comparison](docs/pob-reference.md); no full-build parity is claimed.
 
 See the executable [Spark example](examples/spark.mjs), [architecture](docs/architecture.md), [conventions](docs/conventions.md), [data pipeline](docs/data-pipeline.md), [supported mechanics](docs/supported-mechanics.md), [security boundaries](docs/security.md), and [roadmap](docs/roadmap.md).
 

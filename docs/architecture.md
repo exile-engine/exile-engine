@@ -34,4 +34,8 @@ The SD parser retains ordered stat groups, ranges, handlers, locales and include
 
 Game packages normalize only the data needed for their supported mechanic. The first normalizer reads client-authored Spark resolved damage and cast-time records. The synchronous calculator applies the explicitly implemented stat operations and returns a trace. Client facts remain separate from the formula code. No suffix-based naming heuristic supplies missing semantics.
 
-The PoB package currently defines compatibility contracts and an explicit capability status. A future XML adapter will consume data and produce canonical inputs with unresolved fields; it will never invoke PoB.
+The PoB package adapts a bounded, documented PoE1 XML subset to canonical selected-skill inputs. It retains unresolved data and emits no calculable input unless the entire imported slice is supported. It never invokes PoB. XML parsing and item-line interpretation stay outside the calculation package.
+
+PoE1 `calculateSelectedSkill` is the fresh full-recomputation reference. A selected-skill session captures immutable dataset facts and caches base, damage increase, cast-speed increase, pre-resistance hit, post-resistance hit and cast-rate nodes. Every update validates all external input, discovers the current dependency sets, and propagates dirty leaves and changed dependency sets. Reports name the derived nodes actually evaluated. Metadata/provenance changes also invalidate result assembly. Invalid updates preserve the last accepted state.
+
+Dependency graphs are bounded and checked before evaluation. Cyclic and feedback-dependent nodes fail with `graph.feedback-unsupported`; there is no previous-value fallback or implicit fixed-point iteration. Future feedback mechanics need a specified state model or bounded solver, convergence criteria and failure semantics before acceptance.

@@ -13,7 +13,7 @@
 - Retain the exact canonical game stat ID. Do not sanitize it, translate it, use a description alias instead, or convert it to a PoB internal name.
 - Store raw source values and preserve their source records. Convert units explicitly at the rule boundary: for example, client cast time milliseconds becomes seconds in the calculation result.
 - A percentage contribution is in percentage points: `28` means 28%, not `0.28`. Document scale and rounding for every new mechanic.
-- Each occurrence keeps provenance. Sum applicable increased damage categories additively in the Spark slice. Cast-speed scaling is separate. Conditions, local modifiers and more/less effects need explicit implementations before they are accepted.
+- Each occurrence keeps provenance. Sum applicable increased damage categories additively in the Spark slice. Cast-speed scaling is separate. Conditions, local modifiers and more/less effects need explicit implementations before they are accepted. The PoE1 selected-skill API additionally follows its pinned PoB endpoint/speed rounding and tick ceiling; the original isolated-hit API keeps its existing arithmetic contract.
 - Use finite numbers and validate domains and divisors. Preserve game-specific rounding where the source resolves base values. Do not manufacture additional rounding on intermediate presentation values.
 
 ## Versions and documentation
