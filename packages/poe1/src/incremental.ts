@@ -28,6 +28,7 @@ import {
   selectLightningExposure,
   type LightningResistanceStages,
 } from './resistance.js';
+import { calculateSelectedSkillShockEffects } from './shock.js';
 
 export interface IncrementalSelectedSkillReport {
   readonly calculation: SelectedSkillCalculation;
@@ -70,6 +71,7 @@ const DERIVED = new Set([
   'damage-after-resistance',
   'cast-rate',
   'critical-effects',
+  'shock-effects',
   'selected-skill',
 ]);
 
@@ -98,6 +100,14 @@ function copyInput(input: SelectedSkillInput): SelectedSkillInput {
     },
     configuration: {
       ...input.configuration,
+      ...(input.configuration.shock === undefined
+        ? {}
+        : {
+            shock: {
+              ...input.configuration.shock,
+              source: { ...input.configuration.shock.source },
+            },
+          }),
       ...(input.configuration.lightningResistance === undefined
         ? {}
         : {
@@ -213,6 +223,37 @@ function copyDataset(dataset: SparkDataset): SparkDataset {
             sourceRows: copyRows(dataset.resistance.sourceRows),
           },
         }),
+    ...(dataset.shock === undefined
+      ? {}
+      : {
+          shock: {
+            identity: {
+              game: dataset.shock.identity.game,
+              build: dataset.shock.identity.build,
+              snapshotId: dataset.shock.identity.snapshotId,
+            },
+            ruleSource: { ...dataset.shock.ruleSource },
+            sourceRows: copyRows(dataset.shock.sourceRows),
+          },
+        }),
+  };
+}
+
+function copyShockEffects(
+  effects: SelectedSkillCalculation['shockEffects'],
+): SelectedSkillCalculation['shockEffects'] {
+  return {
+    ...effects,
+    contributions: effects.contributions.map((contribution) => ({
+      ...contribution,
+      source: { ...contribution.source },
+    })),
+    ruleSource: { ...effects.ruleSource },
+    sourceRows: effects.sourceRows.map((row) => ({
+      table: row.table,
+      key: row.key,
+      rowIndex: row.rowIndex,
+    })),
   };
 }
 
@@ -299,8 +340,15 @@ function inputNodes(input: SelectedSkillInput): Readonly<Record<string, unknown>
       [
         Object.hasOwn(input.configuration, 'criticalStrikeMode'),
         input.configuration.criticalStrikeMode,
+      ],
+    ],
+    [
+      'input.shock',
+      [
         Object.hasOwn(input.configuration, 'ailmentMode'),
         input.configuration.ailmentMode,
+        Object.hasOwn(input.configuration, 'shock'),
+        input.configuration.shock,
       ],
     ],
     [
@@ -383,11 +431,13 @@ function graph(input: SelectedSkillInput): CalculationDependencies {
       'input.critical-configuration',
       'effective-resistance',
     ],
+    'shock-effects': ['input.shock', 'damage-after-resistance', 'critical-effects'],
     'selected-skill': [
       'input.metadata',
       'input.skill',
       'input.supports',
       'input.critical-configuration',
+      'input.shock',
       'input.resistance',
       'input.resistance-maximum',
       'input.resistance-source',
@@ -407,6 +457,7 @@ function graph(input: SelectedSkillInput): CalculationDependencies {
       'damage-after-resistance',
       'cast-rate',
       'critical-effects',
+      'shock-effects',
     ],
   };
 }
@@ -448,6 +499,7 @@ interface Cache {
   readonly criticalEffects: SelectedSkillCalculation['criticalEffects'];
   readonly resistanceEffects: SelectedSkillCalculation['resistanceEffects'];
   readonly resistanceStages: LightningResistanceStages;
+  readonly shockEffects: SelectedSkillCalculation['shockEffects'];
   readonly before: DamageRange;
   readonly after: DamageRange;
   readonly castTime: number;
@@ -486,6 +538,7 @@ export function createSelectedSkillSession(
     addedMultiplierPercent: full.value.criticalEffects.addedMultiplierPercent,
     criticalEffects: copyCriticalEffects(full.value.criticalEffects),
     resistanceEffects: copyResistanceEffects(full.value.resistanceEffects),
+    shockEffects: copyShockEffects(full.value.shockEffects),
     resistanceStages: {
       exposurePercent: full.value.resistanceEffects.exposurePercent,
       selectedExposureIndices: [...full.value.resistanceEffects.selectedExposureIndices],
@@ -508,6 +561,7 @@ export function createSelectedSkillSession(
       supportEffects: cache.supportEffects,
       criticalEffects: cache.criticalEffects,
       resistanceEffects: cache.resistanceEffects,
+      shockEffects: cache.shockEffects,
       hit: {
         ...full.value.hit,
         sourceRows: full.value.hit.sourceRows.map((row) => ({ ...row })),
@@ -565,6 +619,7 @@ export function createSelectedSkillSession(
       addedMultiplierPercent,
       criticalEffects,
       resistanceEffects,
+      shockEffects,
       before,
       after,
       castTime,
@@ -729,6 +784,22 @@ export function createSelectedSkillSession(
           criticalEffects = effects.value;
           break;
         }
+        case 'shock-effects': {
+          const effects = calculateSelectedSkillShockEffects(
+            next,
+            {
+              ...baseline,
+              nonCriticalHitBeforeResistance: before,
+              nonCriticalHitAfterResistance: after,
+              effectiveLightningResistancePercent: resistanceEffects.effectiveResistancePercent,
+            },
+            criticalEffects,
+            captured.shock,
+          );
+          if (!effects.ok) return effects;
+          shockEffects = effects.value;
+          break;
+        }
       }
     }
     if (
@@ -798,6 +869,7 @@ export function createSelectedSkillSession(
       supportEffects,
       criticalEffects,
       resistanceEffects,
+      shockEffects,
     );
     if (!assembled.ok) return assembled;
     accepted = next;
@@ -816,6 +888,7 @@ export function createSelectedSkillSession(
       addedMultiplierPercent,
       criticalEffects,
       resistanceEffects,
+      shockEffects,
       resistanceStages: {
         exposurePercent,
         selectedExposureIndices,

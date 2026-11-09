@@ -22,6 +22,43 @@ export const SELECTED_SPARK_LIGHTNING_PENETRATION_STAT_ID =
   'base_reduce_enemy_lightning_resistance_%' as const;
 export const SELECTED_SPARK_LIGHTNING_EXPOSURE_STAT_ID =
   'lightning_exposure_on_hit_magnitude' as const;
+export const SELECTED_SPARK_SHOCK_STAT_ID = 'base_damage_taken_+%_from_shock' as const;
+
+/** Supplied enemy state, independent of hit generation; percentages are bounded integers. */
+export interface SelectedShockConfiguration {
+  readonly magnitudePercent: number;
+  readonly uptimePercent: number;
+  readonly source: SourceRef;
+}
+
+export interface SelectedSkillShockDataset {
+  readonly identity: SnapshotIdentity;
+  readonly ruleSource: SourceRef;
+  readonly sourceRows: readonly SourceRowRef[];
+}
+
+/** Scenario contribution in the exact game vocabulary, not a parsed item modifier. */
+export interface SelectedSkillShockContribution extends StatContribution {
+  readonly statId: typeof SELECTED_SPARK_SHOCK_STAT_ID;
+  readonly uptimePercent: number;
+  readonly operation: 'increased-damage-taken';
+}
+
+export interface SelectedSkillShockTrace {
+  readonly mode: 'excluded' | 'configured';
+  readonly magnitudePercent: number;
+  readonly uptimePercent: number;
+  readonly shockedDamageMultiplier: number;
+  readonly averageDamageMultiplier: number;
+  readonly unshockedHitMeanAfterResistance: number;
+  readonly shockedHitMeanAfterResistance: number;
+  readonly normalHitMeanAfterShock: number;
+  readonly criticalHitMeanAfterShock: number;
+  readonly expectedHitMeanAfterShock: number;
+  readonly contributions: readonly SelectedSkillShockContribution[];
+  readonly ruleSource: SourceRef;
+  readonly sourceRows: readonly SourceRowRef[];
+}
 
 /** Explicit already-active enemy state; no application chance, first-hit or uptime inference. */
 export interface SelectedLightningExposure {
@@ -164,7 +201,8 @@ export interface SelectedSkillConfiguration {
   readonly lightningResistance?: SelectedLightningResistanceConfiguration;
   /** Absent retains the earlier explicitly noncritical profile. */
   readonly criticalStrikeMode?: 'disabled' | 'average';
-  readonly ailmentMode?: 'excluded';
+  readonly ailmentMode?: 'excluded' | 'configured-shock';
+  readonly shock?: SelectedShockConfiguration;
 }
 
 export interface SelectedSkillSelection {
@@ -191,13 +229,14 @@ export interface SelectedSkillCalculation {
   readonly buildId: string;
   readonly configuration: SelectedSkillConfiguration;
   readonly skill: SelectedSkillSelection;
-  readonly engineRevision: 'poe1-selected-spark-v5';
+  readonly engineRevision: 'poe1-selected-spark-v6';
   readonly metric: 'selected-skill-hit-combined-dps';
   readonly hit: SparkCalculation;
   readonly addedLightningDamage: AddedLightningDamageTrace;
   readonly supportEffects: SelectedSkillSupportTrace;
   readonly criticalEffects: SelectedSkillCriticalTrace;
   readonly resistanceEffects: SelectedSkillResistanceTrace;
+  readonly shockEffects: SelectedSkillShockTrace;
   readonly hitsPerCast: 1;
   readonly hitsPerSecond: number;
   readonly hitDps: number;

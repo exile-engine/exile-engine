@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PathOfBuilding>
+  <Build level="1" className="Witch" ascendClassName="None" mainSocketGroup="1" targetVersion="3_0">
+    <PlayerStat stat="CombinedDPS" value="999999999"/>
+  </Build>
+  <Skills>
+    <Skill enabled="true" mainActiveSkill="1" skillPart="1">
+      <Gem skillId="Spark" gemId="Metadata/Items/Gems/SkillGemSpark" nameSpec="Spark" level="20" quality="0" enabled="true"/>
+    </Skill>
+  </Skills>
+  <Items activeItemSet="1">
+    <Item id="1"><![CDATA[Rarity: RARE
+Synthetic Spark Fixture
+Simple Robe
+Implicits: 0]]></Item>
+    <ItemSet id="1"><Slot name="Body Armour" itemId="1"/></ItemSet>
+  </Items>
+  <Config>
+    <Input name="conditionEnemyShocked" boolean="true"/>
+    <Input name="conditionShockEffect" number="0"/>
+    <Input name="enemyIsBoss" string="None"/>
+    <Input name="enemyLightningResist" number="0"/>
+    <Input name="customMods" string="Never deal Critical Strikes"/>
+  </Config>
+</PathOfBuilding>

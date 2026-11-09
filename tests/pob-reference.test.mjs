@@ -189,8 +189,26 @@ test('penetration and exposure keep exact stat identities and negative authored 
   assert.equal(row.fields.Stat1Max, example.value);
 });
 
+test('configured shock preserves the matching game vocabulary and separate scenario rule source', async () => {
+  const fact = reference.shockReference;
+  assert.deepEqual(dataset.shock.identity, reference.identity);
+  assert.deepEqual(dataset.shock.ruleSource, fact.ruleSource);
+  assert.deepEqual(dataset.shock.sourceRows, fact.statRows);
+  assert.deepEqual(
+    Object.keys(oracle).toSorted(),
+    reference.cases.map((entry) => entry.fixture).toSorted(),
+  );
+  for (const source of fact.statRows) {
+    const row = await reader.getRecord(source.table, source.key);
+    assert.equal(row.rowIndex, source.rowIndex);
+    assert.equal(row.fields.Id, source.key);
+    assert.equal(row.fields.IsLocal, false);
+    assert.equal(row.fields.IsWeaponLocal, false);
+  }
+});
+
 for (const expected of reference.cases) {
-  test(`${expected.fixture}: adapted XML intermediates, contributions and selected hit/combined DPS match executed pinned PoB`, async () => {
+  test(`${expected.fixture}: adapted XML intermediates, contributions and selected hit/combined DPS match ${expected.shock ? 'host-weighted executed pinned PoB endpoints' : 'executed pinned PoB'}`, async () => {
     const xml = await readFile(
       new URL(`./fixtures/pob/${expected.fixture}.xml`, import.meta.url),
       'utf8',
@@ -202,6 +220,7 @@ for (const expected of reference.cases) {
       target: reader.identity,
       buildId: `fixture:${expected.fixture}`,
       configurationId: `fixture:${expected.fixture}:enemy`,
+      ...(expected.shock ? { shockUptimePercent: expected.shock.uptimePercent } : {}),
     });
     assert.equal(imported.complete, true, JSON.stringify(imported.diagnostics));
     assert.deepEqual(imported.unresolved, []);
@@ -256,9 +275,32 @@ for (const expected of reference.cases) {
       })),
     );
     assert.equal(value.configuration.criticalStrikeMode ?? 'disabled', expected.criticalMode);
-    if (expected.criticalMode === 'average')
+    assert.deepEqual(value.configuration.shock, expected.shock);
+    if (expected.shock) assert.equal(value.configuration.ailmentMode, 'configured-shock');
+    else if (expected.criticalMode === 'average')
       assert.equal(value.configuration.ailmentMode, 'excluded');
     const critical = value.criticalEffects;
+    const shock = value.shockEffects;
+    assert.equal(shock.mode, expected.shock ? 'configured' : 'excluded');
+    for (const [key, wanted] of Object.entries(expected.shockEffects))
+      if (typeof wanted === 'number') close(shock[key], wanted, `shock.${key}`);
+      else assert.deepEqual(shock[key], wanted, `shock.${key}`);
+    assert.deepEqual(shock.ruleSource, reference.shockReference.ruleSource);
+    assert.deepEqual(shock.sourceRows, reference.shockReference.statRows);
+    assert.deepEqual(
+      shock.contributions,
+      expected.shock
+        ? [
+            {
+              statId: reference.shockReference.statRows[0].key,
+              value: expected.shock.magnitudePercent,
+              uptimePercent: expected.shock.uptimePercent,
+              operation: 'increased-damage-taken',
+              source: expected.shock.source,
+            },
+          ]
+        : [],
+    );
     assert.equal(critical.mode, expected.criticalMode);
     for (const [key, wanted] of Object.entries(expected.criticalEffects)) {
       if (key === 'mode') continue;
@@ -460,9 +502,127 @@ for (const expected of reference.cases) {
     const dps =
       (nonCritMean * (1 - refChance / 100) + (critMean * refChance) / 100) *
       (1 - refResistance / 100) *
+      (1 +
+        ((expected.shock?.magnitudePercent ?? 0) * (expected.shock?.uptimePercent ?? 0)) / 10000) *
       speed;
     close(value.combinedDps, dps, 'independent pinned-source CombinedDPS branch');
-    const observed = oracle[expected.fixture];
+    const observedShocked = oracle[expected.fixture];
+    const observed = observedShocked.unshocked ?? observedShocked;
+    assert.equal(observedShocked.sourceXmlSha256, expected.xmlSha256);
+    if (expected.shock) {
+      assert.equal(expected.comparisonKind, 'host-weighted-executed-pob-endpoints');
+      assert.equal(observedShocked.sourceXmlSha256, expected.oracleEndpoints.shockedXmlSha256);
+      const unshockedXml = xml.replace(
+        'name="conditionEnemyShocked" boolean="true"',
+        'name="conditionEnemyShocked" boolean="false"',
+      );
+      assert.notEqual(unshockedXml, xml);
+      assert.equal(
+        createHash('sha256').update(unshockedXml).digest('hex'),
+        expected.oracleEndpoints.unshockedXmlSha256,
+      );
+      assert.equal(observed.sourceXmlSha256, expected.oracleEndpoints.unshockedXmlSha256);
+      assert.equal(observed.xmlTransformation, expected.oracleEndpoints.unshockedXmlTransformation);
+      assert.equal(observedShocked.enemyShockConfigured, true);
+      assert.equal(observed.enemyShockConfigured, false);
+      close(
+        observedShocked.configuredShockEffectPercent,
+        expected.shock.magnitudePercent,
+        'PoB configured shock magnitude',
+      );
+      close(
+        observedShocked.CurrentShock,
+        expected.shock.magnitudePercent,
+        'PoB applied shock magnitude',
+      );
+      close(
+        observedShocked.MaximumShock,
+        reference.shockReference.maximumMagnitudePercent,
+        'PoB default shock cap',
+      );
+      close(
+        observedShocked.enemyDamageTakenPercent,
+        expected.shock.magnitudePercent,
+        'PoB shock damage taken total',
+      );
+      close(observed.CurrentShock, 0, 'PoB unshocked endpoint magnitude');
+      close(observed.enemyDamageTakenPercent, 0, 'PoB unshocked endpoint damage taken');
+      assert.deepEqual(
+        observedShocked.shockContributions,
+        expected.shock.magnitudePercent === 0
+          ? []
+          : [
+              {
+                name: 'DamageTaken',
+                value: expected.shock.magnitudePercent,
+                source: 'Shock',
+                flags: 0,
+                keywordFlags: 0,
+              },
+            ],
+      );
+      assert.deepEqual(observed.shockContributions, []);
+      close(
+        shock.unshockedHitMeanAfterResistance,
+        observed.AverageHit,
+        'executed unshocked endpoint hit mean',
+      );
+      close(
+        shock.shockedHitMeanAfterResistance,
+        observedShocked.AverageHit,
+        'executed shocked endpoint hit mean',
+      );
+      const uptime = expected.shock.uptimePercent / 100;
+      close(
+        shock.expectedHitMeanAfterShock,
+        observed.AverageHit * (1 - uptime) + observedShocked.AverageHit * uptime,
+        'host-weighted executed endpoint expected hit',
+      );
+      close(
+        shock.normalHitMeanAfterShock,
+        observed.LightningHitAverage * (1 - uptime) + observedShocked.LightningHitAverage * uptime,
+        'host-weighted normal hit',
+      );
+      if (expected.criticalMode === 'average')
+        close(
+          shock.criticalHitMeanAfterShock,
+          observed.LightningCritAverage * (1 - uptime) +
+            observedShocked.LightningCritAverage * uptime,
+          'host-weighted critical hit',
+        );
+      for (const key of [
+        'Speed',
+        'Time',
+        'CritChance',
+        'CritMultiplier',
+        'LightningMinBase',
+        'LightningMaxBase',
+        'addedMinimum',
+        'addedMaximum',
+        'increasedDamagePercent',
+        'increasedCastSpeedPercent',
+      ])
+        assert.equal(observedShocked[key], observed[key], `shock leaves ${key} unchanged`);
+      for (const key of [
+        'contributions',
+        'addedContributions',
+        'supportContributions',
+        'criticalContributions',
+        'penetrationContributions',
+        'enemyLightningResistanceContributions',
+      ])
+        assert.deepEqual(observedShocked[key], observed[key], `shock leaves ${key} unchanged`);
+      if (observedShocked.lightningDamageMultiplier !== undefined)
+        close(
+          observedShocked.lightningDamageMultiplier,
+          observed.lightningDamageMultiplier * shock.shockedDamageMultiplier,
+          'PoB common resistance and shocked damage-taken multiplier',
+        );
+    } else {
+      assert.equal(observed.CurrentShock, 0);
+      assert.equal(observed.enemyDamageTakenPercent, 0);
+      assert.deepEqual(observed.shockContributions, []);
+    }
     assert.equal(observed.selectedSkillId, 'Spark');
     assert.equal(observed.selectedPart, 1);
     close(critical.chancePercent, observed.CritChance, 'PoB critical chance');
@@ -651,8 +811,17 @@ for (const expected of reference.cases) {
     );
     close(hit.castsPerSecond, observed.Speed, 'PoB Speed');
     close(hit.castTimeSeconds, observed.Time, 'PoB Time');
-    close(value.hitDps, observed.TotalDPS, 'PoB selected-skill TotalDPS');
-    close(value.combinedDps, observed.CombinedDPS, 'PoB selected-skill CombinedDPS');
+    const uptime = (expected.shock?.uptimePercent ?? 0) / 100;
+    close(
+      value.hitDps,
+      observed.TotalDPS * (1 - uptime) + observedShocked.TotalDPS * uptime,
+      'PoB selected-skill TotalDPS endpoints with explicit host weighting',
+    );
+    close(
+      value.combinedDps,
+      observed.CombinedDPS * (1 - uptime) + observedShocked.CombinedDPS * uptime,
+      'PoB selected-skill CombinedDPS endpoints with explicit host weighting',
+    );
     const damageRows = observed.lightningBreakdown.damageTypes;
     assert.equal(damageRows.length, 1);
     assert.equal(damageRows[0].source, 'Lightning');

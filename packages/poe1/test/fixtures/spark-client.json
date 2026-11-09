@@ -159,6 +159,12 @@
         "Id": "lightning_exposure_on_hit_magnitude",
         "IsLocal": false,
         "IsWeaponLocal": false
+      },
+      {
+        "_index": 16700,
+        "Id": "base_damage_taken_+%_from_shock",
+        "IsLocal": false,
+        "IsWeaponLocal": false
       }
     ],
     "GrantedEffects": [

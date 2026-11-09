@@ -58,7 +58,12 @@ const initial = {
       ],
     },
     criticalStrikeMode: 'average',
-    ailmentMode: 'excluded',
+    ailmentMode: 'configured-shock',
+    shock: {
+      magnitudePercent: 20,
+      uptimePercent: 50,
+      source: { kind: 'scenario', id: 'synthetic-shock', line: 1 },
+    },
   },
   modifiers: [
     ...Array.from({ length: 32 }, (_, index) => ({
@@ -115,6 +120,10 @@ for (const mutation of [
   'exposure-enabled',
   'lightning-penetration',
   'penetration-applicability',
+  'cast-speed-only',
+  'shock-magnitude',
+  'shock-uptime',
+  'shock-mode',
 ]) {
   const states = [];
   const next = structuredClone(initial);
@@ -143,6 +152,14 @@ for (const mutation of [
     if (mutation === 'penetration-applicability')
       next.modifiers[35].statId =
         index % 2 === 0 ? 'base_reduce_enemy_lightning_resistance_%' : 'spell_damage_+%';
+    if (mutation === 'cast-speed-only') next.modifiers[0].value = index % 51;
+    if (mutation === 'shock-magnitude') next.configuration.shock.magnitudePercent = index % 51;
+    if (mutation === 'shock-uptime') next.configuration.shock.uptimePercent = index % 101;
+    if (mutation === 'shock-mode') {
+      next.configuration.ailmentMode = index % 2 === 0 ? 'configured-shock' : 'excluded';
+      if (index % 2 === 0) next.configuration.shock = structuredClone(initial.configuration.shock);
+      else delete next.configuration.shock;
+    }
     states.push(structuredClone(next));
   }
   const check = value(createSelectedSkillSession(initial, dataset));
@@ -199,7 +216,7 @@ for (const mutation of [
 console.log(
   JSON.stringify(
     {
-      benchmark: 'selected-skill-batches-v5',
+      benchmark: 'selected-skill-batches-v6',
       engineRevision: selectedSkillEngineRevision,
       node: process.version,
       identity: dataset.identity,

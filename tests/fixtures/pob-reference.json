@@ -2,22 +2,23 @@
   "comparisonKind": "executed-pinned-pob-headless",
   "pobExecuted": true,
   "engine": {
-    "repositoryRevision": "88cab58d97dac8c75ca16b748da5c81fef2e5eb7",
+    "repositoryRevision": "b71f99117c944c70767237895e836e864fba4ca2",
     "workingTreeChanges": true,
-    "rulesRevision": "poe1-selected-spark-v5",
+    "rulesRevision": "poe1-selected-spark-v6",
     "sourceSha256": {
-      "packages/core/src/selected-skill.ts": "ea3790fd2cb5237e25eca3ea97777a5f8542fdc2cb6ba405e6de0ef270285daf",
+      "packages/core/src/selected-skill.ts": "bcd6937e86d5bb25242c5003a881720b1ccb766a4bba541b6c1afd7ee17ef8fe",
       "packages/core/src/spark.ts": "d703848b743ac24cc6af15ed84c925a052724297c4d2a5f4d2eb68b1d9c0b853",
-      "packages/poe1/src/selected-skill.ts": "fd215a153a4863273044c05ab1f2ad9e4649552072f32ca9d7bc1e1436d05584",
-      "packages/poe1/src/incremental.ts": "c55cc55b1a31cd181280559a6f7f6cefa9bbf4e1af4180d9693100e329574c77",
+      "packages/poe1/src/selected-skill.ts": "e61495a27d401c5c297acbbc00e3d59f1a7d322505369b76e3bc1cac04c8e0cc",
+      "packages/poe1/src/incremental.ts": "790068c15132b7f7a84031e7e6e5e76b74a448efdbbb598c6e722f95e006fd27",
       "packages/poe1/src/graph.ts": "964fb36094d6d8609caa5d28a5aedacd0a2d8ce513992d29bb43d1c62e262c3c",
-      "packages/pob/src/index.ts": "829ee0d6c951e5831130f0095c9ad319d17f566cab5f52d6e835e23fcce494c1",
+      "packages/pob/src/index.ts": "f2e5eb4c176de10740cd9e67c9319ef2e27046a2ffb5d0bcfd323434174a0c67",
       "packages/pob/src/xml.ts": "a360760b838bd73656a9d81bb8aa1efc099f96c2033876a36f8363b40d145268",
-      "packages/core/src/types.ts": "0943d2def8830907f6b901054d8867d44d31cbecdd097f18eab41a48aa91107f",
-      "packages/poe1/src/index.ts": "bdf5c4363392d81277c425e2f1c493860bede929a51b839cb9c757a931bd6e29",
+      "packages/core/src/types.ts": "f97f8fb51b94da7ac1a453cd0ce47a23167f22ca2a6415bbe0ae15c66f6a43d4",
+      "packages/poe1/src/index.ts": "4cbeb6dd2428334a87e41fe89a293f4ab8270605c496310b5ef86c10c9ec9328",
       "packages/poe1/src/supports.ts": "378edc1329c52460f702d12ca7650317e7b5b40eacf618890730ac0b71a2f26f",
       "packages/poe1/src/critical.ts": "0dc9ecf05664bccb6d7dae816e76b7a93f2bd42ba5efb43f17c218162acc7c3f",
-      "packages/poe1/src/resistance.ts": "b031d43648b2d1ae5cce7340610d47ee45e59471d42c6536e168a01ba793bfd8"
+      "packages/poe1/src/resistance.ts": "b031d43648b2d1ae5cce7340610d47ee45e59471d42c6536e168a01ba793bfd8",
+      "packages/poe1/src/shock.ts": "ab3cb7692ea8b8c6acaa9bb7be38a60dd786ef40956eb64829e00e53b72eb0ef"
     }
   },
   "reference": {
@@ -42,12 +43,12 @@
       {
         "path": "src/Modules/CalcOffence.lua",
         "gitBlob": "76f6d5ca25e0e7f9f5e31ee83887e3c7898c16c3",
-        "lines": "112-140,494-506,2427-2467,3071-3077,3508-3514,3622-3626,3826-3831,6137-6139,3375-3409,2336-2340,3071-3142,3233-3310,3437-3480,3678-3691,3819-3831,3618-3626"
+        "lines": "112-140,494-506,2427-2467,3071-3077,3508-3514,3622-3626,3826-3831,6137-6139,3375-3409,2336-2340,3071-3142,3233-3310,3437-3480,3678-3691,3819-3831,3618-3626,3521-3522,3609-3626"
       },
       {
         "path": "src/Modules/Data.lua",
         "gitBlob": "a1134c87915f657ae734d9268d04709368e94a62",
-        "lines": "238,245-246,259"
+        "lines": "238,245-246,259,427"
       },
       {
         "path": "src/Data/SkillStatMap.lua",
@@ -57,7 +58,7 @@
       {
         "path": "src/Modules/ConfigOptions.lua",
         "gitBlob": "8ff3e6f8c794dcb83b68dab8754e6e84cebdd7e2",
-        "lines": "2086-2095,2248-2250,1979-1980,2248-2262"
+        "lines": "2086-2095,2248-2250,1979-1980,2248-2262,1943-1949"
       },
       {
         "path": "src/Modules/ModParser.lua",
@@ -117,7 +118,7 @@
       {
         "path": "src/Modules/CalcPerform.lua",
         "gitBlob": "d683aab3ce3a3b96fdc13bac149cbf6d1ff76249",
-        "lines": "3654-3683"
+        "lines": "3654-3683,3545-3556,3624-3634"
       }
     ]
   },
@@ -262,6 +263,18 @@
         "penetrationPercent": 0,
         "effectiveResistancePercent": 0,
         "damageMultiplier": 1
+      },
+      "shockEffects": {
+        "mode": "excluded",
+        "magnitudePercent": 0,
+        "uptimePercent": 0,
+        "shockedDamageMultiplier": 1.0,
+        "averageDamageMultiplier": 1.0,
+        "unshockedHitMeanAfterResistance": 1043.5,
+        "shockedHitMeanAfterResistance": 1043.5,
+        "normalHitMeanAfterShock": 1043.5,
+        "criticalHitMeanAfterShock": 1565.25,
+        "expectedHitMeanAfterShock": 1043.5
       }
     },
     {
@@ -374,6 +387,18 @@
         "penetrationPercent": 0,
         "effectiveResistancePercent": 0,
         "damageMultiplier": 1
+      },
+      "shockEffects": {
+        "mode": "excluded",
+        "magnitudePercent": 0,
+        "uptimePercent": 0,
+        "shockedDamageMultiplier": 1.0,
+        "averageDamageMultiplier": 1.0,
+        "unshockedHitMeanAfterResistance": 2087,
+        "shockedHitMeanAfterResistance": 2087.0,
+        "normalHitMeanAfterShock": 2087.0,
+        "criticalHitMeanAfterShock": 3130.5,
+        "expectedHitMeanAfterShock": 2087.0
       }
     },
     {
@@ -474,6 +499,18 @@
         "penetrationPercent": 0,
         "effectiveResistancePercent": 0,
         "damageMultiplier": 1
+      },
+      "shockEffects": {
+        "mode": "excluded",
+        "magnitudePercent": 0,
+        "uptimePercent": 0,
+        "shockedDamageMultiplier": 1.0,
+        "averageDamageMultiplier": 1.0,
+        "unshockedHitMeanAfterResistance": 1043.5,
+        "shockedHitMeanAfterResistance": 1043.5,
+        "normalHitMeanAfterShock": 1043.5,
+        "criticalHitMeanAfterShock": 1565.25,
+        "expectedHitMeanAfterShock": 1043.5
       }
     },
     {
@@ -590,6 +627,18 @@
         "penetrationPercent": 0,
         "effectiveResistancePercent": 25,
         "damageMultiplier": 0.75
+      },
+      "shockEffects": {
+        "mode": "excluded",
+        "magnitudePercent": 0,
+        "uptimePercent": 0,
+        "shockedDamageMultiplier": 1.0,
+        "averageDamageMultiplier": 1.0,
+        "unshockedHitMeanAfterResistance": 1565.25,
+        "shockedHitMeanAfterResistance": 1565.25,
+        "normalHitMeanAfterShock": 1565.25,
+        "criticalHitMeanAfterShock": 2347.875,
+        "expectedHitMeanAfterShock": 1565.25
       }
     },
     {
@@ -690,6 +739,18 @@
         "penetrationPercent": 0,
         "effectiveResistancePercent": 0,
         "damageMultiplier": 1
+      },
+      "shockEffects": {
+        "mode": "excluded",
+        "magnitudePercent": 0,
+        "uptimePercent": 0,
+        "shockedDamageMultiplier": 1.0,
+        "averageDamageMultiplier": 1.0,
+        "unshockedHitMeanAfterResistance": 0,
+        "shockedHitMeanAfterResistance": 0.0,
+        "normalHitMeanAfterShock": 0.0,
+        "criticalHitMeanAfterShock": 0.0,
+        "expectedHitMeanAfterShock": 0.0
       }
     },
     {
@@ -798,6 +859,18 @@
         "penetrationPercent": 0,
         "effectiveResistancePercent": 0,
         "damageMultiplier": 1
+      },
+      "shockEffects": {
+        "mode": "excluded",
+        "magnitudePercent": 0,
+        "uptimePercent": 0,
+        "shockedDamageMultiplier": 1.0,
+        "averageDamageMultiplier": 1.0,
+        "unshockedHitMeanAfterResistance": 1072,
+        "shockedHitMeanAfterResistance": 1072.0,
+        "normalHitMeanAfterShock": 1072.0,
+        "criticalHitMeanAfterShock": 1608.0,
+        "expectedHitMeanAfterShock": 1072.0
       }
     },
     {
@@ -918,6 +991,18 @@
         "penetrationPercent": 0,
         "effectiveResistancePercent": 0,
         "damageMultiplier": 1
+      },
+      "shockEffects": {
+        "mode": "excluded",
+        "magnitudePercent": 0,
+        "uptimePercent": 0,
+        "shockedDamageMultiplier": 1.0,
+        "averageDamageMultiplier": 1.0,
+        "unshockedHitMeanAfterResistance": 1081.5,
+        "shockedHitMeanAfterResistance": 1081.5,
+        "normalHitMeanAfterShock": 1081.5,
+        "criticalHitMeanAfterShock": 1622.25,
+        "expectedHitMeanAfterShock": 1081.5
       }
     },
     {
@@ -1047,6 +1132,18 @@
         "penetrationPercent": 0,
         "effectiveResistancePercent": 25,
         "damageMultiplier": 0.75
+      },
+      "shockEffects": {
+        "mode": "excluded",
+        "magnitudePercent": 0,
+        "uptimePercent": 0,
+        "shockedDamageMultiplier": 1.0,
+        "averageDamageMultiplier": 1.0,
+        "unshockedHitMeanAfterResistance": 1608,
+        "shockedHitMeanAfterResistance": 1608.0,
+        "normalHitMeanAfterShock": 1608.0,
+        "criticalHitMeanAfterShock": 2412.0,
+        "expectedHitMeanAfterShock": 1608.0
       }
     },
     {
@@ -1155,6 +1252,18 @@
         "penetrationPercent": 0,
         "effectiveResistancePercent": 0,
         "damageMultiplier": 1
+      },
+      "shockEffects": {
+        "mode": "excluded",
+        "magnitudePercent": 0,
+        "uptimePercent": 0,
+        "shockedDamageMultiplier": 1.0,
+        "averageDamageMultiplier": 1.0,
+        "unshockedHitMeanAfterResistance": 43,
+        "shockedHitMeanAfterResistance": 43.0,
+        "normalHitMeanAfterShock": 43.0,
+        "criticalHitMeanAfterShock": 64.5,
+        "expectedHitMeanAfterShock": 43.0
       }
     },
     {
@@ -1268,6 +1377,18 @@
         "penetrationPercent": 0,
         "effectiveResistancePercent": 0,
         "damageMultiplier": 1
+      },
+      "shockEffects": {
+        "mode": "excluded",
+        "magnitudePercent": 0,
+        "uptimePercent": 0,
+        "shockedDamageMultiplier": 1.0,
+        "averageDamageMultiplier": 1.0,
+        "unshockedHitMeanAfterResistance": 1308,
+        "shockedHitMeanAfterResistance": 1308.0,
+        "normalHitMeanAfterShock": 1308.0,
+        "criticalHitMeanAfterShock": 1962.0,
+        "expectedHitMeanAfterShock": 1308.0
       }
     },
     {
@@ -1376,6 +1497,18 @@
         "penetrationPercent": 0,
         "effectiveResistancePercent": 0,
         "damageMultiplier": 1
+      },
+      "shockEffects": {
+        "mode": "excluded",
+        "magnitudePercent": 0,
+        "uptimePercent": 0,
+        "shockedDamageMultiplier": 1.0,
+        "averageDamageMultiplier": 1.0,
+        "unshockedHitMeanAfterResistance": 1043.5,
+        "shockedHitMeanAfterResistance": 1043.5,
+        "normalHitMeanAfterShock": 1043.5,
+        "criticalHitMeanAfterShock": 1565.25,
+        "expectedHitMeanAfterShock": 1043.5
       }
     },
     {
@@ -1496,6 +1629,18 @@
         "penetrationPercent": 0,
         "effectiveResistancePercent": 0,
         "damageMultiplier": 1
+      },
+      "shockEffects": {
+        "mode": "excluded",
+        "magnitudePercent": 0,
+        "uptimePercent": 0,
+        "shockedDamageMultiplier": 1.0,
+        "averageDamageMultiplier": 1.0,
+        "unshockedHitMeanAfterResistance": 1304.5,
+        "shockedHitMeanAfterResistance": 1304.5,
+        "normalHitMeanAfterShock": 1304.5,
+        "criticalHitMeanAfterShock": 1956.75,
+        "expectedHitMeanAfterShock": 1304.5
       }
     },
     {
@@ -1616,6 +1761,18 @@
         "penetrationPercent": 0,
         "effectiveResistancePercent": 0,
         "damageMultiplier": 1
+      },
+      "shockEffects": {
+        "mode": "excluded",
+        "magnitudePercent": 0,
+        "uptimePercent": 0,
+        "shockedDamageMultiplier": 1.0,
+        "averageDamageMultiplier": 1.0,
+        "unshockedHitMeanAfterResistance": 1450.5,
+        "shockedHitMeanAfterResistance": 1450.5,
+        "normalHitMeanAfterShock": 1450.5,
+        "criticalHitMeanAfterShock": 2175.75,
+        "expectedHitMeanAfterShock": 1450.5
       }
     },
     {
@@ -1770,6 +1927,18 @@
         "penetrationPercent": 0,
         "effectiveResistancePercent": 25,
         "damageMultiplier": 0.75
+      },
+      "shockEffects": {
+        "mode": "excluded",
+        "magnitudePercent": 0,
+        "uptimePercent": 0,
+        "shockedDamageMultiplier": 1.0,
+        "averageDamageMultiplier": 1.0,
+        "unshockedHitMeanAfterResistance": 2235,
+        "shockedHitMeanAfterResistance": 2235.0,
+        "normalHitMeanAfterShock": 2235.0,
+        "criticalHitMeanAfterShock": 3352.5,
+        "expectedHitMeanAfterShock": 2235.0
       }
     },
     {
@@ -1890,6 +2059,18 @@
         "penetrationPercent": 0,
         "effectiveResistancePercent": 0,
         "damageMultiplier": 1
+      },
+      "shockEffects": {
+        "mode": "excluded",
+        "magnitudePercent": 0,
+        "uptimePercent": 0,
+        "shockedDamageMultiplier": 1.0,
+        "averageDamageMultiplier": 1.0,
+        "unshockedHitMeanAfterResistance": 1043.5,
+        "shockedHitMeanAfterResistance": 1043.5,
+        "normalHitMeanAfterShock": 1043.5,
+        "criticalHitMeanAfterShock": 1565.25,
+        "expectedHitMeanAfterShock": 1043.5
       }
     },
     {
@@ -2028,6 +2209,18 @@
         "penetrationPercent": 0,
         "effectiveResistancePercent": 0,
         "damageMultiplier": 1
+      },
+      "shockEffects": {
+        "mode": "excluded",
+        "magnitudePercent": 0,
+        "uptimePercent": 0,
+        "shockedDamageMultiplier": 1.0,
+        "averageDamageMultiplier": 1.0,
+        "unshockedHitMeanAfterResistance": 1818,
+        "shockedHitMeanAfterResistance": 1818.0,
+        "normalHitMeanAfterShock": 1818.0,
+        "criticalHitMeanAfterShock": 2727.0,
+        "expectedHitMeanAfterShock": 1818.0
       }
     },
     {
@@ -2123,6 +2316,18 @@
         "penetrationPercent": 0,
         "effectiveResistancePercent": 0,
         "damageMultiplier": 1
+      },
+      "shockEffects": {
+        "mode": "excluded",
+        "magnitudePercent": 0,
+        "uptimePercent": 0,
+        "shockedDamageMultiplier": 1.0,
+        "averageDamageMultiplier": 1.0,
+        "unshockedHitMeanAfterResistance": 1074.805,
+        "shockedHitMeanAfterResistance": 1074.805,
+        "normalHitMeanAfterShock": 1043.5,
+        "criticalHitMeanAfterShock": 1565.25,
+        "expectedHitMeanAfterShock": 1074.805
       }
     },
     {
@@ -2229,6 +2434,18 @@
         "penetrationPercent": 0,
         "effectiveResistancePercent": 0,
         "damageMultiplier": 1
+      },
+      "shockEffects": {
+        "mode": "excluded",
+        "magnitudePercent": 0,
+        "uptimePercent": 0,
+        "shockedDamageMultiplier": 1.0,
+        "averageDamageMultiplier": 1.0,
+        "unshockedHitMeanAfterResistance": 1121.7625,
+        "shockedHitMeanAfterResistance": 1121.7625,
+        "normalHitMeanAfterShock": 1043.5,
+        "criticalHitMeanAfterShock": 1565.25,
+        "expectedHitMeanAfterShock": 1121.7625
       }
     },
     {
@@ -2330,6 +2547,18 @@
         "penetrationPercent": 0,
         "effectiveResistancePercent": 0,
         "damageMultiplier": 1
+      },
+      "shockEffects": {
+        "mode": "excluded",
+        "magnitudePercent": 0,
+        "uptimePercent": 0,
+        "shockedDamageMultiplier": 1.0,
+        "averageDamageMultiplier": 1.0,
+        "unshockedHitMeanAfterResistance": 1106.11,
+        "shockedHitMeanAfterResistance": 1106.11,
+        "normalHitMeanAfterShock": 1043.5,
+        "criticalHitMeanAfterShock": 2087.0,
+        "expectedHitMeanAfterShock": 1106.11
       }
     },
     {
@@ -2450,6 +2679,18 @@
         "penetrationPercent": 0,
         "effectiveResistancePercent": 0,
         "damageMultiplier": 1
+      },
+      "shockEffects": {
+        "mode": "excluded",
+        "magnitudePercent": 0,
+        "uptimePercent": 0,
+        "shockedDamageMultiplier": 1.0,
+        "averageDamageMultiplier": 1.0,
+        "unshockedHitMeanAfterResistance": 1459.203,
+        "shockedHitMeanAfterResistance": 1459.203,
+        "normalHitMeanAfterShock": 1450.5,
+        "criticalHitMeanAfterShock": 2175.75,
+        "expectedHitMeanAfterShock": 1459.203
       }
     },
     {
@@ -2570,6 +2811,18 @@
         "penetrationPercent": 0,
         "effectiveResistancePercent": 0,
         "damageMultiplier": 1
+      },
+      "shockEffects": {
+        "mode": "excluded",
+        "magnitudePercent": 0,
+        "uptimePercent": 0,
+        "shockedDamageMultiplier": 1.0,
+        "averageDamageMultiplier": 1.0,
+        "unshockedHitMeanAfterResistance": 1074.805,
+        "shockedHitMeanAfterResistance": 1074.805,
+        "normalHitMeanAfterShock": 1043.5,
+        "criticalHitMeanAfterShock": 1565.25,
+        "expectedHitMeanAfterShock": 1074.805
       }
     },
     {
@@ -2671,6 +2924,18 @@
         "penetrationPercent": 0,
         "effectiveResistancePercent": 0,
         "damageMultiplier": 1
+      },
+      "shockEffects": {
+        "mode": "excluded",
+        "magnitudePercent": 0,
+        "uptimePercent": 0,
+        "shockedDamageMultiplier": 1.0,
+        "averageDamageMultiplier": 1.0,
+        "unshockedHitMeanAfterResistance": 1565.25,
+        "shockedHitMeanAfterResistance": 1565.25,
+        "normalHitMeanAfterShock": 1043.5,
+        "criticalHitMeanAfterShock": 1565.25,
+        "expectedHitMeanAfterShock": 1565.25
       }
     },
     {
@@ -2772,6 +3037,18 @@
         "penetrationPercent": 0,
         "effectiveResistancePercent": 0,
         "damageMultiplier": 1
+      },
+      "shockEffects": {
+        "mode": "excluded",
+        "magnitudePercent": 0,
+        "uptimePercent": 0,
+        "shockedDamageMultiplier": 1.0,
+        "averageDamageMultiplier": 1.0,
+        "unshockedHitMeanAfterResistance": 1043.5,
+        "shockedHitMeanAfterResistance": 1043.5,
+        "normalHitMeanAfterShock": 1043.5,
+        "criticalHitMeanAfterShock": 1565.25,
+        "expectedHitMeanAfterShock": 1043.5
       }
     },
     {
@@ -2903,6 +3180,18 @@
         "penetrationPercent": 0,
         "effectiveResistancePercent": 0,
         "damageMultiplier": 1
+      },
+      "shockEffects": {
+        "mode": "excluded",
+        "magnitudePercent": 0,
+        "uptimePercent": 0,
+        "shockedDamageMultiplier": 1.0,
+        "averageDamageMultiplier": 1.0,
+        "unshockedHitMeanAfterResistance": 1470.807,
+        "shockedHitMeanAfterResistance": 1470.807,
+        "normalHitMeanAfterShock": 1450.5,
+        "criticalHitMeanAfterShock": 2901.0,
+        "expectedHitMeanAfterShock": 1470.807
       }
     },
     {
@@ -3073,6 +3362,18 @@
         "penetrationPercent": 0,
         "effectiveResistancePercent": 25,
         "damageMultiplier": 0.75
+      },
+      "shockEffects": {
+        "mode": "excluded",
+        "magnitudePercent": 0,
+        "uptimePercent": 0,
+        "shockedDamageMultiplier": 1.0,
+        "averageDamageMultiplier": 1.0,
+        "unshockedHitMeanAfterResistance": 2302.0499999999997,
+        "shockedHitMeanAfterResistance": 2302.0499999999997,
+        "normalHitMeanAfterShock": 2235.0,
+        "criticalHitMeanAfterShock": 4470.0,
+        "expectedHitMeanAfterShock": 2302.0499999999997
       }
     },
     {
@@ -3199,6 +3500,18 @@
         "penetrationPercent": 0,
         "effectiveResistancePercent": 0,
         "damageMultiplier": 1
+      },
+      "shockEffects": {
+        "mode": "excluded",
+        "magnitudePercent": 0,
+        "uptimePercent": 0,
+        "shockedDamageMultiplier": 1.0,
+        "averageDamageMultiplier": 1.0,
+        "unshockedHitMeanAfterResistance": 1633.263,
+        "shockedHitMeanAfterResistance": 1633.263,
+        "normalHitMeanAfterShock": 1450.5,
+        "criticalHitMeanAfterShock": 2175.75,
+        "expectedHitMeanAfterShock": 1633.263
       }
     },
     {
@@ -3300,7 +3613,19 @@
         "effectiveResistancePercent": 55,
         "damageMultiplier": 0.44999999999999996
       },
-      "xmlSha256": "0ed58377587d875ac5690cfdceef21010959ed75cf74dd29d406dad52c155535"
+      "xmlSha256": "0ed58377587d875ac5690cfdceef21010959ed75cf74dd29d406dad52c155535",
+      "shockEffects": {
+        "mode": "excluded",
+        "magnitudePercent": 0,
+        "uptimePercent": 0,
+        "shockedDamageMultiplier": 1.0,
+        "averageDamageMultiplier": 1.0,
+        "unshockedHitMeanAfterResistance": 469.57499999999993,
+        "shockedHitMeanAfterResistance": 469.57499999999993,
+        "normalHitMeanAfterShock": 469.57499999999993,
+        "criticalHitMeanAfterShock": 704.3625,
+        "expectedHitMeanAfterShock": 469.57499999999993
+      }
     },
     {
       "fixture": "lightning-exposure",
@@ -3407,7 +3732,19 @@
         "effectiveResistancePercent": 60,
         "damageMultiplier": 0.4
       },
-      "xmlSha256": "017a4c42251b5701f65e3414b623742eba4c732cfe9751a681400bbffa948d4a"
+      "xmlSha256": "017a4c42251b5701f65e3414b623742eba4c732cfe9751a681400bbffa948d4a",
+      "shockEffects": {
+        "mode": "excluded",
+        "magnitudePercent": 0,
+        "uptimePercent": 0,
+        "shockedDamageMultiplier": 1.0,
+        "averageDamageMultiplier": 1.0,
+        "unshockedHitMeanAfterResistance": 417.40000000000003,
+        "shockedHitMeanAfterResistance": 417.40000000000003,
+        "normalHitMeanAfterShock": 417.40000000000003,
+        "criticalHitMeanAfterShock": 626.1,
+        "expectedHitMeanAfterShock": 417.40000000000003
+      }
     },
     {
       "fixture": "lightning-exposure-strongest",
@@ -3525,7 +3862,19 @@
         "effectiveResistancePercent": 50,
         "damageMultiplier": 0.5
       },
-      "xmlSha256": "3f983bdac3799d9493b0d21420253f2f4b0e48b13b044b2317dd5da7b53fa0ab"
+      "xmlSha256": "3f983bdac3799d9493b0d21420253f2f4b0e48b13b044b2317dd5da7b53fa0ab",
+      "shockEffects": {
+        "mode": "excluded",
+        "magnitudePercent": 0,
+        "uptimePercent": 0,
+        "shockedDamageMultiplier": 1.0,
+        "averageDamageMultiplier": 1.0,
+        "unshockedHitMeanAfterResistance": 521.75,
+        "shockedHitMeanAfterResistance": 521.75,
+        "normalHitMeanAfterShock": 521.75,
+        "criticalHitMeanAfterShock": 782.625,
+        "expectedHitMeanAfterShock": 521.75
+      }
     },
     {
       "fixture": "lightning-exposure-disabled",
@@ -3643,7 +3992,19 @@
         "effectiveResistancePercent": 65,
         "damageMultiplier": 0.35
       },
-      "xmlSha256": "4cd481e1cfc962b0ec333a8c4f862eefd935321d832c035f1f7b717e1a9c372d"
+      "xmlSha256": "4cd481e1cfc962b0ec333a8c4f862eefd935321d832c035f1f7b717e1a9c372d",
+      "shockEffects": {
+        "mode": "excluded",
+        "magnitudePercent": 0,
+        "uptimePercent": 0,
+        "shockedDamageMultiplier": 1.0,
+        "averageDamageMultiplier": 1.0,
+        "unshockedHitMeanAfterResistance": 365.22499999999997,
+        "shockedHitMeanAfterResistance": 365.22499999999997,
+        "normalHitMeanAfterShock": 365.22499999999997,
+        "criticalHitMeanAfterShock": 547.8375,
+        "expectedHitMeanAfterShock": 365.22499999999997
+      }
     },
     {
       "fixture": "lightning-overcap",
@@ -3756,7 +4117,19 @@
         "effectiveResistancePercent": 70,
         "damageMultiplier": 0.30000000000000004
       },
-      "xmlSha256": "c024c9a5ef69642dddb011979e13771fc9e5882ec98c3a92c2f72c298ea6ee65"
+      "xmlSha256": "c024c9a5ef69642dddb011979e13771fc9e5882ec98c3a92c2f72c298ea6ee65",
+      "shockEffects": {
+        "mode": "excluded",
+        "magnitudePercent": 0,
+        "uptimePercent": 0,
+        "shockedDamageMultiplier": 1.0,
+        "averageDamageMultiplier": 1.0,
+        "unshockedHitMeanAfterResistance": 313.05000000000007,
+        "shockedHitMeanAfterResistance": 313.05000000000007,
+        "normalHitMeanAfterShock": 313.05000000000007,
+        "criticalHitMeanAfterShock": 469.57500000000005,
+        "expectedHitMeanAfterShock": 313.05000000000007
+      }
     },
     {
       "fixture": "lightning-fixed-cap",
@@ -3869,7 +4242,19 @@
         "effectiveResistancePercent": 55,
         "damageMultiplier": 0.44999999999999996
       },
-      "xmlSha256": "75d8ce6a489c1afb61550cd589cecbfcc25258408cd3deed7408c84c10de23f4"
+      "xmlSha256": "75d8ce6a489c1afb61550cd589cecbfcc25258408cd3deed7408c84c10de23f4",
+      "shockEffects": {
+        "mode": "excluded",
+        "magnitudePercent": 0,
+        "uptimePercent": 0,
+        "shockedDamageMultiplier": 1.0,
+        "averageDamageMultiplier": 1.0,
+        "unshockedHitMeanAfterResistance": 469.57499999999993,
+        "shockedHitMeanAfterResistance": 469.57499999999993,
+        "normalHitMeanAfterShock": 469.57499999999993,
+        "criticalHitMeanAfterShock": 704.3625,
+        "expectedHitMeanAfterShock": 469.57499999999993
+      }
     },
     {
       "fixture": "lightning-negative",
@@ -3982,7 +4367,19 @@
         "effectiveResistancePercent": -85,
         "damageMultiplier": 1.85
       },
-      "xmlSha256": "430c797675d2d49b7afb95903e4e5a7be5784bd92645e294bc5498b16ff03289"
+      "xmlSha256": "430c797675d2d49b7afb95903e4e5a7be5784bd92645e294bc5498b16ff03289",
+      "shockEffects": {
+        "mode": "excluded",
+        "magnitudePercent": 0,
+        "uptimePercent": 0,
+        "shockedDamageMultiplier": 1.0,
+        "averageDamageMultiplier": 1.0,
+        "unshockedHitMeanAfterResistance": 1930.4750000000001,
+        "shockedHitMeanAfterResistance": 1930.4750000000001,
+        "normalHitMeanAfterShock": 1930.4750000000001,
+        "criticalHitMeanAfterShock": 2895.7125,
+        "expectedHitMeanAfterShock": 1930.4750000000001
+      }
     },
     {
       "fixture": "lightning-floor",
@@ -4095,7 +4492,19 @@
         "effectiveResistancePercent": -220,
         "damageMultiplier": 3.2
       },
-      "xmlSha256": "694fe059c8966a4d2ffeef4cff92355c4e3718e459231d2e8152f8b8a7149d41"
+      "xmlSha256": "694fe059c8966a4d2ffeef4cff92355c4e3718e459231d2e8152f8b8a7149d41",
+      "shockEffects": {
+        "mode": "excluded",
+        "magnitudePercent": 0,
+        "uptimePercent": 0,
+        "shockedDamageMultiplier": 1.0,
+        "averageDamageMultiplier": 1.0,
+        "unshockedHitMeanAfterResistance": 3339.2000000000003,
+        "shockedHitMeanAfterResistance": 3339.2000000000003,
+        "normalHitMeanAfterShock": 3339.2000000000003,
+        "criticalHitMeanAfterShock": 5008.8,
+        "expectedHitMeanAfterShock": 3339.2000000000003
+      }
     },
     {
       "fixture": "lightning-penetration-sum",
@@ -4201,7 +4610,19 @@
         "effectiveResistancePercent": 45,
         "damageMultiplier": 0.55
       },
-      "xmlSha256": "de70e7e871a2eb679807a531092c09ca73ffb8f1099e9b2bff1c6053cfcfdba7"
+      "xmlSha256": "de70e7e871a2eb679807a531092c09ca73ffb8f1099e9b2bff1c6053cfcfdba7",
+      "shockEffects": {
+        "mode": "excluded",
+        "magnitudePercent": 0,
+        "uptimePercent": 0,
+        "shockedDamageMultiplier": 1.0,
+        "averageDamageMultiplier": 1.0,
+        "unshockedHitMeanAfterResistance": 573.9250000000001,
+        "shockedHitMeanAfterResistance": 573.9250000000001,
+        "normalHitMeanAfterShock": 573.9250000000001,
+        "criticalHitMeanAfterShock": 860.8875,
+        "expectedHitMeanAfterShock": 573.9250000000001
+      }
     },
     {
       "fixture": "lightning-resistance-combined",
@@ -4389,21 +4810,1123 @@
         "effectiveResistancePercent": 70,
         "damageMultiplier": 0.30000000000000004
       },
-      "xmlSha256": "50b538abf8036e4df0d7c2a9a308d821bb958d3c798cd207c919fa6fa62c98b2"
+      "xmlSha256": "50b538abf8036e4df0d7c2a9a308d821bb958d3c798cd207c919fa6fa62c98b2",
+      "shockEffects": {
+        "mode": "excluded",
+        "magnitudePercent": 0,
+        "uptimePercent": 0,
+        "shockedDamageMultiplier": 1.0,
+        "averageDamageMultiplier": 1.0,
+        "unshockedHitMeanAfterResistance": 920.82,
+        "shockedHitMeanAfterResistance": 920.82,
+        "normalHitMeanAfterShock": 894.0000000000001,
+        "criticalHitMeanAfterShock": 1788.0000000000002,
+        "expectedHitMeanAfterShock": 920.82
+      }
+    },
+    {
+      "fixture": "shock-full",
+      "contributions": [],
+      "increasedDamagePercent": 0,
+      "increasedCastSpeedPercent": 0,
+      "effectiveLightningResistancePercent": 0,
+      "beforeResistance": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "afterResistance": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "castTimeSeconds": 0.6,
+      "castsPerSecond": 1.6666666666666667,
+      "hitDps": 2087.0,
+      "combinedDps": 2087.0,
+      "xmlSha256": "cb835734caa4c05ec77b45968a2086a380b49a6308634cedd11ebc2968f00899",
+      "gemLevel": 20,
+      "baseLightningDamage": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "addedGroups": [],
+      "rawAddedLightningDamage": {
+        "min": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "effectiveAddedLightningDamage": {
+        "min": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "combinedBaseLightningDamage": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "addedDamageEffectiveness": 1.9,
+      "supports": [],
+      "supportContributions": [],
+      "spellDamageMultiplier": 1,
+      "criticalChanceMultiplier": 1,
+      "castTimeMultiplier": 1,
+      "manaCostMultiplier": 1,
+      "criticalMode": "disabled",
+      "criticalModifiers": [],
+      "criticalEffects": {
+        "mode": "disabled",
+        "baseChancePercent": 6,
+        "increasedChancePercent": 0,
+        "lessChanceMultiplier": 1,
+        "unroundedChancePercent": 6,
+        "roundedChancePercent": 6,
+        "chancePercent": 0,
+        "baseMultiplierPercent": 150,
+        "addedMultiplierPercent": 0,
+        "criticalMultiplier": 1.5,
+        "criticalHitBeforeResistance": {
+          "min": 156,
+          "max": 2974.5,
+          "mean": 1565.25
+        },
+        "criticalHitAfterResistance": {
+          "min": 156,
+          "max": 2974.5,
+          "mean": 1565.25
+        },
+        "expectedHitMeanBeforeResistance": 1043.5,
+        "expectedHitMeanAfterResistance": 1043.5
+      },
+      "rawResistancePercent": 0,
+      "maximumResistanceMode": "configured",
+      "exposures": [],
+      "penetrationModifiers": [],
+      "resistanceEffects": {
+        "profile": "configured",
+        "baseResistancePercent": 0,
+        "maximumResistanceMode": "configured",
+        "maximumResistancePercent": 75,
+        "minimumResistancePercent": -200,
+        "exposurePercent": 0,
+        "selectedExposureIndices": [],
+        "uncappedResistancePercent": 0,
+        "cappedResistancePercent": 0,
+        "penetrationPercent": 0,
+        "effectiveResistancePercent": 0,
+        "damageMultiplier": 1
+      },
+      "comparisonKind": "host-weighted-executed-pob-endpoints",
+      "shock": {
+        "magnitudePercent": 20,
+        "uptimePercent": 100,
+        "source": {
+          "kind": "scenario",
+          "id": "pob-config:shock",
+          "label": "conditionEnemyShocked=true; conditionShockEffect=20; host shockUptimePercent=100"
+        }
+      },
+      "oracleEndpoints": {
+        "shockedXmlSha256": "cb835734caa4c05ec77b45968a2086a380b49a6308634cedd11ebc2968f00899",
+        "unshockedXmlSha256": "23ab9862841b6af6ad55ee3e88449061f2b2ae2473a63e319bd16da9325dfe8b",
+        "unshockedXmlTransformation": "replace the sole conditionEnemyShocked boolean true with false; all other XML bytes unchanged"
+      },
+      "unshockedHitDps": 1739.1666666666667,
+      "unshockedCombinedDps": 1739.1666666666667,
+      "shockEffects": {
+        "mode": "configured",
+        "magnitudePercent": 20,
+        "uptimePercent": 100,
+        "shockedDamageMultiplier": 1.2,
+        "averageDamageMultiplier": 1.2,
+        "unshockedHitMeanAfterResistance": 1043.5,
+        "shockedHitMeanAfterResistance": 1252.2,
+        "normalHitMeanAfterShock": 1252.2,
+        "criticalHitMeanAfterShock": 1878.3,
+        "expectedHitMeanAfterShock": 1252.2
+      }
+    },
+    {
+      "fixture": "shock-zero-uptime",
+      "contributions": [],
+      "increasedDamagePercent": 0,
+      "increasedCastSpeedPercent": 0,
+      "effectiveLightningResistancePercent": 0,
+      "beforeResistance": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "afterResistance": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "castTimeSeconds": 0.6,
+      "castsPerSecond": 1.6666666666666667,
+      "hitDps": 1739.1666666666667,
+      "combinedDps": 1739.1666666666667,
+      "xmlSha256": "cb835734caa4c05ec77b45968a2086a380b49a6308634cedd11ebc2968f00899",
+      "gemLevel": 20,
+      "baseLightningDamage": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "addedGroups": [],
+      "rawAddedLightningDamage": {
+        "min": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "effectiveAddedLightningDamage": {
+        "min": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "combinedBaseLightningDamage": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "addedDamageEffectiveness": 1.9,
+      "supports": [],
+      "supportContributions": [],
+      "spellDamageMultiplier": 1,
+      "criticalChanceMultiplier": 1,
+      "castTimeMultiplier": 1,
+      "manaCostMultiplier": 1,
+      "criticalMode": "disabled",
+      "criticalModifiers": [],
+      "criticalEffects": {
+        "mode": "disabled",
+        "baseChancePercent": 6,
+        "increasedChancePercent": 0,
+        "lessChanceMultiplier": 1,
+        "unroundedChancePercent": 6,
+        "roundedChancePercent": 6,
+        "chancePercent": 0,
+        "baseMultiplierPercent": 150,
+        "addedMultiplierPercent": 0,
+        "criticalMultiplier": 1.5,
+        "criticalHitBeforeResistance": {
+          "min": 156,
+          "max": 2974.5,
+          "mean": 1565.25
+        },
+        "criticalHitAfterResistance": {
+          "min": 156,
+          "max": 2974.5,
+          "mean": 1565.25
+        },
+        "expectedHitMeanBeforeResistance": 1043.5,
+        "expectedHitMeanAfterResistance": 1043.5
+      },
+      "rawResistancePercent": 0,
+      "maximumResistanceMode": "configured",
+      "exposures": [],
+      "penetrationModifiers": [],
+      "resistanceEffects": {
+        "profile": "configured",
+        "baseResistancePercent": 0,
+        "maximumResistanceMode": "configured",
+        "maximumResistancePercent": 75,
+        "minimumResistancePercent": -200,
+        "exposurePercent": 0,
+        "selectedExposureIndices": [],
+        "uncappedResistancePercent": 0,
+        "cappedResistancePercent": 0,
+        "penetrationPercent": 0,
+        "effectiveResistancePercent": 0,
+        "damageMultiplier": 1
+      },
+      "comparisonKind": "host-weighted-executed-pob-endpoints",
+      "shock": {
+        "magnitudePercent": 20,
+        "uptimePercent": 0,
+        "source": {
+          "kind": "scenario",
+          "id": "pob-config:shock",
+          "label": "conditionEnemyShocked=true; conditionShockEffect=20; host shockUptimePercent=0"
+        }
+      },
+      "oracleEndpoints": {
+        "shockedXmlSha256": "cb835734caa4c05ec77b45968a2086a380b49a6308634cedd11ebc2968f00899",
+        "unshockedXmlSha256": "23ab9862841b6af6ad55ee3e88449061f2b2ae2473a63e319bd16da9325dfe8b",
+        "unshockedXmlTransformation": "replace the sole conditionEnemyShocked boolean true with false; all other XML bytes unchanged"
+      },
+      "unshockedHitDps": 1739.1666666666667,
+      "unshockedCombinedDps": 1739.1666666666667,
+      "shockEffects": {
+        "mode": "configured",
+        "magnitudePercent": 20,
+        "uptimePercent": 0,
+        "shockedDamageMultiplier": 1.2,
+        "averageDamageMultiplier": 1.0,
+        "unshockedHitMeanAfterResistance": 1043.5,
+        "shockedHitMeanAfterResistance": 1252.2,
+        "normalHitMeanAfterShock": 1043.5,
+        "criticalHitMeanAfterShock": 1565.25,
+        "expectedHitMeanAfterShock": 1043.5
+      }
+    },
+    {
+      "fixture": "shock-partial",
+      "contributions": [],
+      "increasedDamagePercent": 0,
+      "increasedCastSpeedPercent": 0,
+      "effectiveLightningResistancePercent": 0,
+      "beforeResistance": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "afterResistance": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "castTimeSeconds": 0.6,
+      "castsPerSecond": 1.6666666666666667,
+      "hitDps": 1913.0833333333335,
+      "combinedDps": 1913.0833333333335,
+      "xmlSha256": "cb835734caa4c05ec77b45968a2086a380b49a6308634cedd11ebc2968f00899",
+      "gemLevel": 20,
+      "baseLightningDamage": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "addedGroups": [],
+      "rawAddedLightningDamage": {
+        "min": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "effectiveAddedLightningDamage": {
+        "min": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "combinedBaseLightningDamage": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "addedDamageEffectiveness": 1.9,
+      "supports": [],
+      "supportContributions": [],
+      "spellDamageMultiplier": 1,
+      "criticalChanceMultiplier": 1,
+      "castTimeMultiplier": 1,
+      "manaCostMultiplier": 1,
+      "criticalMode": "disabled",
+      "criticalModifiers": [],
+      "criticalEffects": {
+        "mode": "disabled",
+        "baseChancePercent": 6,
+        "increasedChancePercent": 0,
+        "lessChanceMultiplier": 1,
+        "unroundedChancePercent": 6,
+        "roundedChancePercent": 6,
+        "chancePercent": 0,
+        "baseMultiplierPercent": 150,
+        "addedMultiplierPercent": 0,
+        "criticalMultiplier": 1.5,
+        "criticalHitBeforeResistance": {
+          "min": 156,
+          "max": 2974.5,
+          "mean": 1565.25
+        },
+        "criticalHitAfterResistance": {
+          "min": 156,
+          "max": 2974.5,
+          "mean": 1565.25
+        },
+        "expectedHitMeanBeforeResistance": 1043.5,
+        "expectedHitMeanAfterResistance": 1043.5
+      },
+      "rawResistancePercent": 0,
+      "maximumResistanceMode": "configured",
+      "exposures": [],
+      "penetrationModifiers": [],
+      "resistanceEffects": {
+        "profile": "configured",
+        "baseResistancePercent": 0,
+        "maximumResistanceMode": "configured",
+        "maximumResistancePercent": 75,
+        "minimumResistancePercent": -200,
+        "exposurePercent": 0,
+        "selectedExposureIndices": [],
+        "uncappedResistancePercent": 0,
+        "cappedResistancePercent": 0,
+        "penetrationPercent": 0,
+        "effectiveResistancePercent": 0,
+        "damageMultiplier": 1
+      },
+      "comparisonKind": "host-weighted-executed-pob-endpoints",
+      "shock": {
+        "magnitudePercent": 20,
+        "uptimePercent": 50,
+        "source": {
+          "kind": "scenario",
+          "id": "pob-config:shock",
+          "label": "conditionEnemyShocked=true; conditionShockEffect=20; host shockUptimePercent=50"
+        }
+      },
+      "oracleEndpoints": {
+        "shockedXmlSha256": "cb835734caa4c05ec77b45968a2086a380b49a6308634cedd11ebc2968f00899",
+        "unshockedXmlSha256": "23ab9862841b6af6ad55ee3e88449061f2b2ae2473a63e319bd16da9325dfe8b",
+        "unshockedXmlTransformation": "replace the sole conditionEnemyShocked boolean true with false; all other XML bytes unchanged"
+      },
+      "unshockedHitDps": 1739.1666666666667,
+      "unshockedCombinedDps": 1739.1666666666667,
+      "shockEffects": {
+        "mode": "configured",
+        "magnitudePercent": 20,
+        "uptimePercent": 50,
+        "shockedDamageMultiplier": 1.2,
+        "averageDamageMultiplier": 1.1,
+        "unshockedHitMeanAfterResistance": 1043.5,
+        "shockedHitMeanAfterResistance": 1252.2,
+        "normalHitMeanAfterShock": 1147.8500000000001,
+        "criticalHitMeanAfterShock": 1721.775,
+        "expectedHitMeanAfterShock": 1147.8500000000001
+      }
+    },
+    {
+      "fixture": "shock-zero-magnitude",
+      "contributions": [],
+      "increasedDamagePercent": 0,
+      "increasedCastSpeedPercent": 0,
+      "effectiveLightningResistancePercent": 0,
+      "beforeResistance": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "afterResistance": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "castTimeSeconds": 0.6,
+      "castsPerSecond": 1.6666666666666667,
+      "hitDps": 1739.1666666666667,
+      "combinedDps": 1739.1666666666667,
+      "xmlSha256": "b4b0ddd71b6dd89e86135e70e0087934241782471bb61a908399d822cbcea5a7",
+      "gemLevel": 20,
+      "baseLightningDamage": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "addedGroups": [],
+      "rawAddedLightningDamage": {
+        "min": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "effectiveAddedLightningDamage": {
+        "min": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "combinedBaseLightningDamage": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "addedDamageEffectiveness": 1.9,
+      "supports": [],
+      "supportContributions": [],
+      "spellDamageMultiplier": 1,
+      "criticalChanceMultiplier": 1,
+      "castTimeMultiplier": 1,
+      "manaCostMultiplier": 1,
+      "criticalMode": "disabled",
+      "criticalModifiers": [],
+      "criticalEffects": {
+        "mode": "disabled",
+        "baseChancePercent": 6,
+        "increasedChancePercent": 0,
+        "lessChanceMultiplier": 1,
+        "unroundedChancePercent": 6,
+        "roundedChancePercent": 6,
+        "chancePercent": 0,
+        "baseMultiplierPercent": 150,
+        "addedMultiplierPercent": 0,
+        "criticalMultiplier": 1.5,
+        "criticalHitBeforeResistance": {
+          "min": 156,
+          "max": 2974.5,
+          "mean": 1565.25
+        },
+        "criticalHitAfterResistance": {
+          "min": 156,
+          "max": 2974.5,
+          "mean": 1565.25
+        },
+        "expectedHitMeanBeforeResistance": 1043.5,
+        "expectedHitMeanAfterResistance": 1043.5
+      },
+      "rawResistancePercent": 0,
+      "maximumResistanceMode": "configured",
+      "exposures": [],
+      "penetrationModifiers": [],
+      "resistanceEffects": {
+        "profile": "configured",
+        "baseResistancePercent": 0,
+        "maximumResistanceMode": "configured",
+        "maximumResistancePercent": 75,
+        "minimumResistancePercent": -200,
+        "exposurePercent": 0,
+        "selectedExposureIndices": [],
+        "uncappedResistancePercent": 0,
+        "cappedResistancePercent": 0,
+        "penetrationPercent": 0,
+        "effectiveResistancePercent": 0,
+        "damageMultiplier": 1
+      },
+      "comparisonKind": "host-weighted-executed-pob-endpoints",
+      "shock": {
+        "magnitudePercent": 0,
+        "uptimePercent": 100,
+        "source": {
+          "kind": "scenario",
+          "id": "pob-config:shock",
+          "label": "conditionEnemyShocked=true; conditionShockEffect=0; host shockUptimePercent=100"
+        }
+      },
+      "oracleEndpoints": {
+        "shockedXmlSha256": "b4b0ddd71b6dd89e86135e70e0087934241782471bb61a908399d822cbcea5a7",
+        "unshockedXmlSha256": "d28dfa169066fc2d5def46f5dcfebf2aa716e80361d9a5b22f5b57c15493ea34",
+        "unshockedXmlTransformation": "replace the sole conditionEnemyShocked boolean true with false; all other XML bytes unchanged"
+      },
+      "unshockedHitDps": 1739.1666666666667,
+      "unshockedCombinedDps": 1739.1666666666667,
+      "shockEffects": {
+        "mode": "configured",
+        "magnitudePercent": 0,
+        "uptimePercent": 100,
+        "shockedDamageMultiplier": 1.0,
+        "averageDamageMultiplier": 1.0,
+        "unshockedHitMeanAfterResistance": 1043.5,
+        "shockedHitMeanAfterResistance": 1043.5,
+        "normalHitMeanAfterShock": 1043.5,
+        "criticalHitMeanAfterShock": 1565.25,
+        "expectedHitMeanAfterShock": 1043.5
+      }
+    },
+    {
+      "fixture": "shock-minimum",
+      "contributions": [],
+      "increasedDamagePercent": 0,
+      "increasedCastSpeedPercent": 0,
+      "effectiveLightningResistancePercent": 0,
+      "beforeResistance": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "afterResistance": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "castTimeSeconds": 0.6,
+      "castsPerSecond": 1.6666666666666667,
+      "hitDps": 1756.5583333333334,
+      "combinedDps": 1756.5583333333334,
+      "xmlSha256": "739634135989305a4840d8d9043500a524d88d6dba2177b6e2550aceab112266",
+      "gemLevel": 20,
+      "baseLightningDamage": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "addedGroups": [],
+      "rawAddedLightningDamage": {
+        "min": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "effectiveAddedLightningDamage": {
+        "min": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "combinedBaseLightningDamage": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "addedDamageEffectiveness": 1.9,
+      "supports": [],
+      "supportContributions": [],
+      "spellDamageMultiplier": 1,
+      "criticalChanceMultiplier": 1,
+      "castTimeMultiplier": 1,
+      "manaCostMultiplier": 1,
+      "criticalMode": "disabled",
+      "criticalModifiers": [],
+      "criticalEffects": {
+        "mode": "disabled",
+        "baseChancePercent": 6,
+        "increasedChancePercent": 0,
+        "lessChanceMultiplier": 1,
+        "unroundedChancePercent": 6,
+        "roundedChancePercent": 6,
+        "chancePercent": 0,
+        "baseMultiplierPercent": 150,
+        "addedMultiplierPercent": 0,
+        "criticalMultiplier": 1.5,
+        "criticalHitBeforeResistance": {
+          "min": 156,
+          "max": 2974.5,
+          "mean": 1565.25
+        },
+        "criticalHitAfterResistance": {
+          "min": 156,
+          "max": 2974.5,
+          "mean": 1565.25
+        },
+        "expectedHitMeanBeforeResistance": 1043.5,
+        "expectedHitMeanAfterResistance": 1043.5
+      },
+      "rawResistancePercent": 0,
+      "maximumResistanceMode": "configured",
+      "exposures": [],
+      "penetrationModifiers": [],
+      "resistanceEffects": {
+        "profile": "configured",
+        "baseResistancePercent": 0,
+        "maximumResistanceMode": "configured",
+        "maximumResistancePercent": 75,
+        "minimumResistancePercent": -200,
+        "exposurePercent": 0,
+        "selectedExposureIndices": [],
+        "uncappedResistancePercent": 0,
+        "cappedResistancePercent": 0,
+        "penetrationPercent": 0,
+        "effectiveResistancePercent": 0,
+        "damageMultiplier": 1
+      },
+      "comparisonKind": "host-weighted-executed-pob-endpoints",
+      "shock": {
+        "magnitudePercent": 1,
+        "uptimePercent": 100,
+        "source": {
+          "kind": "scenario",
+          "id": "pob-config:shock",
+          "label": "conditionEnemyShocked=true; conditionShockEffect=1; host shockUptimePercent=100"
+        }
+      },
+      "oracleEndpoints": {
+        "shockedXmlSha256": "739634135989305a4840d8d9043500a524d88d6dba2177b6e2550aceab112266",
+        "unshockedXmlSha256": "82b27e1625392cd766df691c5189ea94cb5c59df68ac952d9267fbab54612f37",
+        "unshockedXmlTransformation": "replace the sole conditionEnemyShocked boolean true with false; all other XML bytes unchanged"
+      },
+      "unshockedHitDps": 1739.1666666666667,
+      "unshockedCombinedDps": 1739.1666666666667,
+      "shockEffects": {
+        "mode": "configured",
+        "magnitudePercent": 1,
+        "uptimePercent": 100,
+        "shockedDamageMultiplier": 1.01,
+        "averageDamageMultiplier": 1.01,
+        "unshockedHitMeanAfterResistance": 1043.5,
+        "shockedHitMeanAfterResistance": 1053.935,
+        "normalHitMeanAfterShock": 1053.935,
+        "criticalHitMeanAfterShock": 1580.9025,
+        "expectedHitMeanAfterShock": 1053.935
+      }
+    },
+    {
+      "fixture": "shock-maximum",
+      "contributions": [],
+      "increasedDamagePercent": 0,
+      "increasedCastSpeedPercent": 0,
+      "effectiveLightningResistancePercent": 0,
+      "beforeResistance": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "afterResistance": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "castTimeSeconds": 0.6,
+      "castsPerSecond": 1.6666666666666667,
+      "hitDps": 2608.75,
+      "combinedDps": 2608.75,
+      "xmlSha256": "8b7858d30ac44908031fa5a21b6c6bfee5e475a4c922cd31925c964f9a43f751",
+      "gemLevel": 20,
+      "baseLightningDamage": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "addedGroups": [],
+      "rawAddedLightningDamage": {
+        "min": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "effectiveAddedLightningDamage": {
+        "min": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "combinedBaseLightningDamage": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "addedDamageEffectiveness": 1.9,
+      "supports": [],
+      "supportContributions": [],
+      "spellDamageMultiplier": 1,
+      "criticalChanceMultiplier": 1,
+      "castTimeMultiplier": 1,
+      "manaCostMultiplier": 1,
+      "criticalMode": "disabled",
+      "criticalModifiers": [],
+      "criticalEffects": {
+        "mode": "disabled",
+        "baseChancePercent": 6,
+        "increasedChancePercent": 0,
+        "lessChanceMultiplier": 1,
+        "unroundedChancePercent": 6,
+        "roundedChancePercent": 6,
+        "chancePercent": 0,
+        "baseMultiplierPercent": 150,
+        "addedMultiplierPercent": 0,
+        "criticalMultiplier": 1.5,
+        "criticalHitBeforeResistance": {
+          "min": 156,
+          "max": 2974.5,
+          "mean": 1565.25
+        },
+        "criticalHitAfterResistance": {
+          "min": 156,
+          "max": 2974.5,
+          "mean": 1565.25
+        },
+        "expectedHitMeanBeforeResistance": 1043.5,
+        "expectedHitMeanAfterResistance": 1043.5
+      },
+      "rawResistancePercent": 0,
+      "maximumResistanceMode": "configured",
+      "exposures": [],
+      "penetrationModifiers": [],
+      "resistanceEffects": {
+        "profile": "configured",
+        "baseResistancePercent": 0,
+        "maximumResistanceMode": "configured",
+        "maximumResistancePercent": 75,
+        "minimumResistancePercent": -200,
+        "exposurePercent": 0,
+        "selectedExposureIndices": [],
+        "uncappedResistancePercent": 0,
+        "cappedResistancePercent": 0,
+        "penetrationPercent": 0,
+        "effectiveResistancePercent": 0,
+        "damageMultiplier": 1
+      },
+      "comparisonKind": "host-weighted-executed-pob-endpoints",
+      "shock": {
+        "magnitudePercent": 50,
+        "uptimePercent": 100,
+        "source": {
+          "kind": "scenario",
+          "id": "pob-config:shock",
+          "label": "conditionEnemyShocked=true; conditionShockEffect=50; host shockUptimePercent=100"
+        }
+      },
+      "oracleEndpoints": {
+        "shockedXmlSha256": "8b7858d30ac44908031fa5a21b6c6bfee5e475a4c922cd31925c964f9a43f751",
+        "unshockedXmlSha256": "1aee364d54814db572aabef911d750307123a9e8c45187efc2d49e27518243e3",
+        "unshockedXmlTransformation": "replace the sole conditionEnemyShocked boolean true with false; all other XML bytes unchanged"
+      },
+      "unshockedHitDps": 1739.1666666666667,
+      "unshockedCombinedDps": 1739.1666666666667,
+      "shockEffects": {
+        "mode": "configured",
+        "magnitudePercent": 50,
+        "uptimePercent": 100,
+        "shockedDamageMultiplier": 1.5,
+        "averageDamageMultiplier": 1.5,
+        "unshockedHitMeanAfterResistance": 1043.5,
+        "shockedHitMeanAfterResistance": 1565.25,
+        "normalHitMeanAfterShock": 1565.25,
+        "criticalHitMeanAfterShock": 2347.875,
+        "expectedHitMeanAfterShock": 1565.25
+      }
+    },
+    {
+      "fixture": "shock-combined",
+      "gemLevel": 20,
+      "increasedDamagePercent": 100,
+      "increasedCastSpeedPercent": 25,
+      "effectiveLightningResistancePercent": 70,
+      "contributions": [
+        {
+          "statId": "damage_+%",
+          "value": 10
+        },
+        {
+          "statId": "spell_damage_+%",
+          "value": 20
+        },
+        {
+          "statId": "lightning_damage_+%",
+          "value": 30
+        },
+        {
+          "statId": "projectile_damage_+%",
+          "value": 40
+        },
+        {
+          "statId": "base_cast_speed_+%",
+          "value": 25
+        }
+      ],
+      "baseLightningDamage": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "addedGroups": [
+        {
+          "statIds": [
+            "spell_minimum_added_lightning_damage",
+            "spell_maximum_added_lightning_damage"
+          ],
+          "values": [10, 20],
+          "source": {
+            "kind": "item",
+            "id": "pob-item:1",
+            "line": 5
+          }
+        }
+      ],
+      "rawAddedLightningDamage": {
+        "min": 10,
+        "max": 20,
+        "mean": 15
+      },
+      "addedDamageEffectiveness": 1.9,
+      "effectiveAddedLightningDamage": {
+        "min": 19,
+        "max": 38,
+        "mean": 28.5
+      },
+      "combinedBaseLightningDamage": {
+        "min": 123,
+        "max": 2021,
+        "mean": 1072
+      },
+      "beforeResistance": {
+        "min": 342,
+        "max": 5618,
+        "mean": 2980
+      },
+      "afterResistance": {
+        "min": 102.60000000000001,
+        "max": 1685.4000000000003,
+        "mean": 894.0000000000001
+      },
+      "castTimeSeconds": 0.48,
+      "castsPerSecond": 2.0833333333333335,
+      "hitDps": 2048.8245,
+      "combinedDps": 2048.8245,
+      "supports": [
+        {
+          "id": "SupportControlledDestruction",
+          "gemLevel": 20,
+          "quality": 0,
+          "enabled": true,
+          "source": {
+            "kind": "skill",
+            "id": "pob-gem:1:2",
+            "label": "Controlled Destruction"
+          }
+        }
+      ],
+      "supportContributions": [
+        {
+          "statId": "support_controlled_destruction_spell_damage_+%_final",
+          "value": 39,
+          "operation": "more-spell-damage",
+          "appliedToSelectedHit": true
+        },
+        {
+          "statId": "support_controlled_destruction_critical_strike_chance_+%_final",
+          "value": -80,
+          "operation": "less-critical-strike-chance",
+          "appliedToSelectedHit": true
+        }
+      ],
+      "spellDamageMultiplier": 1.3900000000000001,
+      "criticalChanceMultiplier": 0.2,
+      "castTimeMultiplier": 1,
+      "manaCostMultiplier": 1.4,
+      "criticalMode": "average",
+      "criticalModifiers": [
+        {
+          "statId": "critical_strike_chance_+%",
+          "value": 100,
+          "line": 11
+        },
+        {
+          "statId": "spell_critical_strike_chance_+%",
+          "value": 50,
+          "line": 12
+        },
+        {
+          "statId": "base_critical_strike_multiplier_+",
+          "value": 50,
+          "line": 13
+        }
+      ],
+      "criticalEffects": {
+        "mode": "average",
+        "baseChancePercent": 6,
+        "increasedChancePercent": 150,
+        "lessChanceMultiplier": 0.2,
+        "unroundedChancePercent": 3,
+        "roundedChancePercent": 3,
+        "chancePercent": 3,
+        "baseMultiplierPercent": 150,
+        "addedMultiplierPercent": 50,
+        "criticalMultiplier": 2,
+        "criticalHitBeforeResistance": {
+          "min": 684,
+          "max": 11236,
+          "mean": 5960
+        },
+        "criticalHitAfterResistance": {
+          "min": 205.20000000000002,
+          "max": 3370.8000000000006,
+          "mean": 1788.0000000000002
+        },
+        "expectedHitMeanBeforeResistance": 3069.4,
+        "expectedHitMeanAfterResistance": 920.82
+      },
+      "rawResistancePercent": 110,
+      "maximumResistanceMode": "configured",
+      "exposures": [
+        {
+          "statId": "lightning_exposure_on_hit_magnitude",
+          "value": -15,
+          "enabled": true,
+          "source": {
+            "kind": "scenario",
+            "id": "pob-config:exposure:Exposure 1",
+            "label": "Inflict Lightning Exposure on Hit, applying -15% to Lightning Resistance",
+            "line": 1
+          }
+        }
+      ],
+      "penetrationModifiers": [
+        {
+          "statId": "base_reduce_enemy_lightning_resistance_%",
+          "value": 20,
+          "line": 14
+        }
+      ],
+      "resistanceEffects": {
+        "profile": "configured",
+        "baseResistancePercent": 110,
+        "maximumResistanceMode": "configured",
+        "maximumResistancePercent": 90,
+        "minimumResistancePercent": -200,
+        "exposurePercent": -15,
+        "selectedExposureIndices": [0],
+        "uncappedResistancePercent": 95,
+        "cappedResistancePercent": 90,
+        "penetrationPercent": 20,
+        "effectiveResistancePercent": 70,
+        "damageMultiplier": 0.30000000000000004
+      },
+      "xmlSha256": "151247475a16438a75f4c69848f4fbc0427e8ca944f5affdc6269a2b4473d969",
+      "comparisonKind": "host-weighted-executed-pob-endpoints",
+      "shock": {
+        "magnitudePercent": 17,
+        "uptimePercent": 40,
+        "source": {
+          "kind": "scenario",
+          "id": "pob-config:shock",
+          "label": "conditionEnemyShocked=true; conditionShockEffect=17; host shockUptimePercent=40"
+        }
+      },
+      "oracleEndpoints": {
+        "shockedXmlSha256": "151247475a16438a75f4c69848f4fbc0427e8ca944f5affdc6269a2b4473d969",
+        "unshockedXmlSha256": "b4577bf4d669def79f48cb50e40fe6c46b2f391658f80fa9a017712598a38051",
+        "unshockedXmlTransformation": "replace the sole conditionEnemyShocked boolean true with false; all other XML bytes unchanged"
+      },
+      "unshockedHitDps": 1918.3750000000002,
+      "unshockedCombinedDps": 1918.3750000000002,
+      "shockEffects": {
+        "mode": "configured",
+        "magnitudePercent": 17,
+        "uptimePercent": 40,
+        "shockedDamageMultiplier": 1.17,
+        "averageDamageMultiplier": 1.068,
+        "unshockedHitMeanAfterResistance": 920.82,
+        "shockedHitMeanAfterResistance": 1077.3594,
+        "normalHitMeanAfterShock": 954.7920000000001,
+        "criticalHitMeanAfterShock": 1909.5840000000003,
+        "expectedHitMeanAfterShock": 983.4357600000001
+      }
+    },
+    {
+      "fixture": "shock-no-damage",
+      "contributions": [
+        {
+          "statId": "damage_+%",
+          "value": -100
+        }
+      ],
+      "increasedDamagePercent": -100,
+      "increasedCastSpeedPercent": 0,
+      "effectiveLightningResistancePercent": 0,
+      "beforeResistance": {
+        "min": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "afterResistance": {
+        "min": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "castTimeSeconds": 0.6,
+      "castsPerSecond": 1.6666666666666667,
+      "hitDps": 0.0,
+      "combinedDps": 0.0,
+      "xmlSha256": "88d219894dac62003116628883597b109159a82e3dfa8d2aa3d8edd5e09f46aa",
+      "gemLevel": 20,
+      "baseLightningDamage": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "addedGroups": [],
+      "rawAddedLightningDamage": {
+        "min": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "effectiveAddedLightningDamage": {
+        "min": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "combinedBaseLightningDamage": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "addedDamageEffectiveness": 1.9,
+      "supports": [],
+      "supportContributions": [],
+      "spellDamageMultiplier": 1,
+      "criticalChanceMultiplier": 1,
+      "castTimeMultiplier": 1,
+      "manaCostMultiplier": 1,
+      "criticalMode": "disabled",
+      "criticalModifiers": [],
+      "criticalEffects": {
+        "mode": "disabled",
+        "baseChancePercent": 6,
+        "increasedChancePercent": 0,
+        "lessChanceMultiplier": 1,
+        "unroundedChancePercent": 6,
+        "roundedChancePercent": 6,
+        "chancePercent": 0,
+        "baseMultiplierPercent": 150,
+        "addedMultiplierPercent": 0,
+        "criticalMultiplier": 1.5,
+        "criticalHitBeforeResistance": {
+          "min": 0,
+          "max": 0,
+          "mean": 0
+        },
+        "criticalHitAfterResistance": {
+          "min": 0,
+          "max": 0,
+          "mean": 0
+        },
+        "expectedHitMeanBeforeResistance": 0,
+        "expectedHitMeanAfterResistance": 0
+      },
+      "rawResistancePercent": 0,
+      "maximumResistanceMode": "configured",
+      "exposures": [],
+      "penetrationModifiers": [],
+      "resistanceEffects": {
+        "profile": "configured",
+        "baseResistancePercent": 0,
+        "maximumResistanceMode": "configured",
+        "maximumResistancePercent": 75,
+        "minimumResistancePercent": -200,
+        "exposurePercent": 0,
+        "selectedExposureIndices": [],
+        "uncappedResistancePercent": 0,
+        "cappedResistancePercent": 0,
+        "penetrationPercent": 0,
+        "effectiveResistancePercent": 0,
+        "damageMultiplier": 1
+      },
+      "comparisonKind": "host-weighted-executed-pob-endpoints",
+      "shock": {
+        "magnitudePercent": 20,
+        "uptimePercent": 100,
+        "source": {
+          "kind": "scenario",
+          "id": "pob-config:shock",
+          "label": "conditionEnemyShocked=true; conditionShockEffect=20; host shockUptimePercent=100"
+        }
+      },
+      "oracleEndpoints": {
+        "shockedXmlSha256": "88d219894dac62003116628883597b109159a82e3dfa8d2aa3d8edd5e09f46aa",
+        "unshockedXmlSha256": "8477a31902eb8cc1f7effbfa3595078de5b749fde7597e9ff43b2fc7e98f67b9",
+        "unshockedXmlTransformation": "replace the sole conditionEnemyShocked boolean true with false; all other XML bytes unchanged"
+      },
+      "unshockedHitDps": 0,
+      "unshockedCombinedDps": 0,
+      "shockEffects": {
+        "mode": "configured",
+        "magnitudePercent": 20,
+        "uptimePercent": 100,
+        "shockedDamageMultiplier": 1.2,
+        "averageDamageMultiplier": 1.2,
+        "unshockedHitMeanAfterResistance": 0,
+        "shockedHitMeanAfterResistance": 0.0,
+        "normalHitMeanAfterShock": 0.0,
+        "criticalHitMeanAfterShock": 0.0,
+        "expectedHitMeanAfterShock": 0.0
+      }
     }
   ],
   "oracle": {
-    "executedOn": "2026-11-09",
+    "executedOn": "2026-11-10",
     "mode": "official-headless-wrapper",
-    "fixtureInputs": "exact UTF-8 XML bytes; no injected calculation rules",
+    "fixtureInputs": "44 exact UTF-8 XML fixtures plus 8 explicitly derived unshocked endpoint XML variants; no injected calculation rules",
     "outputFile": "tests/fixtures/pob-oracle-output.json",
-    "outputSha256": "6912aa60a6cafeb43afa60bde6a6c5623f3ebaa1723b29bfe98e6ef3db943e0f",
+    "outputSha256": "63a11b3741d1e3206546ae9b490238fad1b2f350379180fd864150e2e0b820af",
     "numericSerialization": "17 significant digits",
     "host": {
       "platform": "windows-x64",
       "python": "3.13.7",
       "binding": "external ctypes host; no observer code stored in Exile Engine",
-      "observerSha256": "399c8ccb8168bc2ba76692e46e6f581bf076d05b9575d92ea1f89cf732b9949f"
+      "observerSha256": "afa44de852ccdfd6ccd4a5f3a5e5e2f46f94b41601d9860055cab7b4ba4d8c52"
     },
     "runtime": {
       "gitRevision": "3dbca4463c0a59079d9f7f032d8240cf868e09da",
@@ -4413,7 +5936,8 @@
       "dllPath": "runtime/lua51.dll",
       "dllGitBlob": "f7263d7fedec48d6c539c90d864dd315ad8eab60",
       "dllSha256": "89244909c375fa3daf43f2d26d64e551ccf699e9d4b59d2f4ec39a6f844dcf0b"
-    }
+    },
+    "uptimeComparison": "host-defined probability weighting between separately executed shocked and unshocked endpoints; PoB itself receives no uptime input"
   },
   "rejectedFixtures": [
     {
@@ -4591,5 +6115,29 @@
     "configuredMaximumFormula": "min(max(rawResistancePercent, 75), 90)",
     "exposureStateAssumption": "enabled is an explicitly already-active configured snapshot state; application timing, chance, duration and uptime are not calculated",
     "legacyEffectiveProfile": "exclusive caller-supplied already-effective resistance; no raw profile, exposure, penetration or inferred cap"
+  },
+  "shockReference": {
+    "statRows": [
+      {
+        "table": "Stats",
+        "key": "base_damage_taken_+%_from_shock",
+        "rowIndex": 16700
+      }
+    ],
+    "statInterpretation": "matching canonical game vocabulary only; configured magnitude is scenario input, not a parsed item modifier or shock-effect scaling stat",
+    "ruleSource": {
+      "kind": "external",
+      "id": "pob:3dbca4463c0a59079d9f7f032d8240cf868e09da:ConfigOptions:1943-1949;CalcPerform:3545-3556,3624-3634;CalcOffence:3521-3522,3609-3626;Data:427",
+      "label": "Pinned PoE1 configured shock endpoint: increased damage taken, maximum 50%; host-supplied uptime weights explicit shocked and unshocked states."
+    },
+    "minimumMagnitudePercent": 0,
+    "maximumMagnitudePercent": 50,
+    "magnitudePrecision": 0,
+    "uptimeRangePercent": [0, 100],
+    "uptimePrecision": 0,
+    "damageFactor": "1 + magnitudePercent * uptimePercent / 10000",
+    "endpointWeighting": "unshocked * (1 - uptimePercent / 100) + shocked * uptimePercent / 100",
+    "applicationAssumption": "externally configured shock state independent of Spark damage, critical chance, chance to shock, duration, application threshold and hit/cast frequency; no inferred application feedback",
+    "otherAilments": "excluded; average mode keeps Cannot inflict Elemental Ailments to prohibit self-generated ailments while configured external shock remains explicit"
   }
 }

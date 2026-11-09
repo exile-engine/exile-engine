@@ -4,9 +4,11 @@ Portable TypeScript libraries for Path of Exile 1 and 2 calculations and locale-
 
 This first release calculates **ordinary Spark, one noncritical projectile hit**. It also parses and reconciles an English/Thai wand example and renders equivalent modifier text in the other locale. The data packages contain full snapshots of the selected build catalogs; that does not imply support for every mechanic in those catalogs.
 
-The PoE1 selected-skill slice additionally accepts ordered spell added-lightning ranges, one normal Controlled Destruction support and explicit average critical hits with ailments excluded. It applies client-derived effectiveness/chance, an attributed player multiplier rule, and reviewed more/less/cast-time rules while retaining raw contributions and provenance. Its XML fixtures are compared with an executed pinned PoB oracle; full and incremental paths are checked against each other. Other damage elements, attacks, other supports and conditional effects remain outside this slice.
+The PoE1 selected-skill slice additionally accepts ordered spell added-lightning ranges, one normal Controlled Destruction support and explicit average critical hits under a declared ailment policy. It applies client-derived effectiveness/chance, an attributed player multiplier rule, and reviewed more/less/cast-time rules while retaining raw contributions and provenance. Its XML fixtures are compared with an executed pinned PoB oracle; full and incremental paths are checked against each other. Other damage elements, attacks, other supports and conditional effects remain outside this slice.
 
 The configured lightning-resistance slice selects the strongest explicitly active exposure, applies its reviewed cap/floor profile, then subtracts penetration. It reports each stage and the same effective resistance for normal and critical hits; exposure timing and other resistance mechanics remain outside scope.
+
+An explicit configured-shock policy accepts fixed magnitude and host uptime, retaining unshocked/shocked means and scenario provenance. Partial uptime uses a documented blend of separately executed pinned PoB endpoints; no shock application or uptime is inferred from Spark hits.
 
 ## Packages
 
@@ -43,7 +45,7 @@ The package source compiles to ESM JavaScript and declarations with the JavaScri
 
 The application supplies snapshot I/O. Load the matching dataset, normalize Spark once with `loadSparkDataset(reader)`, and call `calculateSpark(input, dataset)` synchronously. The game package returns a discriminated result with diagnostics, source rows and an arithmetic breakdown. Inputs include the exact snapshot identity and an explicit effective enemy lightning resistance.
 
-Keep a copied item's unresolved lines and candidate mappings until reconciliation is complete. A successful modifier match does not establish a complete equipment model. `@exile-engine/pob` imports a bounded synthetic PoE1 XML subset; unsupported or ambiguous data blocks a calculable input. PoE1 additionally exposes fresh and incremental selected-skill hit/combined DPS for normal Spark, counting one noncritical lightning hit per cast. See the [executed pinned reference comparison](docs/pob-reference.md); no full-build parity is claimed.
+Keep a copied item's unresolved lines and candidate mappings until reconciliation is complete. A successful modifier match does not establish a complete equipment model. `@exile-engine/pob` imports a bounded synthetic PoE1 XML subset; unsupported or ambiguous data blocks a calculable input. PoE1 additionally exposes fresh and incremental selected-skill hit/combined DPS for normal Spark, counting one lightning hit per cast with explicit critical and shock policies. See the [executed pinned reference comparison](docs/pob-reference.md); no full-build parity is claimed.
 
 See the executable [Spark example](examples/spark.mjs), [architecture](docs/architecture.md), [conventions](docs/conventions.md), [data pipeline](docs/data-pipeline.md), [supported mechanics](docs/supported-mechanics.md), [security boundaries](docs/security.md), and [roadmap](docs/roadmap.md).
 

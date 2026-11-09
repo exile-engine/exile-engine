@@ -17,10 +17,11 @@ export async function runSelectedSparkDemo(readShard, readXml) {
   const dataset = value(await loadSparkDataset(reader));
   const imported = importPobXml({
     format: 'pob-xml',
-    xml: await readXml('lightning-resistance-combined'),
+    xml: await readXml('shock-combined'),
     target: reader.identity,
     buildId: 'browser-synthetic-spark',
     configurationId: 'explicit-nonboss-25',
+    shockUptimePercent: 40,
   });
   if (!imported.complete) throw new Error(JSON.stringify(imported.diagnostics));
   const initial = value(calculateSelectedSkill(imported.selectedSkill, dataset));
@@ -49,10 +50,41 @@ export async function runSelectedSparkDemo(readShard, readXml) {
     initial.resistanceEffects.effectiveResistancePercent !== 70
   )
     throw new Error('Expected exposure before the cap and penetration after it.');
+  if (
+    initial.shockEffects.mode !== 'configured' ||
+    initial.shockEffects.magnitudePercent !== 17 ||
+    initial.shockEffects.uptimePercent !== 40 ||
+    initial.shockEffects.averageDamageMultiplier !== 1 + (17 / 100) * (40 / 100)
+  )
+    throw new Error('Expected fixed external shock and explicit host uptime.');
   const session = value(createSelectedSkillSession(imported.selectedSkill, dataset));
   const next = structuredClone(imported.selectedSkill);
   const reports = [];
   for (const change of [
+    () => {
+      next.configuration.shock.magnitudePercent = 20;
+    },
+    () => {
+      next.configuration.shock.uptimePercent = 0;
+    },
+    () => {
+      next.configuration.shock.uptimePercent = 100;
+    },
+    () => {
+      next.configuration.shock.source.label = 'Explicit external source, full uptime';
+    },
+    () => {
+      delete next.configuration.shock;
+      next.configuration.ailmentMode = 'excluded';
+    },
+    () => {
+      next.configuration.ailmentMode = 'configured-shock';
+      next.configuration.shock = {
+        magnitudePercent: 17,
+        uptimePercent: 40,
+        source: { kind: 'scenario', id: 'browser-restored-shock' },
+      };
+    },
     () => {
       next.configuration.lightningResistance.exposures[0].value = -25;
     },
@@ -139,6 +171,7 @@ export async function runSelectedSparkDemo(readShard, readXml) {
     reports.push({
       recalculated: report.recalculated,
       combinedDps: report.calculation.combinedDps,
+      shockEffects: report.calculation.shockEffects,
       resistanceEffects: {
         baseResistancePercent: report.calculation.resistanceEffects.baseResistancePercent,
         exposurePercent: report.calculation.resistanceEffects.exposurePercent,

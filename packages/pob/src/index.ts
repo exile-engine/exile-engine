@@ -13,7 +13,7 @@ import {
 import { parseXml, XmlError, type PobXmlLimits, type XmlElement } from './xml.js';
 
 export { pobXmlLimits, type PobXmlLimits } from './xml.js';
-export const pobAdapterVersion = 'poe1-spark-xml-v5';
+export const pobAdapterVersion = 'poe1-spark-xml-v6';
 export const pobCompatibility = Object.freeze({
   status: 'bounded-poe1-spark-xml' as const,
   xmlImportImplemented: true as const,
@@ -28,6 +28,8 @@ export interface PobXmlSource {
   readonly target: SnapshotIdentity;
   readonly buildId: string;
   readonly configurationId: string;
+  /** Explicit host time weight: PoB XML supplies only an active/inactive shock endpoint. */
+  readonly shockUptimePercent?: number;
 }
 export interface PobSourceLocation {
   readonly element: string;
@@ -171,7 +173,9 @@ export function importPobXml(
     return result();
   }
   for (const key of Object.keys(source))
-    if (!['format', 'xml', 'target', 'buildId', 'configurationId'].includes(key))
+    if (
+      !['format', 'xml', 'target', 'buildId', 'configurationId', 'shockUptimePercent'].includes(key)
+    )
       problem(
         'pob.source-unsupported-field',
         `Unsupported source field ${key}.`,
@@ -393,6 +397,7 @@ export function importPobXml(
   let averageCriticalStrikes = false;
   let maximumResistanceMode: 'configured' | 'default75' = 'configured';
   let resistanceSource: SourceRef | undefined;
+  let shock: { magnitudePercent: number; uptimePercent: number; source: SourceRef } | undefined;
   const exposures: SelectedLightningExposure[] = [];
   if (config) {
     check(config, [], ['Input', 'CustomModifierBlock']);
@@ -409,7 +414,16 @@ export function importPobXml(
           'ambiguous-stat',
         );
       inputs.set(name, input);
-      if (!['enemyIsBoss', 'enemyLightningResist', 'enemyMaxResist', 'customMods'].includes(name))
+      if (
+        ![
+          'enemyIsBoss',
+          'enemyLightningResist',
+          'enemyMaxResist',
+          'customMods',
+          'conditionEnemyShocked',
+          'conditionShockEffect',
+        ].includes(name)
+      )
         problem(
           'pob.unsupported-configuration',
           `Unsupported configuration ${name}.`,
@@ -421,6 +435,53 @@ export function importPobXml(
     const crit = inputs.get('customMods');
     const resist = inputs.get('enemyLightningResist');
     const maximum = inputs.get('enemyMaxResist');
+    const shocked = inputs.get('conditionEnemyShocked');
+    const shockEffect = inputs.get('conditionShockEffect');
+    if (
+      shocked ||
+      shockEffect ||
+      Object.hasOwn(source, 'shockUptimePercent') ||
+      source.shockUptimePercent !== undefined
+    ) {
+      const magnitude = integer(shockEffect?.attributes.number, 0, 50);
+      const uptime = source.shockUptimePercent;
+      if (
+        !shocked ||
+        !shockEffect ||
+        !['true', 'false'].includes(shocked.attributes.boolean ?? '') ||
+        shocked.attributes.number !== undefined ||
+        shocked.attributes.string !== undefined ||
+        shockEffect.attributes.boolean !== undefined ||
+        shockEffect.attributes.string !== undefined ||
+        magnitude === undefined ||
+        !Object.hasOwn(source, 'shockUptimePercent') ||
+        !Number.isSafeInteger(uptime) ||
+        uptime! < 0 ||
+        uptime! > 100 ||
+        (shocked.attributes.boolean === 'false' && uptime !== 0)
+      )
+        problem(
+          'pob.invalid-shock',
+          'Configured shock requires both native conditionEnemyShocked/conditionShockEffect fields, integer magnitude 0–50 and an explicit host shockUptimePercent integer 0–100. Native false requires uptime 0.',
+          { element: 'Config' },
+          JSON.stringify({
+            conditionEnemyShocked: shocked?.attributes,
+            conditionShockEffect: shockEffect?.attributes,
+            shockUptimePercent: typeof uptime === 'number' ? uptime : typeof uptime,
+          }),
+          'malformed-input',
+        );
+      else
+        shock = {
+          magnitudePercent: magnitude,
+          uptimePercent: uptime!,
+          source: {
+            kind: 'scenario',
+            id: 'pob-config:shock',
+            label: `conditionEnemyShocked=${shocked.attributes.boolean}; conditionShockEffect=${shockEffect.attributes.number}; host shockUptimePercent=${uptime}`,
+          },
+        };
+    }
     const blocks = config.children.filter((child) => child.name === 'CustomModifierBlock');
     let declaration: string | undefined;
     if (blocks.length) {
@@ -766,6 +827,7 @@ export function importPobXml(
       ...(averageCriticalStrikes
         ? { criticalStrikeMode: 'average' as const, ailmentMode: 'excluded' as const }
         : {}),
+      ...(shock ? { shock, ailmentMode: 'configured-shock' as const } : {}),
     },
     modifiers,
     ...(addedLightningDamage.length ? { addedLightningDamage } : {}),

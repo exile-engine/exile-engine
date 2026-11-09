@@ -38,6 +38,11 @@ const exposure = (value = -10, enabled = true, id = 'synthetic-exposure-1') => (
   enabled,
   source: { kind: 'scenario', id, line: 1 },
 });
+const shock = (magnitudePercent = 20, uptimePercent = 100, id = 'synthetic-shock-1') => ({
+  magnitudePercent,
+  uptimePercent,
+  source: { kind: 'scenario', id, line: 1 },
+});
 function configuredInput(
   baseResistancePercent = 0,
   exposures = [],
@@ -88,6 +93,7 @@ test('incremental item and enemy changes equal full recomputation with selective
     'damage-before-resistance',
     'damage-after-resistance',
     'critical-effects',
+    'shock-effects',
     'selected-skill',
   ]);
   input.configuration.effectiveLightningResistancePercent = -25;
@@ -98,6 +104,7 @@ test('incremental item and enemy changes equal full recomputation with selective
     'resistance-effects',
     'damage-after-resistance',
     'critical-effects',
+    'shock-effects',
     'selected-skill',
   ]);
   input.configuration.id = 'enemy-2';
@@ -159,6 +166,7 @@ test('grouped added-lightning edits, membership and provenance match full interm
     'damage-before-resistance',
     'damage-after-resistance',
     'critical-effects',
+    'shock-effects',
     'selected-skill',
   ]);
   assert.ok(!changed.recalculated.includes('damage-increase'));
@@ -187,6 +195,7 @@ test('new gem-level effectiveness invalidates scaled added damage while retainin
   delete synthetic.supports;
   delete synthetic.critical;
   delete synthetic.resistance;
+  delete synthetic.shock;
   synthetic.levels.find((level) => level.gemLevel === 1).addedDamageEffectiveness = 0.5;
   synthetic.identity.snapshotId += '-synthetic-effectiveness';
   const input = {
@@ -233,6 +242,7 @@ test('support level, enabled state and provenance update independently from base
       'damage-before-resistance',
       'damage-after-resistance',
       'critical-effects',
+      'shock-effects',
       'selected-skill',
     ].sort(),
   );
@@ -424,6 +434,7 @@ test('critical chance and multiplier edits retain separate applicability sets an
   assert.deepEqual(changed.recalculated, [
     'critical-chance-increase',
     'critical-effects',
+    'shock-effects',
     'selected-skill',
   ]);
   assert.equal(changed.calculation.criticalEffects.chancePercent, 21);
@@ -461,7 +472,7 @@ test('critical mode changes preserve normal damage and cast caches and update su
   const session = value(createSelectedSkillSession(input, dataset));
   input.configuration.criticalStrikeMode = 'average';
   const averaged = checkUpdate(session, input);
-  assert.deepEqual(averaged.recalculated, ['critical-effects', 'selected-skill']);
+  assert.deepEqual(averaged.recalculated, ['critical-effects', 'shock-effects', 'selected-skill']);
   assert.equal(averaged.calculation.criticalEffects.lessChanceMultiplier, 0.2);
   assert.equal(averaged.calculation.criticalEffects.chancePercent, 1.2);
   assert.equal(averaged.calculation.hitsPerCast, 1);
@@ -482,7 +493,7 @@ test('critical mode changes preserve normal damage and cast caches and update su
   checkUpdate(session, input);
   input.configuration.criticalStrikeMode = 'disabled';
   const disabled = checkUpdate(session, input);
-  assert.deepEqual(disabled.recalculated, ['critical-effects', 'selected-skill']);
+  assert.deepEqual(disabled.recalculated, ['critical-effects', 'shock-effects', 'selected-skill']);
   assert.equal(disabled.calculation.criticalEffects.chancePercent, 0);
   assert.equal(
     disabled.calculation.criticalEffects.expectedHitMeanAfterResistance,
@@ -528,6 +539,7 @@ test('selected level changes refresh critical base chance while preserving modif
   const synthetic = structuredClone(dataset);
   delete synthetic.supports;
   delete synthetic.resistance;
+  delete synthetic.shock;
   synthetic.identity.snapshotId += '-synthetic-critical-level';
   synthetic.critical.identity = { ...synthetic.identity };
   synthetic.levels.find((level) => level.gemLevel === 1).baseCriticalStrikeChancePercent = 10;
@@ -818,6 +830,7 @@ test('resistance cap/floor precede penetration for both normal and critical dama
     'resistance-effects',
     'damage-after-resistance',
     'critical-effects',
+    'shock-effects',
     'selected-skill',
   ]);
   input.modifiers[0].statId = 'base_reduce_enemy_lightning_resistance_%';
@@ -838,6 +851,7 @@ test('resistance cap/floor precede penetration for both normal and critical dama
   input.configuration.criticalStrikeMode = 'disabled';
   assert.deepEqual(checkUpdate(session, input).recalculated, [
     'critical-effects',
+    'shock-effects',
     'selected-skill',
   ]);
 });
@@ -1066,6 +1080,252 @@ test('inherited conflicting resistance profiles reject atomically and recover wi
   }
 });
 
+test('configured shock magnitude, uptime and source change only shock effects and result', () => {
+  const input = structuredClone(basic);
+  input.configuration.ailmentMode = 'configured-shock';
+  input.configuration.shock = shock();
+  const session = value(createSelectedSkillSession(input, dataset));
+  assert.deepEqual(session.current.calculation, value(calculateSelectedSkill(input, dataset)));
+  const first = session.current.calculation;
+  assert.equal(first.shockEffects.mode, 'configured');
+  assert.equal(first.shockEffects.shockedDamageMultiplier, 1.2);
+  assert.equal(first.shockEffects.averageDamageMultiplier, 1.2);
+  assert.equal(
+    first.shockEffects.unshockedHitMeanAfterResistance,
+    first.criticalEffects.expectedHitMeanAfterResistance,
+  );
+  assert.equal(
+    first.shockEffects.shockedHitMeanAfterResistance,
+    first.shockEffects.unshockedHitMeanAfterResistance * 1.2,
+  );
+  input.configuration.shock.magnitudePercent = 50;
+  const maximum = checkUpdate(session, input);
+  assert.deepEqual(maximum.recalculated, ['shock-effects', 'selected-skill']);
+  input.configuration.shock.uptimePercent = 25;
+  const partial = checkUpdate(session, input);
+  assert.deepEqual(partial.recalculated, ['shock-effects', 'selected-skill']);
+  assert.equal(partial.calculation.shockEffects.averageDamageMultiplier, 1.125);
+  const effects = partial.calculation.shockEffects;
+  assert.ok(
+    Math.abs(
+      effects.expectedHitMeanAfterShock -
+        (effects.unshockedHitMeanAfterResistance * 0.75 +
+          effects.shockedHitMeanAfterResistance * 0.25),
+    ) <= 1e-9,
+  );
+  input.configuration.shock.source.id = 'moved-shock-source';
+  const moved = checkUpdate(session, input);
+  assert.deepEqual(moved.recalculated, ['shock-effects', 'selected-skill']);
+  assert.equal(moved.calculation.shockEffects.contributions[0].source.id, 'moved-shock-source');
+  input.configuration.shock.uptimePercent = 0;
+  const noUptime = checkUpdate(session, input).calculation;
+  assert.equal(noUptime.shockEffects.averageDamageMultiplier, 1);
+  assert.equal(
+    noUptime.shockEffects.expectedHitMeanAfterShock,
+    noUptime.criticalEffects.expectedHitMeanAfterResistance,
+  );
+  input.configuration.shock.magnitudePercent = 0;
+  input.configuration.shock.uptimePercent = 100;
+  const zeroMagnitude = checkUpdate(session, input).calculation;
+  assert.equal(zeroMagnitude.shockEffects.shockedDamageMultiplier, 1);
+  assert.equal(
+    zeroMagnitude.shockEffects.expectedHitMeanAfterShock,
+    zeroMagnitude.criticalEffects.expectedHitMeanAfterResistance,
+  );
+  delete input.configuration.shock;
+  input.configuration.ailmentMode = 'excluded';
+  const excluded = checkUpdate(session, input);
+  assert.deepEqual(excluded.recalculated, ['shock-effects', 'selected-skill']);
+  assert.equal(excluded.calculation.shockEffects.mode, 'excluded');
+  assert.deepEqual(excluded.calculation.shockEffects.contributions, []);
+});
+
+test('shock shares post-resistance critical results while cast-only edits reuse shock means', () => {
+  const input = configuredInput(-195, [exposure(-10)]);
+  input.configuration.criticalStrikeMode = 'average';
+  input.configuration.ailmentMode = 'configured-shock';
+  input.configuration.shock = shock(30, 40);
+  input.skill.supports = [support()];
+  input.addedLightningDamage = [added(2, 8)];
+  input.modifiers.push(modifier('critical_strike_chance_+%', 100, 14));
+  input.modifiers.push(modifier('base_critical_strike_multiplier_+', 50, 15));
+  input.modifiers.push(modifier('base_reduce_enemy_lightning_resistance_%', 20, 16));
+  const session = value(createSelectedSkillSession(input, dataset));
+  assert.deepEqual(session.current.calculation, value(calculateSelectedSkill(input, dataset)));
+  assert.equal(session.current.calculation.resistanceEffects.effectiveResistancePercent, -220);
+  const originalShock = session.current.calculation.shockEffects;
+  input.modifiers[2].value = 35;
+  const faster = checkUpdate(session, input);
+  assert.deepEqual(faster.recalculated, ['cast-speed-increase', 'cast-rate', 'selected-skill']);
+  assert.deepEqual(faster.calculation.shockEffects, originalShock);
+  input.configuration.criticalStrikeMode = 'disabled';
+  const disabledCritical = checkUpdate(session, input);
+  assert.deepEqual(disabledCritical.recalculated, [
+    'critical-effects',
+    'shock-effects',
+    'selected-skill',
+  ]);
+  input.configuration.criticalStrikeMode = 'average';
+  checkUpdate(session, input);
+  input.skill.supports[0].enabled = false;
+  const noSupport = checkUpdate(session, input);
+  assert.ok(noSupport.recalculated.includes('shock-effects'));
+  assert.ok(!noSupport.recalculated.includes('effective-resistance'));
+  input.modifiers[5].value = 30;
+  const morePenetration = checkUpdate(session, input);
+  assert.equal(morePenetration.calculation.resistanceEffects.effectiveResistancePercent, -230);
+  assert.ok(morePenetration.recalculated.includes('shock-effects'));
+  assert.ok(!morePenetration.recalculated.includes('damage-before-resistance'));
+  input.modifiers[0].value = -130;
+  const zeroDamage = checkUpdate(session, input).calculation;
+  assert.equal(zeroDamage.shockEffects.expectedHitMeanAfterShock, 0);
+  assert.equal(zeroDamage.hitDps, 0);
+});
+
+test('shock scenarios reject unsupported inference, bounds and inherited configuration atomically', () => {
+  const initial = structuredClone(basic);
+  const session = value(createSelectedSkillSession(initial, dataset));
+  const before = session.current;
+  const base = structuredClone(basic);
+  base.configuration.ailmentMode = 'configured-shock';
+  base.configuration.shock = shock();
+  for (const mutate of [
+    (input) => {
+      input.configuration.ailmentMode = 'excluded';
+    },
+    (input) => {
+      delete input.configuration.shock;
+    },
+    (input) => {
+      input.configuration.shock = null;
+    },
+    (input) => {
+      input.configuration.shock.magnitudePercent = -1;
+    },
+    (input) => {
+      input.configuration.shock.magnitudePercent = 51;
+    },
+    (input) => {
+      input.configuration.shock.magnitudePercent = 1.5;
+    },
+    (input) => {
+      input.configuration.shock.uptimePercent = -1;
+    },
+    (input) => {
+      input.configuration.shock.uptimePercent = 101;
+    },
+    (input) => {
+      input.configuration.shock.uptimePercent = 0.5;
+    },
+    (input) => {
+      input.configuration.shock.source.kind = 'item';
+    },
+    (input) => {
+      input.configuration.shock.source = Object.create(input.configuration.shock.source);
+    },
+    (input) => {
+      input.configuration.shock.chancePercent = 50;
+    },
+    (input) => {
+      const state = input.configuration.shock;
+      delete input.configuration.shock;
+      Object.setPrototypeOf(input.configuration, { shock: state });
+    },
+    (input) => {
+      delete input.configuration.shock;
+      Object.setPrototypeOf(input.configuration, { shock: null });
+    },
+    (input) => {
+      input.modifiers.push(modifier('shock_effect_+%', 10, 17));
+    },
+    (input) => {
+      input.modifiers.push(modifier('base_damage_taken_+%_from_shock', 10, 17));
+    },
+  ]) {
+    const input = structuredClone(base);
+    mutate(input);
+    assert.equal(calculateSelectedSkill(input, dataset).ok, false);
+    assert.equal(createSelectedSkillSession(input, dataset).ok, false);
+    assert.equal(session.recalculate(input).ok, false);
+    assert.equal(session.current, before);
+  }
+  checkUpdate(session, base);
+  const unavailable = structuredClone(dataset);
+  delete unavailable.shock;
+  const legacy = value(createSelectedSkillSession(basic, unavailable));
+  const last = legacy.current;
+  assert.equal(calculateSelectedSkill(base, unavailable).ok, false);
+  assert.equal(legacy.recalculate(base).ok, false);
+  assert.equal(legacy.current, last);
+  const recovered = structuredClone(basic);
+  recovered.configuration.effectiveLightningResistancePercent = 50;
+  assert.deepEqual(
+    value(legacy.recalculate(recovered)).calculation,
+    value(calculateSelectedSkill(recovered, unavailable)),
+  );
+});
+
+test('shock scenario, normalized facts and trace retain independent ownership', () => {
+  const input = structuredClone(basic);
+  input.configuration.ailmentMode = 'configured-shock';
+  input.configuration.shock = shock();
+  const expected = structuredClone(input);
+  const ownedDataset = structuredClone(dataset);
+  const session = value(createSelectedSkillSession(input, ownedDataset));
+  const original = structuredClone(session.current.calculation);
+  input.configuration.shock.source.id = 'host-shock-source';
+  input.configuration.shock.magnitudePercent = 50;
+  ownedDataset.shock.ruleSource.id = 'host-shock-rule';
+  ownedDataset.shock.sourceRows[0].key = 'host-shock-row';
+  assert.deepEqual(session.current.calculation, original);
+  assert.throws(() => {
+    session.current.calculation.shockEffects.contributions[0].source.id = 'changed';
+  }, TypeError);
+  assert.throws(() => {
+    session.current.calculation.shockEffects.ruleSource.id = 'changed';
+  }, TypeError);
+  expected.configuration.shock.magnitudePercent = 0;
+  checkUpdate(session, expected);
+  expected.configuration.shock.magnitudePercent = -0;
+  expected.configuration.shock.uptimePercent = -0;
+  checkUpdate(session, expected);
+});
+
+test('shock facts reject cycles, inherited metadata, sparse rows and mismatched identity', () => {
+  for (const select of [
+    (data) => data.shock,
+    (data) => data.shock.identity,
+    (data) => data.shock.ruleSource,
+    (data) => data.shock.sourceRows[0],
+  ]) {
+    const malformed = structuredClone(dataset);
+    const target = select(malformed);
+    target.extra = {};
+    target.extra.self = target.extra;
+    assert.equal(calculateSelectedSkill(basic, malformed).ok, false);
+    assert.equal(createSelectedSkillSession(basic, malformed).ok, false);
+  }
+  for (const mutate of [
+    (data) => {
+      data.shock.identity.snapshotId += '-different';
+    },
+    (data) => {
+      data.shock.sourceRows[0] = Object.create(data.shock.sourceRows[0]);
+    },
+    (data) => {
+      delete data.shock.sourceRows[0];
+    },
+    (data) => {
+      data.shock.ruleSource.id = 'unverified-shock-rule';
+    },
+  ]) {
+    const malformed = structuredClone(dataset);
+    mutate(malformed);
+    assert.equal(calculateSelectedSkill(basic, malformed).ok, false);
+    assert.equal(createSelectedSkillSession(basic, malformed).ok, false);
+  }
+});
+
 test('invalid added-lightning groups fail atomically and retain the accepted dependency set', () => {
   const input = { ...structuredClone(basic), addedLightningDamage: [added(2, 8)] };
   const session = value(createSelectedSkillSession(input, dataset));
@@ -1128,6 +1388,7 @@ test('scaled-added and combined-base overflow reject atomically before publishin
     delete synthetic.supports;
     delete synthetic.critical;
     delete synthetic.resistance;
+    delete synthetic.shock;
     synthetic.identity.snapshotId += combinedOverflow ? '-combined-overflow' : '-scaled-overflow';
     const level = synthetic.levels.find((entry) => entry.gemLevel === 20);
     level.addedDamageEffectiveness = combinedOverflow ? 1e307 : 1e308;

@@ -46,18 +46,27 @@ const fixtures = Object.fromEntries(
       'lightning-floor',
       'lightning-penetration-sum',
       'lightning-resistance-combined',
+      'shock-full',
+      'shock-zero-uptime',
+      'shock-partial',
+      'shock-zero-magnitude',
+      'shock-minimum',
+      'shock-maximum',
+      'shock-combined',
+      'shock-no-damage',
     ].map(async (name) => [
       name,
       await readFile(new URL(`./fixtures/pob/${name}.xml`, import.meta.url), 'utf8'),
     ]),
   ),
 );
-const source = (xml = fixtures.baseline) => ({
+const source = (xml = fixtures.baseline, shockUptimePercent) => ({
   format: 'pob-xml',
   xml,
   target,
   buildId: 'synthetic-spark',
   configurationId: 'explicit-enemy',
+  ...(shockUptimePercent === undefined ? {} : { shockUptimePercent }),
 });
 const rawResistance = (
   baseResistancePercent,
@@ -75,7 +84,7 @@ const rawResistance = (
 });
 
 test('PoB capability advertises exactly the bounded XML profile', () => {
-  assert.equal(pobAdapterVersion, 'poe1-spark-xml-v5');
+  assert.equal(pobAdapterVersion, 'poe1-spark-xml-v6');
   assert.equal(pobCompatibility.status, 'bounded-poe1-spark-xml');
   assert.equal(pobCompatibility.xmlImportImplemented, true);
   assert.equal(pobCompatibility.shareCodeImportImplemented, false);
@@ -637,6 +646,101 @@ test('mixed custom formats, unknown exposure blocks and unsupported cap or penet
     assert.equal(imported.rawXml, xml);
   }
   assert.equal(importPobXml(source(malformed[0])).diagnostics[0].code, 'pob.ambiguous-assumptions');
+});
+
+test('configured shock retains native magnitude, explicit host uptime and their combined scenario provenance', () => {
+  const scenarios = [
+    ['shock-full', 20, 100],
+    ['shock-zero-uptime', 20, 0],
+    ['shock-partial', 20, 50],
+    ['shock-zero-magnitude', 0, 100],
+    ['shock-minimum', 1, 100],
+    ['shock-maximum', 50, 100],
+    ['shock-combined', 17, 40],
+    ['shock-no-damage', 20, 100],
+  ];
+  for (const [name, magnitude, uptime] of scenarios) {
+    const imported = importPobXml(source(fixtures[name], uptime));
+    assert.equal(imported.complete, true, name + JSON.stringify(imported.diagnostics));
+    const config = imported.selectedSkill.configuration;
+    assert.equal(config.id, 'explicit-enemy');
+    assert.equal(config.ailmentMode, 'configured-shock');
+    assert.deepEqual(config.shock, {
+      magnitudePercent: magnitude,
+      uptimePercent: uptime,
+      source: {
+        kind: 'scenario',
+        id: 'pob-config:shock',
+        label: `conditionEnemyShocked=true; conditionShockEffect=${magnitude}; host shockUptimePercent=${uptime}`,
+      },
+    });
+    assert.equal(imported.rawXml, fixtures[name]);
+    assert.deepEqual(imported.selectedSkill.identity, target);
+  }
+  assert.equal(fixtures['shock-full'], fixtures['shock-partial']);
+  assert.equal(fixtures['shock-full'], fixtures['shock-zero-uptime']);
+  const combined = importPobXml(source(fixtures['shock-combined'], 40));
+  assert.equal(combined.selectedSkill.configuration.criticalStrikeMode, 'average');
+  assert.equal(combined.selectedSkill.configuration.lightningResistance.exposures[0].value, -15);
+  assert.equal(combined.supports[0].enabled, true);
+  assert.equal(combined.modifiers.at(-1).statId, 'base_reduce_enemy_lightning_resistance_%');
+  assert.equal('shock' in importPobXml(source()).selectedSkill.configuration, false);
+});
+
+test('native false shock is explicit zero uptime; missing or contradictory metadata never supplies an inferred shock', () => {
+  const full = fixtures['shock-full'];
+  const off = full.replace(
+    'name="conditionEnemyShocked" boolean="true"',
+    'name="conditionEnemyShocked" boolean="false"',
+  );
+  const importedOff = importPobXml(source(off, 0));
+  assert.equal(importedOff.complete, true);
+  assert.equal(importedOff.selectedSkill.configuration.shock.magnitudePercent, 20);
+  assert.equal(importedOff.selectedSkill.configuration.shock.uptimePercent, 0);
+  assert.match(
+    importedOff.selectedSkill.configuration.shock.source.label,
+    /conditionEnemyShocked=false/,
+  );
+  const invalidSources = [
+    source(full),
+    { ...source(full), shockUptimePercent: undefined },
+    source(off, 1),
+    source(fixtures.baseline, 100),
+    source(fixtures.baseline, 0),
+    ...[-1, 101, 0.5, NaN, Infinity, '100', null].map((uptime) => ({
+      ...source(full),
+      shockUptimePercent: uptime,
+    })),
+    ...[
+      full.replace('    <Input name="conditionShockEffect" number="20"/>\n', ''),
+      full.replace('    <Input name="conditionEnemyShocked" boolean="true"/>\n', ''),
+      full.replace(
+        'name="conditionShockEffect" number="20"',
+        'name="conditionShockEffect" number="51"',
+      ),
+      full.replace(
+        'name="conditionShockEffect" number="20"',
+        'name="conditionShockEffect" number="20.5"',
+      ),
+      full.replace(
+        'name="conditionShockEffect" number="20"',
+        'name="conditionShockEffect" number="-1"',
+      ),
+      full.replace(
+        'name="conditionEnemyShocked" boolean="true"',
+        'name="conditionEnemyShocked" number="1"',
+      ),
+      full.replace('</Config>', '<Input name="conditionEnemyChilled" boolean="true"/></Config>'),
+      full.replace('Implicits: 0', 'Implicits: 0\n20% increased Effect of Shock'),
+    ].map((xml) => source(xml, 100)),
+  ];
+  for (const input of invalidSources) {
+    const imported = importPobXml(input);
+    assert.equal(imported.complete, false, JSON.stringify(input));
+    assert.equal('selectedSkill' in imported, false);
+    assert.ok(imported.unresolved.length);
+    assert.equal(imported.rawXml, input.xml);
+  }
 });
 
 test('ambiguous selection, unsupported version hints and mechanics fail visibly', () => {
