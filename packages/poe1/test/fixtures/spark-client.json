@@ -75,6 +75,18 @@
         "Id": "quality_display_base_number_of_projectiles_is_gem",
         "IsLocal": false,
         "IsWeaponLocal": false
+      },
+      {
+        "_index": 1628,
+        "Id": "spell_minimum_added_lightning_damage",
+        "IsLocal": false,
+        "IsWeaponLocal": false
+      },
+      {
+        "_index": 1629,
+        "Id": "spell_maximum_added_lightning_damage",
+        "IsLocal": false,
+        "IsWeaponLocal": false
       }
     ],
     "GrantedEffects": [
@@ -108,7 +120,8 @@
         "StatInterpolations": [3, 3, 1],
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
-        "AdditionalStatsValues": [4]
+        "AdditionalStatsValues": [4],
+        "DamageEffectiveness": 9000
       },
       {
         "_index": 7430,
@@ -120,7 +133,8 @@
         "StatInterpolations": [3, 3, 1],
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
-        "AdditionalStatsValues": [4]
+        "AdditionalStatsValues": [4],
+        "DamageEffectiveness": 9000
       },
       {
         "_index": 7431,
@@ -132,7 +146,8 @@
         "StatInterpolations": [3, 3, 1],
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
-        "AdditionalStatsValues": [4]
+        "AdditionalStatsValues": [4],
+        "DamageEffectiveness": 9000
       },
       {
         "_index": 7432,
@@ -144,7 +159,8 @@
         "StatInterpolations": [3, 3, 1],
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
-        "AdditionalStatsValues": [4]
+        "AdditionalStatsValues": [4],
+        "DamageEffectiveness": 9000
       },
       {
         "_index": 7433,
@@ -156,7 +172,8 @@
         "StatInterpolations": [3, 3, 1],
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
-        "AdditionalStatsValues": [5]
+        "AdditionalStatsValues": [5],
+        "DamageEffectiveness": 9000
       },
       {
         "_index": 7434,
@@ -168,7 +185,8 @@
         "StatInterpolations": [3, 3, 1],
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
-        "AdditionalStatsValues": [5]
+        "AdditionalStatsValues": [5],
+        "DamageEffectiveness": 9000
       },
       {
         "_index": 7435,
@@ -180,7 +198,8 @@
         "StatInterpolations": [3, 3, 1],
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
-        "AdditionalStatsValues": [5]
+        "AdditionalStatsValues": [5],
+        "DamageEffectiveness": 9000
       },
       {
         "_index": 7436,
@@ -192,7 +211,8 @@
         "StatInterpolations": [3, 3, 1],
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
-        "AdditionalStatsValues": [5]
+        "AdditionalStatsValues": [5],
+        "DamageEffectiveness": 9000
       },
       {
         "_index": 7437,
@@ -204,7 +224,8 @@
         "StatInterpolations": [3, 3, 1],
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
-        "AdditionalStatsValues": [5]
+        "AdditionalStatsValues": [5],
+        "DamageEffectiveness": 9000
       },
       {
         "_index": 7438,
@@ -216,7 +237,8 @@
         "StatInterpolations": [3, 3, 1],
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
-        "AdditionalStatsValues": [6]
+        "AdditionalStatsValues": [6],
+        "DamageEffectiveness": 9000
       },
       {
         "_index": 7439,
@@ -228,7 +250,8 @@
         "StatInterpolations": [3, 3, 1],
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
-        "AdditionalStatsValues": [6]
+        "AdditionalStatsValues": [6],
+        "DamageEffectiveness": 9000
       },
       {
         "_index": 7440,
@@ -240,7 +263,8 @@
         "StatInterpolations": [3, 3, 1],
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
-        "AdditionalStatsValues": [6]
+        "AdditionalStatsValues": [6],
+        "DamageEffectiveness": 9000
       },
       {
         "_index": 7441,
@@ -252,7 +276,8 @@
         "StatInterpolations": [3, 3, 1],
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
-        "AdditionalStatsValues": [6]
+        "AdditionalStatsValues": [6],
+        "DamageEffectiveness": 9000
       },
       {
         "_index": 7442,
@@ -264,7 +289,8 @@
         "StatInterpolations": [3, 3, 1],
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
-        "AdditionalStatsValues": [7]
+        "AdditionalStatsValues": [7],
+        "DamageEffectiveness": 9000
       },
       {
         "_index": 7443,
@@ -276,7 +302,8 @@
         "StatInterpolations": [3, 3, 1],
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
-        "AdditionalStatsValues": [7]
+        "AdditionalStatsValues": [7],
+        "DamageEffectiveness": 9000
       },
       {
         "_index": 7444,
@@ -288,7 +315,8 @@
         "StatInterpolations": [3, 3, 1],
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
-        "AdditionalStatsValues": [7]
+        "AdditionalStatsValues": [7],
+        "DamageEffectiveness": 9000
       },
       {
         "_index": 7445,
@@ -300,7 +328,8 @@
         "StatInterpolations": [3, 3, 1],
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
-        "AdditionalStatsValues": [7]
+        "AdditionalStatsValues": [7],
+        "DamageEffectiveness": 9000
       },
       {
         "_index": 7446,
@@ -312,7 +341,8 @@
         "StatInterpolations": [3, 3, 1],
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
-        "AdditionalStatsValues": [7]
+        "AdditionalStatsValues": [7],
+        "DamageEffectiveness": 9000
       },
       {
         "_index": 7447,
@@ -324,7 +354,8 @@
         "StatInterpolations": [3, 3, 1],
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
-        "AdditionalStatsValues": [8]
+        "AdditionalStatsValues": [8],
+        "DamageEffectiveness": 9000
       },
       {
         "_index": 7448,
@@ -336,7 +367,8 @@
         "StatInterpolations": [3, 3, 1],
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
-        "AdditionalStatsValues": [8]
+        "AdditionalStatsValues": [8],
+        "DamageEffectiveness": 9000
       },
       {
         "_index": 7449,
@@ -348,7 +380,8 @@
         "StatInterpolations": [3, 3, 1],
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
-        "AdditionalStatsValues": [8]
+        "AdditionalStatsValues": [8],
+        "DamageEffectiveness": 9000
       },
       {
         "_index": 7450,
@@ -360,7 +393,8 @@
         "StatInterpolations": [3, 3, 1],
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
-        "AdditionalStatsValues": [8]
+        "AdditionalStatsValues": [8],
+        "DamageEffectiveness": 9000
       },
       {
         "_index": 7451,
@@ -372,7 +406,8 @@
         "StatInterpolations": [3, 3, 1],
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
-        "AdditionalStatsValues": [8]
+        "AdditionalStatsValues": [8],
+        "DamageEffectiveness": 9000
       },
       {
         "_index": 7452,
@@ -384,7 +419,8 @@
         "StatInterpolations": [3, 3, 1],
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
-        "AdditionalStatsValues": [8]
+        "AdditionalStatsValues": [8],
+        "DamageEffectiveness": 9000
       },
       {
         "_index": 7453,
@@ -396,7 +432,8 @@
         "StatInterpolations": [3, 3, 1],
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
-        "AdditionalStatsValues": [9]
+        "AdditionalStatsValues": [9],
+        "DamageEffectiveness": 9000
       },
       {
         "_index": 7454,
@@ -408,7 +445,8 @@
         "StatInterpolations": [3, 3, 1],
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
-        "AdditionalStatsValues": [9]
+        "AdditionalStatsValues": [9],
+        "DamageEffectiveness": 9000
       },
       {
         "_index": 7455,
@@ -420,7 +458,8 @@
         "StatInterpolations": [3, 3, 1],
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
-        "AdditionalStatsValues": [9]
+        "AdditionalStatsValues": [9],
+        "DamageEffectiveness": 9000
       },
       {
         "_index": 7456,
@@ -432,7 +471,8 @@
         "StatInterpolations": [3, 3, 1],
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
-        "AdditionalStatsValues": [9]
+        "AdditionalStatsValues": [9],
+        "DamageEffectiveness": 9000
       },
       {
         "_index": 7457,
@@ -444,7 +484,8 @@
         "StatInterpolations": [3, 3, 1],
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
-        "AdditionalStatsValues": [9]
+        "AdditionalStatsValues": [9],
+        "DamageEffectiveness": 9000
       },
       {
         "_index": 7458,
@@ -456,7 +497,8 @@
         "StatInterpolations": [3, 3, 1],
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
-        "AdditionalStatsValues": [9]
+        "AdditionalStatsValues": [9],
+        "DamageEffectiveness": 9000
       },
       {
         "_index": 7459,
@@ -468,7 +510,8 @@
         "StatInterpolations": [3, 3, 1],
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
-        "AdditionalStatsValues": [9]
+        "AdditionalStatsValues": [9],
+        "DamageEffectiveness": 9000
       },
       {
         "_index": 7460,
@@ -480,7 +523,8 @@
         "StatInterpolations": [3, 3, 1],
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
-        "AdditionalStatsValues": [10]
+        "AdditionalStatsValues": [10],
+        "DamageEffectiveness": 9000
       },
       {
         "_index": 7461,
@@ -492,7 +536,8 @@
         "StatInterpolations": [3, 3, 1],
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
-        "AdditionalStatsValues": [10]
+        "AdditionalStatsValues": [10],
+        "DamageEffectiveness": 9000
       },
       {
         "_index": 7462,
@@ -504,7 +549,8 @@
         "StatInterpolations": [3, 3, 1],
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
-        "AdditionalStatsValues": [10]
+        "AdditionalStatsValues": [10],
+        "DamageEffectiveness": 9000
       },
       {
         "_index": 7463,
@@ -516,7 +562,8 @@
         "StatInterpolations": [3, 3, 1],
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
-        "AdditionalStatsValues": [10]
+        "AdditionalStatsValues": [10],
+        "DamageEffectiveness": 9000
       },
       {
         "_index": 7464,
@@ -528,7 +575,8 @@
         "StatInterpolations": [3, 3, 1],
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
-        "AdditionalStatsValues": [10]
+        "AdditionalStatsValues": [10],
+        "DamageEffectiveness": 9000
       },
       {
         "_index": 7465,
@@ -540,7 +588,8 @@
         "StatInterpolations": [3, 3, 1],
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
-        "AdditionalStatsValues": [10]
+        "AdditionalStatsValues": [10],
+        "DamageEffectiveness": 9000
       },
       {
         "_index": 7466,
@@ -552,7 +601,8 @@
         "StatInterpolations": [3, 3, 1],
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
-        "AdditionalStatsValues": [10]
+        "AdditionalStatsValues": [10],
+        "DamageEffectiveness": 9000
       },
       {
         "_index": 7467,
@@ -564,7 +614,8 @@
         "StatInterpolations": [3, 3, 1],
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
-        "AdditionalStatsValues": [10]
+        "AdditionalStatsValues": [10],
+        "DamageEffectiveness": 9000
       },
       {
         "_index": 7468,
@@ -576,7 +627,8 @@
         "StatInterpolations": [3, 3, 1],
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
-        "AdditionalStatsValues": [11]
+        "AdditionalStatsValues": [11],
+        "DamageEffectiveness": 9000
       }
     ],
     "GrantedEffectsPerLevel": [

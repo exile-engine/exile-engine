@@ -20,6 +20,101 @@ const mod = (statId, value) => ({
   value,
   source: { kind: 'item', id: 'body-armour:1', line: 6 },
 });
+const added = (min, max, line = 7) => ({
+  statIds: ['spell_minimum_added_lightning_damage', 'spell_maximum_added_lightning_damage'],
+  values: [min, max],
+  source: { kind: 'item', id: 'body-armour:1', line },
+});
+
+test('ordered added-lightning groups retain raw provenance and scale before increases and rounding', () => {
+  const groups = [added(1, 2), added(0, 0, 8)];
+  const before = structuredClone(groups);
+  const result = calculateSelectedSkill(
+    { ...input, modifiers: [mod('spell_damage_+%', 25)], addedLightningDamage: groups },
+    dataset,
+  );
+  assert.equal(result.ok, true);
+  assert.deepEqual(result.value.hit.baseLightningDamage, { min: 104, max: 1983, mean: 1043.5 });
+  assert.deepEqual(result.value.addedLightningDamage, {
+    raw: { min: 1, max: 2, mean: 1.5 },
+    effectiveness: 1.9,
+    effective: { min: 1.9, max: 3.8, mean: (1.9 + 3.8) / 2 },
+    combinedBase: { min: 105.9, max: 1986.8, mean: (105.9 + 1986.8) / 2 },
+    contributions: groups,
+  });
+  assert.deepEqual(result.value.hit.nonCriticalHitBeforeResistance, {
+    min: 132,
+    max: 2484,
+    mean: 1308,
+  });
+  assert.equal(result.value.combinedDps, 2180);
+  assert.deepEqual(groups, before);
+  groups[0].values[0] = 99;
+  assert.equal(result.value.addedLightningDamage.contributions[0].values[0], 1);
+  assert.ok(
+    result.value.hit.sourceRows.some(
+      (row) => row.table === 'Stats' && row.key === 'spell_minimum_added_lightning_damage',
+    ),
+  );
+  const zero = calculateSelectedSkill(
+    { ...input, modifiers: [mod('damage_+%', -100)], addedLightningDamage: before },
+    dataset,
+  );
+  assert.equal(zero.ok, true);
+  assert.equal(zero.value.combinedDps, 0);
+  assert.deepEqual(zero.value.addedLightningDamage.contributions, before);
+});
+
+test('invalid or unsupported flat ranges never become a complete calculation', () => {
+  const candidates = [
+    null,
+    [null],
+    [added(-1, 2)],
+    [added(3, 2)],
+    [added(1.5, 2)],
+    [added(0, Infinity)],
+    [added(0, Number.MAX_SAFE_INTEGER + 1)],
+    [added(0, Number.MAX_SAFE_INTEGER), added(0, 1)],
+    [
+      {
+        ...added(1, 2),
+        statIds: ['spell_maximum_added_lightning_damage', 'spell_minimum_added_lightning_damage'],
+      },
+    ],
+    [
+      {
+        ...added(1, 2),
+        statIds: ['global_minimum_added_lightning_damage', 'global_maximum_added_lightning_damage'],
+      },
+    ],
+    [{ ...added(1, 2), values: [1] }],
+    [{ ...added(1, 2), source: null }],
+    [{ ...added(1, 2), conditions: ['on-low-life'] }],
+    [{ ...added(1, 2), scope: 'local' }],
+    [{ ...added(1, 2), more: true }],
+    Array(1001).fill(added(0, 0)),
+  ];
+  for (const groups of candidates) {
+    const result = calculateSelectedSkill({ ...input, addedLightningDamage: groups }, dataset);
+    assert.equal(result.ok, false, JSON.stringify(groups));
+    assert.equal('value' in result, false);
+  }
+  assert.equal(
+    calculateSelectedSkill(
+      { ...input, modifiers: [mod('spell_minimum_added_lightning_damage', 10)] },
+      dataset,
+    ).ok,
+    false,
+  );
+  for (const effectiveness of [undefined, -1, NaN, Infinity]) {
+    const malformed = structuredClone(dataset);
+    malformed.levels[19].addedDamageEffectiveness = effectiveness;
+    assert.equal(
+      calculateSelectedSkill({ ...input, addedLightningDamage: [added(1, 2)] }, malformed).ok,
+      false,
+    );
+  }
+});
 
 test('selected skill counts one noncritical lightning hit per cast and preserves identities', () => {
   const result = calculateSelectedSkill(input, dataset);

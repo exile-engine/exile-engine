@@ -21,9 +21,23 @@ const result = calculateSpark(
 
 `reader` is a matching PoE1 `CatalogReader`, usually supplied by the PoE1 data package. Loading resolves actual `Spark` client records, all supported source levels and ordinary quality. The synchronous calculation uses client-resolved base damage, additive supported increased damage, cast speed and explicit effective resistance. It returns ranges before/after resistance, cast frequency and provenance. No full-build DPS is claimed.
 
-Unsupported supports, variants, flat damage, crit, shock, conversions, conditions and local effects fail with diagnostics. See the root supported-mechanics document and executable example.
+The isolated-hit API rejects unsupported supports, variants, flat damage, crit, shock, conversions, conditions and local effects with diagnostics. See the root supported-mechanics document and executable example.
 
 `calculateSelectedSkill(input, dataset)` is a separate fresh full-recomputation path for normal Spark selected-skill hit/combined DPS. Input carries `identity`, `buildId`, `skill`, `configuration: { id, effectiveLightningResistancePercent }`, and individual `modifiers`. It counts one noncritical lightning hit per cast; combined DPS equals hit DPS. It follows the pinned reference's hit endpoint rounding, rounded cast-speed multiplier and server-tick ceiling. It does not multiply by projectile count or duration.
+
+Its optional `addedLightningDamage` array accepts only ordered spell-lightning ranges:
+
+```js
+addedLightningDamage: [
+  {
+    statIds: ['spell_minimum_added_lightning_damage', 'spell_maximum_added_lightning_damage'],
+    values: [10, 20],
+    source: { kind: 'item', id: 'body-armour:1', line: 5 },
+  },
+];
+```
+
+Raw endpoints and their sums must be nonnegative safe integers with minimum at most maximum. Each group retains both stat IDs, values and shared provenance. The normalizer reads per-level client effectiveness (`1 + DamageEffectiveness / 10000`, currently 1.9), applies it to summed raw endpoints, adds intrinsic damage, then applies increases and final endpoint rounding. The result's `addedLightningDamage` trace reports each stage and every original group; `hit.baseLightningDamage` stays intrinsic. Generic/attack added damage, other elements, local/conditional effects, support gems and caller-defined effectiveness remain unsupported. This extension applies to selected-skill APIs; the original isolated-hit API above retains its earlier input contract.
 
 `createSelectedSkillSession(input, dataset)` returns a validated session. `session.recalculate(nextInput)` returns the calculation, `recalculated` node names and the current `dependencies`. The session captures immutable dataset facts, tracks changing applicability sets, and retains its last accepted state on invalid updates. `planCalculationGraph` rejects cycles/feedback explicitly instead of assuming every future mechanic is acyclic.
 

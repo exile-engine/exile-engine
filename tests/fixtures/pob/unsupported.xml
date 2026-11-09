@@ -13,7 +13,7 @@
 Synthetic Spark Fixture
 Simple Robe
 Implicits: 0
-Adds 1 to 10 Lightning Damage to Spells]]></Item>
+Adds 1 to 10 Fire Damage to Spells]]></Item>
     <ItemSet id="1"><Slot name="Body Armour" itemId="1"/></ItemSet>
   </Items>
   <Config>

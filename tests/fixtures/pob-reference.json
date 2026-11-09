@@ -2,17 +2,19 @@
   "comparisonKind": "executed-pinned-pob-headless",
   "pobExecuted": true,
   "engine": {
-    "repositoryRevision": "a642eea0ba4995504e54e28b28ad11562dd7c5c4",
+    "repositoryRevision": "b8016e7186701a3bdee292af8454187c884ffc6a",
     "workingTreeChanges": true,
-    "rulesRevision": "poe1-selected-spark-v1",
+    "rulesRevision": "poe1-selected-spark-v2",
     "sourceSha256": {
-      "packages/core/src/selected-skill.ts": "61b05106624fe65f44dd4ccb8b293c352326f1beed37829a912459e990c1f7fd",
-      "packages/core/src/spark.ts": "878952d2dde7fc368f40637a194e600cef4cda54d0175045cf155a4c3cda500b",
-      "packages/poe1/src/selected-skill.ts": "45cb5e6fad558e492117518a67643dcc58928df34e8c88426628ccfadd35d2dc",
-      "packages/poe1/src/incremental.ts": "e31f43210c2576f96da98a0e29b2fc6c5512acf9cd7a01add8071f9b66723236",
+      "packages/core/src/selected-skill.ts": "fc0439e7829049ef5b401a5c757548b24a833f6838f03d2d61c715ee856f4a84",
+      "packages/core/src/spark.ts": "e18109df745a8f2f3a3d517a39cb5f38c7d9c81e229e1475aa632713848d3ede",
+      "packages/poe1/src/selected-skill.ts": "bc254a5f61171f6c5063d63d05773b7dee9d9a60a0fbca8726b206217975e3b6",
+      "packages/poe1/src/incremental.ts": "44162c73e60b1629df75e1b00cb234b1c75cff5f9c80141bb6cb4ed335e17b91",
       "packages/poe1/src/graph.ts": "964fb36094d6d8609caa5d28a5aedacd0a2d8ce513992d29bb43d1c62e262c3c",
-      "packages/pob/src/index.ts": "491668ca7e5b20f4123c9a4c6a639823908908cb26cef9bb388396d69345a998",
-      "packages/pob/src/xml.ts": "a360760b838bd73656a9d81bb8aa1efc099f96c2033876a36f8363b40d145268"
+      "packages/pob/src/index.ts": "bfe08fa14e1798d482e6712cf8cc93c7329a5a3d070b8c818e4b016a564c2398",
+      "packages/pob/src/xml.ts": "a360760b838bd73656a9d81bb8aa1efc099f96c2033876a36f8363b40d145268",
+      "packages/core/src/types.ts": "052277d2e06068564efc91c72d6e502923dbbf21115023120e82eefcac446e83",
+      "packages/poe1/src/index.ts": "94518d59870020408c512149bc6f37445d36f5d49d01b77983e44fb2bb359e22"
     }
   },
   "reference": {
@@ -37,7 +39,7 @@
       {
         "path": "src/Modules/CalcOffence.lua",
         "gitBlob": "76f6d5ca25e0e7f9f5e31ee83887e3c7898c16c3",
-        "lines": "112-140,494-506,2427-2467,3071-3077,3508-3514,3622-3626,3826-3831,6137-6139"
+        "lines": "112-140,494-506,2427-2467,3071-3077,3508-3514,3622-3626,3826-3831,6137-6139,3375-3409"
       },
       {
         "path": "src/Modules/Data.lua",
@@ -47,7 +49,7 @@
       {
         "path": "src/Data/SkillStatMap.lua",
         "gitBlob": "880e8c8e42195e27bedb341b9bffc9b5f30f938e",
-        "lines": "712-714,736-738,781-783,1725-1733"
+        "lines": "712-714,736-738,781-783,1725-1733,1743-1748"
       },
       {
         "path": "src/Modules/ConfigOptions.lua",
@@ -57,7 +59,7 @@
       {
         "path": "src/Modules/ModParser.lua",
         "gitBlob": "9d5d1db3a05366674a9879fbe61ceb6f9a0d7fce",
-        "lines": "2231"
+        "lines": "2231,136-140"
       },
       {
         "path": "src/HeadlessWrapper.lua",
@@ -73,6 +75,16 @@
         "path": "src/Classes/ConfigTab.lua",
         "gitBlob": "7a6bf0b95c3d3dd29ea276746511765b1b0febcb",
         "lines": "883-935,1163-1203"
+      },
+      {
+        "path": "src/Export/Scripts/skills.lua",
+        "gitBlob": "8a7e6b8995240c2a0b2541349a98c81e2e6fc14f",
+        "lines": "311-312"
+      },
+      {
+        "path": "src/Data/Global.lua",
+        "gitBlob": "c675233afcdfd9e8e2afb758d4871d54c553abfa",
+        "lines": "155"
       }
     ]
   },
@@ -96,7 +108,32 @@
     "minimum": 104,
     "maximum": 1983,
     "mean": 1043.5,
-    "castTimeSeconds": 0.6
+    "castTimeSeconds": 0.6,
+    "addedDamageEffectiveness": {
+      "sourceTable": "GrantedEffectStatSetsPerLevel",
+      "sourceField": "DamageEffectiveness",
+      "rawValue": 9000,
+      "divisor": 10000,
+      "offset": 1,
+      "value": 1.9,
+      "sourceRows": [
+        {
+          "gemLevel": 1,
+          "key": "GrantedEffectStatSetsPerLevel:7429",
+          "rowIndex": 7429
+        },
+        {
+          "gemLevel": 20,
+          "key": "GrantedEffectStatSetsPerLevel:7448",
+          "rowIndex": 7448
+        },
+        {
+          "gemLevel": 40,
+          "key": "GrantedEffectStatSetsPerLevel:7468",
+          "rowIndex": 7468
+        }
+      ]
+    }
   },
   "cases": [
     {
@@ -119,7 +156,30 @@
       "castsPerSecond": 1.6666666666666667,
       "hitDps": 1739.1666666666667,
       "combinedDps": 1739.1666666666667,
-      "xmlSha256": "1eeaf654033ed4b0d731a19d31febb66281d26b0516acfe7dbcd4c623b6e2b85"
+      "xmlSha256": "1eeaf654033ed4b0d731a19d31febb66281d26b0516acfe7dbcd4c623b6e2b85",
+      "gemLevel": 20,
+      "baseLightningDamage": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "addedGroups": [],
+      "rawAddedLightningDamage": {
+        "min": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "effectiveAddedLightningDamage": {
+        "min": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "combinedBaseLightningDamage": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "addedDamageEffectiveness": 1.9
     },
     {
       "fixture": "increased",
@@ -158,7 +218,30 @@
       "castsPerSecond": 1.6666666666666667,
       "hitDps": 3478.3333333333335,
       "combinedDps": 3478.3333333333335,
-      "xmlSha256": "0627243665e628e27562bc242f2c482ca344ca37c8d8c1d171a81416d667ab83"
+      "xmlSha256": "0627243665e628e27562bc242f2c482ca344ca37c8d8c1d171a81416d667ab83",
+      "gemLevel": 20,
+      "baseLightningDamage": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "addedGroups": [],
+      "rawAddedLightningDamage": {
+        "min": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "effectiveAddedLightningDamage": {
+        "min": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "combinedBaseLightningDamage": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "addedDamageEffectiveness": 1.9
     },
     {
       "fixture": "cast",
@@ -185,7 +268,30 @@
       "castsPerSecond": 2.0833333333333335,
       "hitDps": 2173.9583333333335,
       "combinedDps": 2173.9583333333335,
-      "xmlSha256": "13955d0779ddcea6040925602e18a25669023040a641bc46585a51a4767f06d0"
+      "xmlSha256": "13955d0779ddcea6040925602e18a25669023040a641bc46585a51a4767f06d0",
+      "gemLevel": 20,
+      "baseLightningDamage": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "addedGroups": [],
+      "rawAddedLightningDamage": {
+        "min": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "effectiveAddedLightningDamage": {
+        "min": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "combinedBaseLightningDamage": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "addedDamageEffectiveness": 1.9
     },
     {
       "fixture": "resisted",
@@ -228,7 +334,30 @@
       "castsPerSecond": 2.0833333333333335,
       "hitDps": 3260.9375,
       "combinedDps": 3260.9375,
-      "xmlSha256": "c5e740af53d608313e5ae68f84c7e5f4ab159d317097882b87642a36bd3862ac"
+      "xmlSha256": "c5e740af53d608313e5ae68f84c7e5f4ab159d317097882b87642a36bd3862ac",
+      "gemLevel": 20,
+      "baseLightningDamage": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "addedGroups": [],
+      "rawAddedLightningDamage": {
+        "min": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "effectiveAddedLightningDamage": {
+        "min": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "combinedBaseLightningDamage": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "addedDamageEffectiveness": 1.9
     },
     {
       "fixture": "no-damage",
@@ -255,7 +384,416 @@
       "castsPerSecond": 1.6666666666666667,
       "hitDps": 0,
       "combinedDps": 0,
-      "xmlSha256": "c7cbc99e0110ee4ebfdfc148a272ae739c546d0915e4933ccc6344e7c1df1d83"
+      "xmlSha256": "c7cbc99e0110ee4ebfdfc148a272ae739c546d0915e4933ccc6344e7c1df1d83",
+      "gemLevel": 20,
+      "baseLightningDamage": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "addedGroups": [],
+      "rawAddedLightningDamage": {
+        "min": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "effectiveAddedLightningDamage": {
+        "min": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "combinedBaseLightningDamage": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "addedDamageEffectiveness": 1.9
+    },
+    {
+      "fixture": "added-lightning",
+      "gemLevel": 20,
+      "increasedDamagePercent": 0,
+      "increasedCastSpeedPercent": 0,
+      "effectiveLightningResistancePercent": 0,
+      "contributions": [],
+      "baseLightningDamage": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "addedGroups": [
+        {
+          "statIds": [
+            "spell_minimum_added_lightning_damage",
+            "spell_maximum_added_lightning_damage"
+          ],
+          "values": [10, 20],
+          "source": {
+            "kind": "item",
+            "id": "pob-item:1",
+            "line": 5
+          }
+        }
+      ],
+      "rawAddedLightningDamage": {
+        "min": 10,
+        "max": 20,
+        "mean": 15
+      },
+      "addedDamageEffectiveness": 1.9,
+      "effectiveAddedLightningDamage": {
+        "min": 19,
+        "max": 38,
+        "mean": 28.5
+      },
+      "combinedBaseLightningDamage": {
+        "min": 123,
+        "max": 2021,
+        "mean": 1072
+      },
+      "beforeResistance": {
+        "min": 123,
+        "max": 2021,
+        "mean": 1072
+      },
+      "afterResistance": {
+        "min": 123,
+        "max": 2021,
+        "mean": 1072
+      },
+      "castTimeSeconds": 0.6,
+      "castsPerSecond": 1.6666666666666667,
+      "hitDps": 1786.6666666666667,
+      "combinedDps": 1786.6666666666667,
+      "xmlSha256": "6c1dc1f21fa75b3ba36cf1114effa2fb7546ea400726571443cfa3d44cb60543"
+    },
+    {
+      "fixture": "added-lightning-multiple",
+      "gemLevel": 20,
+      "increasedDamagePercent": 0,
+      "increasedCastSpeedPercent": 0,
+      "effectiveLightningResistancePercent": 0,
+      "contributions": [],
+      "baseLightningDamage": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "addedGroups": [
+        {
+          "statIds": [
+            "spell_minimum_added_lightning_damage",
+            "spell_maximum_added_lightning_damage"
+          ],
+          "values": [10, 20],
+          "source": {
+            "kind": "item",
+            "id": "pob-item:1",
+            "line": 5
+          }
+        },
+        {
+          "statIds": [
+            "spell_minimum_added_lightning_damage",
+            "spell_maximum_added_lightning_damage"
+          ],
+          "values": [3, 7],
+          "source": {
+            "kind": "item",
+            "id": "pob-item:1",
+            "line": 6
+          }
+        }
+      ],
+      "rawAddedLightningDamage": {
+        "min": 13,
+        "max": 27,
+        "mean": 20
+      },
+      "addedDamageEffectiveness": 1.9,
+      "effectiveAddedLightningDamage": {
+        "min": 24.7,
+        "max": 51.3,
+        "mean": 38
+      },
+      "combinedBaseLightningDamage": {
+        "min": 128.7,
+        "max": 2034.3,
+        "mean": 1081.5
+      },
+      "beforeResistance": {
+        "min": 129,
+        "max": 2034,
+        "mean": 1081.5
+      },
+      "afterResistance": {
+        "min": 129,
+        "max": 2034,
+        "mean": 1081.5
+      },
+      "castTimeSeconds": 0.6,
+      "castsPerSecond": 1.6666666666666667,
+      "hitDps": 1802.5,
+      "combinedDps": 1802.5,
+      "xmlSha256": "e2ebeff62dcdfeb839bf1084117e4cb39e7c1f6e669451c430c53c9a3205535d"
+    },
+    {
+      "fixture": "added-lightning-combined",
+      "gemLevel": 20,
+      "increasedDamagePercent": 100,
+      "increasedCastSpeedPercent": 25,
+      "effectiveLightningResistancePercent": 25,
+      "contributions": [
+        {
+          "statId": "damage_+%",
+          "value": 10
+        },
+        {
+          "statId": "spell_damage_+%",
+          "value": 20
+        },
+        {
+          "statId": "lightning_damage_+%",
+          "value": 30
+        },
+        {
+          "statId": "projectile_damage_+%",
+          "value": 40
+        },
+        {
+          "statId": "base_cast_speed_+%",
+          "value": 25
+        }
+      ],
+      "baseLightningDamage": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "addedGroups": [
+        {
+          "statIds": [
+            "spell_minimum_added_lightning_damage",
+            "spell_maximum_added_lightning_damage"
+          ],
+          "values": [10, 20],
+          "source": {
+            "kind": "item",
+            "id": "pob-item:1",
+            "line": 5
+          }
+        }
+      ],
+      "rawAddedLightningDamage": {
+        "min": 10,
+        "max": 20,
+        "mean": 15
+      },
+      "addedDamageEffectiveness": 1.9,
+      "effectiveAddedLightningDamage": {
+        "min": 19,
+        "max": 38,
+        "mean": 28.5
+      },
+      "combinedBaseLightningDamage": {
+        "min": 123,
+        "max": 2021,
+        "mean": 1072
+      },
+      "beforeResistance": {
+        "min": 246,
+        "max": 4042,
+        "mean": 2144
+      },
+      "afterResistance": {
+        "min": 184.5,
+        "max": 3031.5,
+        "mean": 1608
+      },
+      "castTimeSeconds": 0.48,
+      "castsPerSecond": 2.0833333333333335,
+      "hitDps": 3350.0000000000005,
+      "combinedDps": 3350.0000000000005,
+      "xmlSha256": "fe694ce73c5cf35c614faee6d3d4724291abca51df4123233c67da15b2bc1012"
+    },
+    {
+      "fixture": "added-lightning-level1",
+      "gemLevel": 1,
+      "increasedDamagePercent": 0,
+      "increasedCastSpeedPercent": 0,
+      "effectiveLightningResistancePercent": 0,
+      "contributions": [],
+      "baseLightningDamage": {
+        "min": 1,
+        "max": 28,
+        "mean": 14.5
+      },
+      "addedGroups": [
+        {
+          "statIds": [
+            "spell_minimum_added_lightning_damage",
+            "spell_maximum_added_lightning_damage"
+          ],
+          "values": [10, 20],
+          "source": {
+            "kind": "item",
+            "id": "pob-item:1",
+            "line": 5
+          }
+        }
+      ],
+      "rawAddedLightningDamage": {
+        "min": 10,
+        "max": 20,
+        "mean": 15
+      },
+      "addedDamageEffectiveness": 1.9,
+      "effectiveAddedLightningDamage": {
+        "min": 19,
+        "max": 38,
+        "mean": 28.5
+      },
+      "combinedBaseLightningDamage": {
+        "min": 20,
+        "max": 66,
+        "mean": 43
+      },
+      "beforeResistance": {
+        "min": 20,
+        "max": 66,
+        "mean": 43
+      },
+      "afterResistance": {
+        "min": 20,
+        "max": 66,
+        "mean": 43
+      },
+      "castTimeSeconds": 0.6,
+      "castsPerSecond": 1.6666666666666667,
+      "hitDps": 71.66666666666667,
+      "combinedDps": 71.66666666666667,
+      "xmlSha256": "1707c81fdb858153e1b2c2a4c28e48e5b4a28e0b7a16ea532b7c81a27a7f6573"
+    },
+    {
+      "fixture": "added-lightning-rounded",
+      "gemLevel": 20,
+      "increasedDamagePercent": 25,
+      "increasedCastSpeedPercent": 0,
+      "effectiveLightningResistancePercent": 0,
+      "contributions": [
+        {
+          "statId": "spell_damage_+%",
+          "value": 25
+        }
+      ],
+      "baseLightningDamage": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "addedGroups": [
+        {
+          "statIds": [
+            "spell_minimum_added_lightning_damage",
+            "spell_maximum_added_lightning_damage"
+          ],
+          "values": [1, 2],
+          "source": {
+            "kind": "item",
+            "id": "pob-item:1",
+            "line": 5
+          }
+        }
+      ],
+      "rawAddedLightningDamage": {
+        "min": 1,
+        "max": 2,
+        "mean": 1.5
+      },
+      "addedDamageEffectiveness": 1.9,
+      "effectiveAddedLightningDamage": {
+        "min": 1.9,
+        "max": 3.8,
+        "mean": 2.8499999999999996
+      },
+      "combinedBaseLightningDamage": {
+        "min": 105.9,
+        "max": 1986.8,
+        "mean": 1046.35
+      },
+      "beforeResistance": {
+        "min": 132,
+        "max": 2484,
+        "mean": 1308
+      },
+      "afterResistance": {
+        "min": 132,
+        "max": 2484,
+        "mean": 1308
+      },
+      "castTimeSeconds": 0.6,
+      "castsPerSecond": 1.6666666666666667,
+      "hitDps": 2180,
+      "combinedDps": 2180,
+      "xmlSha256": "d52421bd3196c9ce1034a700219af518d45f692a2de863b2b8939f110abde6ee"
+    },
+    {
+      "fixture": "added-lightning-zero",
+      "gemLevel": 20,
+      "increasedDamagePercent": 0,
+      "increasedCastSpeedPercent": 0,
+      "effectiveLightningResistancePercent": 0,
+      "contributions": [],
+      "baseLightningDamage": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "addedGroups": [
+        {
+          "statIds": [
+            "spell_minimum_added_lightning_damage",
+            "spell_maximum_added_lightning_damage"
+          ],
+          "values": [0, 0],
+          "source": {
+            "kind": "item",
+            "id": "pob-item:1",
+            "line": 5
+          }
+        }
+      ],
+      "rawAddedLightningDamage": {
+        "min": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "addedDamageEffectiveness": 1.9,
+      "effectiveAddedLightningDamage": {
+        "min": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "combinedBaseLightningDamage": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "beforeResistance": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "afterResistance": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "castTimeSeconds": 0.6,
+      "castsPerSecond": 1.6666666666666667,
+      "hitDps": 1739.1666666666667,
+      "combinedDps": 1739.1666666666667,
+      "xmlSha256": "40b6d6928b2d55d3818138ede340a98bb661fd291ff7502031d089795b9ff964"
     }
   ],
   "oracle": {
@@ -263,13 +801,13 @@
     "mode": "official-headless-wrapper",
     "fixtureInputs": "exact UTF-8 XML bytes; no injected calculation rules",
     "outputFile": "tests/fixtures/pob-oracle-output.json",
-    "outputSha256": "2c18197c9504dc330d2a56742d708ed70c9e8a8e72b149414f0e186dd3c145bf",
+    "outputSha256": "bc5656b1ab365da16f1a0ffa7c09ae13394ab51a196ac66f30fa9462e177719d",
     "numericSerialization": "17 significant digits",
     "host": {
       "platform": "windows-x64",
       "python": "3.13.7",
       "binding": "external ctypes host; no observer code stored in Exile Engine",
-      "observerSha256": "b162ab86fd183eab07578493d30e4d1e7a50c54cbe9fedb59b41e3f351c353b0"
+      "observerSha256": "cd8913ae164092b39e5d696110659edf7c8575353022d4ca9e862bb6afc32c2e"
     },
     "runtime": {
       "gitRevision": "3dbca4463c0a59079d9f7f032d8240cf868e09da",
@@ -280,5 +818,25 @@
       "dllGitBlob": "f7263d7fedec48d6c539c90d864dd315ad8eab60",
       "dllSha256": "89244909c375fa3daf43f2d26d64e551ccf699e9d4b59d2f4ec39a6f844dcf0b"
     }
-  }
+  },
+  "rejectedFixtures": [
+    {
+      "fixture": "missing-config",
+      "xmlSha256": "c7862e978176ef07136f7987e25ca48d405d431bd3d06fe1af0b6253c8a066b9",
+      "oracleExecuted": false,
+      "expected": "incomplete-import-no-calculation"
+    },
+    {
+      "fixture": "unsupported",
+      "xmlSha256": "ff8b3c2926e92928bccd4af4ef73178ccc8dbccd7515285d4e4cebb26d375579",
+      "oracleExecuted": false,
+      "expected": "incomplete-import-no-calculation"
+    },
+    {
+      "fixture": "added-lightning-reversed",
+      "xmlSha256": "330a2efd510724bfa9ba3566f7e0a80561de761a9f109c305a8d34330e301e0c",
+      "oracleExecuted": false,
+      "expected": "incomplete-import-no-calculation"
+    }
+  ]
 }

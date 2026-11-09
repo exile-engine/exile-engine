@@ -1,11 +1,15 @@
 import {
   SPARK_MODIFIER_STAT_IDS,
+  SPARK_ADDED_LIGHTNING_STAT_IDS,
   calculateSparkForGame,
   errorDiagnostic,
   failure,
   isSnapshotIdentity,
   success,
   type Diagnostic,
+  type AddedLightningDamageContribution,
+  type AddedLightningDamageTrace,
+  type DamageRange,
   type Result,
   type SelectedSkillCalculation,
   type SelectedSkillInput,
@@ -14,7 +18,7 @@ import {
   type SparkInput,
 } from '@exile-engine/core';
 
-export const selectedSkillEngineRevision = 'poe1-selected-spark-v1' as const;
+export const selectedSkillEngineRevision = 'poe1-selected-spark-v2' as const;
 
 function object(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === 'object' && !Array.isArray(value);
@@ -22,6 +26,10 @@ function object(value: unknown): value is Record<string, unknown> {
 
 function keys(value: Record<string, unknown>, allowed: readonly string[]): boolean {
   return Object.keys(value).every((key) => allowed.includes(key));
+}
+
+function ownFields(value: Record<string, unknown>, required: readonly string[]): boolean {
+  return required.every((key) => Object.hasOwn(value, key));
 }
 
 function id(value: unknown): value is string {
@@ -32,14 +40,36 @@ function finite(value: unknown): value is number {
   return typeof value === 'number' && Number.isFinite(value);
 }
 
+function denseArray(value: unknown, maximum: number): value is readonly unknown[] {
+  if (!Array.isArray(value) || value.length > maximum) return false;
+  for (let index = 0; index < value.length; index++) if (!Object.hasOwn(value, index)) return false;
+  return true;
+}
+
 /** Reject hidden dataset semantics before capturing or traversing host-owned records. */
 function selectedDatasetShape(dataset: SparkDataset): boolean {
   const rows = (value: unknown) =>
-    Array.isArray(value) &&
-    value.length <= 10_000 &&
-    value.every((row) => object(row) && keys(row, ['table', 'key', 'rowIndex']));
+    denseArray(value, 10_000) &&
+    value.every(
+      (row) =>
+        object(row) &&
+        keys(row, ['table', 'key', 'rowIndex']) &&
+        ownFields(row, ['table', 'key', 'rowIndex']),
+    );
   return (
     object(dataset) &&
+    ownFields(dataset, [
+      'identity',
+      'baseDamageAuthority',
+      'grantedEffectId',
+      'statSetId',
+      'baseCastTimeSeconds',
+      'supportedModifierStatIds',
+      'levels',
+      'qualityStats',
+      'sourceRows',
+      'ruleProvenance',
+    ]) &&
     keys(dataset, [
       'identity',
       'baseDamageAuthority',
@@ -54,26 +84,43 @@ function selectedDatasetShape(dataset: SparkDataset): boolean {
     ]) &&
     object(dataset.identity) &&
     keys(dataset.identity, ['game', 'build', 'snapshotId']) &&
-    Array.isArray(dataset.supportedModifierStatIds) &&
+    ownFields(dataset.identity, ['game', 'build', 'snapshotId']) &&
+    denseArray(dataset.supportedModifierStatIds, SPARK_MODIFIER_STAT_IDS.length) &&
     dataset.supportedModifierStatIds.length === SPARK_MODIFIER_STAT_IDS.length &&
     SPARK_MODIFIER_STAT_IDS.every((statId) => dataset.supportedModifierStatIds.includes(statId)) &&
-    Array.isArray(dataset.levels) &&
+    denseArray(dataset.levels, 40) &&
     dataset.levels.length === 40 &&
     dataset.levels.every(
       (level) =>
         object(level) &&
-        keys(level, ['gemLevel', 'baseLightningMin', 'baseLightningMax', 'sourceRows']) &&
+        ownFields(level, [
+          'gemLevel',
+          'baseLightningMin',
+          'baseLightningMax',
+          'addedDamageEffectiveness',
+          'sourceRows',
+        ]) &&
+        keys(level, [
+          'gemLevel',
+          'baseLightningMin',
+          'baseLightningMax',
+          'addedDamageEffectiveness',
+          'sourceRows',
+        ]) &&
+        finite(level.addedDamageEffectiveness) &&
+        level.addedDamageEffectiveness >= 0 &&
         rows(level.sourceRows),
     ) &&
-    Array.isArray(dataset.qualityStats) &&
-    dataset.qualityStats.length <= 100 &&
+    denseArray(dataset.qualityStats, 100) &&
     dataset.qualityStats.every(
       (stat) =>
         object(stat) &&
+        ownFields(stat, ['statId', 'valuePerQuality', 'sourceRows']) &&
         keys(stat, ['statId', 'valuePerQuality', 'sourceRows']) &&
         rows(stat.sourceRows),
     ) &&
-    rows(dataset.sourceRows)
+    rows(dataset.sourceRows) &&
+    denseArray(dataset.ruleProvenance, 100)
   );
 }
 
@@ -84,7 +131,16 @@ export function validateSelectedSkillInput(input: SelectedSkillInput): Result<Se
     diagnostics.push(errorDiagnostic(code, message));
   if (!object(input))
     return failure(errorDiagnostic('selected.input', 'Expected selected-skill input.'));
-  if (!keys(input, ['identity', 'buildId', 'skill', 'configuration', 'modifiers']))
+  if (
+    !keys(input, [
+      'identity',
+      'buildId',
+      'skill',
+      'configuration',
+      'modifiers',
+      'addedLightningDamage',
+    ])
+  )
     reject('selected.unsupported-field', 'Unsupported selected-skill input field.');
   if (
     !isSnapshotIdentity(input.identity) ||
@@ -141,13 +197,16 @@ export function validateSelectedSkillInput(input: SelectedSkillInput): Result<Se
         (mod.conditions !== undefined &&
           (!Array.isArray(mod.conditions) || mod.conditions.length !== 0)) ||
         !object(mod.source) ||
+        !ownFields(mod.source, ['kind', 'id']) ||
         !keys(mod.source, ['kind', 'id', 'label', 'line']) ||
         typeof mod.source.kind !== 'string' ||
         !['item', 'skill', 'quality', 'scenario', 'external'].includes(mod.source.kind) ||
         !id(mod.source.id) ||
-        (mod.source.label !== undefined && !id(mod.source.label)) ||
+        (mod.source.label !== undefined &&
+          (!Object.hasOwn(mod.source, 'label') || !id(mod.source.label))) ||
         (mod.source.line !== undefined &&
-          (!finite(mod.source.line) ||
+          (!Object.hasOwn(mod.source, 'line') ||
+            !finite(mod.source.line) ||
             !Number.isSafeInteger(mod.source.line) ||
             mod.source.line < 1))
       )
@@ -175,6 +234,60 @@ export function validateSelectedSkillInput(input: SelectedSkillInput): Result<Se
         );
     }
   }
+  if (input.addedLightningDamage !== undefined) {
+    if (!Array.isArray(input.addedLightningDamage) || input.addedLightningDamage.length > 1000) {
+      reject(
+        'selected.added-lightning',
+        'Added lightning must contain at most 1000 ordered spell damage ranges.',
+      );
+    } else {
+      let minimum = 0;
+      let maximum = 0;
+      for (const group of input.addedLightningDamage) {
+        if (
+          !object(group) ||
+          !keys(group, ['statIds', 'values', 'source', 'scope', 'conditions']) ||
+          !Array.isArray(group.statIds) ||
+          group.statIds.length !== 2 ||
+          group.statIds[0] !== SPARK_ADDED_LIGHTNING_STAT_IDS[0] ||
+          group.statIds[1] !== SPARK_ADDED_LIGHTNING_STAT_IDS[1] ||
+          !Array.isArray(group.values) ||
+          group.values.length !== 2 ||
+          !group.values.every((value) => Number.isSafeInteger(value) && value >= 0) ||
+          group.values[0] > group.values[1] ||
+          (group.scope !== undefined && group.scope !== 'global') ||
+          (group.conditions !== undefined &&
+            (!Array.isArray(group.conditions) || group.conditions.length !== 0)) ||
+          !object(group.source) ||
+          !ownFields(group.source, ['kind', 'id']) ||
+          !keys(group.source, ['kind', 'id', 'label', 'line']) ||
+          typeof group.source.kind !== 'string' ||
+          !['item', 'skill', 'quality', 'scenario', 'external'].includes(group.source.kind) ||
+          !id(group.source.id) ||
+          (group.source.label !== undefined &&
+            (!Object.hasOwn(group.source, 'label') || !id(group.source.label))) ||
+          (group.source.line !== undefined &&
+            (!Object.hasOwn(group.source, 'line') ||
+              !finite(group.source.line) ||
+              !Number.isSafeInteger(group.source.line) ||
+              group.source.line < 1))
+        ) {
+          reject(
+            'selected.unsupported-added-lightning',
+            'Added lightning needs the exact ordered spell minimum/maximum IDs, nonnegative safe integer endpoints in order and provenance; extra, local or conditional semantics are unsupported.',
+          );
+          continue;
+        }
+        minimum += group.values[0];
+        maximum += group.values[1];
+      }
+      if (!Number.isSafeInteger(minimum) || !Number.isSafeInteger(maximum))
+        reject(
+          'selected.added-lightning-overflow',
+          'Added lightning endpoint sums must remain safe integers.',
+        );
+    }
+  }
   if (diagnostics.length) return { ok: false, diagnostics };
   return success({
     identity: { ...input.identity },
@@ -189,7 +302,65 @@ export function validateSelectedSkillInput(input: SelectedSkillInput): Result<Se
       source: { ...mod.source },
       ...(mod.conditions === undefined ? {} : { conditions: [...mod.conditions] }),
     })),
+    ...(input.addedLightningDamage === undefined
+      ? {}
+      : { addedLightningDamage: input.addedLightningDamage.map(copyAddedLightning) }),
   });
+}
+
+function copyAddedLightning(
+  group: AddedLightningDamageContribution,
+): AddedLightningDamageContribution {
+  return {
+    ...group,
+    statIds: [...group.statIds],
+    values: [...group.values],
+    source: { ...group.source },
+    ...(group.conditions === undefined ? {} : { conditions: [...group.conditions] }),
+  };
+}
+
+function range(min: number, max: number): DamageRange {
+  return { min, max, mean: (min + max) / 2 };
+}
+
+/** Sum ordered raw groups, then apply effectiveness once without intermediate rounding. */
+export function calculateAddedLightningDamage(
+  input: SelectedSkillInput,
+  baseline: SparkCalculation,
+  effectiveness: number,
+): Result<AddedLightningDamageTrace> {
+  const contributions = (input.addedLightningDamage ?? []).map(copyAddedLightning);
+  const raw = range(
+    contributions.reduce((sum, group) => sum + group.values[0], 0),
+    contributions.reduce((sum, group) => sum + group.values[1], 0),
+  );
+  const effective = range(raw.min * effectiveness, raw.max * effectiveness);
+  const combinedBase = range(
+    baseline.baseLightningDamage.min + effective.min,
+    baseline.baseLightningDamage.max + effective.max,
+  );
+  if (
+    ![
+      raw.min,
+      raw.max,
+      raw.mean,
+      effectiveness,
+      effective.min,
+      effective.max,
+      effective.mean,
+      combinedBase.min,
+      combinedBase.max,
+      combinedBase.mean,
+    ].every(Number.isFinite)
+  )
+    return failure(
+      errorDiagnostic(
+        'selected.numeric-overflow',
+        'Added lightning arithmetic exceeds finite numeric limits.',
+      ),
+    );
+  return success({ raw, effectiveness, effective, combinedBase, contributions });
 }
 
 function sparkInput(input: SelectedSkillInput): SparkInput {
@@ -209,6 +380,7 @@ function sparkInput(input: SelectedSkillInput): SparkInput {
 export function assembleSelectedSkill(
   input: SelectedSkillInput,
   hit: SparkCalculation,
+  addedLightningDamage: AddedLightningDamageTrace,
 ): Result<SelectedSkillCalculation> {
   const hitDps = hit.nonCriticalHitAfterResistance.mean * hit.castsPerSecond;
   if (!Number.isFinite(hitDps) || !Number.isFinite(hit.castsPerSecond) || hit.castsPerSecond <= 0)
@@ -229,6 +401,7 @@ export function assembleSelectedSkill(
     engineRevision: selectedSkillEngineRevision,
     metric: 'selected-skill-hit-combined-dps',
     hit,
+    addedLightningDamage,
     hitsPerCast: 1,
     hitsPerSecond: hit.castsPerSecond,
     hitDps,
@@ -253,13 +426,26 @@ export function calculateSelectedSkill(
     );
   const hit = calculateSparkForGame(sparkInput(validated.value), dataset, 'poe1');
   if (!hit.ok) return hit;
-  return assembleSelectedSkill(validated.value, selectedHitRules(hit.value));
+  const effectiveness = dataset.levels.find(
+    (level) => level.gemLevel === validated.value.skill.gemLevel,
+  )!.addedDamageEffectiveness!;
+  const added = calculateAddedLightningDamage(validated.value, hit.value, effectiveness);
+  if (!added.ok) return added;
+  return assembleSelectedSkill(
+    validated.value,
+    selectedHitRules(hit.value, added.value.combinedBase),
+    added.value,
+  );
 }
 
 /** Pinned PoB hit rounding and server-tick cast-rate ceiling for this selected slice. */
-export function selectedHitRules(hit: SparkCalculation): SparkCalculation {
-  const min = Math.floor(hit.nonCriticalHitBeforeResistance.min + 0.5);
-  const max = Math.floor(hit.nonCriticalHitBeforeResistance.max + 0.5);
+export function selectedHitRules(
+  hit: SparkCalculation,
+  combinedBase: DamageRange = hit.baseLightningDamage,
+): SparkCalculation {
+  const damageScale = Math.max(0, 1 + hit.increasedDamagePercent / 100);
+  const min = Math.floor(combinedBase.min * damageScale + 0.5);
+  const max = Math.floor(combinedBase.max * damageScale + 0.5);
   const scale = 1 - hit.effectiveLightningResistancePercent / 100;
   const speed = Math.floor((1 + hit.increasedCastSpeedPercent / 100) * 100 + 0.5) / 100;
   const castsPerSecond = Math.min(speed / hit.baseCastTimeSeconds, 1 / 0.033);
@@ -275,6 +461,7 @@ export function selectedHitRules(hit: SparkCalculation): SparkCalculation {
     castTimeSeconds: 1 / castsPerSecond,
     ruleProvenance: [
       ...hit.ruleProvenance,
+      'Selected spell added lightning: sum ordered raw minimum/maximum groups, multiply by client added-damage effectiveness, add intrinsic lightning, then apply increases without intermediate rounding.',
       'Selected Spark rules: PoB 3dbca4463c0a59079d9f7f032d8240cf868e09da; round hit endpoints before resistance, cast-speed multiplier to two decimals, cast rate at most 1/0.033 per second.',
     ],
   };
@@ -284,7 +471,11 @@ export function selectedHitRules(hit: SparkCalculation): SparkCalculation {
 export function prepareSelectedSkill(
   input: SelectedSkillInput,
   dataset: SparkDataset,
-): Result<{ input: SelectedSkillInput; baseline: SparkCalculation }> {
+): Result<{
+  input: SelectedSkillInput;
+  baseline: SparkCalculation;
+  addedDamageEffectiveness: number;
+}> {
   const validated = validateSelectedSkillInput(input);
   if (!validated.ok) return validated;
   if (!selectedDatasetShape(dataset))
@@ -300,5 +491,11 @@ export function prepareSelectedSkill(
     'poe1',
   );
   if (!baseline.ok) return baseline;
-  return success({ input: validated.value, baseline: baseline.value });
+  return success({
+    input: validated.value,
+    baseline: baseline.value,
+    addedDamageEffectiveness: dataset.levels.find(
+      (level) => level.gemLevel === validated.value.skill.gemLevel,
+    )!.addedDamageEffectiveness!,
+  });
 }

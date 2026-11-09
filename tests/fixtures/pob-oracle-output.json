@@ -1,4 +1,615 @@
 {
+  "added-lightning": {
+    "ActionSpeedMod": 1,
+    "AverageDamage": 1072,
+    "AverageHit": 1072,
+    "CombinedDPS": 1786.6666666666667,
+    "CritChance": 0,
+    "CritMultiplier": 0,
+    "HitChance": 100,
+    "LightningHitAverage": 1072,
+    "LightningMaxBase": 2021,
+    "LightningMinBase": 123,
+    "Speed": 1.6666666666666667,
+    "Time": 0.59999999999999998,
+    "TotalDPS": 1786.6666666666667,
+    "TotalMax": 2021,
+    "TotalMin": 123,
+    "addedContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 131072,
+        "name": "LightningMin",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 10
+      },
+      {
+        "flags": 0,
+        "keywordFlags": 131072,
+        "name": "LightningMax",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 20
+      }
+    ],
+    "addedMaximum": 20,
+    "addedMinimum": 10,
+    "contributions": [],
+    "damageEffectiveness": 1.8999999999999999,
+    "increasedCastSpeedPercent": 0,
+    "increasedDamagePercent": 0,
+    "itemModifierLines": [
+      {
+        "line": "Adds 10 to 20 Lightning Damage to Spells",
+        "mods": [
+          {
+            "flags": 0,
+            "keywordFlags": 131072,
+            "name": "LightningMin",
+            "value": 10
+          },
+          {
+            "flags": 0,
+            "keywordFlags": 131072,
+            "name": "LightningMax",
+            "value": 20
+          }
+        ]
+      }
+    ],
+    "lightningBreakdown": {
+      "1": "Base damage:",
+      "2": "104 to 1983 ^8(base damage from skill)",
+      "3": "+ 10 to 20 ^8(added damage)",
+      "4": "x 1.90 ^8(damage effectiveness)",
+      "5": "= 123.0 to 2021.0",
+      "6": "Hit damage:",
+      "7": "123 to 2021 ^8(total damage)",
+      "8": "= 123 to 2021",
+      "9": "Portion of total damage: 100%",
+      "damageTypes": [
+        {
+          "base": "123 to 2021",
+          "convSrc": false,
+          "inc": false,
+          "more": false,
+          "source": "Lightning",
+          "total": "123 to 2021"
+        }
+      ]
+    },
+    "selectedPart": 1,
+    "selectedSkillId": "Spark"
+  },
+  "added-lightning-combined": {
+    "ActionSpeedMod": 1,
+    "AverageDamage": 1608,
+    "AverageHit": 1608,
+    "CombinedDPS": 3350.0000000000005,
+    "CritChance": 0,
+    "CritMultiplier": 0,
+    "HitChance": 100,
+    "LightningHitAverage": 1608,
+    "LightningMaxBase": 2021,
+    "LightningMinBase": 123,
+    "Speed": 2.0833333333333335,
+    "Time": 0.47999999999999998,
+    "TotalDPS": 3350.0000000000005,
+    "TotalMax": 3031.5,
+    "TotalMin": 184.5,
+    "addedContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 131072,
+        "name": "LightningMin",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 10
+      },
+      {
+        "flags": 0,
+        "keywordFlags": 131072,
+        "name": "LightningMax",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 20
+      }
+    ],
+    "addedMaximum": 20,
+    "addedMinimum": 10,
+    "contributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "Damage",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 10
+      },
+      {
+        "flags": 2,
+        "keywordFlags": 0,
+        "name": "Damage",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 20
+      },
+      {
+        "flags": 1024,
+        "keywordFlags": 0,
+        "name": "Damage",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 40
+      },
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "LightningDamage",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 30
+      },
+      {
+        "flags": 16,
+        "keywordFlags": 0,
+        "name": "Speed",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 25
+      }
+    ],
+    "damageEffectiveness": 1.8999999999999999,
+    "increasedCastSpeedPercent": 25,
+    "increasedDamagePercent": 100,
+    "itemModifierLines": [
+      {
+        "line": "Adds 10 to 20 Lightning Damage to Spells",
+        "mods": [
+          {
+            "flags": 0,
+            "keywordFlags": 131072,
+            "name": "LightningMin",
+            "value": 10
+          },
+          {
+            "flags": 0,
+            "keywordFlags": 131072,
+            "name": "LightningMax",
+            "value": 20
+          }
+        ]
+      },
+      {
+        "line": "10% increased Damage",
+        "mods": [
+          {
+            "flags": 0,
+            "keywordFlags": 0,
+            "name": "Damage",
+            "value": 10
+          }
+        ]
+      },
+      {
+        "line": "20% increased Spell Damage",
+        "mods": [
+          {
+            "flags": 2,
+            "keywordFlags": 0,
+            "name": "Damage",
+            "value": 20
+          }
+        ]
+      },
+      {
+        "line": "30% increased Lightning Damage",
+        "mods": [
+          {
+            "flags": 0,
+            "keywordFlags": 0,
+            "name": "LightningDamage",
+            "value": 30
+          }
+        ]
+      },
+      {
+        "line": "40% increased Projectile Damage",
+        "mods": [
+          {
+            "flags": 1024,
+            "keywordFlags": 0,
+            "name": "Damage",
+            "value": 40
+          }
+        ]
+      },
+      {
+        "line": "25% increased Cast Speed",
+        "mods": [
+          {
+            "flags": 16,
+            "keywordFlags": 0,
+            "name": "Speed",
+            "value": 25
+          }
+        ]
+      }
+    ],
+    "lightningBreakdown": {
+      "1": "Base damage:",
+      "2": "104 to 1983 ^8(base damage from skill)",
+      "3": "+ 10 to 20 ^8(added damage)",
+      "4": "x 1.90 ^8(damage effectiveness)",
+      "5": "= 123.0 to 2021.0",
+      "6": "Hit damage:",
+      "7": "246 to 4042 ^8(total damage)",
+      "8": "x 0.750 ^8(effective DPS modifier)",
+      "9": "= 184 to 3031",
+      "10": "Portion of total damage: 100%",
+      "damageTypes": [
+        {
+          "base": "123 to 2021",
+          "convSrc": false,
+          "inc": "x 2",
+          "more": false,
+          "source": "Lightning",
+          "total": "246 to 4042"
+        }
+      ]
+    },
+    "selectedPart": 1,
+    "selectedSkillId": "Spark"
+  },
+  "added-lightning-level1": {
+    "ActionSpeedMod": 1,
+    "AverageDamage": 43,
+    "AverageHit": 43,
+    "CombinedDPS": 71.666666666666671,
+    "CritChance": 0,
+    "CritMultiplier": 0,
+    "HitChance": 100,
+    "LightningHitAverage": 43,
+    "LightningMaxBase": 66,
+    "LightningMinBase": 20,
+    "Speed": 1.6666666666666667,
+    "Time": 0.59999999999999998,
+    "TotalDPS": 71.666666666666671,
+    "TotalMax": 66,
+    "TotalMin": 20,
+    "addedContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 131072,
+        "name": "LightningMin",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 10
+      },
+      {
+        "flags": 0,
+        "keywordFlags": 131072,
+        "name": "LightningMax",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 20
+      }
+    ],
+    "addedMaximum": 20,
+    "addedMinimum": 10,
+    "contributions": [],
+    "damageEffectiveness": 1.8999999999999999,
+    "increasedCastSpeedPercent": 0,
+    "increasedDamagePercent": 0,
+    "itemModifierLines": [
+      {
+        "line": "Adds 10 to 20 Lightning Damage to Spells",
+        "mods": [
+          {
+            "flags": 0,
+            "keywordFlags": 131072,
+            "name": "LightningMin",
+            "value": 10
+          },
+          {
+            "flags": 0,
+            "keywordFlags": 131072,
+            "name": "LightningMax",
+            "value": 20
+          }
+        ]
+      }
+    ],
+    "lightningBreakdown": {
+      "1": "Base damage:",
+      "2": "1 to 28 ^8(base damage from skill)",
+      "3": "+ 10 to 20 ^8(added damage)",
+      "4": "x 1.90 ^8(damage effectiveness)",
+      "5": "= 20.0 to 66.0",
+      "6": "Hit damage:",
+      "7": "20 to 66 ^8(total damage)",
+      "8": "= 20 to 66",
+      "9": "Portion of total damage: 100%",
+      "damageTypes": [
+        {
+          "base": "20 to 66",
+          "convSrc": false,
+          "inc": false,
+          "more": false,
+          "source": "Lightning",
+          "total": "20 to 66"
+        }
+      ]
+    },
+    "selectedPart": 1,
+    "selectedSkillId": "Spark"
+  },
+  "added-lightning-multiple": {
+    "ActionSpeedMod": 1,
+    "AverageDamage": 1081.5,
+    "AverageHit": 1081.5,
+    "CombinedDPS": 1802.5,
+    "CritChance": 0,
+    "CritMultiplier": 0,
+    "HitChance": 100,
+    "LightningHitAverage": 1081.5,
+    "LightningMaxBase": 2034.3,
+    "LightningMinBase": 128.69999999999999,
+    "Speed": 1.6666666666666667,
+    "Time": 0.59999999999999998,
+    "TotalDPS": 1802.5,
+    "TotalMax": 2034,
+    "TotalMin": 129,
+    "addedContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 131072,
+        "name": "LightningMin",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 10
+      },
+      {
+        "flags": 0,
+        "keywordFlags": 131072,
+        "name": "LightningMin",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 3
+      },
+      {
+        "flags": 0,
+        "keywordFlags": 131072,
+        "name": "LightningMax",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 20
+      },
+      {
+        "flags": 0,
+        "keywordFlags": 131072,
+        "name": "LightningMax",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 7
+      }
+    ],
+    "addedMaximum": 27,
+    "addedMinimum": 13,
+    "contributions": [],
+    "damageEffectiveness": 1.8999999999999999,
+    "increasedCastSpeedPercent": 0,
+    "increasedDamagePercent": 0,
+    "itemModifierLines": [
+      {
+        "line": "Adds 10 to 20 Lightning Damage to Spells",
+        "mods": [
+          {
+            "flags": 0,
+            "keywordFlags": 131072,
+            "name": "LightningMin",
+            "value": 10
+          },
+          {
+            "flags": 0,
+            "keywordFlags": 131072,
+            "name": "LightningMax",
+            "value": 20
+          }
+        ]
+      },
+      {
+        "line": "Adds 3 to 7 Lightning Damage to Spells",
+        "mods": [
+          {
+            "flags": 0,
+            "keywordFlags": 131072,
+            "name": "LightningMin",
+            "value": 3
+          },
+          {
+            "flags": 0,
+            "keywordFlags": 131072,
+            "name": "LightningMax",
+            "value": 7
+          }
+        ]
+      }
+    ],
+    "lightningBreakdown": {
+      "1": "Base damage:",
+      "2": "104 to 1983 ^8(base damage from skill)",
+      "3": "+ 13 to 27 ^8(added damage)",
+      "4": "x 1.90 ^8(damage effectiveness)",
+      "5": "= 128.7 to 2034.3",
+      "6": "Hit damage:",
+      "7": "129 to 2034 ^8(total damage)",
+      "8": "= 129 to 2034",
+      "9": "Portion of total damage: 100%",
+      "damageTypes": [
+        {
+          "base": "128.7 to 2034.3",
+          "convSrc": false,
+          "inc": false,
+          "more": false,
+          "source": "Lightning",
+          "total": "129 to 2034"
+        }
+      ]
+    },
+    "selectedPart": 1,
+    "selectedSkillId": "Spark"
+  },
+  "added-lightning-rounded": {
+    "ActionSpeedMod": 1,
+    "AverageDamage": 1308,
+    "AverageHit": 1308,
+    "CombinedDPS": 2180,
+    "CritChance": 0,
+    "CritMultiplier": 0,
+    "HitChance": 100,
+    "LightningHitAverage": 1308,
+    "LightningMaxBase": 1986.8,
+    "LightningMinBase": 105.90000000000001,
+    "Speed": 1.6666666666666667,
+    "Time": 0.59999999999999998,
+    "TotalDPS": 2180,
+    "TotalMax": 2484,
+    "TotalMin": 132,
+    "addedContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 131072,
+        "name": "LightningMin",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 1
+      },
+      {
+        "flags": 0,
+        "keywordFlags": 131072,
+        "name": "LightningMax",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 2
+      }
+    ],
+    "addedMaximum": 2,
+    "addedMinimum": 1,
+    "contributions": [
+      {
+        "flags": 2,
+        "keywordFlags": 0,
+        "name": "Damage",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 25
+      }
+    ],
+    "damageEffectiveness": 1.8999999999999999,
+    "increasedCastSpeedPercent": 0,
+    "increasedDamagePercent": 25,
+    "itemModifierLines": [
+      {
+        "line": "Adds 1 to 2 Lightning Damage to Spells",
+        "mods": [
+          {
+            "flags": 0,
+            "keywordFlags": 131072,
+            "name": "LightningMin",
+            "value": 1
+          },
+          {
+            "flags": 0,
+            "keywordFlags": 131072,
+            "name": "LightningMax",
+            "value": 2
+          }
+        ]
+      },
+      {
+        "line": "25% increased Spell Damage",
+        "mods": [
+          {
+            "flags": 2,
+            "keywordFlags": 0,
+            "name": "Damage",
+            "value": 25
+          }
+        ]
+      }
+    ],
+    "lightningBreakdown": {
+      "1": "Base damage:",
+      "2": "104 to 1983 ^8(base damage from skill)",
+      "3": "+ 1 to 2 ^8(added damage)",
+      "4": "x 1.90 ^8(damage effectiveness)",
+      "5": "= 105.9 to 1986.8",
+      "6": "Hit damage:",
+      "7": "132 to 2484 ^8(total damage)",
+      "8": "= 132 to 2484",
+      "9": "Portion of total damage: 100%",
+      "damageTypes": [
+        {
+          "base": "105.9 to 1986.8",
+          "convSrc": false,
+          "inc": "x 1.25",
+          "more": false,
+          "source": "Lightning",
+          "total": "132 to 2484"
+        }
+      ]
+    },
+    "selectedPart": 1,
+    "selectedSkillId": "Spark"
+  },
+  "added-lightning-zero": {
+    "ActionSpeedMod": 1,
+    "AverageDamage": 1043.5,
+    "AverageHit": 1043.5,
+    "CombinedDPS": 1739.1666666666667,
+    "CritChance": 0,
+    "CritMultiplier": 0,
+    "HitChance": 100,
+    "LightningHitAverage": 1043.5,
+    "LightningMaxBase": 1983,
+    "LightningMinBase": 104,
+    "Speed": 1.6666666666666667,
+    "Time": 0.59999999999999998,
+    "TotalDPS": 1739.1666666666667,
+    "TotalMax": 1983,
+    "TotalMin": 104,
+    "addedContributions": [],
+    "addedMaximum": 0,
+    "addedMinimum": 0,
+    "contributions": [],
+    "damageEffectiveness": 1.8999999999999999,
+    "increasedCastSpeedPercent": 0,
+    "increasedDamagePercent": 0,
+    "itemModifierLines": [
+      {
+        "line": "Adds 0 to 0 Lightning Damage to Spells",
+        "mods": [
+          {
+            "flags": 0,
+            "keywordFlags": 131072,
+            "name": "LightningMin",
+            "value": 0
+          },
+          {
+            "flags": 0,
+            "keywordFlags": 131072,
+            "name": "LightningMax",
+            "value": 0
+          }
+        ]
+      }
+    ],
+    "lightningBreakdown": {
+      "1": "Base damage:",
+      "2": "104 to 1983 ^8(base damage from skill)",
+      "3": "= 104.0 to 1983.0",
+      "4": "Hit damage:",
+      "5": "104 to 1983 ^8(total damage)",
+      "6": "= 104 to 1983",
+      "7": "Portion of total damage: 100%",
+      "damageTypes": [
+        {
+          "base": "104 to 1983",
+          "convSrc": false,
+          "inc": false,
+          "more": false,
+          "source": "Lightning",
+          "total": "104 to 1983"
+        }
+      ]
+    },
+    "selectedPart": 1,
+    "selectedSkillId": "Spark"
+  },
   "baseline": {
     "ActionSpeedMod": 1,
     "AverageDamage": 1043.5,
@@ -15,9 +626,14 @@
     "TotalDPS": 1739.1666666666667,
     "TotalMax": 1983,
     "TotalMin": 104,
+    "addedContributions": [],
+    "addedMaximum": 0,
+    "addedMinimum": 0,
     "contributions": [],
+    "damageEffectiveness": 1.8999999999999999,
     "increasedCastSpeedPercent": 0,
     "increasedDamagePercent": 0,
+    "itemModifierLines": [],
     "lightningBreakdown": {
       "1": "Base damage:",
       "2": "104 to 1983 ^8(base damage from skill)",
@@ -56,6 +672,9 @@
     "TotalDPS": 2173.9583333333335,
     "TotalMax": 1983,
     "TotalMin": 104,
+    "addedContributions": [],
+    "addedMaximum": 0,
+    "addedMinimum": 0,
     "contributions": [
       {
         "flags": 16,
@@ -65,8 +684,22 @@
         "value": 25
       }
     ],
+    "damageEffectiveness": 1.8999999999999999,
     "increasedCastSpeedPercent": 25,
     "increasedDamagePercent": 0,
+    "itemModifierLines": [
+      {
+        "line": "25% increased Cast Speed",
+        "mods": [
+          {
+            "flags": 16,
+            "keywordFlags": 0,
+            "name": "Speed",
+            "value": 25
+          }
+        ]
+      }
+    ],
     "lightningBreakdown": {
       "1": "Base damage:",
       "2": "104 to 1983 ^8(base damage from skill)",
@@ -105,6 +738,9 @@
     "TotalDPS": 3478.3333333333335,
     "TotalMax": 3966,
     "TotalMin": 208,
+    "addedContributions": [],
+    "addedMaximum": 0,
+    "addedMinimum": 0,
     "contributions": [
       {
         "flags": 0,
@@ -135,8 +771,55 @@
         "value": 30
       }
     ],
+    "damageEffectiveness": 1.8999999999999999,
     "increasedCastSpeedPercent": 0,
     "increasedDamagePercent": 100,
+    "itemModifierLines": [
+      {
+        "line": "10% increased Damage",
+        "mods": [
+          {
+            "flags": 0,
+            "keywordFlags": 0,
+            "name": "Damage",
+            "value": 10
+          }
+        ]
+      },
+      {
+        "line": "20% increased Spell Damage",
+        "mods": [
+          {
+            "flags": 2,
+            "keywordFlags": 0,
+            "name": "Damage",
+            "value": 20
+          }
+        ]
+      },
+      {
+        "line": "30% increased Lightning Damage",
+        "mods": [
+          {
+            "flags": 0,
+            "keywordFlags": 0,
+            "name": "LightningDamage",
+            "value": 30
+          }
+        ]
+      },
+      {
+        "line": "40% increased Projectile Damage",
+        "mods": [
+          {
+            "flags": 1024,
+            "keywordFlags": 0,
+            "name": "Damage",
+            "value": 40
+          }
+        ]
+      }
+    ],
     "lightningBreakdown": {
       "1": "Base damage:",
       "2": "104 to 1983 ^8(base damage from skill)",
@@ -175,6 +858,9 @@
     "TotalDPS": 0,
     "TotalMax": 0,
     "TotalMin": 0,
+    "addedContributions": [],
+    "addedMaximum": 0,
+    "addedMinimum": 0,
     "contributions": [
       {
         "flags": 0,
@@ -184,8 +870,22 @@
         "value": -100
       }
     ],
+    "damageEffectiveness": 1.8999999999999999,
     "increasedCastSpeedPercent": 0,
     "increasedDamagePercent": -100,
+    "itemModifierLines": [
+      {
+        "line": "100% reduced Damage",
+        "mods": [
+          {
+            "flags": 0,
+            "keywordFlags": 0,
+            "name": "Damage",
+            "value": -100
+          }
+        ]
+      }
+    ],
     "lightningBreakdown": {
       "1": "Base damage:",
       "2": "104 to 1983 ^8(base damage from skill)",
@@ -223,6 +923,9 @@
     "TotalDPS": 3260.9375000000005,
     "TotalMax": 2974.5,
     "TotalMin": 156,
+    "addedContributions": [],
+    "addedMaximum": 0,
+    "addedMinimum": 0,
     "contributions": [
       {
         "flags": 0,
@@ -260,8 +963,66 @@
         "value": 25
       }
     ],
+    "damageEffectiveness": 1.8999999999999999,
     "increasedCastSpeedPercent": 25,
     "increasedDamagePercent": 100,
+    "itemModifierLines": [
+      {
+        "line": "10% increased Damage",
+        "mods": [
+          {
+            "flags": 0,
+            "keywordFlags": 0,
+            "name": "Damage",
+            "value": 10
+          }
+        ]
+      },
+      {
+        "line": "20% increased Spell Damage",
+        "mods": [
+          {
+            "flags": 2,
+            "keywordFlags": 0,
+            "name": "Damage",
+            "value": 20
+          }
+        ]
+      },
+      {
+        "line": "30% increased Lightning Damage",
+        "mods": [
+          {
+            "flags": 0,
+            "keywordFlags": 0,
+            "name": "LightningDamage",
+            "value": 30
+          }
+        ]
+      },
+      {
+        "line": "40% increased Projectile Damage",
+        "mods": [
+          {
+            "flags": 1024,
+            "keywordFlags": 0,
+            "name": "Damage",
+            "value": 40
+          }
+        ]
+      },
+      {
+        "line": "25% increased Cast Speed",
+        "mods": [
+          {
+            "flags": 16,
+            "keywordFlags": 0,
+            "name": "Speed",
+            "value": 25
+          }
+        ]
+      }
+    ],
     "lightningBreakdown": {
       "1": "Base damage:",
       "2": "104 to 1983 ^8(base damage from skill)",

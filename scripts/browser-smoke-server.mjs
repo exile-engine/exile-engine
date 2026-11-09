@@ -24,7 +24,7 @@ const server = http.createServer(async (request, response) => {
       !(
         name.startsWith('examples/') ||
         /^packages\/[^/]+\/(?:dist|snapshot)\//.test(name) ||
-        /^tests\/fixtures\/pob\/[a-z-]+\.xml$/.test(name)
+        /^tests\/fixtures\/pob\/[a-z0-9-]+\.xml$/.test(name)
       ) ||
       !mime[path.extname(file)]
     ) {

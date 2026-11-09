@@ -36,6 +36,9 @@ export interface SelectedSkillSession {
 const CAST_SPEED = 'base_cast_speed_+%';
 const DERIVED = new Set([
   'base',
+  'added-lightning',
+  'effective-added-lightning',
+  'combined-base',
   'damage-increase',
   'cast-speed-increase',
   'damage-before-resistance',
@@ -62,6 +65,17 @@ function copyInput(input: SelectedSkillInput): SelectedSkillInput {
     },
     configuration: { ...input.configuration },
     modifiers: input.modifiers.map(copyModifier),
+    ...(input.addedLightningDamage === undefined
+      ? {}
+      : {
+          addedLightningDamage: input.addedLightningDamage.map((group) => ({
+            ...group,
+            statIds: [group.statIds[0], group.statIds[1]],
+            values: [group.values[0], group.values[1]],
+            source: { ...group.source },
+            ...(group.conditions ? { conditions: [...group.conditions] } : {}),
+          })),
+        }),
   };
 }
 
@@ -87,6 +101,9 @@ function copyDataset(dataset: SparkDataset): SparkDataset {
       gemLevel: level.gemLevel,
       baseLightningMin: level.baseLightningMin,
       baseLightningMax: level.baseLightningMax,
+      ...(level.addedDamageEffectiveness === undefined
+        ? {}
+        : { addedDamageEffectiveness: level.addedDamageEffectiveness }),
       sourceRows: copyRows(level.sourceRows),
     })),
     qualityStats: dataset.qualityStats.map((stat) => ({
@@ -114,6 +131,10 @@ function inputNodes(input: SelectedSkillInput): Readonly<Record<string, unknown>
     ['input.skill', input.skill],
     ['input.resistance', input.configuration.effectiveLightningResistancePercent],
     ...input.modifiers.map((modifier, index) => [`modifier:${index}`, modifier]),
+    ...(input.addedLightningDamage ?? []).map((group, index) => [
+      `added-lightning:${index}`,
+      group,
+    ]),
   ]);
 }
 
@@ -127,9 +148,14 @@ function graph(input: SelectedSkillInput): CalculationDependencies {
   return {
     ...Object.fromEntries(Object.keys(roots).map((id) => [id, []])),
     base: ['input.skill'],
+    'added-lightning': (input.addedLightningDamage ?? []).map(
+      (_, index) => `added-lightning:${index}`,
+    ),
+    'effective-added-lightning': ['base', 'added-lightning'],
+    'combined-base': ['base', 'effective-added-lightning'],
     'damage-increase': damage,
     'cast-speed-increase': speed,
-    'damage-before-resistance': ['base', 'damage-increase'],
+    'damage-before-resistance': ['combined-base', 'damage-increase'],
     'damage-after-resistance': ['damage-before-resistance', 'input.resistance'],
     'cast-rate': ['base', 'cast-speed-increase'],
     'selected-skill': [
@@ -137,7 +163,11 @@ function graph(input: SelectedSkillInput): CalculationDependencies {
       'input.skill',
       'input.resistance',
       ...input.modifiers.map((_, index) => `modifier:${index}`),
+      ...(input.addedLightningDamage ?? []).map((_, index) => `added-lightning:${index}`),
       'base',
+      'added-lightning',
+      'effective-added-lightning',
+      'combined-base',
       'damage-increase',
       'cast-speed-increase',
       'damage-before-resistance',
@@ -171,6 +201,10 @@ function range(min: number, max: number): DamageRange {
 
 interface Cache {
   readonly baseline: SparkCalculation;
+  readonly rawAdded: DamageRange;
+  readonly effectiveness: number;
+  readonly effectiveAdded: DamageRange;
+  readonly combinedBase: DamageRange;
   readonly damageIncrease: number;
   readonly speedIncrease: number;
   readonly before: DamageRange;
@@ -199,6 +233,10 @@ export function createSelectedSkillSession(
   const hit = full.value.hit;
   let cache: Cache = {
     baseline: selectedHitRules(prepared.value.baseline),
+    rawAdded: full.value.addedLightningDamage.raw,
+    effectiveness: full.value.addedLightningDamage.effectiveness,
+    effectiveAdded: full.value.addedLightningDamage.effective,
+    combinedBase: full.value.addedLightningDamage.combinedBase,
     damageIncrease: hit.increasedDamagePercent,
     speedIncrease: hit.increasedCastSpeedPercent,
     before: hit.nonCriticalHitBeforeResistance,
@@ -252,15 +290,43 @@ export function createSelectedSkillSession(
       current = immutable({ calculation: current.calculation, recalculated: [], dependencies });
       return success(current);
     }
-    let { baseline, damageIncrease, speedIncrease, before, after, castTime, casts } = cache;
+    let {
+      baseline,
+      rawAdded,
+      effectiveness,
+      effectiveAdded,
+      combinedBase,
+      damageIncrease,
+      speedIncrease,
+      before,
+      after,
+      castTime,
+      casts,
+    } = cache;
     for (const id of recalculated) {
       switch (id) {
         case 'base': {
           const base = prepareSelectedSkill(next, captured);
           if (!base.ok) return base;
           baseline = selectedHitRules(base.value.baseline);
+          effectiveness = base.value.addedDamageEffectiveness;
           break;
         }
+        case 'added-lightning':
+          rawAdded = range(
+            (next.addedLightningDamage ?? []).reduce((sum, group) => sum + group.values[0], 0),
+            (next.addedLightningDamage ?? []).reduce((sum, group) => sum + group.values[1], 0),
+          );
+          break;
+        case 'effective-added-lightning':
+          effectiveAdded = range(rawAdded.min * effectiveness, rawAdded.max * effectiveness);
+          break;
+        case 'combined-base':
+          combinedBase = range(
+            baseline.baseLightningDamage.min + effectiveAdded.min,
+            baseline.baseLightningDamage.max + effectiveAdded.max,
+          );
+          break;
         case 'damage-increase':
           damageIncrease = next.modifiers
             .filter((modifier) => modifier.statId !== CAST_SPEED)
@@ -274,8 +340,8 @@ export function createSelectedSkillSession(
         case 'damage-before-resistance': {
           const scale = Math.max(0, 1 + damageIncrease / 100);
           before = range(
-            Math.floor(baseline.baseLightningDamage.min * scale + 0.5),
-            Math.floor(baseline.baseLightningDamage.max * scale + 0.5),
+            Math.floor(combinedBase.min * scale + 0.5),
+            Math.floor(combinedBase.max * scale + 0.5),
           );
           break;
         }
@@ -297,6 +363,16 @@ export function createSelectedSkillSession(
       ![
         damageIncrease,
         speedIncrease,
+        rawAdded.min,
+        rawAdded.max,
+        rawAdded.mean,
+        effectiveness,
+        effectiveAdded.min,
+        effectiveAdded.max,
+        effectiveAdded.mean,
+        combinedBase.min,
+        combinedBase.max,
+        combinedBase.mean,
         before.min,
         before.max,
         before.mean,
@@ -311,26 +387,48 @@ export function createSelectedSkillSession(
         errorDiagnostic('input.numeric-overflow', 'The update exceeds finite numeric limits.'),
       );
     }
-    const assembled = assembleSelectedSkill(next, {
-      ...baseline,
-      nonCriticalHitBeforeResistance: before,
-      nonCriticalHitAfterResistance: after,
-      castTimeSeconds: castTime,
-      castsPerSecond: casts,
-      effectiveLightningResistancePercent: next.configuration.effectiveLightningResistancePercent,
-      increasedDamagePercent: damageIncrease,
-      increasedCastSpeedPercent: speedIncrease,
-      modifierContributions: next.modifiers.map((modifier) => ({
-        statId: modifier.statId,
-        value: modifier.value,
-        source: { ...modifier.source },
-        scope: 'global',
-      })),
-    });
+    const assembled = assembleSelectedSkill(
+      next,
+      {
+        ...baseline,
+        nonCriticalHitBeforeResistance: before,
+        nonCriticalHitAfterResistance: after,
+        castTimeSeconds: castTime,
+        castsPerSecond: casts,
+        effectiveLightningResistancePercent: next.configuration.effectiveLightningResistancePercent,
+        increasedDamagePercent: damageIncrease,
+        increasedCastSpeedPercent: speedIncrease,
+        modifierContributions: next.modifiers.map((modifier) => ({
+          statId: modifier.statId,
+          value: modifier.value,
+          source: { ...modifier.source },
+          scope: 'global',
+        })),
+      },
+      {
+        raw: rawAdded,
+        effectiveness,
+        effective: effectiveAdded,
+        combinedBase,
+        contributions: next.addedLightningDamage ?? [],
+      },
+    );
     if (!assembled.ok) return assembled;
     accepted = next;
     dependencies = nextDependencies;
-    cache = { baseline, damageIncrease, speedIncrease, before, after, castTime, casts };
+    cache = {
+      baseline,
+      rawAdded,
+      effectiveness,
+      effectiveAdded,
+      combinedBase,
+      damageIncrease,
+      speedIncrease,
+      before,
+      after,
+      castTime,
+      casts,
+    };
     current = immutable({ calculation: assembled.value, recalculated, dependencies });
     return success(current);
   }

@@ -17,6 +17,7 @@ import {
   type StatContribution,
 } from './types.js';
 import { errorDiagnostic, failure, isSnapshotIdentity, sameSnapshot, success } from './result.js';
+import { SPARK_ADDED_LIGHTNING_STAT_IDS } from './selected-skill.js';
 
 const MIN_STAT = 'spell_minimum_base_lightning_damage';
 const MAX_STAT = 'spell_maximum_base_lightning_damage';
@@ -138,11 +139,21 @@ export async function loadSparkDatasetForGame(
       reader.getTable('GrantedEffectQualityStats'),
     ]);
     const stats = new Map(statRecords.map((record) => [record.key, record]));
-    for (const statId of [...SPARK_MODIFIER_STAT_IDS, MIN_STAT, MAX_STAT]) {
+    for (const statId of [
+      ...SPARK_MODIFIER_STAT_IDS,
+      MIN_STAT,
+      MAX_STAT,
+      ...(game === 'poe1' ? SPARK_ADDED_LIGHTNING_STAT_IDS : []),
+    ]) {
       const stat = stats.get(statId);
       if (!stat || stat.fields.Id !== statId) throw new Error(`Missing exact game stat ${statId}.`);
       if (
-        (SPARK_MODIFIER_STAT_IDS as readonly string[]).includes(statId) &&
+        (
+          [
+            ...SPARK_MODIFIER_STAT_IDS,
+            ...(game === 'poe1' ? SPARK_ADDED_LIGHTNING_STAT_IDS : []),
+          ] as readonly string[]
+        ).includes(statId) &&
         (stat.fields.IsLocal === true || stat.fields.IsWeaponLocal === true)
       ) {
         throw new Error(`Supported modifier ${statId} unexpectedly has local semantics.`);
@@ -223,10 +234,22 @@ export async function loadSparkDatasetForGame(
         throw new Error(`Spark level ${gemLevel} lacks a valid lightning range.`);
       if (levels.some((level) => level.gemLevel === gemLevel))
         throw new Error(`Duplicate Spark gem level ${gemLevel}.`);
+      let addedDamageEffectiveness: number | undefined;
+      if (game === 'poe1') {
+        const rawEffectiveness = numberField(row, 'DamageEffectiveness');
+        addedDamageEffectiveness = 1 + rawEffectiveness / 10_000;
+        if (
+          !Number.isSafeInteger(rawEffectiveness) ||
+          addedDamageEffectiveness < 0 ||
+          !finite(addedDamageEffectiveness)
+        )
+          throw new Error(`Spark level ${gemLevel} has invalid added-damage effectiveness.`);
+      }
       levels.push({
         gemLevel,
         baseLightningMin: min,
         baseLightningMax: max,
+        ...(addedDamageEffectiveness === undefined ? {} : { addedDamageEffectiveness }),
         sourceRows: [
           rowRef('GrantedEffectStatSetsPerLevel', row),
           rowRef('GrantedEffectsPerLevel', perEffect[0]!),
@@ -286,6 +309,9 @@ export async function loadSparkDatasetForGame(
       sourceRows: [
         rowRef('GrantedEffects', effect),
         rowRef('GrantedEffectStatSets', statSet),
+        ...(game === 'poe1'
+          ? SPARK_ADDED_LIGHTNING_STAT_IDS.map((statId) => rowRef('Stats', stats.get(statId)!))
+          : []),
         ...intrinsicRows.filter(
           (row, index, rows) =>
             rows.findIndex(
@@ -295,6 +321,11 @@ export async function loadSparkDatasetForGame(
       ],
       ruleProvenance: [
         ...RULE_PROVENANCE,
+        ...(game === 'poe1'
+          ? [
+              'PoE1 added-damage effectiveness: original client GrantedEffectStatSetsPerLevel.DamageEffectiveness / 10000 + 1; exact spell added-lightning stat pair verified in Stats. The isolated-hit API does not apply added damage.',
+            ]
+          : []),
         `Modifier semantics reference: https://github.com/PathOfBuildingCommunity/${game === 'poe1' ? 'PathOfBuilding' : 'PathOfBuilding-PoE2'}/blob/${game === 'poe1' ? '3dbca4463c0a59079d9f7f032d8240cf868e09da' : 'bb52d6b368307457eb9c54bb13f1829993d390b1'}/src/Data/SkillStatMap.lua`,
       ],
     };

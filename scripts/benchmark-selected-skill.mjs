@@ -4,6 +4,7 @@ import {
   calculateSelectedSkill,
   createSelectedSkillSession,
   loadSparkDataset,
+  selectedSkillEngineRevision,
 } from '@exile-engine/poe1';
 import { fixtureReader } from '../packages/core/test/fixture-reader.mjs';
 
@@ -28,13 +29,25 @@ const initial = {
     value: 1,
     source: { kind: 'item', id: `synthetic-item-${index}`, line: 1 },
   })),
+  addedLightningDamage: [
+    {
+      statIds: ['spell_minimum_added_lightning_damage', 'spell_maximum_added_lightning_damage'],
+      values: [2, 8],
+      source: { kind: 'item', id: 'synthetic-added-item', line: 1 },
+    },
+  ],
 };
 const size = 1000;
 const trials = 5;
 const median = (values) =>
   [...values].sort((left, right) => left - right)[Math.floor(values.length / 2)];
 const reports = [];
-for (const mutation of ['item-value', 'enemy-resistance', 'applicability']) {
+for (const mutation of [
+  'item-value',
+  'enemy-resistance',
+  'applicability',
+  'added-lightning-range',
+]) {
   const states = [];
   const next = structuredClone(initial);
   for (let index = 0; index < size; index++) {
@@ -43,6 +56,8 @@ for (const mutation of ['item-value', 'enemy-resistance', 'applicability']) {
       next.configuration.effectiveLightningResistancePercent = index % 91;
     if (mutation === 'applicability')
       next.modifiers[1].statId = index % 2 === 0 ? 'spell_damage_+%' : 'base_cast_speed_+%';
+    if (mutation === 'added-lightning-range')
+      next.addedLightningDamage[0].values = [index % 11, 20 + (index % 31)];
     states.push(structuredClone(next));
   }
   const check = value(createSelectedSkillSession(initial, dataset));
@@ -99,11 +114,12 @@ for (const mutation of ['item-value', 'enemy-resistance', 'applicability']) {
 console.log(
   JSON.stringify(
     {
-      benchmark: 'selected-skill-batches-v1',
-      engineRevision: 'poe1-selected-spark-v1',
+      benchmark: 'selected-skill-batches-v2',
+      engineRevision: selectedSkillEngineRevision,
       node: process.version,
       identity: dataset.identity,
       modifierCount: initial.modifiers.length,
+      addedLightningGroupCount: initial.addedLightningDamage.length,
       timing:
         'performance.now; session creation and equality assertions excluded; alternating trial order; median of five warm batches',
       reports,

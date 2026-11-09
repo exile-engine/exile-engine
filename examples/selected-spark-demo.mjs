@@ -17,17 +17,39 @@ export async function runSelectedSparkDemo(readShard, readXml) {
   const dataset = value(await loadSparkDataset(reader));
   const imported = importPobXml({
     format: 'pob-xml',
-    xml: await readXml('resisted'),
+    xml: await readXml('added-lightning-combined'),
     target: reader.identity,
     buildId: 'browser-synthetic-spark',
     configurationId: 'explicit-nonboss-25',
   });
   if (!imported.complete) throw new Error(JSON.stringify(imported.diagnostics));
   const initial = value(calculateSelectedSkill(imported.selectedSkill, dataset));
+  if (
+    initial.addedLightningDamage.contributions.length !== 1 ||
+    initial.addedLightningDamage.effectiveness !== 1.9
+  )
+    throw new Error('Expected the pinned spell added-lightning group and client effectiveness.');
   const session = value(createSelectedSkillSession(imported.selectedSkill, dataset));
   const next = structuredClone(imported.selectedSkill);
   const reports = [];
   for (const change of [
+    () => {
+      next.addedLightningDamage[0].values[0] += 1;
+      next.addedLightningDamage[0].values[1] += 2;
+    },
+    () => {
+      next.addedLightningDamage.push({
+        statIds: ['spell_minimum_added_lightning_damage', 'spell_maximum_added_lightning_damage'],
+        values: [3, 7],
+        source: { kind: 'item', id: 'browser-extra-range', line: 1 },
+      });
+    },
+    () => {
+      next.addedLightningDamage.splice(0, 1);
+    },
+    () => {
+      next.skill.gemLevel = 1;
+    },
     () => {
       next.modifiers[0].value += 10;
     },
@@ -48,10 +70,11 @@ export async function runSelectedSparkDemo(readShard, readXml) {
     reports.push({
       recalculated: report.recalculated,
       combinedDps: report.calculation.combinedDps,
+      addedLightningDamage: report.calculation.addedLightningDamage,
     });
   }
   const rejected = [];
-  for (const name of ['missing-config', 'unsupported']) {
+  for (const name of ['missing-config', 'unsupported', 'added-lightning-reversed']) {
     const result = importPobXml({
       format: 'pob-xml',
       xml: await readXml(name),

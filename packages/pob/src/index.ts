@@ -1,5 +1,6 @@
 import {
   isSnapshotIdentity,
+  type AddedLightningDamageContribution,
   type Diagnostic,
   type SelectedSkillInput,
   type SnapshotIdentity,
@@ -8,7 +9,7 @@ import {
 import { parseXml, XmlError, type PobXmlLimits, type XmlElement } from './xml.js';
 
 export { pobXmlLimits, type PobXmlLimits } from './xml.js';
-export const pobAdapterVersion = 'poe1-spark-xml-v1';
+export const pobAdapterVersion = 'poe1-spark-xml-v2';
 export const pobCompatibility = Object.freeze({
   status: 'bounded-poe1-spark-xml' as const,
   xmlImportImplemented: true as const,
@@ -54,6 +55,7 @@ export interface PobImportedBuild {
   readonly configurationId: string | undefined;
   readonly adapterVersion: string;
   readonly modifiers: readonly StatContribution[];
+  readonly addedLightningDamage: readonly AddedLightningDamageContribution[];
   readonly skills: readonly PobImportedSkill[];
   readonly unresolved: readonly PobUnresolvedInput[];
   readonly diagnostics: readonly Diagnostic[];
@@ -92,6 +94,7 @@ export function importPobXml(
   const diagnostics: Diagnostic[] = [];
   const unresolved: PobUnresolvedInput[] = [];
   const modifiers: StatContribution[] = [];
+  const addedLightningDamage: AddedLightningDamageContribution[] = [];
   const skills: PobImportedSkill[] = [];
   const validSource = object(source);
   const identity =
@@ -122,6 +125,7 @@ export function importPobXml(
     configurationId,
     adapterVersion: pobAdapterVersion,
     modifiers,
+    addedLightningDamage,
     skills,
     unresolved,
     diagnostics,
@@ -483,6 +487,35 @@ export function importPobXml(
         const raw = lines[index]!;
         const line = raw.trim();
         if (!line) continue;
+        const addedMatch = /^Adds ([0-9]+) to ([0-9]+) Lightning Damage to Spells$/.exec(line);
+        if (addedMatch) {
+          const min = Number(addedMatch[1]);
+          const max = Number(addedMatch[2]);
+          if (!Number.isSafeInteger(min) || !Number.isSafeInteger(max) || min > max)
+            problem(
+              'pob.invalid-added-lightning-range',
+              'Added spell lightning damage needs ordered nonnegative safe integer endpoints.',
+              { element: 'Item', ...(itemId ? { itemId } : {}), textLine: lineOffset + index + 1 },
+              raw,
+              'malformed-input',
+            );
+          else
+            addedLightningDamage.push({
+              statIds: [
+                'spell_minimum_added_lightning_damage',
+                'spell_maximum_added_lightning_damage',
+              ],
+              values: [min, max],
+              scope: 'global',
+              source: {
+                kind: 'item',
+                id: `pob-item:${itemId}`,
+                line: lineOffset + index + 1,
+                label: raw,
+              },
+            });
+          continue;
+        }
         const matches = rules.flatMap(([pattern, statId]) => {
           const match = pattern.exec(line);
           return match
@@ -525,5 +558,6 @@ export function importPobXml(
     },
     configuration: { id: configurationId, effectiveLightningResistancePercent: resistance },
     modifiers,
+    ...(addedLightningDamage.length ? { addedLightningDamage } : {}),
   });
 }

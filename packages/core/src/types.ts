@@ -96,6 +96,8 @@ export interface SparkLevel {
   readonly gemLevel: number;
   readonly baseLightningMin: number;
   readonly baseLightningMax: number;
+  /** PoE1 client DamageEffectiveness / 10000 + 1; absent for the PoE2 slice. */
+  readonly addedDamageEffectiveness?: number;
   readonly sourceRows: readonly SourceRowRef[];
 }
 

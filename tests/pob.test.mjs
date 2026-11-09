@@ -1,17 +1,30 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
-import { importPobXml, pobCompatibility, pobXmlLimits } from '@exile-engine/pob';
+import { importPobXml, pobAdapterVersion, pobCompatibility, pobXmlLimits } from '@exile-engine/pob';
 
 const target = { game: 'poe1', build: '26474023', snapshotId: 'explicit-test-snapshot' };
 const fixtures = Object.fromEntries(
   await Promise.all(
-    ['baseline', 'increased', 'cast', 'resisted', 'no-damage', 'missing-config', 'unsupported'].map(
-      async (name) => [
-        name,
-        await readFile(new URL(`./fixtures/pob/${name}.xml`, import.meta.url), 'utf8'),
-      ],
-    ),
+    [
+      'baseline',
+      'increased',
+      'cast',
+      'resisted',
+      'no-damage',
+      'missing-config',
+      'unsupported',
+      'added-lightning',
+      'added-lightning-multiple',
+      'added-lightning-combined',
+      'added-lightning-level1',
+      'added-lightning-rounded',
+      'added-lightning-zero',
+      'added-lightning-reversed',
+    ].map(async (name) => [
+      name,
+      await readFile(new URL(`./fixtures/pob/${name}.xml`, import.meta.url), 'utf8'),
+    ]),
   ),
 );
 const source = (xml = fixtures.baseline) => ({
@@ -23,6 +36,7 @@ const source = (xml = fixtures.baseline) => ({
 });
 
 test('PoB capability advertises exactly the bounded XML profile', () => {
+  assert.equal(pobAdapterVersion, 'poe1-spark-xml-v2');
   assert.equal(pobCompatibility.status, 'bounded-poe1-spark-xml');
   assert.equal(pobCompatibility.xmlImportImplemented, true);
   assert.equal(pobCompatibility.shareCodeImportImplemented, false);
@@ -101,8 +115,119 @@ test('missing enemy configuration and unsupported mechanics retain unresolved da
   }
   assert.equal(
     importPobXml(source(fixtures.unsupported)).unresolved[0].raw,
-    'Adds 1 to 10 Lightning Damage to Spells',
+    'Adds 1 to 10 Fire Damage to Spells',
   );
+});
+
+test('added spell lightning preserves each ordered stat pair and item-line provenance', () => {
+  const imported = importPobXml(source(fixtures['added-lightning-multiple']));
+  assert.equal(imported.complete, true, JSON.stringify(imported.diagnostics));
+  assert.deepEqual(imported.modifiers, []);
+  assert.deepEqual(
+    imported.addedLightningDamage.map(({ statIds, values, source, scope }) => ({
+      statIds,
+      values,
+      source,
+      scope,
+    })),
+    [
+      {
+        statIds: ['spell_minimum_added_lightning_damage', 'spell_maximum_added_lightning_damage'],
+        values: [10, 20],
+        scope: 'global',
+        source: {
+          kind: 'item',
+          id: 'pob-item:1',
+          line: 5,
+          label: 'Adds 10 to 20 Lightning Damage to Spells',
+        },
+      },
+      {
+        statIds: ['spell_minimum_added_lightning_damage', 'spell_maximum_added_lightning_damage'],
+        values: [3, 7],
+        scope: 'global',
+        source: {
+          kind: 'item',
+          id: 'pob-item:1',
+          line: 6,
+          label: 'Adds 3 to 7 Lightning Damage to Spells',
+        },
+      },
+    ],
+  );
+  assert.deepEqual(imported.selectedSkill.addedLightningDamage, imported.addedLightningDamage);
+  assert.deepEqual(imported.selectedSkill.identity, target);
+  const leading = importPobXml(
+    source(fixtures['added-lightning'].replace('<![CDATA[Rarity:', '<![CDATA[\n\nRarity:')),
+  );
+  assert.equal(leading.addedLightningDamage[0].source.line, 7);
+});
+
+test('all bounded added-lightning fixtures adapt raw endpoints without applying effectiveness', () => {
+  for (const name of [
+    'added-lightning',
+    'added-lightning-multiple',
+    'added-lightning-combined',
+    'added-lightning-level1',
+    'added-lightning-rounded',
+    'added-lightning-zero',
+  ]) {
+    const imported = importPobXml(source(fixtures[name]));
+    assert.equal(imported.complete, true, name + JSON.stringify(imported.diagnostics));
+    assert.equal(imported.selectedSkill.skill.gemLevel, name === 'added-lightning-level1' ? 1 : 20);
+    assert.equal(imported.rawXml, fixtures[name]);
+  }
+  assert.deepEqual(
+    importPobXml(source(fixtures['added-lightning'])).addedLightningDamage[0].values,
+    [10, 20],
+  );
+  assert.deepEqual(
+    importPobXml(source(fixtures['added-lightning-rounded'])).addedLightningDamage[0].values,
+    [1, 2],
+  );
+  assert.deepEqual(
+    importPobXml(source(fixtures['added-lightning-zero'])).addedLightningDamage[0].values,
+    [0, 0],
+  );
+  const combined = importPobXml(source(fixtures['added-lightning-combined']));
+  assert.equal(combined.modifiers.length, 5);
+  assert.equal(combined.addedLightningDamage.length, 1);
+  assert.equal(combined.modifiers[0].source.line, 6);
+  assert.equal(combined.selectedSkill.configuration.effectiveLightningResistancePercent, 25);
+  const absent = importPobXml(source());
+  assert.deepEqual(absent.addedLightningDamage, []);
+  assert.equal('addedLightningDamage' in absent.selectedSkill, false);
+});
+
+test('reversed, oversized, decimal, attack, generic and conditional added damage remain unresolved', () => {
+  const rejected = [
+    fixtures['added-lightning-reversed'],
+    ...[
+      'Adds -1 to 20 Lightning Damage to Spells',
+      'Adds 1.5 to 20 Lightning Damage to Spells',
+      'Adds 1 to 20 Lightning Damage',
+      'Adds 1 to 20 Lightning Damage to Attacks',
+      'Adds 1 to 20 Lightning Damage to Spells while on Low Life',
+      'Adds 1 to 20 Lightning Damage to Spells (local)',
+      'Adds 1 to 20 Fire Damage to Spells',
+      'Adds 9007199254740992 to 9007199254740992 Lightning Damage to Spells',
+      'Adds NaN to 20 Lightning Damage to Spells',
+      'Adds 1 to Infinity Lightning Damage to Spells',
+    ].map((line) =>
+      fixtures['added-lightning'].replace('Adds 10 to 20 Lightning Damage to Spells', line),
+    ),
+  ];
+  for (const xml of rejected) {
+    const imported = importPobXml(source(xml));
+    assert.equal(imported.complete, false, xml);
+    assert.equal('selectedSkill' in imported, false);
+    assert.equal(imported.unresolved.length, 1);
+    assert.equal(imported.rawXml, xml);
+  }
+  const reversed = importPobXml(source(fixtures['added-lightning-reversed']));
+  assert.equal(reversed.diagnostics[0].code, 'pob.invalid-added-lightning-range');
+  assert.equal(reversed.unresolved[0].reason, 'malformed-input');
+  assert.equal(reversed.unresolved[0].source.textLine, 5);
 });
 
 test('ambiguous selection, unsupported version hints and mechanics fail visibly', () => {

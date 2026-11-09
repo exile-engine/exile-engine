@@ -19,6 +19,36 @@ const modifier = (statId, value, more = {}) => ({
   ...more,
 });
 
+test('PoE1 added-damage effectiveness is normalized from exact source rows with provenance', async () => {
+  for (const level of dataset.levels) {
+    const source = fixture.tables.GrantedEffectStatSetsPerLevel.find(
+      (row) => row.GemLevel === level.gemLevel,
+    );
+    assert.equal(source.DamageEffectiveness, 9000);
+    assert.equal(level.addedDamageEffectiveness, 1 + source.DamageEffectiveness / 10000);
+    assert.ok(
+      level.sourceRows.some(
+        (row) => row.table === 'GrantedEffectStatSetsPerLevel' && row.rowIndex === source._index,
+      ),
+    );
+  }
+  const changed = structuredClone(fixture);
+  changed.tables.GrantedEffectStatSetsPerLevel[0].DamageEffectiveness = 0;
+  const loaded = await loadSparkDataset(fixtureReader(changed));
+  assert.equal(loaded.ok, true);
+  assert.equal(loaded.value.levels[0].addedDamageEffectiveness, 1);
+  for (const value of [undefined, NaN, Infinity, -10001, 1.5]) {
+    const invalid = structuredClone(fixture);
+    invalid.tables.GrantedEffectStatSetsPerLevel[0].DamageEffectiveness = value;
+    assert.equal((await loadSparkDataset(fixtureReader(invalid))).ok, false);
+  }
+  const missing = structuredClone(fixture);
+  missing.tables.Stats = missing.tables.Stats.filter(
+    (row) => row.Id !== 'spell_maximum_added_lightning_damage',
+  );
+  assert.equal((await loadSparkDataset(fixtureReader(missing))).ok, false);
+});
+
 test('PoE1 client-resolved Spark ranges and cast time match recorded client rows', () => {
   for (const [gemLevel, min, max] of [
     [1, 1, 28],

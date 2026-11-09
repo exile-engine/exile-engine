@@ -25,6 +25,8 @@ export type {
   SelectedSkillCalculation,
   SelectedSkillConfiguration,
   SelectedSkillSelection,
+  AddedLightningDamageContribution,
+  AddedLightningDamageTrace,
 } from '@exile-engine/core';
 export { createSelectedSkillSession } from './incremental.js';
 export type { IncrementalSelectedSkillReport, SelectedSkillSession } from './incremental.js';

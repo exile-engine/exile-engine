@@ -6,6 +6,7 @@ import { loadCatalog } from '@exile-engine/data-poe1';
 import { importPobXml } from '@exile-engine/pob';
 import {
   calculateSelectedSkill,
+  createSelectedSkillSession,
   loadSparkDataset,
   selectedSkillEngineRevision,
 } from '@exile-engine/poe1';
@@ -75,6 +76,23 @@ test('pinned PoB coefficient arithmetic independently resolves the same client b
   );
 });
 
+test('added damage effectiveness is normalized from the exact client field and source rows', async () => {
+  const fact = reference.base.addedDamageEffectiveness;
+  close(fact.rawValue / fact.divisor + fact.offset, fact.value, 'effectiveness normalization');
+  for (const source of fact.sourceRows) {
+    const row = await reader.getRecord(fact.sourceTable, source.key);
+    assert.equal(row.rowIndex, source.rowIndex);
+    assert.equal(row.fields.StatSet.key, 'Spark');
+    assert.equal(row.fields.GemLevel, source.gemLevel);
+    assert.equal(row.fields[fact.sourceField], fact.rawValue);
+    close(
+      dataset.levels.find((level) => level.gemLevel === source.gemLevel).addedDamageEffectiveness,
+      fact.value,
+      `level ${source.gemLevel} effectiveness`,
+    );
+  }
+});
+
 for (const expected of reference.cases) {
   test(`${expected.fixture}: adapted XML intermediates, contributions and selected hit/combined DPS match executed pinned PoB`, async () => {
     const xml = await readFile(
@@ -94,6 +112,13 @@ for (const expected of reference.cases) {
     const result = calculateSelectedSkill(imported.selectedSkill, dataset);
     assert.equal(result.ok, true, JSON.stringify(result.diagnostics));
     const value = result.value;
+    const session = createSelectedSkillSession(imported.selectedSkill, dataset);
+    assert.equal(session.ok, true, JSON.stringify(session.diagnostics));
+    assert.deepEqual(session.value.current.calculation, value);
+    const unchanged = session.value.recalculate(imported.selectedSkill);
+    assert.equal(unchanged.ok, true, JSON.stringify(unchanged.diagnostics));
+    assert.deepEqual(unchanged.value.calculation, value);
+    assert.deepEqual(unchanged.value.recalculated, []);
     assert.deepEqual(value.identity, reference.identity);
     assert.equal(value.buildId, `fixture:${expected.fixture}`);
     assert.equal(value.configuration.id, `fixture:${expected.fixture}:enemy`);
@@ -102,7 +127,7 @@ for (const expected of reference.cases) {
     assert.equal(value.hitsPerCast, 1);
     assert.deepEqual(value.includedDamage, ['lightning-hit']);
     assert.equal(value.skill.id, 'Spark');
-    assert.equal(value.skill.gemLevel, reference.base.gemLevel);
+    assert.equal(value.skill.gemLevel, expected.gemLevel);
     const hit = value.hit;
     assert.deepEqual(
       hit.modifierContributions.map(({ statId, value }) => ({ statId, value })),
@@ -121,10 +146,24 @@ for (const expected of reference.cases) {
         .size,
       expected.contributions.length,
     );
-    range(
-      hit.baseLightningDamage,
-      { min: reference.base.minimum, max: reference.base.maximum, mean: reference.base.mean },
-      'base',
+    range(hit.baseLightningDamage, expected.baseLightningDamage, 'intrinsic base');
+    const added = value.addedLightningDamage;
+    range(added.raw, expected.rawAddedLightningDamage, 'raw added');
+    close(added.effectiveness, expected.addedDamageEffectiveness, 'added effectiveness');
+    range(added.effective, expected.effectiveAddedLightningDamage, 'effective added');
+    range(added.combinedBase, expected.combinedBaseLightningDamage, 'combined base');
+    assert.deepEqual(
+      added.contributions.map(({ statIds, values, source }) => ({
+        statIds,
+        values,
+        source: { kind: source.kind, id: source.id, line: source.line },
+      })),
+      expected.addedGroups,
+    );
+    assert.deepEqual(imported.addedLightningDamage, added.contributions);
+    assert.equal(
+      new Set(added.contributions.map((entry) => `${entry.source.id}:${entry.source.line}`)).size,
+      expected.addedGroups.length,
     );
     range(hit.nonCriticalHitBeforeResistance, expected.beforeResistance, 'beforeResistance');
     range(hit.nonCriticalHitAfterResistance, expected.afterResistance, 'afterResistance');
@@ -146,8 +185,18 @@ for (const expected of reference.cases) {
     const castIncrease = expected.contributions
       .filter((mod) => mod.statId === 'base_cast_speed_+%')
       .reduce((sum, mod) => sum + mod.value, 0);
-    const minimum = Math.floor(reference.base.minimum * (1 + damageIncrease / 100) + 0.5);
-    const maximum = Math.floor(reference.base.maximum * (1 + damageIncrease / 100) + 0.5);
+    const addedMinimum = expected.addedGroups.reduce((sum, group) => sum + group.values[0], 0);
+    const addedMaximum = expected.addedGroups.reduce((sum, group) => sum + group.values[1], 0);
+    const minimum = Math.floor(
+      (expected.baseLightningDamage.min + addedMinimum * expected.addedDamageEffectiveness) *
+        (1 + damageIncrease / 100) +
+        0.5,
+    );
+    const maximum = Math.floor(
+      (expected.baseLightningDamage.max + addedMaximum * expected.addedDamageEffectiveness) *
+        (1 + damageIncrease / 100) +
+        0.5,
+    );
     const speed = Math.min(
       Math.floor((1 + castIncrease / 100) * 100 + 0.5) / 100 / reference.base.castTimeSeconds,
       1 / 0.033,
@@ -161,8 +210,11 @@ for (const expected of reference.cases) {
     assert.equal(observed.CritChance, 0);
     assert.equal(observed.HitChance, 100);
     assert.equal(observed.ActionSpeedMod, 1);
-    close(hit.baseLightningDamage.min, observed.LightningMinBase, 'PoB base minimum');
-    close(hit.baseLightningDamage.max, observed.LightningMaxBase, 'PoB base maximum');
+    close(added.raw.min, observed.addedMinimum, 'PoB added minimum');
+    close(added.raw.max, observed.addedMaximum, 'PoB added maximum');
+    close(added.effectiveness, observed.damageEffectiveness, 'PoB added effectiveness');
+    close(added.combinedBase.min, observed.LightningMinBase, 'PoB combined base minimum');
+    close(added.combinedBase.max, observed.LightningMaxBase, 'PoB combined base maximum');
     close(hit.nonCriticalHitAfterResistance.min, observed.TotalMin, 'PoB effective minimum');
     close(hit.nonCriticalHitAfterResistance.max, observed.TotalMax, 'PoB effective maximum');
     close(
@@ -212,12 +264,53 @@ for (const expected of reference.cases) {
         (left, right) => left.statId.localeCompare(right.statId) || left.value - right.value,
       );
     assert.deepEqual(sorted(compared), sorted(expected.contributions));
+    const flatIds = [
+      'spell_minimum_added_lightning_damage',
+      'spell_maximum_added_lightning_damage',
+    ];
+    const flatMapping = new Map([
+      ['LightningMin:0:131072', flatIds[0]],
+      ['LightningMax:0:131072', flatIds[1]],
+    ]);
+    const observedAdded = observed.addedContributions.map((entry) => {
+      const statId = flatMapping.get(`${entry.name}:${entry.flags}:${entry.keywordFlags}`);
+      assert.ok(statId, `Unreviewed PoB added modifier ${entry.name}`);
+      assert.equal(entry.source, 'Item:1:Synthetic Spark Fixture, Simple Robe');
+      return { statId, value: entry.value };
+    });
+    // PoB Tabulate omits zero-value entries; the parsed item line still retains both endpoints.
+    const flattened = expected.addedGroups.flatMap((group) =>
+      group.values.map((value, index) => ({ statId: group.statIds[index], value })),
+    );
+    assert.deepEqual(sorted(observedAdded), sorted(flattened.filter((entry) => entry.value !== 0)));
+    const observedLines = observed.itemModifierLines.filter((row) =>
+      row.mods.some((mod) => mod.keywordFlags === 131072),
+    );
+    assert.deepEqual(
+      observedLines.map((row) =>
+        row.mods.map((mod) => ({
+          statId: flatMapping.get(`${mod.name}:${mod.flags}:${mod.keywordFlags}`),
+          value: mod.value,
+        })),
+      ),
+      expected.addedGroups.map((group) =>
+        group.values.map((value, index) => ({ statId: group.statIds[index], value })),
+      ),
+    );
+    for (const [index, group] of expected.addedGroups.entries()) {
+      const line = `Adds ${group.values[0]} to ${group.values[1]} Lightning Damage to Spells`;
+      assert.equal(observedLines[index].line, line);
+      assert.equal(added.contributions[index].source.label, line);
+    }
   });
 }
 
-for (const fixture of ['missing-config', 'unsupported']) {
+for (const rejection of reference.rejectedFixtures) {
+  const fixture = rejection.fixture;
   test(`${fixture}: rejected XML has no selected-skill calculation input`, async () => {
     const xml = await readFile(new URL(`./fixtures/pob/${fixture}.xml`, import.meta.url), 'utf8');
+    assert.equal(createHash('sha256').update(xml).digest('hex'), rejection.xmlSha256);
+    assert.equal(rejection.oracleExecuted, false);
     const imported = importPobXml({
       format: 'pob-xml',
       xml,
