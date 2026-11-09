@@ -17,7 +17,7 @@ export async function runSelectedSparkDemo(readShard, readXml) {
   const dataset = value(await loadSparkDataset(reader));
   const imported = importPobXml({
     format: 'pob-xml',
-    xml: await readXml('added-lightning-combined'),
+    xml: await readXml('support-controlled-destruction-combined'),
     target: reader.identity,
     buildId: 'browser-synthetic-spark',
     configurationId: 'explicit-nonboss-25',
@@ -29,10 +29,25 @@ export async function runSelectedSparkDemo(readShard, readXml) {
     initial.addedLightningDamage.effectiveness !== 1.9
   )
     throw new Error('Expected the pinned spell added-lightning group and client effectiveness.');
+  if (
+    initial.supportEffects.supports.length !== 1 ||
+    initial.supportEffects.spellDamageMultiplier !== 1 + 39 / 100 ||
+    initial.supportEffects.castTimeMultiplier !== 1
+  )
+    throw new Error('Expected the reviewed support damage and unchanged cast-time rules.');
   const session = value(createSelectedSkillSession(imported.selectedSkill, dataset));
   const next = structuredClone(imported.selectedSkill);
   const reports = [];
   for (const change of [
+    () => {
+      next.skill.supports[0].gemLevel = 1;
+    },
+    () => {
+      next.skill.supports[0].enabled = false;
+    },
+    () => {
+      next.skill.supports[0].enabled = true;
+    },
     () => {
       next.addedLightningDamage[0].values[0] += 1;
       next.addedLightningDamage[0].values[1] += 2;
@@ -71,6 +86,19 @@ export async function runSelectedSparkDemo(readShard, readXml) {
       recalculated: report.recalculated,
       combinedDps: report.calculation.combinedDps,
       addedLightningDamage: report.calculation.addedLightningDamage,
+      supportEffects: {
+        spellDamageMultiplier: report.calculation.supportEffects.spellDamageMultiplier,
+        criticalChanceMultiplier: report.calculation.supportEffects.criticalChanceMultiplier,
+        castTimeMultiplier: report.calculation.supportEffects.castTimeMultiplier,
+        contributions: report.calculation.supportEffects.contributions.map(
+          ({ statId, value, source, appliedToSelectedHit }) => ({
+            statId,
+            value,
+            source,
+            appliedToSelectedHit,
+          }),
+        ),
+      },
     });
   }
   const rejected = [];

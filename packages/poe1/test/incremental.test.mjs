@@ -13,7 +13,7 @@ const fixture = JSON.parse(
   await readFile(new URL('./fixtures/spark-client.json', import.meta.url), 'utf8'),
 );
 const loaded = await loadSparkDataset(fixtureReader(fixture));
-assert.equal(loaded.ok, true);
+assert.equal(loaded.ok, true, JSON.stringify(loaded.diagnostics));
 const dataset = loaded.value;
 const modifier = (statId, value, line) => ({
   statId,
@@ -24,6 +24,13 @@ const added = (min, max, id = 'wand-1', line = 10) => ({
   statIds: ['spell_minimum_added_lightning_damage', 'spell_maximum_added_lightning_damage'],
   values: [min, max],
   source: { kind: 'item', id, line },
+});
+const support = (gemLevel = 1, enabled = true) => ({
+  id: 'SupportControlledDestruction',
+  gemLevel,
+  quality: 0,
+  enabled,
+  source: { kind: 'skill', id: 'synthetic-support-1', line: 1 },
 });
 const basic = {
   identity: dataset.identity,
@@ -146,6 +153,7 @@ test('grouped added-lightning edits, membership and provenance match full interm
 
 test('new gem-level effectiveness invalidates scaled added damage while retaining raw sums', () => {
   const synthetic = structuredClone(dataset);
+  delete synthetic.supports;
   synthetic.levels.find((level) => level.gemLevel === 1).addedDamageEffectiveness = 0.5;
   synthetic.identity.snapshotId += '-synthetic-effectiveness';
   const input = {
@@ -167,6 +175,196 @@ test('new gem-level effectiveness invalidates scaled added damage while retainin
     mean: 3.5,
   });
   assert.equal(report.calculation.addedLightningDamage.effectiveness, 0.5);
+});
+
+test('support level, enabled state and provenance update independently from base and increases', () => {
+  const input = { ...structuredClone(basic), addedLightningDamage: [added(2, 8)] };
+  input.skill.supports = [support()];
+  const session = value(createSelectedSkillSession(input, dataset));
+  assert.deepEqual(session.current.calculation, value(calculateSelectedSkill(input, dataset)));
+  assert.equal(
+    session.current.calculation.supportEffects.spellDamageMultiplier,
+    1 +
+      dataset.supports[0].levels.find((level) => level.gemLevel === 1).moreSpellDamagePercent / 100,
+  );
+  assert.equal(session.current.calculation.supportEffects.castTimeMultiplier, 1);
+  assert.equal(session.current.calculation.supportEffects.contributions.length, 2);
+  input.skill.supports[0].gemLevel = 20;
+  const leveled = checkUpdate(session, input);
+  assert.equal(leveled.calculation.supportEffects.spellDamageMultiplier, 1 + 39 / 100);
+  assert.deepEqual(
+    [...leveled.recalculated].sort(),
+    [
+      'support-effects',
+      'cast-rate',
+      'damage-before-resistance',
+      'damage-after-resistance',
+      'selected-skill',
+    ].sort(),
+  );
+  assert.ok(!leveled.recalculated.includes('base'));
+  assert.ok(!leveled.recalculated.includes('damage-increase'));
+  assert.ok(!leveled.recalculated.includes('added-lightning'));
+  input.skill.supports[0].enabled = false;
+  const disabled = checkUpdate(session, input).calculation.supportEffects;
+  assert.equal(disabled.spellDamageMultiplier, 1);
+  assert.equal(disabled.criticalChanceMultiplier, 1);
+  assert.equal(disabled.castTimeMultiplier, 1);
+  assert.ok(disabled.contributions.every((contribution) => !contribution.appliedToSelectedHit));
+  input.skill.supports[0].source.id = 'synthetic-support-moved';
+  input.skill.supports[0].source.line = 2;
+  const provenance = checkUpdate(session, input).calculation.supportEffects;
+  assert.equal(provenance.supports[0].source.id, 'synthetic-support-moved');
+  assert.ok(
+    provenance.contributions.every(
+      (contribution) => contribution.source.id === 'synthetic-support-moved',
+    ),
+  );
+  input.skill.supports[0].enabled = true;
+  const enabled = checkUpdate(session, input).calculation.supportEffects;
+  assert.ok(
+    enabled.contributions.some(
+      (contribution) =>
+        contribution.operation === 'more-spell-damage' && contribution.appliedToSelectedHit,
+    ),
+  );
+  assert.ok(
+    enabled.contributions.some(
+      (contribution) =>
+        contribution.operation === 'less-critical-strike-chance' &&
+        !contribution.appliedToSelectedHit,
+    ),
+  );
+  input.skill.supports = [];
+  const removed = checkUpdate(session, input).calculation.supportEffects;
+  assert.equal(removed.spellDamageMultiplier, 1);
+  assert.deepEqual(removed.supports, []);
+  assert.deepEqual(removed.contributions, []);
+});
+
+test('invalid and unavailable supports reject atomically, including disabled unknown supports', () => {
+  const input = structuredClone(basic);
+  input.skill.supports = [support()];
+  const session = value(createSelectedSkillSession(input, dataset));
+  const original = session.current;
+  for (const mutate of [
+    (next) => {
+      next.skill.supports[0].id = 'UnknownSupport';
+    },
+    (next) => {
+      next.skill.supports[0].id = 'UnknownSupport';
+      next.skill.supports[0].enabled = false;
+    },
+    (next) => {
+      next.skill.supports.push(support(20));
+    },
+    (next) => {
+      next.skill.supports[0].gemLevel = 0;
+    },
+    (next) => {
+      next.skill.supports[0].gemLevel = 21;
+    },
+    (next) => {
+      next.skill.supports[0].quality = 1;
+    },
+    (next) => {
+      next.skill.supports[0].enabled = 'false';
+    },
+    (next) => {
+      next.skill.supports[0].source.line = 0;
+    },
+    (next) => {
+      next.skill.supports[0].source = Object.create(next.skill.supports[0].source);
+    },
+    (next) => {
+      next.skill.supports[0].conditions = ['on-low-life'];
+    },
+    (next) => {
+      next.skill.supports[0] = 'SupportControlledDestruction';
+    },
+  ]) {
+    const next = structuredClone(input);
+    mutate(next);
+    assert.equal(calculateSelectedSkill(next, dataset).ok, false);
+    assert.equal(session.recalculate(next).ok, false);
+    assert.equal(session.current, original);
+  }
+  const unavailable = structuredClone(dataset);
+  delete unavailable.supports;
+  const noSupport = value(createSelectedSkillSession(basic, unavailable));
+  const before = noSupport.current;
+  assert.equal(calculateSelectedSkill(input, unavailable).ok, false);
+  assert.equal(noSupport.recalculate(input).ok, false);
+  assert.equal(noSupport.current, before);
+  checkUpdate(session, input);
+});
+
+test('support input, normalized facts and reported trace have independent ownership', () => {
+  const input = structuredClone(basic);
+  input.skill.supports = [support()];
+  const expected = structuredClone(input);
+  const ownedDataset = structuredClone(dataset);
+  const session = value(createSelectedSkillSession(input, ownedDataset));
+  const original = structuredClone(session.current.calculation);
+  input.skill.supports[0].source.id = 'host-source-mutated';
+  input.skill.supports[0].gemLevel = 20;
+  ownedDataset.supports[0].levels[0].moreSpellDamagePercent = 999;
+  ownedDataset.supports[0].sourceRows[0].key = 'host-support-row-mutated';
+  ownedDataset.supports[0].levels[0].sourceRows[0].key = 'host-support-level-row-mutated';
+  assert.deepEqual(session.current.calculation, original);
+  assert.throws(() => {
+    session.current.calculation.supportEffects.supports[0].source.id = 'mutated';
+  }, TypeError);
+  assert.throws(() => {
+    session.current.calculation.supportEffects.contributions[0].sourceRows[0].key = 'mutated';
+  }, TypeError);
+  expected.skill.supports[0].gemLevel = 20;
+  checkUpdate(session, expected);
+  expected.skill.supports[0].gemLevel = 1;
+  expected.skill.supports[0].quality = -0;
+  checkUpdate(session, expected);
+});
+
+test('support facts reject cycles, inherited identities, sparse levels and snapshot mismatches', () => {
+  for (const select of [
+    (data) => data.supports[0],
+    (data) => data.supports[0].identity,
+    (data) => data.supports[0].levels[0],
+    (data) => data.supports[0].sourceRows[0],
+    (data) => data.supports[0].levels[0].sourceRows[0],
+  ]) {
+    const malformed = structuredClone(dataset);
+    const target = select(malformed);
+    target.extra = {};
+    target.extra.self = target.extra;
+    assert.equal(calculateSelectedSkill(basic, malformed).ok, false);
+    assert.equal(createSelectedSkillSession(basic, malformed).ok, false);
+  }
+  for (const mutate of [
+    (data) => {
+      data.supports[0].identity.snapshotId += '-different';
+    },
+    (data) => {
+      data.supports[0].identity = Object.create(data.supports[0].identity);
+    },
+    (data) => {
+      delete data.supports[0].levels[0];
+    },
+    (data) => {
+      delete data.supports[0].sourceRows[0];
+    },
+    (data) => {
+      delete data.supports[0].levels[0].sourceRows[0];
+    },
+    (data) => {
+      data.supports[0].levels[0].criticalStrikeChancePercent = -99;
+    },
+  ]) {
+    const malformed = structuredClone(dataset);
+    mutate(malformed);
+    assert.equal(calculateSelectedSkill(basic, malformed).ok, false);
+    assert.equal(createSelectedSkillSession(basic, malformed).ok, false);
+  }
 });
 
 test('invalid added-lightning groups fail atomically and retain the accepted dependency set', () => {
@@ -228,6 +426,7 @@ test('invalid added-lightning groups fail atomically and retain the accepted dep
 test('scaled-added and combined-base overflow reject atomically before publishing output', () => {
   for (const combinedOverflow of [false, true]) {
     const synthetic = structuredClone(dataset);
+    delete synthetic.supports;
     synthetic.identity.snapshotId += combinedOverflow ? '-combined-overflow' : '-scaled-overflow';
     const level = synthetic.levels.find((entry) => entry.gemLevel === 20);
     level.addedDamageEffectiveness = combinedOverflow ? 1e307 : 1e308;
@@ -374,6 +573,28 @@ test('inherited source rows and grouped source identities fail at the shared bou
   input.addedLightningDamage[0].source = Object.create(input.addedLightningDamage[0].source);
   assert.equal(calculateSelectedSkill(input, dataset).ok, false);
   assert.equal(createSelectedSkillSession(input, dataset).ok, false);
+});
+
+test('inherited required build, skill, configuration and snapshot fields fail before cloning', () => {
+  const inherit = (target, key) => {
+    const inherited = target[key];
+    delete target[key];
+    Object.setPrototypeOf(target, { [key]: inherited });
+  };
+  for (const withSupport of [false, true]) {
+    for (const mutate of [
+      (input) => inherit(input, 'buildId'),
+      (input) => inherit(input.skill, 'id'),
+      (input) => inherit(input.configuration, 'id'),
+      (input) => inherit(input.identity, 'snapshotId'),
+    ]) {
+      const input = structuredClone(basic);
+      if (withSupport) input.skill.supports = [support()];
+      mutate(input);
+      assert.equal(calculateSelectedSkill(input, dataset).ok, false);
+      assert.equal(createSelectedSkillSession(input, dataset).ok, false);
+    }
+  }
 });
 
 test('deterministic mutation batches compare every intermediate and final result to fresh work', () => {

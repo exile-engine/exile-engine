@@ -2,19 +2,20 @@
   "comparisonKind": "executed-pinned-pob-headless",
   "pobExecuted": true,
   "engine": {
-    "repositoryRevision": "b8016e7186701a3bdee292af8454187c884ffc6a",
+    "repositoryRevision": "52e8310ee54e0cbe94692a0656af9c0ef31515ee",
     "workingTreeChanges": true,
-    "rulesRevision": "poe1-selected-spark-v2",
+    "rulesRevision": "poe1-selected-spark-v3",
     "sourceSha256": {
-      "packages/core/src/selected-skill.ts": "fc0439e7829049ef5b401a5c757548b24a833f6838f03d2d61c715ee856f4a84",
+      "packages/core/src/selected-skill.ts": "238c384e273ceb609b250e2b083cf5e8001d4cc8fac5ace44aac799889b159d0",
       "packages/core/src/spark.ts": "e18109df745a8f2f3a3d517a39cb5f38c7d9c81e229e1475aa632713848d3ede",
-      "packages/poe1/src/selected-skill.ts": "bc254a5f61171f6c5063d63d05773b7dee9d9a60a0fbca8726b206217975e3b6",
-      "packages/poe1/src/incremental.ts": "44162c73e60b1629df75e1b00cb234b1c75cff5f9c80141bb6cb4ed335e17b91",
+      "packages/poe1/src/selected-skill.ts": "88d56cb7139f3db5421ef6a2b481a4742de5cc3f6fc3aa0436580efdf359444a",
+      "packages/poe1/src/incremental.ts": "6eef3ed8233ee61b26877bbb86b979b84acdb04df8b7f61e31760fcd86fdfff4",
       "packages/poe1/src/graph.ts": "964fb36094d6d8609caa5d28a5aedacd0a2d8ce513992d29bb43d1c62e262c3c",
-      "packages/pob/src/index.ts": "bfe08fa14e1798d482e6712cf8cc93c7329a5a3d070b8c818e4b016a564c2398",
+      "packages/pob/src/index.ts": "94fb4c3ea2012c4ba6c48d37db6d05b5b936f36f23ae9fee7e79213f6f8c82ea",
       "packages/pob/src/xml.ts": "a360760b838bd73656a9d81bb8aa1efc099f96c2033876a36f8363b40d145268",
-      "packages/core/src/types.ts": "052277d2e06068564efc91c72d6e502923dbbf21115023120e82eefcac446e83",
-      "packages/poe1/src/index.ts": "94518d59870020408c512149bc6f37445d36f5d49d01b77983e44fb2bb359e22"
+      "packages/core/src/types.ts": "6a431d0307b098f0d93d04f30b186afa947fd5db32f046ac2c850f3ce64a192f",
+      "packages/poe1/src/index.ts": "eed8a752b780aba6d29759a9ae005204bf0bf26cb4465f83c1f67c7725ca9b0b",
+      "packages/poe1/src/supports.ts": "378edc1329c52460f702d12ca7650317e7b5b40eacf618890730ac0b71a2f26f"
     }
   },
   "reference": {
@@ -39,7 +40,7 @@
       {
         "path": "src/Modules/CalcOffence.lua",
         "gitBlob": "76f6d5ca25e0e7f9f5e31ee83887e3c7898c16c3",
-        "lines": "112-140,494-506,2427-2467,3071-3077,3508-3514,3622-3626,3826-3831,6137-6139,3375-3409"
+        "lines": "112-140,494-506,2427-2467,3071-3077,3508-3514,3622-3626,3826-3831,6137-6139,3375-3409,2336-2340"
       },
       {
         "path": "src/Modules/Data.lua",
@@ -85,6 +86,26 @@
         "path": "src/Data/Global.lua",
         "gitBlob": "c675233afcdfd9e8e2afb758d4871d54c553abfa",
         "lines": "155"
+      },
+      {
+        "path": "src/Data/Skills/sup_int.lua",
+        "gitBlob": "2797a1425e9deea47095fcd1f01fd5cd39c77e17",
+        "lines": "1159-1205"
+      },
+      {
+        "path": "src/Data/Gems.lua",
+        "gitBlob": "c24f4a51bbcd1364b9bfa724f5c6a1e6a3f75fae",
+        "lines": "8069-8080"
+      },
+      {
+        "path": "src/Modules/CalcActiveSkill.lua",
+        "gitBlob": "938e89ff78d72b1d8f171ef9149354dcb9da0cc7",
+        "lines": "83-89,517-526"
+      },
+      {
+        "path": "src/Classes/ModList.lua",
+        "gitBlob": "ec686674d772a7ac27d1fef77b28d8c7d18678e1",
+        "lines": "122-153"
       }
     ]
   },
@@ -179,7 +200,13 @@
         "max": 1983,
         "mean": 1043.5
       },
-      "addedDamageEffectiveness": 1.9
+      "addedDamageEffectiveness": 1.9,
+      "supports": [],
+      "supportContributions": [],
+      "spellDamageMultiplier": 1,
+      "criticalChanceMultiplier": 1,
+      "castTimeMultiplier": 1,
+      "manaCostMultiplier": 1
     },
     {
       "fixture": "increased",
@@ -241,7 +268,13 @@
         "max": 1983,
         "mean": 1043.5
       },
-      "addedDamageEffectiveness": 1.9
+      "addedDamageEffectiveness": 1.9,
+      "supports": [],
+      "supportContributions": [],
+      "spellDamageMultiplier": 1,
+      "criticalChanceMultiplier": 1,
+      "castTimeMultiplier": 1,
+      "manaCostMultiplier": 1
     },
     {
       "fixture": "cast",
@@ -291,7 +324,13 @@
         "max": 1983,
         "mean": 1043.5
       },
-      "addedDamageEffectiveness": 1.9
+      "addedDamageEffectiveness": 1.9,
+      "supports": [],
+      "supportContributions": [],
+      "spellDamageMultiplier": 1,
+      "criticalChanceMultiplier": 1,
+      "castTimeMultiplier": 1,
+      "manaCostMultiplier": 1
     },
     {
       "fixture": "resisted",
@@ -357,7 +396,13 @@
         "max": 1983,
         "mean": 1043.5
       },
-      "addedDamageEffectiveness": 1.9
+      "addedDamageEffectiveness": 1.9,
+      "supports": [],
+      "supportContributions": [],
+      "spellDamageMultiplier": 1,
+      "criticalChanceMultiplier": 1,
+      "castTimeMultiplier": 1,
+      "manaCostMultiplier": 1
     },
     {
       "fixture": "no-damage",
@@ -407,7 +452,13 @@
         "max": 1983,
         "mean": 1043.5
       },
-      "addedDamageEffectiveness": 1.9
+      "addedDamageEffectiveness": 1.9,
+      "supports": [],
+      "supportContributions": [],
+      "spellDamageMultiplier": 1,
+      "criticalChanceMultiplier": 1,
+      "castTimeMultiplier": 1,
+      "manaCostMultiplier": 1
     },
     {
       "fixture": "added-lightning",
@@ -465,7 +516,13 @@
       "castsPerSecond": 1.6666666666666667,
       "hitDps": 1786.6666666666667,
       "combinedDps": 1786.6666666666667,
-      "xmlSha256": "6c1dc1f21fa75b3ba36cf1114effa2fb7546ea400726571443cfa3d44cb60543"
+      "xmlSha256": "6c1dc1f21fa75b3ba36cf1114effa2fb7546ea400726571443cfa3d44cb60543",
+      "supports": [],
+      "supportContributions": [],
+      "spellDamageMultiplier": 1,
+      "criticalChanceMultiplier": 1,
+      "castTimeMultiplier": 1,
+      "manaCostMultiplier": 1
     },
     {
       "fixture": "added-lightning-multiple",
@@ -535,7 +592,13 @@
       "castsPerSecond": 1.6666666666666667,
       "hitDps": 1802.5,
       "combinedDps": 1802.5,
-      "xmlSha256": "e2ebeff62dcdfeb839bf1084117e4cb39e7c1f6e669451c430c53c9a3205535d"
+      "xmlSha256": "e2ebeff62dcdfeb839bf1084117e4cb39e7c1f6e669451c430c53c9a3205535d",
+      "supports": [],
+      "supportContributions": [],
+      "spellDamageMultiplier": 1,
+      "criticalChanceMultiplier": 1,
+      "castTimeMultiplier": 1,
+      "manaCostMultiplier": 1
     },
     {
       "fixture": "added-lightning-combined",
@@ -614,7 +677,13 @@
       "castsPerSecond": 2.0833333333333335,
       "hitDps": 3350.0000000000005,
       "combinedDps": 3350.0000000000005,
-      "xmlSha256": "fe694ce73c5cf35c614faee6d3d4724291abca51df4123233c67da15b2bc1012"
+      "xmlSha256": "fe694ce73c5cf35c614faee6d3d4724291abca51df4123233c67da15b2bc1012",
+      "supports": [],
+      "supportContributions": [],
+      "spellDamageMultiplier": 1,
+      "criticalChanceMultiplier": 1,
+      "castTimeMultiplier": 1,
+      "manaCostMultiplier": 1
     },
     {
       "fixture": "added-lightning-level1",
@@ -672,7 +741,13 @@
       "castsPerSecond": 1.6666666666666667,
       "hitDps": 71.66666666666667,
       "combinedDps": 71.66666666666667,
-      "xmlSha256": "1707c81fdb858153e1b2c2a4c28e48e5b4a28e0b7a16ea532b7c81a27a7f6573"
+      "xmlSha256": "1707c81fdb858153e1b2c2a4c28e48e5b4a28e0b7a16ea532b7c81a27a7f6573",
+      "supports": [],
+      "supportContributions": [],
+      "spellDamageMultiplier": 1,
+      "criticalChanceMultiplier": 1,
+      "castTimeMultiplier": 1,
+      "manaCostMultiplier": 1
     },
     {
       "fixture": "added-lightning-rounded",
@@ -735,7 +810,13 @@
       "castsPerSecond": 1.6666666666666667,
       "hitDps": 2180,
       "combinedDps": 2180,
-      "xmlSha256": "d52421bd3196c9ce1034a700219af518d45f692a2de863b2b8939f110abde6ee"
+      "xmlSha256": "d52421bd3196c9ce1034a700219af518d45f692a2de863b2b8939f110abde6ee",
+      "supports": [],
+      "supportContributions": [],
+      "spellDamageMultiplier": 1,
+      "criticalChanceMultiplier": 1,
+      "castTimeMultiplier": 1,
+      "manaCostMultiplier": 1
     },
     {
       "fixture": "added-lightning-zero",
@@ -793,7 +874,445 @@
       "castsPerSecond": 1.6666666666666667,
       "hitDps": 1739.1666666666667,
       "combinedDps": 1739.1666666666667,
-      "xmlSha256": "40b6d6928b2d55d3818138ede340a98bb661fd291ff7502031d089795b9ff964"
+      "xmlSha256": "40b6d6928b2d55d3818138ede340a98bb661fd291ff7502031d089795b9ff964",
+      "supports": [],
+      "supportContributions": [],
+      "spellDamageMultiplier": 1,
+      "criticalChanceMultiplier": 1,
+      "castTimeMultiplier": 1,
+      "manaCostMultiplier": 1
+    },
+    {
+      "fixture": "support-controlled-destruction-level1",
+      "contributions": [],
+      "increasedDamagePercent": 0,
+      "increasedCastSpeedPercent": 0,
+      "effectiveLightningResistancePercent": 0,
+      "beforeResistance": {
+        "min": 130,
+        "max": 2479,
+        "mean": 1304.5
+      },
+      "afterResistance": {
+        "min": 130,
+        "max": 2479,
+        "mean": 1304.5
+      },
+      "castTimeSeconds": 0.6,
+      "castsPerSecond": 1.6666666666666667,
+      "hitDps": 2174.166666666667,
+      "combinedDps": 2174.166666666667,
+      "gemLevel": 20,
+      "baseLightningDamage": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "addedGroups": [],
+      "rawAddedLightningDamage": {
+        "min": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "effectiveAddedLightningDamage": {
+        "min": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "combinedBaseLightningDamage": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "addedDamageEffectiveness": 1.9,
+      "supports": [
+        {
+          "id": "SupportControlledDestruction",
+          "gemLevel": 1,
+          "quality": 0,
+          "enabled": true,
+          "source": {
+            "kind": "skill",
+            "id": "pob-gem:1:2",
+            "label": "Controlled Destruction"
+          }
+        }
+      ],
+      "supportContributions": [
+        {
+          "statId": "support_controlled_destruction_spell_damage_+%_final",
+          "value": 25,
+          "operation": "more-spell-damage",
+          "appliedToSelectedHit": true
+        },
+        {
+          "statId": "support_controlled_destruction_critical_strike_chance_+%_final",
+          "value": -80,
+          "operation": "less-critical-strike-chance",
+          "appliedToSelectedHit": false
+        }
+      ],
+      "spellDamageMultiplier": 1.25,
+      "criticalChanceMultiplier": 0.2,
+      "castTimeMultiplier": 1,
+      "manaCostMultiplier": 1.4,
+      "xmlSha256": "2c1c71cd2112f17ae124fa2de670515e1e6be133f992782d1e07012a1505f99a"
+    },
+    {
+      "fixture": "support-controlled-destruction-level20",
+      "contributions": [],
+      "increasedDamagePercent": 0,
+      "increasedCastSpeedPercent": 0,
+      "effectiveLightningResistancePercent": 0,
+      "beforeResistance": {
+        "min": 145,
+        "max": 2756,
+        "mean": 1450.5
+      },
+      "afterResistance": {
+        "min": 145,
+        "max": 2756,
+        "mean": 1450.5
+      },
+      "castTimeSeconds": 0.6,
+      "castsPerSecond": 1.6666666666666667,
+      "hitDps": 2417.5,
+      "combinedDps": 2417.5,
+      "gemLevel": 20,
+      "baseLightningDamage": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "addedGroups": [],
+      "rawAddedLightningDamage": {
+        "min": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "effectiveAddedLightningDamage": {
+        "min": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "combinedBaseLightningDamage": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "addedDamageEffectiveness": 1.9,
+      "supports": [
+        {
+          "id": "SupportControlledDestruction",
+          "gemLevel": 20,
+          "quality": 0,
+          "enabled": true,
+          "source": {
+            "kind": "skill",
+            "id": "pob-gem:1:2",
+            "label": "Controlled Destruction"
+          }
+        }
+      ],
+      "supportContributions": [
+        {
+          "statId": "support_controlled_destruction_spell_damage_+%_final",
+          "value": 39,
+          "operation": "more-spell-damage",
+          "appliedToSelectedHit": true
+        },
+        {
+          "statId": "support_controlled_destruction_critical_strike_chance_+%_final",
+          "value": -80,
+          "operation": "less-critical-strike-chance",
+          "appliedToSelectedHit": false
+        }
+      ],
+      "spellDamageMultiplier": 1.3900000000000001,
+      "criticalChanceMultiplier": 0.2,
+      "castTimeMultiplier": 1,
+      "manaCostMultiplier": 1.4,
+      "xmlSha256": "7bf80d56d3f30d03f1786adba7f96fb9b63fb58b9baa94e010e94c29778a4bd8"
+    },
+    {
+      "fixture": "support-controlled-destruction-combined",
+      "gemLevel": 20,
+      "increasedDamagePercent": 100,
+      "increasedCastSpeedPercent": 25,
+      "effectiveLightningResistancePercent": 25,
+      "contributions": [
+        {
+          "statId": "damage_+%",
+          "value": 10
+        },
+        {
+          "statId": "spell_damage_+%",
+          "value": 20
+        },
+        {
+          "statId": "lightning_damage_+%",
+          "value": 30
+        },
+        {
+          "statId": "projectile_damage_+%",
+          "value": 40
+        },
+        {
+          "statId": "base_cast_speed_+%",
+          "value": 25
+        }
+      ],
+      "baseLightningDamage": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "addedGroups": [
+        {
+          "statIds": [
+            "spell_minimum_added_lightning_damage",
+            "spell_maximum_added_lightning_damage"
+          ],
+          "values": [10, 20],
+          "source": {
+            "kind": "item",
+            "id": "pob-item:1",
+            "line": 5
+          }
+        }
+      ],
+      "rawAddedLightningDamage": {
+        "min": 10,
+        "max": 20,
+        "mean": 15
+      },
+      "addedDamageEffectiveness": 1.9,
+      "effectiveAddedLightningDamage": {
+        "min": 19,
+        "max": 38,
+        "mean": 28.5
+      },
+      "combinedBaseLightningDamage": {
+        "min": 123,
+        "max": 2021,
+        "mean": 1072
+      },
+      "beforeResistance": {
+        "min": 342,
+        "max": 5618,
+        "mean": 2980
+      },
+      "afterResistance": {
+        "min": 256.5,
+        "max": 4213.5,
+        "mean": 2235
+      },
+      "castTimeSeconds": 0.48,
+      "castsPerSecond": 2.0833333333333335,
+      "hitDps": 4656.25,
+      "combinedDps": 4656.25,
+      "supports": [
+        {
+          "id": "SupportControlledDestruction",
+          "gemLevel": 20,
+          "quality": 0,
+          "enabled": true,
+          "source": {
+            "kind": "skill",
+            "id": "pob-gem:1:2",
+            "label": "Controlled Destruction"
+          }
+        }
+      ],
+      "supportContributions": [
+        {
+          "statId": "support_controlled_destruction_spell_damage_+%_final",
+          "value": 39,
+          "operation": "more-spell-damage",
+          "appliedToSelectedHit": true
+        },
+        {
+          "statId": "support_controlled_destruction_critical_strike_chance_+%_final",
+          "value": -80,
+          "operation": "less-critical-strike-chance",
+          "appliedToSelectedHit": false
+        }
+      ],
+      "spellDamageMultiplier": 1.3900000000000001,
+      "criticalChanceMultiplier": 0.2,
+      "castTimeMultiplier": 1,
+      "manaCostMultiplier": 1.4,
+      "xmlSha256": "6ff26d24168b4f3a77a15776570f90085047f01b0fb200220b1529a2ec89fc0b"
+    },
+    {
+      "fixture": "support-controlled-destruction-disabled",
+      "contributions": [],
+      "increasedDamagePercent": 0,
+      "increasedCastSpeedPercent": 0,
+      "effectiveLightningResistancePercent": 0,
+      "beforeResistance": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "afterResistance": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "castTimeSeconds": 0.6,
+      "castsPerSecond": 1.6666666666666667,
+      "hitDps": 1739.1666666666667,
+      "combinedDps": 1739.1666666666667,
+      "gemLevel": 20,
+      "baseLightningDamage": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "addedGroups": [],
+      "rawAddedLightningDamage": {
+        "min": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "effectiveAddedLightningDamage": {
+        "min": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "combinedBaseLightningDamage": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "addedDamageEffectiveness": 1.9,
+      "supports": [
+        {
+          "id": "SupportControlledDestruction",
+          "gemLevel": 20,
+          "quality": 0,
+          "enabled": false,
+          "source": {
+            "kind": "skill",
+            "id": "pob-gem:1:2",
+            "label": "Controlled Destruction"
+          }
+        }
+      ],
+      "supportContributions": [
+        {
+          "statId": "support_controlled_destruction_spell_damage_+%_final",
+          "value": 39,
+          "operation": "more-spell-damage",
+          "appliedToSelectedHit": false
+        },
+        {
+          "statId": "support_controlled_destruction_critical_strike_chance_+%_final",
+          "value": -80,
+          "operation": "less-critical-strike-chance",
+          "appliedToSelectedHit": false
+        }
+      ],
+      "spellDamageMultiplier": 1,
+      "criticalChanceMultiplier": 1,
+      "castTimeMultiplier": 1,
+      "manaCostMultiplier": 1,
+      "xmlSha256": "6528de10aebb5d8ee61dbbce0e9b997b613ee21148b2f5df001d6064866dc3e8"
+    },
+    {
+      "fixture": "support-controlled-destruction-rounded",
+      "gemLevel": 20,
+      "increasedDamagePercent": 25,
+      "increasedCastSpeedPercent": 0,
+      "effectiveLightningResistancePercent": 0,
+      "contributions": [
+        {
+          "statId": "spell_damage_+%",
+          "value": 25
+        }
+      ],
+      "baseLightningDamage": {
+        "min": 104,
+        "max": 1983,
+        "mean": 1043.5
+      },
+      "addedGroups": [
+        {
+          "statIds": [
+            "spell_minimum_added_lightning_damage",
+            "spell_maximum_added_lightning_damage"
+          ],
+          "values": [1, 2],
+          "source": {
+            "kind": "item",
+            "id": "pob-item:1",
+            "line": 5
+          }
+        }
+      ],
+      "rawAddedLightningDamage": {
+        "min": 1,
+        "max": 2,
+        "mean": 1.5
+      },
+      "addedDamageEffectiveness": 1.9,
+      "effectiveAddedLightningDamage": {
+        "min": 1.9,
+        "max": 3.8,
+        "mean": 2.8499999999999996
+      },
+      "combinedBaseLightningDamage": {
+        "min": 105.9,
+        "max": 1986.8,
+        "mean": 1046.35
+      },
+      "beforeResistance": {
+        "min": 184,
+        "max": 3452,
+        "mean": 1818
+      },
+      "afterResistance": {
+        "min": 184,
+        "max": 3452,
+        "mean": 1818
+      },
+      "castTimeSeconds": 0.6,
+      "castsPerSecond": 1.6666666666666667,
+      "hitDps": 3030,
+      "combinedDps": 3030,
+      "supports": [
+        {
+          "id": "SupportControlledDestruction",
+          "gemLevel": 20,
+          "quality": 0,
+          "enabled": true,
+          "source": {
+            "kind": "skill",
+            "id": "pob-gem:1:2",
+            "label": "Controlled Destruction"
+          }
+        }
+      ],
+      "supportContributions": [
+        {
+          "statId": "support_controlled_destruction_spell_damage_+%_final",
+          "value": 39,
+          "operation": "more-spell-damage",
+          "appliedToSelectedHit": true
+        },
+        {
+          "statId": "support_controlled_destruction_critical_strike_chance_+%_final",
+          "value": -80,
+          "operation": "less-critical-strike-chance",
+          "appliedToSelectedHit": false
+        }
+      ],
+      "spellDamageMultiplier": 1.3900000000000001,
+      "criticalChanceMultiplier": 0.2,
+      "castTimeMultiplier": 1,
+      "manaCostMultiplier": 1.4,
+      "xmlSha256": "04aa6e43db97940712050ec9b3257f82030db979aef2113bf7604041de31364e"
     }
   ],
   "oracle": {
@@ -801,13 +1320,13 @@
     "mode": "official-headless-wrapper",
     "fixtureInputs": "exact UTF-8 XML bytes; no injected calculation rules",
     "outputFile": "tests/fixtures/pob-oracle-output.json",
-    "outputSha256": "bc5656b1ab365da16f1a0ffa7c09ae13394ab51a196ac66f30fa9462e177719d",
+    "outputSha256": "c0eced91882033836200aba9b708eeed35cc24554e78834c228e0f56e30c5112",
     "numericSerialization": "17 significant digits",
     "host": {
       "platform": "windows-x64",
       "python": "3.13.7",
       "binding": "external ctypes host; no observer code stored in Exile Engine",
-      "observerSha256": "cd8913ae164092b39e5d696110659edf7c8575353022d4ca9e862bb6afc32c2e"
+      "observerSha256": "7793e867d830732442270a5a7ef7e5c60f36223ccc6819ce9cafc909cb20906b"
     },
     "runtime": {
       "gitRevision": "3dbca4463c0a59079d9f7f032d8240cf868e09da",
@@ -838,5 +1357,64 @@
       "oracleExecuted": false,
       "expected": "incomplete-import-no-calculation"
     }
-  ]
+  ],
+  "supportReference": {
+    "id": "SupportControlledDestruction",
+    "gameItemId": "Metadata/Items/Gems/SupportGemControlledDestruction",
+    "pobGemKey": "Metadata/Items/Gems/SkillGemSupportControlledDestruction",
+    "name": "Controlled Destruction",
+    "minimumGemLevel": 1,
+    "maximumGemLevel": 20,
+    "quality": 0,
+    "spellDamageStatId": "support_controlled_destruction_spell_damage_+%_final",
+    "criticalChanceStatId": "support_controlled_destruction_critical_strike_chance_+%_final",
+    "criticalChancePercent": -80,
+    "castTimeMultiplier": 1,
+    "costMultiplierSource": 140,
+    "manaCostMultiplier": 1.4,
+    "moreSpellDamageByLevel": [
+      25, 25, 26, 27, 28, 28, 29, 30, 31, 31, 32, 33, 34, 34, 35, 36, 37, 37, 38, 39
+    ],
+    "sourceRows": {
+      "grantedEffect": {
+        "table": "GrantedEffects",
+        "key": "SupportControlledDestruction",
+        "rowIndex": 5539
+      },
+      "statSet": {
+        "table": "GrantedEffectStatSets",
+        "key": "SupportControlledDestruction",
+        "rowIndex": 5547
+      },
+      "quality": {
+        "table": "GrantedEffectQualityStats",
+        "key": "GrantedEffectQualityStats:440",
+        "rowIndex": 440
+      },
+      "level1": {
+        "statLevel": {
+          "table": "GrantedEffectStatSetsPerLevel",
+          "key": "GrantedEffectStatSetsPerLevel:43214",
+          "rowIndex": 43214
+        },
+        "effectLevel": {
+          "table": "GrantedEffectsPerLevel",
+          "key": "GrantedEffectsPerLevel:43411",
+          "rowIndex": 43411
+        }
+      },
+      "level20": {
+        "statLevel": {
+          "table": "GrantedEffectStatSetsPerLevel",
+          "key": "GrantedEffectStatSetsPerLevel:43233",
+          "rowIndex": 43233
+        },
+        "effectLevel": {
+          "table": "GrantedEffectsPerLevel",
+          "key": "GrantedEffectsPerLevel:43430",
+          "rowIndex": 43430
+        }
+      }
+    }
+  }
 }

@@ -8,6 +8,8 @@ Exports include `GameId`, `SnapshotIdentity`, `CatalogRecord`, `CatalogRef`, `Ca
 
 `AddedLightningDamageContribution` retains the exact ordered spell minimum/maximum stat pair, raw values and shared source. `AddedLightningDamageTrace` separates raw, effectiveness-scaled and combined-base ranges. PoE1 normalized `SparkLevel` records include client-derived `addedDamageEffectiveness`; this does not enable added damage in the original isolated-hit API or the PoE2 slice.
 
+`SelectedSkillSupport` preserves explicit gem selection and provenance. Optional normalized support facts live on `SparkDataset.supports`; only the PoE1 selected-skill rules interpret the reviewed Controlled Destruction record. `SelectedSkillSupportTrace` retains exact raw stat IDs, enabled effects, more/less/cast-time multipliers and source rows. These contracts do not provide an arbitrary support loader or alter the original isolated-hit API.
+
 Game packages use the portable shared normalization/calculation helpers. Hosts supply data through `CatalogReader`; core never imports a dataset, Node API, filesystem or network client. Every calculated result identifies the exact snapshot and its source rows.
 
 See the root architecture and conventions documentation. Package semver is not a client build ID. Unsupported input produces explicit diagnostics; the package does not contain a full character calculator.

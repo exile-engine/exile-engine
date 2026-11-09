@@ -14,6 +14,7 @@ import {
 import {
   assembleSelectedSkill,
   calculateSelectedSkill,
+  calculateSelectedSkillSupports,
   prepareSelectedSkill,
   selectedHitRules,
   validateSelectedSkillInput,
@@ -41,6 +42,7 @@ const DERIVED = new Set([
   'combined-base',
   'damage-increase',
   'cast-speed-increase',
+  'support-effects',
   'damage-before-resistance',
   'damage-after-resistance',
   'cast-rate',
@@ -61,7 +63,14 @@ function copyInput(input: SelectedSkillInput): SelectedSkillInput {
     identity: { ...input.identity },
     skill: {
       ...input.skill,
-      ...(input.skill.supports ? { supports: [...input.skill.supports] } : {}),
+      ...(input.skill.supports
+        ? {
+            supports: input.skill.supports.map((support) => ({
+              ...support,
+              source: { ...support.source },
+            })),
+          }
+        : {}),
     },
     configuration: { ...input.configuration },
     modifiers: input.modifiers.map(copyModifier),
@@ -113,6 +122,49 @@ function copyDataset(dataset: SparkDataset): SparkDataset {
     })),
     sourceRows: copyRows(dataset.sourceRows),
     ruleProvenance: [...dataset.ruleProvenance],
+    ...(dataset.supports === undefined
+      ? {}
+      : {
+          supports: dataset.supports.map((support) => ({
+            identity: {
+              game: support.identity.game,
+              build: support.identity.build,
+              snapshotId: support.identity.snapshotId,
+            },
+            id: support.id,
+            gemId: support.gemId,
+            levels: support.levels.map((level) => ({
+              gemLevel: level.gemLevel,
+              moreSpellDamagePercent: level.moreSpellDamagePercent,
+              criticalStrikeChancePercent: level.criticalStrikeChancePercent,
+              manaCostMultiplier: level.manaCostMultiplier,
+              sourceRows: copyRows(level.sourceRows),
+            })),
+            sourceRows: copyRows(support.sourceRows),
+          })),
+        }),
+  };
+}
+
+function copySupportEffects(
+  effects: SelectedSkillCalculation['supportEffects'],
+): SelectedSkillCalculation['supportEffects'] {
+  const copyRows = (rows: SparkDataset['sourceRows']) =>
+    rows.map((row) => ({
+      table: row.table,
+      key: row.key,
+      rowIndex: row.rowIndex,
+    }));
+  return {
+    ...effects,
+    supports: effects.supports.map((support) => ({ ...support, source: { ...support.source } })),
+    contributions: effects.contributions.map((contribution) => ({
+      ...contribution,
+      source: { ...contribution.source },
+      ...(contribution.conditions ? { conditions: [...contribution.conditions] } : {}),
+      sourceRows: copyRows(contribution.sourceRows),
+    })),
+    sourceRows: copyRows(effects.sourceRows),
   };
 }
 
@@ -126,9 +178,13 @@ function immutable<T>(value: T): T {
 }
 
 function inputNodes(input: SelectedSkillInput): Readonly<Record<string, unknown>> {
+  const baseSkill = Object.fromEntries(
+    Object.entries(input.skill).filter(([key]) => key !== 'supports'),
+  );
   return Object.fromEntries([
     ['input.metadata', [input.identity, input.buildId, input.configuration.id]],
-    ['input.skill', input.skill],
+    ['input.skill', baseSkill],
+    ['input.supports', [Object.hasOwn(input.skill, 'supports'), input.skill.supports]],
     ['input.resistance', input.configuration.effectiveLightningResistancePercent],
     ...input.modifiers.map((modifier, index) => [`modifier:${index}`, modifier]),
     ...(input.addedLightningDamage ?? []).map((group, index) => [
@@ -155,12 +211,14 @@ function graph(input: SelectedSkillInput): CalculationDependencies {
     'combined-base': ['base', 'effective-added-lightning'],
     'damage-increase': damage,
     'cast-speed-increase': speed,
-    'damage-before-resistance': ['combined-base', 'damage-increase'],
+    'support-effects': ['input.supports'],
+    'damage-before-resistance': ['combined-base', 'damage-increase', 'support-effects'],
     'damage-after-resistance': ['damage-before-resistance', 'input.resistance'],
-    'cast-rate': ['base', 'cast-speed-increase'],
+    'cast-rate': ['base', 'cast-speed-increase', 'support-effects'],
     'selected-skill': [
       'input.metadata',
       'input.skill',
+      'input.supports',
       'input.resistance',
       ...input.modifiers.map((_, index) => `modifier:${index}`),
       ...(input.addedLightningDamage ?? []).map((_, index) => `added-lightning:${index}`),
@@ -170,6 +228,7 @@ function graph(input: SelectedSkillInput): CalculationDependencies {
       'combined-base',
       'damage-increase',
       'cast-speed-increase',
+      'support-effects',
       'damage-before-resistance',
       'damage-after-resistance',
       'cast-rate',
@@ -207,6 +266,7 @@ interface Cache {
   readonly combinedBase: DamageRange;
   readonly damageIncrease: number;
   readonly speedIncrease: number;
+  readonly supportEffects: SelectedSkillCalculation['supportEffects'];
   readonly before: DamageRange;
   readonly after: DamageRange;
   readonly castTime: number;
@@ -239,6 +299,7 @@ export function createSelectedSkillSession(
     combinedBase: full.value.addedLightningDamage.combinedBase,
     damageIncrease: hit.increasedDamagePercent,
     speedIncrease: hit.increasedCastSpeedPercent,
+    supportEffects: copySupportEffects(full.value.supportEffects),
     before: hit.nonCriticalHitBeforeResistance,
     after: hit.nonCriticalHitAfterResistance,
     castTime: hit.castTimeSeconds,
@@ -247,6 +308,8 @@ export function createSelectedSkillSession(
   let current: IncrementalSelectedSkillReport = immutable({
     calculation: {
       ...full.value,
+      skill: accepted.skill,
+      supportEffects: cache.supportEffects,
       hit: {
         ...full.value.hit,
         sourceRows: full.value.hit.sourceRows.map((row) => ({ ...row })),
@@ -298,6 +361,7 @@ export function createSelectedSkillSession(
       combinedBase,
       damageIncrease,
       speedIncrease,
+      supportEffects,
       before,
       after,
       castTime,
@@ -337,11 +401,17 @@ export function createSelectedSkillSession(
             .filter((modifier) => modifier.statId === CAST_SPEED)
             .reduce((sum, modifier) => sum + modifier.value, 0);
           break;
+        case 'support-effects': {
+          const effects = calculateSelectedSkillSupports(next, captured);
+          if (!effects.ok) return effects;
+          supportEffects = effects.value;
+          break;
+        }
         case 'damage-before-resistance': {
           const scale = Math.max(0, 1 + damageIncrease / 100);
           before = range(
-            Math.floor(combinedBase.min * scale + 0.5),
-            Math.floor(combinedBase.max * scale + 0.5),
+            Math.floor(combinedBase.min * scale * supportEffects.spellDamageMultiplier + 0.5),
+            Math.floor(combinedBase.max * scale * supportEffects.spellDamageMultiplier + 0.5),
           );
           break;
         }
@@ -352,7 +422,9 @@ export function createSelectedSkillSession(
         }
         case 'cast-rate':
           casts = Math.min(
-            Math.floor((1 + speedIncrease / 100) * 100 + 0.5) / 100 / baseline.baseCastTimeSeconds,
+            Math.floor((1 + speedIncrease / 100) * 100 + 0.5) /
+              100 /
+              (baseline.baseCastTimeSeconds * supportEffects.castTimeMultiplier),
             1 / 0.033,
           );
           castTime = 1 / casts;
@@ -381,6 +453,10 @@ export function createSelectedSkillSession(
         after.mean,
         castTime,
         casts,
+        supportEffects.spellDamageMultiplier,
+        supportEffects.criticalChanceMultiplier,
+        supportEffects.castTimeMultiplier,
+        supportEffects.manaCostMultiplier,
       ].every(Number.isFinite)
     ) {
       return failure(
@@ -412,6 +488,7 @@ export function createSelectedSkillSession(
         combinedBase,
         contributions: next.addedLightningDamage ?? [],
       },
+      supportEffects,
     );
     if (!assembled.ok) return assembled;
     accepted = next;
@@ -424,6 +501,7 @@ export function createSelectedSkillSession(
       combinedBase,
       damageIncrease,
       speedIncrease,
+      supportEffects,
       before,
       after,
       castTime,

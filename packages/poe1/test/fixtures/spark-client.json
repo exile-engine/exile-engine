@@ -87,6 +87,48 @@
         "Id": "spell_maximum_added_lightning_damage",
         "IsLocal": false,
         "IsWeaponLocal": false
+      },
+      {
+        "_index": 3520,
+        "Id": "support_controlled_destruction_spell_damage_+%_final",
+        "IsPublic": false,
+        "IsLocal": false,
+        "IsWeaponLocal": false,
+        "Semantics": 1,
+        "IsParty": false,
+        "IsVirtual": false,
+        "MainHandAlias_StatsKey": null,
+        "OffHandAlias_StatsKey": null,
+        "IsProxied": true,
+        "HASH32": 784628933,
+        "BelongsActiveSkillsKey": [],
+        "Category": null,
+        "@unknown:13": false,
+        "IsApplyDamageFunctionStat": false,
+        "IsScalable": true,
+        "ContextFlags": [],
+        "DotFlag": []
+      },
+      {
+        "_index": 14659,
+        "Id": "support_controlled_destruction_critical_strike_chance_+%_final",
+        "IsPublic": false,
+        "IsLocal": false,
+        "IsWeaponLocal": false,
+        "Semantics": 1,
+        "IsParty": false,
+        "IsVirtual": false,
+        "MainHandAlias_StatsKey": null,
+        "OffHandAlias_StatsKey": null,
+        "IsProxied": true,
+        "HASH32": 2728755743,
+        "BelongsActiveSkillsKey": [],
+        "Category": null,
+        "@unknown:13": false,
+        "IsApplyDamageFunctionStat": false,
+        "IsScalable": true,
+        "ContextFlags": [],
+        "DotFlag": []
       }
     ],
     "GrantedEffects": [
@@ -95,7 +137,64 @@
         "Id": "Spark",
         "IsSupport": false,
         "CastTime": 600,
-        "StatSet1": 948
+        "StatSet1": 948,
+        "ActiveSkill": {
+          "kind": "ref",
+          "table": "ActiveSkills",
+          "key": "spark",
+          "rowIndex": 122
+        },
+        "CannotBeSupported": false
+      },
+      {
+        "_index": 5539,
+        "Id": "SupportControlledDestruction",
+        "IsSupport": true,
+        "AllowedActiveSkillTypes": [
+          {
+            "kind": "ref",
+            "table": "ActiveSkillType",
+            "key": "Damage",
+            "rowIndex": 6
+          },
+          {
+            "kind": "ref",
+            "table": "ActiveSkillType",
+            "key": "Attack",
+            "rowIndex": 0
+          },
+          {
+            "kind": "ref",
+            "table": "ActiveSkillType",
+            "key": "DegenOnlySpellDamage",
+            "rowIndex": 48
+          }
+        ],
+        "SupportGemLetter": "C",
+        "Attribute": 3,
+        "AddedActiveSkillTypes": [],
+        "ExcludedActiveSkillTypes": [],
+        "SupportsGemsOnly": false,
+        "HASH32": 3431656752,
+        "@unknown:9": [],
+        "CannotBeSupported": false,
+        "LifeLeechBehaviourCategory": 2,
+        "CastTime": 1000,
+        "ActiveSkill": null,
+        "IgnoreMinionTypes": false,
+        "CooldownNotRecoverDuringActive": false,
+        "AddedMinionActiveSkillTypes": [],
+        "Animation": null,
+        "MultiPartAchievement": null,
+        "@unknown:19": false,
+        "SupportWeaponRestrictions": [],
+        "RegularVariant": null,
+        "SkillID": 0,
+        "@unknown:23": 0,
+        "@unknown:24": 0,
+        "@unknown:25": false,
+        "StatSet1": 5547,
+        "StatSet2": []
       }
     ],
     "GrantedEffectStatSets": [
@@ -107,6 +206,16 @@
         "ConstantStatsValues": [2000],
         "BaseEffectiveness": 3.839900016784668,
         "IncrementalEffectiveness": 0.03310000151395798
+      },
+      {
+        "_index": 5547,
+        "Id": "SupportControlledDestruction",
+        "ImplicitStats": [],
+        "ConstantStats": [14659],
+        "ConstantStatsValues": [-80],
+        "BaseEffectiveness": 1,
+        "@unknown:5": 0,
+        "IncrementalEffectiveness": 0
       }
     ],
     "GrantedEffectStatSetsPerLevel": [
@@ -629,6 +738,526 @@
         "AdditionalStats": [19273],
         "AdditionalStatsValues": [11],
         "DamageEffectiveness": 9000
+      },
+      {
+        "_index": 43214,
+        "StatSet": 5547,
+        "GemLevel": 1,
+        "PlayerLevelReq": 18,
+        "SpellCritChance": 0,
+        "AttackCritChance": 0,
+        "BaseMultiplier": 0,
+        "DamageEffectiveness": 0,
+        "BaseResolvedValues": [],
+        "AdditionalStatsValues": [25],
+        "GrantedEffects": [
+          {
+            "kind": "ref",
+            "table": "GrantedEffects",
+            "key": "SupportControlledDestruction",
+            "rowIndex": 5539
+          }
+        ],
+        "AdditionalFlags": [],
+        "FloatStats": [],
+        "InterpolationBases": [],
+        "AdditionalStats": [3520],
+        "StatInterpolations": [1],
+        "FloatStatsValues": []
+      },
+      {
+        "_index": 43215,
+        "StatSet": 5547,
+        "GemLevel": 2,
+        "PlayerLevelReq": 22,
+        "SpellCritChance": 0,
+        "AttackCritChance": 0,
+        "BaseMultiplier": 0,
+        "DamageEffectiveness": 0,
+        "BaseResolvedValues": [],
+        "AdditionalStatsValues": [25],
+        "GrantedEffects": [
+          {
+            "kind": "ref",
+            "table": "GrantedEffects",
+            "key": "SupportControlledDestruction",
+            "rowIndex": 5539
+          }
+        ],
+        "AdditionalFlags": [],
+        "FloatStats": [],
+        "InterpolationBases": [],
+        "AdditionalStats": [3520],
+        "StatInterpolations": [1],
+        "FloatStatsValues": []
+      },
+      {
+        "_index": 43216,
+        "StatSet": 5547,
+        "GemLevel": 3,
+        "PlayerLevelReq": 26,
+        "SpellCritChance": 0,
+        "AttackCritChance": 0,
+        "BaseMultiplier": 0,
+        "DamageEffectiveness": 0,
+        "BaseResolvedValues": [],
+        "AdditionalStatsValues": [26],
+        "GrantedEffects": [
+          {
+            "kind": "ref",
+            "table": "GrantedEffects",
+            "key": "SupportControlledDestruction",
+            "rowIndex": 5539
+          }
+        ],
+        "AdditionalFlags": [],
+        "FloatStats": [],
+        "InterpolationBases": [],
+        "AdditionalStats": [3520],
+        "StatInterpolations": [1],
+        "FloatStatsValues": []
+      },
+      {
+        "_index": 43217,
+        "StatSet": 5547,
+        "GemLevel": 4,
+        "PlayerLevelReq": 29,
+        "SpellCritChance": 0,
+        "AttackCritChance": 0,
+        "BaseMultiplier": 0,
+        "DamageEffectiveness": 0,
+        "BaseResolvedValues": [],
+        "AdditionalStatsValues": [27],
+        "GrantedEffects": [
+          {
+            "kind": "ref",
+            "table": "GrantedEffects",
+            "key": "SupportControlledDestruction",
+            "rowIndex": 5539
+          }
+        ],
+        "AdditionalFlags": [],
+        "FloatStats": [],
+        "InterpolationBases": [],
+        "AdditionalStats": [3520],
+        "StatInterpolations": [1],
+        "FloatStatsValues": []
+      },
+      {
+        "_index": 43218,
+        "StatSet": 5547,
+        "GemLevel": 5,
+        "PlayerLevelReq": 32,
+        "SpellCritChance": 0,
+        "AttackCritChance": 0,
+        "BaseMultiplier": 0,
+        "DamageEffectiveness": 0,
+        "BaseResolvedValues": [],
+        "AdditionalStatsValues": [28],
+        "GrantedEffects": [
+          {
+            "kind": "ref",
+            "table": "GrantedEffects",
+            "key": "SupportControlledDestruction",
+            "rowIndex": 5539
+          }
+        ],
+        "AdditionalFlags": [],
+        "FloatStats": [],
+        "InterpolationBases": [],
+        "AdditionalStats": [3520],
+        "StatInterpolations": [1],
+        "FloatStatsValues": []
+      },
+      {
+        "_index": 43219,
+        "StatSet": 5547,
+        "GemLevel": 6,
+        "PlayerLevelReq": 35,
+        "SpellCritChance": 0,
+        "AttackCritChance": 0,
+        "BaseMultiplier": 0,
+        "DamageEffectiveness": 0,
+        "BaseResolvedValues": [],
+        "AdditionalStatsValues": [28],
+        "GrantedEffects": [
+          {
+            "kind": "ref",
+            "table": "GrantedEffects",
+            "key": "SupportControlledDestruction",
+            "rowIndex": 5539
+          }
+        ],
+        "AdditionalFlags": [],
+        "FloatStats": [],
+        "InterpolationBases": [],
+        "AdditionalStats": [3520],
+        "StatInterpolations": [1],
+        "FloatStatsValues": []
+      },
+      {
+        "_index": 43220,
+        "StatSet": 5547,
+        "GemLevel": 7,
+        "PlayerLevelReq": 38,
+        "SpellCritChance": 0,
+        "AttackCritChance": 0,
+        "BaseMultiplier": 0,
+        "DamageEffectiveness": 0,
+        "BaseResolvedValues": [],
+        "AdditionalStatsValues": [29],
+        "GrantedEffects": [
+          {
+            "kind": "ref",
+            "table": "GrantedEffects",
+            "key": "SupportControlledDestruction",
+            "rowIndex": 5539
+          }
+        ],
+        "AdditionalFlags": [],
+        "FloatStats": [],
+        "InterpolationBases": [],
+        "AdditionalStats": [3520],
+        "StatInterpolations": [1],
+        "FloatStatsValues": []
+      },
+      {
+        "_index": 43221,
+        "StatSet": 5547,
+        "GemLevel": 8,
+        "PlayerLevelReq": 41,
+        "SpellCritChance": 0,
+        "AttackCritChance": 0,
+        "BaseMultiplier": 0,
+        "DamageEffectiveness": 0,
+        "BaseResolvedValues": [],
+        "AdditionalStatsValues": [30],
+        "GrantedEffects": [
+          {
+            "kind": "ref",
+            "table": "GrantedEffects",
+            "key": "SupportControlledDestruction",
+            "rowIndex": 5539
+          }
+        ],
+        "AdditionalFlags": [],
+        "FloatStats": [],
+        "InterpolationBases": [],
+        "AdditionalStats": [3520],
+        "StatInterpolations": [1],
+        "FloatStatsValues": []
+      },
+      {
+        "_index": 43222,
+        "StatSet": 5547,
+        "GemLevel": 9,
+        "PlayerLevelReq": 44,
+        "SpellCritChance": 0,
+        "AttackCritChance": 0,
+        "BaseMultiplier": 0,
+        "DamageEffectiveness": 0,
+        "BaseResolvedValues": [],
+        "AdditionalStatsValues": [31],
+        "GrantedEffects": [
+          {
+            "kind": "ref",
+            "table": "GrantedEffects",
+            "key": "SupportControlledDestruction",
+            "rowIndex": 5539
+          }
+        ],
+        "AdditionalFlags": [],
+        "FloatStats": [],
+        "InterpolationBases": [],
+        "AdditionalStats": [3520],
+        "StatInterpolations": [1],
+        "FloatStatsValues": []
+      },
+      {
+        "_index": 43223,
+        "StatSet": 5547,
+        "GemLevel": 10,
+        "PlayerLevelReq": 47,
+        "SpellCritChance": 0,
+        "AttackCritChance": 0,
+        "BaseMultiplier": 0,
+        "DamageEffectiveness": 0,
+        "BaseResolvedValues": [],
+        "AdditionalStatsValues": [31],
+        "GrantedEffects": [
+          {
+            "kind": "ref",
+            "table": "GrantedEffects",
+            "key": "SupportControlledDestruction",
+            "rowIndex": 5539
+          }
+        ],
+        "AdditionalFlags": [],
+        "FloatStats": [],
+        "InterpolationBases": [],
+        "AdditionalStats": [3520],
+        "StatInterpolations": [1],
+        "FloatStatsValues": []
+      },
+      {
+        "_index": 43224,
+        "StatSet": 5547,
+        "GemLevel": 11,
+        "PlayerLevelReq": 50,
+        "SpellCritChance": 0,
+        "AttackCritChance": 0,
+        "BaseMultiplier": 0,
+        "DamageEffectiveness": 0,
+        "BaseResolvedValues": [],
+        "AdditionalStatsValues": [32],
+        "GrantedEffects": [
+          {
+            "kind": "ref",
+            "table": "GrantedEffects",
+            "key": "SupportControlledDestruction",
+            "rowIndex": 5539
+          }
+        ],
+        "AdditionalFlags": [],
+        "FloatStats": [],
+        "InterpolationBases": [],
+        "AdditionalStats": [3520],
+        "StatInterpolations": [1],
+        "FloatStatsValues": []
+      },
+      {
+        "_index": 43225,
+        "StatSet": 5547,
+        "GemLevel": 12,
+        "PlayerLevelReq": 53,
+        "SpellCritChance": 0,
+        "AttackCritChance": 0,
+        "BaseMultiplier": 0,
+        "DamageEffectiveness": 0,
+        "BaseResolvedValues": [],
+        "AdditionalStatsValues": [33],
+        "GrantedEffects": [
+          {
+            "kind": "ref",
+            "table": "GrantedEffects",
+            "key": "SupportControlledDestruction",
+            "rowIndex": 5539
+          }
+        ],
+        "AdditionalFlags": [],
+        "FloatStats": [],
+        "InterpolationBases": [],
+        "AdditionalStats": [3520],
+        "StatInterpolations": [1],
+        "FloatStatsValues": []
+      },
+      {
+        "_index": 43226,
+        "StatSet": 5547,
+        "GemLevel": 13,
+        "PlayerLevelReq": 56,
+        "SpellCritChance": 0,
+        "AttackCritChance": 0,
+        "BaseMultiplier": 0,
+        "DamageEffectiveness": 0,
+        "BaseResolvedValues": [],
+        "AdditionalStatsValues": [34],
+        "GrantedEffects": [
+          {
+            "kind": "ref",
+            "table": "GrantedEffects",
+            "key": "SupportControlledDestruction",
+            "rowIndex": 5539
+          }
+        ],
+        "AdditionalFlags": [],
+        "FloatStats": [],
+        "InterpolationBases": [],
+        "AdditionalStats": [3520],
+        "StatInterpolations": [1],
+        "FloatStatsValues": []
+      },
+      {
+        "_index": 43227,
+        "StatSet": 5547,
+        "GemLevel": 14,
+        "PlayerLevelReq": 58,
+        "SpellCritChance": 0,
+        "AttackCritChance": 0,
+        "BaseMultiplier": 0,
+        "DamageEffectiveness": 0,
+        "BaseResolvedValues": [],
+        "AdditionalStatsValues": [34],
+        "GrantedEffects": [
+          {
+            "kind": "ref",
+            "table": "GrantedEffects",
+            "key": "SupportControlledDestruction",
+            "rowIndex": 5539
+          }
+        ],
+        "AdditionalFlags": [],
+        "FloatStats": [],
+        "InterpolationBases": [],
+        "AdditionalStats": [3520],
+        "StatInterpolations": [1],
+        "FloatStatsValues": []
+      },
+      {
+        "_index": 43228,
+        "StatSet": 5547,
+        "GemLevel": 15,
+        "PlayerLevelReq": 60,
+        "SpellCritChance": 0,
+        "AttackCritChance": 0,
+        "BaseMultiplier": 0,
+        "DamageEffectiveness": 0,
+        "BaseResolvedValues": [],
+        "AdditionalStatsValues": [35],
+        "GrantedEffects": [
+          {
+            "kind": "ref",
+            "table": "GrantedEffects",
+            "key": "SupportControlledDestruction",
+            "rowIndex": 5539
+          }
+        ],
+        "AdditionalFlags": [],
+        "FloatStats": [],
+        "InterpolationBases": [],
+        "AdditionalStats": [3520],
+        "StatInterpolations": [1],
+        "FloatStatsValues": []
+      },
+      {
+        "_index": 43229,
+        "StatSet": 5547,
+        "GemLevel": 16,
+        "PlayerLevelReq": 62,
+        "SpellCritChance": 0,
+        "AttackCritChance": 0,
+        "BaseMultiplier": 0,
+        "DamageEffectiveness": 0,
+        "BaseResolvedValues": [],
+        "AdditionalStatsValues": [36],
+        "GrantedEffects": [
+          {
+            "kind": "ref",
+            "table": "GrantedEffects",
+            "key": "SupportControlledDestruction",
+            "rowIndex": 5539
+          }
+        ],
+        "AdditionalFlags": [],
+        "FloatStats": [],
+        "InterpolationBases": [],
+        "AdditionalStats": [3520],
+        "StatInterpolations": [1],
+        "FloatStatsValues": []
+      },
+      {
+        "_index": 43230,
+        "StatSet": 5547,
+        "GemLevel": 17,
+        "PlayerLevelReq": 64,
+        "SpellCritChance": 0,
+        "AttackCritChance": 0,
+        "BaseMultiplier": 0,
+        "DamageEffectiveness": 0,
+        "BaseResolvedValues": [],
+        "AdditionalStatsValues": [37],
+        "GrantedEffects": [
+          {
+            "kind": "ref",
+            "table": "GrantedEffects",
+            "key": "SupportControlledDestruction",
+            "rowIndex": 5539
+          }
+        ],
+        "AdditionalFlags": [],
+        "FloatStats": [],
+        "InterpolationBases": [],
+        "AdditionalStats": [3520],
+        "StatInterpolations": [1],
+        "FloatStatsValues": []
+      },
+      {
+        "_index": 43231,
+        "StatSet": 5547,
+        "GemLevel": 18,
+        "PlayerLevelReq": 66,
+        "SpellCritChance": 0,
+        "AttackCritChance": 0,
+        "BaseMultiplier": 0,
+        "DamageEffectiveness": 0,
+        "BaseResolvedValues": [],
+        "AdditionalStatsValues": [37],
+        "GrantedEffects": [
+          {
+            "kind": "ref",
+            "table": "GrantedEffects",
+            "key": "SupportControlledDestruction",
+            "rowIndex": 5539
+          }
+        ],
+        "AdditionalFlags": [],
+        "FloatStats": [],
+        "InterpolationBases": [],
+        "AdditionalStats": [3520],
+        "StatInterpolations": [1],
+        "FloatStatsValues": []
+      },
+      {
+        "_index": 43232,
+        "StatSet": 5547,
+        "GemLevel": 19,
+        "PlayerLevelReq": 68,
+        "SpellCritChance": 0,
+        "AttackCritChance": 0,
+        "BaseMultiplier": 0,
+        "DamageEffectiveness": 0,
+        "BaseResolvedValues": [],
+        "AdditionalStatsValues": [38],
+        "GrantedEffects": [
+          {
+            "kind": "ref",
+            "table": "GrantedEffects",
+            "key": "SupportControlledDestruction",
+            "rowIndex": 5539
+          }
+        ],
+        "AdditionalFlags": [],
+        "FloatStats": [],
+        "InterpolationBases": [],
+        "AdditionalStats": [3520],
+        "StatInterpolations": [1],
+        "FloatStatsValues": []
+      },
+      {
+        "_index": 43233,
+        "StatSet": 5547,
+        "GemLevel": 20,
+        "PlayerLevelReq": 70,
+        "SpellCritChance": 0,
+        "AttackCritChance": 0,
+        "BaseMultiplier": 0,
+        "DamageEffectiveness": 0,
+        "BaseResolvedValues": [],
+        "AdditionalStatsValues": [39],
+        "GrantedEffects": [
+          {
+            "kind": "ref",
+            "table": "GrantedEffects",
+            "key": "SupportControlledDestruction",
+            "rowIndex": 5539
+          }
+        ],
+        "AdditionalFlags": [],
+        "FloatStats": [],
+        "InterpolationBases": [],
+        "AdditionalStats": [3520],
+        "StatInterpolations": [1],
+        "FloatStatsValues": []
       }
     ],
     "GrantedEffectsPerLevel": [
@@ -831,6 +1460,486 @@
         "_index": 7584,
         "GrantedEffect": 940,
         "Level": 40
+      },
+      {
+        "_index": 43411,
+        "GrantedEffect": 5539,
+        "Level": 1,
+        "PlayerLevelReq": 18,
+        "CostMultiplier": 140,
+        "StoredUses": 0,
+        "Cooldown": 0,
+        "CooldownBypassType": 4,
+        "VaalSouls": 0,
+        "VaalStoredUses": 0,
+        "CooldownGroup": 36,
+        "PvPDamageMultiplier": 0,
+        "SoulGainPreventionDuration": 0,
+        "AttackSpeedMultiplier": 0,
+        "@unknown:13": 0,
+        "CostAmounts": [],
+        "CostTypes": [],
+        "ManaReservationFlat": 0,
+        "ManaReservationPercent": 0,
+        "LifeReservationFlat": 0,
+        "LifeReservationPercent": 0,
+        "AttackTime": 0
+      },
+      {
+        "_index": 43412,
+        "GrantedEffect": 5539,
+        "Level": 2,
+        "PlayerLevelReq": 22,
+        "CostMultiplier": 140,
+        "StoredUses": 0,
+        "Cooldown": 0,
+        "CooldownBypassType": 4,
+        "VaalSouls": 0,
+        "VaalStoredUses": 0,
+        "CooldownGroup": 36,
+        "PvPDamageMultiplier": 0,
+        "SoulGainPreventionDuration": 0,
+        "AttackSpeedMultiplier": 0,
+        "@unknown:13": 0,
+        "CostAmounts": [],
+        "CostTypes": [],
+        "ManaReservationFlat": 0,
+        "ManaReservationPercent": 0,
+        "LifeReservationFlat": 0,
+        "LifeReservationPercent": 0,
+        "AttackTime": 0
+      },
+      {
+        "_index": 43413,
+        "GrantedEffect": 5539,
+        "Level": 3,
+        "PlayerLevelReq": 26,
+        "CostMultiplier": 140,
+        "StoredUses": 0,
+        "Cooldown": 0,
+        "CooldownBypassType": 4,
+        "VaalSouls": 0,
+        "VaalStoredUses": 0,
+        "CooldownGroup": 36,
+        "PvPDamageMultiplier": 0,
+        "SoulGainPreventionDuration": 0,
+        "AttackSpeedMultiplier": 0,
+        "@unknown:13": 0,
+        "CostAmounts": [],
+        "CostTypes": [],
+        "ManaReservationFlat": 0,
+        "ManaReservationPercent": 0,
+        "LifeReservationFlat": 0,
+        "LifeReservationPercent": 0,
+        "AttackTime": 0
+      },
+      {
+        "_index": 43414,
+        "GrantedEffect": 5539,
+        "Level": 4,
+        "PlayerLevelReq": 29,
+        "CostMultiplier": 140,
+        "StoredUses": 0,
+        "Cooldown": 0,
+        "CooldownBypassType": 4,
+        "VaalSouls": 0,
+        "VaalStoredUses": 0,
+        "CooldownGroup": 36,
+        "PvPDamageMultiplier": 0,
+        "SoulGainPreventionDuration": 0,
+        "AttackSpeedMultiplier": 0,
+        "@unknown:13": 0,
+        "CostAmounts": [],
+        "CostTypes": [],
+        "ManaReservationFlat": 0,
+        "ManaReservationPercent": 0,
+        "LifeReservationFlat": 0,
+        "LifeReservationPercent": 0,
+        "AttackTime": 0
+      },
+      {
+        "_index": 43415,
+        "GrantedEffect": 5539,
+        "Level": 5,
+        "PlayerLevelReq": 32,
+        "CostMultiplier": 140,
+        "StoredUses": 0,
+        "Cooldown": 0,
+        "CooldownBypassType": 4,
+        "VaalSouls": 0,
+        "VaalStoredUses": 0,
+        "CooldownGroup": 36,
+        "PvPDamageMultiplier": 0,
+        "SoulGainPreventionDuration": 0,
+        "AttackSpeedMultiplier": 0,
+        "@unknown:13": 0,
+        "CostAmounts": [],
+        "CostTypes": [],
+        "ManaReservationFlat": 0,
+        "ManaReservationPercent": 0,
+        "LifeReservationFlat": 0,
+        "LifeReservationPercent": 0,
+        "AttackTime": 0
+      },
+      {
+        "_index": 43416,
+        "GrantedEffect": 5539,
+        "Level": 6,
+        "PlayerLevelReq": 35,
+        "CostMultiplier": 140,
+        "StoredUses": 0,
+        "Cooldown": 0,
+        "CooldownBypassType": 4,
+        "VaalSouls": 0,
+        "VaalStoredUses": 0,
+        "CooldownGroup": 36,
+        "PvPDamageMultiplier": 0,
+        "SoulGainPreventionDuration": 0,
+        "AttackSpeedMultiplier": 0,
+        "@unknown:13": 0,
+        "CostAmounts": [],
+        "CostTypes": [],
+        "ManaReservationFlat": 0,
+        "ManaReservationPercent": 0,
+        "LifeReservationFlat": 0,
+        "LifeReservationPercent": 0,
+        "AttackTime": 0
+      },
+      {
+        "_index": 43417,
+        "GrantedEffect": 5539,
+        "Level": 7,
+        "PlayerLevelReq": 38,
+        "CostMultiplier": 140,
+        "StoredUses": 0,
+        "Cooldown": 0,
+        "CooldownBypassType": 4,
+        "VaalSouls": 0,
+        "VaalStoredUses": 0,
+        "CooldownGroup": 36,
+        "PvPDamageMultiplier": 0,
+        "SoulGainPreventionDuration": 0,
+        "AttackSpeedMultiplier": 0,
+        "@unknown:13": 0,
+        "CostAmounts": [],
+        "CostTypes": [],
+        "ManaReservationFlat": 0,
+        "ManaReservationPercent": 0,
+        "LifeReservationFlat": 0,
+        "LifeReservationPercent": 0,
+        "AttackTime": 0
+      },
+      {
+        "_index": 43418,
+        "GrantedEffect": 5539,
+        "Level": 8,
+        "PlayerLevelReq": 41,
+        "CostMultiplier": 140,
+        "StoredUses": 0,
+        "Cooldown": 0,
+        "CooldownBypassType": 4,
+        "VaalSouls": 0,
+        "VaalStoredUses": 0,
+        "CooldownGroup": 36,
+        "PvPDamageMultiplier": 0,
+        "SoulGainPreventionDuration": 0,
+        "AttackSpeedMultiplier": 0,
+        "@unknown:13": 0,
+        "CostAmounts": [],
+        "CostTypes": [],
+        "ManaReservationFlat": 0,
+        "ManaReservationPercent": 0,
+        "LifeReservationFlat": 0,
+        "LifeReservationPercent": 0,
+        "AttackTime": 0
+      },
+      {
+        "_index": 43419,
+        "GrantedEffect": 5539,
+        "Level": 9,
+        "PlayerLevelReq": 44,
+        "CostMultiplier": 140,
+        "StoredUses": 0,
+        "Cooldown": 0,
+        "CooldownBypassType": 4,
+        "VaalSouls": 0,
+        "VaalStoredUses": 0,
+        "CooldownGroup": 36,
+        "PvPDamageMultiplier": 0,
+        "SoulGainPreventionDuration": 0,
+        "AttackSpeedMultiplier": 0,
+        "@unknown:13": 0,
+        "CostAmounts": [],
+        "CostTypes": [],
+        "ManaReservationFlat": 0,
+        "ManaReservationPercent": 0,
+        "LifeReservationFlat": 0,
+        "LifeReservationPercent": 0,
+        "AttackTime": 0
+      },
+      {
+        "_index": 43420,
+        "GrantedEffect": 5539,
+        "Level": 10,
+        "PlayerLevelReq": 47,
+        "CostMultiplier": 140,
+        "StoredUses": 0,
+        "Cooldown": 0,
+        "CooldownBypassType": 4,
+        "VaalSouls": 0,
+        "VaalStoredUses": 0,
+        "CooldownGroup": 36,
+        "PvPDamageMultiplier": 0,
+        "SoulGainPreventionDuration": 0,
+        "AttackSpeedMultiplier": 0,
+        "@unknown:13": 0,
+        "CostAmounts": [],
+        "CostTypes": [],
+        "ManaReservationFlat": 0,
+        "ManaReservationPercent": 0,
+        "LifeReservationFlat": 0,
+        "LifeReservationPercent": 0,
+        "AttackTime": 0
+      },
+      {
+        "_index": 43421,
+        "GrantedEffect": 5539,
+        "Level": 11,
+        "PlayerLevelReq": 50,
+        "CostMultiplier": 140,
+        "StoredUses": 0,
+        "Cooldown": 0,
+        "CooldownBypassType": 4,
+        "VaalSouls": 0,
+        "VaalStoredUses": 0,
+        "CooldownGroup": 36,
+        "PvPDamageMultiplier": 0,
+        "SoulGainPreventionDuration": 0,
+        "AttackSpeedMultiplier": 0,
+        "@unknown:13": 0,
+        "CostAmounts": [],
+        "CostTypes": [],
+        "ManaReservationFlat": 0,
+        "ManaReservationPercent": 0,
+        "LifeReservationFlat": 0,
+        "LifeReservationPercent": 0,
+        "AttackTime": 0
+      },
+      {
+        "_index": 43422,
+        "GrantedEffect": 5539,
+        "Level": 12,
+        "PlayerLevelReq": 53,
+        "CostMultiplier": 140,
+        "StoredUses": 0,
+        "Cooldown": 0,
+        "CooldownBypassType": 4,
+        "VaalSouls": 0,
+        "VaalStoredUses": 0,
+        "CooldownGroup": 36,
+        "PvPDamageMultiplier": 0,
+        "SoulGainPreventionDuration": 0,
+        "AttackSpeedMultiplier": 0,
+        "@unknown:13": 0,
+        "CostAmounts": [],
+        "CostTypes": [],
+        "ManaReservationFlat": 0,
+        "ManaReservationPercent": 0,
+        "LifeReservationFlat": 0,
+        "LifeReservationPercent": 0,
+        "AttackTime": 0
+      },
+      {
+        "_index": 43423,
+        "GrantedEffect": 5539,
+        "Level": 13,
+        "PlayerLevelReq": 56,
+        "CostMultiplier": 140,
+        "StoredUses": 0,
+        "Cooldown": 0,
+        "CooldownBypassType": 4,
+        "VaalSouls": 0,
+        "VaalStoredUses": 0,
+        "CooldownGroup": 36,
+        "PvPDamageMultiplier": 0,
+        "SoulGainPreventionDuration": 0,
+        "AttackSpeedMultiplier": 0,
+        "@unknown:13": 0,
+        "CostAmounts": [],
+        "CostTypes": [],
+        "ManaReservationFlat": 0,
+        "ManaReservationPercent": 0,
+        "LifeReservationFlat": 0,
+        "LifeReservationPercent": 0,
+        "AttackTime": 0
+      },
+      {
+        "_index": 43424,
+        "GrantedEffect": 5539,
+        "Level": 14,
+        "PlayerLevelReq": 58,
+        "CostMultiplier": 140,
+        "StoredUses": 0,
+        "Cooldown": 0,
+        "CooldownBypassType": 4,
+        "VaalSouls": 0,
+        "VaalStoredUses": 0,
+        "CooldownGroup": 36,
+        "PvPDamageMultiplier": 0,
+        "SoulGainPreventionDuration": 0,
+        "AttackSpeedMultiplier": 0,
+        "@unknown:13": 0,
+        "CostAmounts": [],
+        "CostTypes": [],
+        "ManaReservationFlat": 0,
+        "ManaReservationPercent": 0,
+        "LifeReservationFlat": 0,
+        "LifeReservationPercent": 0,
+        "AttackTime": 0
+      },
+      {
+        "_index": 43425,
+        "GrantedEffect": 5539,
+        "Level": 15,
+        "PlayerLevelReq": 60,
+        "CostMultiplier": 140,
+        "StoredUses": 0,
+        "Cooldown": 0,
+        "CooldownBypassType": 4,
+        "VaalSouls": 0,
+        "VaalStoredUses": 0,
+        "CooldownGroup": 36,
+        "PvPDamageMultiplier": 0,
+        "SoulGainPreventionDuration": 0,
+        "AttackSpeedMultiplier": 0,
+        "@unknown:13": 0,
+        "CostAmounts": [],
+        "CostTypes": [],
+        "ManaReservationFlat": 0,
+        "ManaReservationPercent": 0,
+        "LifeReservationFlat": 0,
+        "LifeReservationPercent": 0,
+        "AttackTime": 0
+      },
+      {
+        "_index": 43426,
+        "GrantedEffect": 5539,
+        "Level": 16,
+        "PlayerLevelReq": 62,
+        "CostMultiplier": 140,
+        "StoredUses": 0,
+        "Cooldown": 0,
+        "CooldownBypassType": 4,
+        "VaalSouls": 0,
+        "VaalStoredUses": 0,
+        "CooldownGroup": 36,
+        "PvPDamageMultiplier": 0,
+        "SoulGainPreventionDuration": 0,
+        "AttackSpeedMultiplier": 0,
+        "@unknown:13": 0,
+        "CostAmounts": [],
+        "CostTypes": [],
+        "ManaReservationFlat": 0,
+        "ManaReservationPercent": 0,
+        "LifeReservationFlat": 0,
+        "LifeReservationPercent": 0,
+        "AttackTime": 0
+      },
+      {
+        "_index": 43427,
+        "GrantedEffect": 5539,
+        "Level": 17,
+        "PlayerLevelReq": 64,
+        "CostMultiplier": 140,
+        "StoredUses": 0,
+        "Cooldown": 0,
+        "CooldownBypassType": 4,
+        "VaalSouls": 0,
+        "VaalStoredUses": 0,
+        "CooldownGroup": 36,
+        "PvPDamageMultiplier": 0,
+        "SoulGainPreventionDuration": 0,
+        "AttackSpeedMultiplier": 0,
+        "@unknown:13": 0,
+        "CostAmounts": [],
+        "CostTypes": [],
+        "ManaReservationFlat": 0,
+        "ManaReservationPercent": 0,
+        "LifeReservationFlat": 0,
+        "LifeReservationPercent": 0,
+        "AttackTime": 0
+      },
+      {
+        "_index": 43428,
+        "GrantedEffect": 5539,
+        "Level": 18,
+        "PlayerLevelReq": 66,
+        "CostMultiplier": 140,
+        "StoredUses": 0,
+        "Cooldown": 0,
+        "CooldownBypassType": 4,
+        "VaalSouls": 0,
+        "VaalStoredUses": 0,
+        "CooldownGroup": 36,
+        "PvPDamageMultiplier": 0,
+        "SoulGainPreventionDuration": 0,
+        "AttackSpeedMultiplier": 0,
+        "@unknown:13": 0,
+        "CostAmounts": [],
+        "CostTypes": [],
+        "ManaReservationFlat": 0,
+        "ManaReservationPercent": 0,
+        "LifeReservationFlat": 0,
+        "LifeReservationPercent": 0,
+        "AttackTime": 0
+      },
+      {
+        "_index": 43429,
+        "GrantedEffect": 5539,
+        "Level": 19,
+        "PlayerLevelReq": 68,
+        "CostMultiplier": 140,
+        "StoredUses": 0,
+        "Cooldown": 0,
+        "CooldownBypassType": 4,
+        "VaalSouls": 0,
+        "VaalStoredUses": 0,
+        "CooldownGroup": 36,
+        "PvPDamageMultiplier": 0,
+        "SoulGainPreventionDuration": 0,
+        "AttackSpeedMultiplier": 0,
+        "@unknown:13": 0,
+        "CostAmounts": [],
+        "CostTypes": [],
+        "ManaReservationFlat": 0,
+        "ManaReservationPercent": 0,
+        "LifeReservationFlat": 0,
+        "LifeReservationPercent": 0,
+        "AttackTime": 0
+      },
+      {
+        "_index": 43430,
+        "GrantedEffect": 5539,
+        "Level": 20,
+        "PlayerLevelReq": 70,
+        "CostMultiplier": 140,
+        "StoredUses": 0,
+        "Cooldown": 0,
+        "CooldownBypassType": 4,
+        "VaalSouls": 0,
+        "VaalStoredUses": 0,
+        "CooldownGroup": 36,
+        "PvPDamageMultiplier": 0,
+        "SoulGainPreventionDuration": 0,
+        "AttackSpeedMultiplier": 0,
+        "@unknown:13": 0,
+        "CostAmounts": [],
+        "CostTypes": [],
+        "ManaReservationFlat": 0,
+        "ManaReservationPercent": 0,
+        "LifeReservationFlat": 0,
+        "LifeReservationPercent": 0,
+        "AttackTime": 0
       }
     ],
     "GrantedEffectQualityStats": [
@@ -839,6 +1948,560 @@
         "GrantedEffectsKey": 940,
         "StatsKeys": [19273],
         "StatsValuesPermille": [100]
+      }
+    ],
+    "ActiveSkills": [
+      {
+        "_index": 122,
+        "Id": "spark",
+        "DisplayedName": "Spark",
+        "Description": "Launches unpredictable sparks that move randomly until they hit an enemy or expire.",
+        "ActionType": {
+          "kind": "source-ref",
+          "table": "ActionTypes",
+          "rowIndex": 57,
+          "sourceColumn": "ActionType"
+        },
+        "Icon_DDSFile": "Art/2DArt/SkillIcons/spark.dds",
+        "ActiveSkillTargetTypes": [1, 2],
+        "ActiveSkillTypes": [
+          {
+            "kind": "ref",
+            "table": "ActiveSkillType",
+            "key": "Spell",
+            "rowIndex": 1
+          },
+          {
+            "kind": "ref",
+            "table": "ActiveSkillType",
+            "key": "Projectile",
+            "rowIndex": 2
+          },
+          {
+            "kind": "ref",
+            "table": "ActiveSkillType",
+            "key": "ProjectilesFromUser",
+            "rowIndex": 56
+          },
+          {
+            "kind": "ref",
+            "table": "ActiveSkillType",
+            "key": "Damage",
+            "rowIndex": 6
+          },
+          {
+            "kind": "ref",
+            "table": "ActiveSkillType",
+            "key": "Duration",
+            "rowIndex": 8
+          },
+          {
+            "kind": "ref",
+            "table": "ActiveSkillType",
+            "key": "Trappable",
+            "rowIndex": 13
+          },
+          {
+            "kind": "ref",
+            "table": "ActiveSkillType",
+            "key": "Totemable",
+            "rowIndex": 14
+          },
+          {
+            "kind": "ref",
+            "table": "ActiveSkillType",
+            "key": "Mineable",
+            "rowIndex": 15
+          },
+          {
+            "kind": "ref",
+            "table": "ActiveSkillType",
+            "key": "Multicastable",
+            "rowIndex": 21
+          },
+          {
+            "kind": "ref",
+            "table": "ActiveSkillType",
+            "key": "Triggerable",
+            "rowIndex": 31
+          },
+          {
+            "kind": "ref",
+            "table": "ActiveSkillType",
+            "key": "Lightning",
+            "rowIndex": 30
+          },
+          {
+            "kind": "ref",
+            "table": "ActiveSkillType",
+            "key": "CanRapidFire",
+            "rowIndex": 69
+          }
+        ],
+        "WeaponRestriction_ItemClassesKeys": [],
+        "WebsiteDescription": "Lightning is a fickle servant. However, skilled casters have learned to harness this frenetic element to devastating effect. With a single incantation, two pulsing strands of electric energy appear, and begin to move erratically around the battlefield. Whenever one contacts an enemy, it discharges, dealing tremendous damage and frequently causing paralysis.",
+        "WebsiteImage": "http://s3.amazonaws.com/pathofexile/image/skills/intelligence/spark.jpg",
+        "HideOnWebsite": false,
+        "GrantedEffect": "Spark",
+        "@unknown:12": false,
+        "SkillTotemId": 22,
+        "IsManuallyCasted": true,
+        "Input_StatKeys": [
+          {
+            "kind": "ref",
+            "table": "Stats",
+            "key": "spark_damage_+%",
+            "rowIndex": 4060
+          },
+          {
+            "kind": "ref",
+            "table": "Stats",
+            "key": "spark_num_of_additional_projectiles",
+            "rowIndex": 4315
+          },
+          {
+            "kind": "ref",
+            "table": "Stats",
+            "key": "spark_projectile_speed_+%",
+            "rowIndex": 4291
+          },
+          {
+            "kind": "ref",
+            "table": "Stats",
+            "key": "spark_num_of_additional_projectiles_in_chain",
+            "rowIndex": 5559
+          },
+          {
+            "kind": "ref",
+            "table": "Stats",
+            "key": "spark_projectiles_nova",
+            "rowIndex": 6394
+          },
+          {
+            "kind": "ref",
+            "table": "Stats",
+            "key": "spark_number_of_additional_projectiles",
+            "rowIndex": 6396
+          },
+          {
+            "kind": "ref",
+            "table": "Stats",
+            "key": "spark_skill_effect_duration_+%",
+            "rowIndex": 6437
+          },
+          {
+            "kind": "ref",
+            "table": "Stats",
+            "key": "spark_totems_from_this_skill_grant_totemified_lightning_tendrils_larger_pulse_interval_-X_to_parent",
+            "rowIndex": 18342
+          },
+          {
+            "kind": "ref",
+            "table": "Stats",
+            "key": "totemified_spark_skill_effect_duration_+%",
+            "rowIndex": 18361
+          }
+        ],
+        "Output_StatKeys": [
+          {
+            "kind": "ref",
+            "table": "Stats",
+            "key": "damage_+%",
+            "rowIndex": 24
+          },
+          {
+            "kind": "ref",
+            "table": "Stats",
+            "key": "number_of_additional_projectiles",
+            "rowIndex": 175
+          },
+          {
+            "kind": "ref",
+            "table": "Stats",
+            "key": "base_projectile_speed_+%",
+            "rowIndex": 177
+          },
+          {
+            "kind": "ref",
+            "table": "Stats",
+            "key": "number_of_chains",
+            "rowIndex": 174
+          },
+          {
+            "kind": "ref",
+            "table": "Stats",
+            "key": "projectiles_nova",
+            "rowIndex": 1816
+          },
+          {
+            "kind": "ref",
+            "table": "Stats",
+            "key": "number_of_additional_projectiles",
+            "rowIndex": 175
+          },
+          {
+            "kind": "ref",
+            "table": "Stats",
+            "key": "skill_effect_duration_+%",
+            "rowIndex": 217
+          },
+          {
+            "kind": "ref",
+            "table": "Stats",
+            "key": "totems_from_this_skill_grant_totemified_lightning_tendrils_larger_pulse_interval_-X_to_parent",
+            "rowIndex": 18287
+          },
+          {
+            "kind": "ref",
+            "table": "Stats",
+            "key": "totemified_skill_effect_duration_+%",
+            "rowIndex": 18360
+          }
+        ],
+        "MinionActiveSkillTypes": [],
+        "@unknown:18": true,
+        "IsGem": true,
+        "SecondarySkillSpecificStats": [],
+        "SkillMine": 8,
+        "AlternateSkillTargetingBehavioursKey": {
+          "kind": "ref",
+          "table": "AlternateSkillTargetingBehaviours",
+          "key": "ConsoleAtFeetNormalSelfcast",
+          "rowIndex": 3
+        },
+        "@unknown:23": false,
+        "AIFile": "",
+        "StatContextFlags": [
+          {
+            "kind": "ref",
+            "table": "VirtualStatContextFlags",
+            "key": "SpellHit",
+            "rowIndex": 3
+          },
+          {
+            "kind": "ref",
+            "table": "VirtualStatContextFlags",
+            "key": "HitGeneral",
+            "rowIndex": 18
+          },
+          {
+            "kind": "ref",
+            "table": "VirtualStatContextFlags",
+            "key": "BaseDamage",
+            "rowIndex": 29
+          },
+          {
+            "kind": "ref",
+            "table": "VirtualStatContextFlags",
+            "key": "Damage",
+            "rowIndex": 10
+          },
+          {
+            "kind": "ref",
+            "table": "VirtualStatContextFlags",
+            "key": "DamageFinal",
+            "rowIndex": 11
+          },
+          {
+            "kind": "ref",
+            "table": "VirtualStatContextFlags",
+            "key": "DamageOverTime",
+            "rowIndex": 16
+          },
+          {
+            "kind": "ref",
+            "table": "VirtualStatContextFlags",
+            "key": "DotMultiplier",
+            "rowIndex": 17
+          },
+          {
+            "kind": "ref",
+            "table": "VirtualStatContextFlags",
+            "key": "Leech",
+            "rowIndex": 19
+          },
+          {
+            "kind": "ref",
+            "table": "VirtualStatContextFlags",
+            "key": "Conversion",
+            "rowIndex": 26
+          },
+          {
+            "kind": "ref",
+            "table": "VirtualStatContextFlags",
+            "key": "BaseSpellDamage",
+            "rowIndex": 27
+          },
+          {
+            "kind": "ref",
+            "table": "VirtualStatContextFlags",
+            "key": "SpellDamage",
+            "rowIndex": 12
+          },
+          {
+            "kind": "ref",
+            "table": "VirtualStatContextFlags",
+            "key": "SpellDamageFinal",
+            "rowIndex": 13
+          }
+        ],
+        "@unknown:26": false,
+        "@unknown:27": false,
+        "@unknown:28": true,
+        "TransfigureBase": null,
+        "@unknown:30": ""
+      }
+    ],
+    "GemEffects": [
+      {
+        "_index": 558,
+        "Id": "SupportControlledDestruction",
+        "Name": "",
+        "GrantedEffect": {
+          "kind": "ref",
+          "table": "GrantedEffects",
+          "key": "SupportControlledDestruction",
+          "rowIndex": 5539
+        },
+        "GrantedEffectHardmode": null,
+        "GrantedEffect2": null,
+        "GrantedEffect2Hardmode": null,
+        "SupportText": "Supports attack skills, or spell skills that deal damage.",
+        "SupportName": "",
+        "GemTags": [
+          {
+            "kind": "ref",
+            "table": "GemTags",
+            "key": "spell",
+            "rowIndex": 4
+          },
+          {
+            "kind": "ref",
+            "table": "GemTags",
+            "key": "critical",
+            "rowIndex": 47
+          },
+          {
+            "kind": "ref",
+            "table": "GemTags",
+            "key": "intelligence",
+            "rowIndex": 11
+          },
+          {
+            "kind": "ref",
+            "table": "GemTags",
+            "key": "support",
+            "rowIndex": 16
+          }
+        ],
+        "Consumed_ModsKey": {
+          "kind": "ref",
+          "table": "Mods",
+          "key": "HungryLoopSupportedByControlledDestruction",
+          "rowIndex": 14648
+        },
+        "ItemColor": 5
+      }
+    ],
+    "BaseItemTypes": [
+      {
+        "_index": 1954,
+        "Id": "Metadata/Items/Gems/SupportGemControlledDestruction",
+        "ItemClassesKey": {
+          "kind": "ref",
+          "table": "ItemClasses",
+          "key": "Support Skill Gem",
+          "rowIndex": 19
+        },
+        "Width": 1,
+        "Height": 1,
+        "Name": "Controlled Destruction Support",
+        "InheritsFrom": "Metadata/Items/Gems/SupportSkillGem",
+        "DropLevel": 18,
+        "FlavourTextKey": null,
+        "Implicit_ModsKeys": [],
+        "SizeOnGround": 1,
+        "SoundEffect": null,
+        "TagsKeys": [],
+        "ModDomain": 43,
+        "ItemVisualIdentity": {
+          "kind": "source-ref",
+          "table": "ItemVisualIdentity",
+          "rowIndex": 9728,
+          "sourceColumn": "ItemVisualIdentity"
+        },
+        "HASH32": 1716224442,
+        "VendorRecipe_AchievementItems": [],
+        "Inflection": "",
+        "Equip_AchievementItemsKey": null,
+        "IsCorrupted": false,
+        "Identify_AchievementItems": [],
+        "IdentifyMagic_AchievementItems": [],
+        "FragmentBaseItemTypesKey": null,
+        "@unknown:22": false,
+        "SoundEffect2": null,
+        "ItemStance": null,
+        "@unknown:25": false,
+        "Unmodifiable": false,
+        "Achievement1": [],
+        "Achievement2": [],
+        "IgnoreQuantBonus": false,
+        "@unknown:30": false,
+        "ShopTag": null,
+        "@unknown:32": [],
+        "@unknown:33": [],
+        "@unknown:34": [],
+        "TalismanEnchants": []
+      }
+    ],
+    "SkillGems": [
+      {
+        "_index": 310,
+        "BaseItemTypesKey": {
+          "kind": "ref",
+          "table": "BaseItemTypes",
+          "key": "Metadata/Items/Gems/SupportGemControlledDestruction",
+          "rowIndex": 1954
+        },
+        "StrengthRequirementPercent": 0,
+        "DexterityRequirementPercent": 0,
+        "IntelligenceRequirementPercent": 100,
+        "VaalVariant_BaseItemTypesKey": null,
+        "IsVaalVariant": false,
+        "MinionGlobalSkillLevelStat": null,
+        "IsSupport": true,
+        "@unknown:8": false,
+        "@unknown:9": false,
+        "@unknown:10": false,
+        "RegisterPrimaryGrantedEffect": true,
+        "RegisterSecondaryGrantedEffect": true,
+        "AwakenedVariant": {
+          "kind": "source-ref",
+          "table": "SkillGems",
+          "rowIndex": 464,
+          "sourceColumn": "AwakenedVariant"
+        },
+        "RegularVariant": null,
+        "GemColour": 3,
+        "ItemExperienceType": {
+          "kind": "ref",
+          "table": "ItemExperienceTypes",
+          "key": "GemProgression18",
+          "rowIndex": 6
+        },
+        "MtxSlotTypes": [
+          {
+            "kind": "source-ref",
+            "table": "MicrotransactionSkillGemEffectSlotTypes",
+            "rowIndex": 0,
+            "sourceColumn": "MtxSlotTypes"
+          }
+        ],
+        "GemVariants": [
+          {
+            "kind": "ref",
+            "table": "GemEffects",
+            "key": "SupportControlledDestruction",
+            "rowIndex": 558
+          }
+        ]
+      }
+    ],
+    "ActiveSkillType": [
+      {
+        "_index": 6,
+        "Id": "Damage",
+        "FlagStat": null
+      },
+      {
+        "_index": 0,
+        "Id": "Attack",
+        "FlagStat": {
+          "kind": "ref",
+          "table": "Stats",
+          "key": "skill_is_attack",
+          "rowIndex": 2988
+        }
+      },
+      {
+        "_index": 48,
+        "Id": "DegenOnlySpellDamage",
+        "FlagStat": null
+      },
+      {
+        "_index": 1,
+        "Id": "Spell",
+        "FlagStat": {
+          "kind": "ref",
+          "table": "Stats",
+          "key": "casting_spell",
+          "rowIndex": 437
+        }
+      },
+      {
+        "_index": 2,
+        "Id": "Projectile",
+        "FlagStat": {
+          "kind": "ref",
+          "table": "Stats",
+          "key": "skill_is_projectile_skill",
+          "rowIndex": 6469
+        }
+      },
+      {
+        "_index": 56,
+        "Id": "ProjectilesFromUser",
+        "FlagStat": null
+      },
+      {
+        "_index": 8,
+        "Id": "Duration",
+        "FlagStat": null
+      },
+      {
+        "_index": 13,
+        "Id": "Trappable",
+        "FlagStat": null
+      },
+      {
+        "_index": 14,
+        "Id": "Totemable",
+        "FlagStat": null
+      },
+      {
+        "_index": 15,
+        "Id": "Mineable",
+        "FlagStat": null
+      },
+      {
+        "_index": 21,
+        "Id": "Multicastable",
+        "FlagStat": null
+      },
+      {
+        "_index": 31,
+        "Id": "Triggerable",
+        "FlagStat": {
+          "kind": "ref",
+          "table": "Stats",
+          "key": "skill_is_triggerable",
+          "rowIndex": 9427
+        }
+      },
+      {
+        "_index": 30,
+        "Id": "Lightning",
+        "FlagStat": {
+          "kind": "ref",
+          "table": "Stats",
+          "key": "skill_is_lightning_skill",
+          "rowIndex": 2820
+        }
+      },
+      {
+        "_index": 69,
+        "Id": "CanRapidFire",
+        "FlagStat": null
       }
     ]
   }

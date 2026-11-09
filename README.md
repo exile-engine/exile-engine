@@ -4,7 +4,7 @@ Portable TypeScript libraries for Path of Exile 1 and 2 calculations and locale-
 
 This first release calculates **ordinary Spark, one noncritical projectile hit**. It also parses and reconciles an English/Thai wand example and renders equivalent modifier text in the other locale. The data packages contain full snapshots of the selected build catalogs; that does not imply support for every mechanic in those catalogs.
 
-The PoE1 selected-skill slice additionally accepts ordered spell added-lightning ranges, applies client-derived effectiveness and retains raw/scaled/combined damage provenance. Its XML fixtures are compared with an executed pinned PoB oracle; full and incremental paths are checked against each other. Other damage elements, attacks, supports and conditional effects remain outside this slice.
+The PoE1 selected-skill slice additionally accepts ordered spell added-lightning ranges and one normal Controlled Destruction support. It applies client-derived effectiveness, explicit more/less and unchanged cast-time rules, and retains raw contributions and provenance. Its XML fixtures are compared with an executed pinned PoB oracle; full and incremental paths are checked against each other. Other damage elements, attacks, other supports and conditional effects remain outside this slice.
 
 ## Packages
 

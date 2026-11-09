@@ -3,13 +3,14 @@ import {
   type AddedLightningDamageContribution,
   type Diagnostic,
   type SelectedSkillInput,
+  type SelectedSkillSupport,
   type SnapshotIdentity,
   type StatContribution,
 } from '@exile-engine/core';
 import { parseXml, XmlError, type PobXmlLimits, type XmlElement } from './xml.js';
 
 export { pobXmlLimits, type PobXmlLimits } from './xml.js';
-export const pobAdapterVersion = 'poe1-spark-xml-v2';
+export const pobAdapterVersion = 'poe1-spark-xml-v3';
 export const pobCompatibility = Object.freeze({
   status: 'bounded-poe1-spark-xml' as const,
   xmlImportImplemented: true as const,
@@ -30,6 +31,8 @@ export interface PobSourceLocation {
   readonly attribute?: string;
   readonly itemId?: string;
   readonly textLine?: number;
+  readonly socketGroup?: number;
+  readonly gemIndex?: number;
 }
 export interface PobUnresolvedInput {
   readonly source: PobSourceLocation;
@@ -57,6 +60,7 @@ export interface PobImportedBuild {
   readonly modifiers: readonly StatContribution[];
   readonly addedLightningDamage: readonly AddedLightningDamageContribution[];
   readonly skills: readonly PobImportedSkill[];
+  readonly supports: readonly SelectedSkillSupport[];
   readonly unresolved: readonly PobUnresolvedInput[];
   readonly diagnostics: readonly Diagnostic[];
   readonly complete: boolean;
@@ -96,6 +100,7 @@ export function importPobXml(
   const modifiers: StatContribution[] = [];
   const addedLightningDamage: AddedLightningDamageContribution[] = [];
   const skills: PobImportedSkill[] = [];
+  const supports: SelectedSkillSupport[] = [];
   const validSource = object(source);
   const identity =
     validSource && isSnapshotIdentity(source.target) ? { ...source.target } : undefined;
@@ -127,6 +132,7 @@ export function importPobXml(
     modifiers,
     addedLightningDamage,
     skills,
+    supports,
     unresolved,
     diagnostics,
     complete: diagnostics.length === 0 && selectedSkill !== undefined,
@@ -296,7 +302,16 @@ export function importPobXml(
           JSON.stringify(group.attributes),
           'ambiguous-stat',
         );
-      const gem = unique(group, 'Gem');
+      const gems = group.children.filter((child) => child.name === 'Gem');
+      if (gems.length < 1 || gems.length > 2)
+        problem(
+          'pob.ambiguous-selection',
+          'Require Spark as the first gem and at most one Controlled Destruction support as the second gem.',
+          { element: 'Skill', socketGroup: 1 },
+          JSON.stringify(gems),
+          'ambiguous-stat',
+        );
+      const gem = gems[0];
       if (gem) {
         check(gem, ['skillId', 'gemId', 'nameSpec', 'level', 'quality', 'enabled']);
         const level = integer(gem.attributes.level, 1, 40);
@@ -325,6 +340,38 @@ export function importPobXml(
           };
           skills.push(selected);
         }
+      }
+      for (let gemIndex = 1; gemIndex < gems.length; gemIndex++) {
+        const supportGem = gems[gemIndex]!;
+        check(supportGem, ['skillId', 'gemId', 'nameSpec', 'level', 'quality', 'enabled']);
+        const gemLevel = integer(supportGem.attributes.level, 1, 20);
+        if (
+          gemIndex !== 1 ||
+          supportGem.attributes.skillId !== 'SupportControlledDestruction' ||
+          supportGem.attributes.gemId !== 'Metadata/Items/Gems/SupportGemControlledDestruction' ||
+          supportGem.attributes.nameSpec !== 'Controlled Destruction' ||
+          gemLevel === undefined ||
+          supportGem.attributes.quality !== '0' ||
+          !['true', 'false'].includes(supportGem.attributes.enabled ?? '')
+        )
+          problem(
+            'pob.unsupported-support',
+            'Only one normal Controlled Destruction support, levels 1–20, quality 0 and explicit enabled state is supported in the selected group.',
+            { element: 'Gem', socketGroup: 1, gemIndex: gemIndex + 1 },
+            JSON.stringify(supportGem.attributes),
+          );
+        else
+          supports.push({
+            id: 'SupportControlledDestruction',
+            gemLevel,
+            quality: 0,
+            enabled: supportGem.attributes.enabled === 'true',
+            source: {
+              kind: 'skill',
+              id: 'pob-gem:1:2',
+              label: 'Controlled Destruction',
+            },
+          });
       }
     }
   }
@@ -554,7 +601,7 @@ export function importPobXml(
       quality: selected.quality,
       variant: 'normal',
       statSet: 'base',
-      supports: [],
+      supports,
     },
     configuration: { id: configurationId, effectiveLightningResistancePercent: resistance },
     modifiers,

@@ -16,9 +16,12 @@ import {
   type SparkCalculation,
   type SparkDataset,
   type SparkInput,
+  type SelectedSkillSupportTrace,
 } from '@exile-engine/core';
+import { calculateSelectedSkillSupports, selectedSupportDatasetShape } from './supports.js';
+export { calculateSelectedSkillSupports } from './supports.js';
 
-export const selectedSkillEngineRevision = 'poe1-selected-spark-v2' as const;
+export const selectedSkillEngineRevision = 'poe1-selected-spark-v3' as const;
 
 function object(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === 'object' && !Array.isArray(value);
@@ -81,6 +84,7 @@ function selectedDatasetShape(dataset: SparkDataset): boolean {
       'qualityStats',
       'sourceRows',
       'ruleProvenance',
+      'supports',
     ]) &&
     object(dataset.identity) &&
     keys(dataset.identity, ['game', 'build', 'snapshotId']) &&
@@ -120,7 +124,9 @@ function selectedDatasetShape(dataset: SparkDataset): boolean {
         rows(stat.sourceRows),
     ) &&
     rows(dataset.sourceRows) &&
-    denseArray(dataset.ruleProvenance, 100)
+    denseArray(dataset.ruleProvenance, 100) &&
+    (dataset.supports === undefined || Object.hasOwn(dataset, 'supports')) &&
+    selectedSupportDatasetShape(dataset)
   );
 }
 
@@ -131,6 +137,11 @@ export function validateSelectedSkillInput(input: SelectedSkillInput): Result<Se
     diagnostics.push(errorDiagnostic(code, message));
   if (!object(input))
     return failure(errorDiagnostic('selected.input', 'Expected selected-skill input.'));
+  if (!ownFields(input, ['identity', 'buildId', 'skill', 'configuration', 'modifiers']))
+    reject(
+      'selected.input',
+      'Selected-skill identities, configuration and modifiers must be explicit own fields.',
+    );
   if (
     !keys(input, [
       'identity',
@@ -144,6 +155,11 @@ export function validateSelectedSkillInput(input: SelectedSkillInput): Result<Se
     reject('selected.unsupported-field', 'Unsupported selected-skill input field.');
   if (
     !isSnapshotIdentity(input.identity) ||
+    !ownFields(input.identity as unknown as Record<string, unknown>, [
+      'game',
+      'build',
+      'snapshotId',
+    ]) ||
     input.identity.game !== 'poe1' ||
     !keys(input.identity as unknown as Record<string, unknown>, ['game', 'build', 'snapshotId']) ||
     !id(input.identity.build) ||
@@ -154,6 +170,7 @@ export function validateSelectedSkillInput(input: SelectedSkillInput): Result<Se
   const skill = input.skill;
   if (
     !object(skill) ||
+    !ownFields(skill, ['id', 'gemLevel', 'quality']) ||
     !keys(skill, ['id', 'gemLevel', 'quality', 'variant', 'statSet', 'supports']) ||
     skill.id !== 'Spark' ||
     !Number.isSafeInteger(skill.gemLevel) ||
@@ -164,16 +181,47 @@ export function validateSelectedSkillInput(input: SelectedSkillInput): Result<Se
     skill.quality > 100 ||
     (skill.variant !== undefined && skill.variant !== 'normal') ||
     (skill.statSet !== undefined && skill.statSet !== 'base') ||
-    (skill.supports !== undefined &&
-      (!Array.isArray(skill.supports) || skill.supports.length !== 0))
+    (skill.supports !== undefined && (!Array.isArray(skill.supports) || skill.supports.length > 1))
   )
     reject(
       'selected.unsupported-skill',
-      'Only normal base Spark, levels 1–40, ordinary quality 0–100 and no supports are supported.',
+      'Only normal base Spark, levels 1–40, ordinary quality 0–100 and at most one reviewed support are supported.',
     );
+  if (object(skill) && Array.isArray(skill.supports) && skill.supports.length <= 1) {
+    for (const support of skill.supports) {
+      if (
+        !object(support) ||
+        !ownFields(support, ['id', 'gemLevel', 'quality', 'enabled', 'source']) ||
+        !keys(support, ['id', 'gemLevel', 'quality', 'enabled', 'source']) ||
+        support.id !== 'SupportControlledDestruction' ||
+        !Number.isSafeInteger(support.gemLevel) ||
+        (support.gemLevel as number) < 1 ||
+        (support.gemLevel as number) > 20 ||
+        support.quality !== 0 ||
+        typeof support.enabled !== 'boolean' ||
+        !object(support.source) ||
+        !ownFields(support.source, ['kind', 'id']) ||
+        !keys(support.source, ['kind', 'id', 'label', 'line']) ||
+        support.source.kind !== 'skill' ||
+        !id(support.source.id) ||
+        (support.source.label !== undefined &&
+          (!Object.hasOwn(support.source, 'label') || !id(support.source.label))) ||
+        (support.source.line !== undefined &&
+          (!Object.hasOwn(support.source, 'line') ||
+            !finite(support.source.line) ||
+            !Number.isSafeInteger(support.source.line) ||
+            support.source.line < 1))
+      )
+        reject(
+          'selected.unsupported-support',
+          'Only explicit normal Controlled Destruction levels 1–20, quality 0, enabled state and skill provenance are supported.',
+        );
+    }
+  }
   const config = input.configuration;
   if (
     !object(config) ||
+    !ownFields(config, ['id', 'effectiveLightningResistancePercent']) ||
     !keys(config, ['id', 'effectiveLightningResistancePercent']) ||
     !id(config.id) ||
     !finite(config.effectiveLightningResistancePercent) ||
@@ -190,6 +238,7 @@ export function validateSelectedSkillInput(input: SelectedSkillInput): Result<Se
     for (const mod of input.modifiers) {
       if (
         !object(mod) ||
+        !ownFields(mod, ['statId', 'value', 'source']) ||
         !keys(mod, ['statId', 'value', 'source', 'scope', 'conditions']) ||
         !(SPARK_MODIFIER_STAT_IDS as readonly unknown[]).includes(mod.statId) ||
         !finite(mod.value) ||
@@ -246,6 +295,7 @@ export function validateSelectedSkillInput(input: SelectedSkillInput): Result<Se
       for (const group of input.addedLightningDamage) {
         if (
           !object(group) ||
+          !ownFields(group, ['statIds', 'values', 'source']) ||
           !keys(group, ['statIds', 'values', 'source', 'scope', 'conditions']) ||
           !Array.isArray(group.statIds) ||
           group.statIds.length !== 2 ||
@@ -294,7 +344,14 @@ export function validateSelectedSkillInput(input: SelectedSkillInput): Result<Se
     buildId: input.buildId,
     skill: {
       ...input.skill,
-      ...(input.skill.supports === undefined ? {} : { supports: [...input.skill.supports] }),
+      ...(input.skill.supports === undefined
+        ? {}
+        : {
+            supports: input.skill.supports.map((support) => ({
+              ...support,
+              source: { ...support.source },
+            })),
+          }),
     },
     configuration: { ...input.configuration },
     modifiers: input.modifiers.map((mod) => ({
@@ -370,7 +427,6 @@ function sparkInput(input: SelectedSkillInput): SparkInput {
     quality: input.skill.quality,
     ...(input.skill.variant === undefined ? {} : { variant: input.skill.variant }),
     ...(input.skill.statSet === undefined ? {} : { statSet: input.skill.statSet }),
-    ...(input.skill.supports === undefined ? {} : { supports: input.skill.supports }),
     modifiers: input.modifiers,
     effectiveLightningResistancePercent: input.configuration.effectiveLightningResistancePercent,
   };
@@ -381,6 +437,7 @@ export function assembleSelectedSkill(
   input: SelectedSkillInput,
   hit: SparkCalculation,
   addedLightningDamage: AddedLightningDamageTrace,
+  supportEffects: SelectedSkillSupportTrace,
 ): Result<SelectedSkillCalculation> {
   const hitDps = hit.nonCriticalHitAfterResistance.mean * hit.castsPerSecond;
   if (!Number.isFinite(hitDps) || !Number.isFinite(hit.castsPerSecond) || hit.castsPerSecond <= 0)
@@ -396,12 +453,20 @@ export function assembleSelectedSkill(
     configuration: { ...input.configuration },
     skill: {
       ...input.skill,
-      ...(input.skill.supports === undefined ? {} : { supports: [...input.skill.supports] }),
+      ...(input.skill.supports === undefined
+        ? {}
+        : {
+            supports: input.skill.supports.map((support) => ({
+              ...support,
+              source: { ...support.source },
+            })),
+          }),
     },
     engineRevision: selectedSkillEngineRevision,
     metric: 'selected-skill-hit-combined-dps',
     hit,
     addedLightningDamage,
+    supportEffects,
     hitsPerCast: 1,
     hitsPerSecond: hit.castsPerSecond,
     hitDps,
@@ -431,10 +496,13 @@ export function calculateSelectedSkill(
   )!.addedDamageEffectiveness!;
   const added = calculateAddedLightningDamage(validated.value, hit.value, effectiveness);
   if (!added.ok) return added;
+  const supportEffects = calculateSelectedSkillSupports(validated.value, dataset);
+  if (!supportEffects.ok) return supportEffects;
   return assembleSelectedSkill(
     validated.value,
-    selectedHitRules(hit.value, added.value.combinedBase),
+    selectedHitRules(hit.value, added.value.combinedBase, supportEffects.value),
     added.value,
+    supportEffects.value,
   );
 }
 
@@ -442,13 +510,21 @@ export function calculateSelectedSkill(
 export function selectedHitRules(
   hit: SparkCalculation,
   combinedBase: DamageRange = hit.baseLightningDamage,
+  supportEffects?: SelectedSkillSupportTrace,
 ): SparkCalculation {
   const damageScale = Math.max(0, 1 + hit.increasedDamagePercent / 100);
-  const min = Math.floor(combinedBase.min * damageScale + 0.5);
-  const max = Math.floor(combinedBase.max * damageScale + 0.5);
+  const min = Math.floor(
+    combinedBase.min * damageScale * (supportEffects?.spellDamageMultiplier ?? 1) + 0.5,
+  );
+  const max = Math.floor(
+    combinedBase.max * damageScale * (supportEffects?.spellDamageMultiplier ?? 1) + 0.5,
+  );
   const scale = 1 - hit.effectiveLightningResistancePercent / 100;
   const speed = Math.floor((1 + hit.increasedCastSpeedPercent / 100) * 100 + 0.5) / 100;
-  const castsPerSecond = Math.min(speed / hit.baseCastTimeSeconds, 1 / 0.033);
+  const castsPerSecond = Math.min(
+    speed / (hit.baseCastTimeSeconds * (supportEffects?.castTimeMultiplier ?? 1)),
+    1 / 0.033,
+  );
   return {
     ...hit,
     nonCriticalHitBeforeResistance: { min, max, mean: (min + max) / 2 },
@@ -462,6 +538,7 @@ export function selectedHitRules(
     ruleProvenance: [
       ...hit.ruleProvenance,
       'Selected spell added lightning: sum ordered raw minimum/maximum groups, multiply by client added-damage effectiveness, add intrinsic lightning, then apply increases without intermediate rounding.',
+      'Controlled Destruction: more spell damage multiplies after increased damage before final rounding; less critical chance is retained but excluded by noncritical mode. Cast-time multiplier is 1; the support record CastTime is not the active skill cast time.',
       'Selected Spark rules: PoB 3dbca4463c0a59079d9f7f032d8240cf868e09da; round hit endpoints before resistance, cast-speed multiplier to two decimals, cast rate at most 1/0.033 per second.',
     ],
   };

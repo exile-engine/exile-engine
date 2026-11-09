@@ -78,7 +78,14 @@
       ]
     },
     "selectedPart": 1,
-    "selectedSkillId": "Spark"
+    "selectedSkillId": "Spark",
+    "supportContributions": [],
+    "supportCriticalChanceMultiplier": 1,
+    "supportDamageMultiplier": 1,
+    "supportGems": [],
+    "supportManaCostMultiplier": 1,
+    "supportSpeedMultiplier": 1,
+    "supportTotalCastTime": 0
   },
   "added-lightning-combined": {
     "ActionSpeedMod": 1,
@@ -251,7 +258,14 @@
       ]
     },
     "selectedPart": 1,
-    "selectedSkillId": "Spark"
+    "selectedSkillId": "Spark",
+    "supportContributions": [],
+    "supportCriticalChanceMultiplier": 1,
+    "supportDamageMultiplier": 1,
+    "supportGems": [],
+    "supportManaCostMultiplier": 1,
+    "supportSpeedMultiplier": 1,
+    "supportTotalCastTime": 0
   },
   "added-lightning-level1": {
     "ActionSpeedMod": 1,
@@ -332,7 +346,14 @@
       ]
     },
     "selectedPart": 1,
-    "selectedSkillId": "Spark"
+    "selectedSkillId": "Spark",
+    "supportContributions": [],
+    "supportCriticalChanceMultiplier": 1,
+    "supportDamageMultiplier": 1,
+    "supportGems": [],
+    "supportManaCostMultiplier": 1,
+    "supportSpeedMultiplier": 1,
+    "supportTotalCastTime": 0
   },
   "added-lightning-multiple": {
     "ActionSpeedMod": 1,
@@ -444,7 +465,14 @@
       ]
     },
     "selectedPart": 1,
-    "selectedSkillId": "Spark"
+    "selectedSkillId": "Spark",
+    "supportContributions": [],
+    "supportCriticalChanceMultiplier": 1,
+    "supportDamageMultiplier": 1,
+    "supportGems": [],
+    "supportManaCostMultiplier": 1,
+    "supportSpeedMultiplier": 1,
+    "supportTotalCastTime": 0
   },
   "added-lightning-rounded": {
     "ActionSpeedMod": 1,
@@ -544,7 +572,14 @@
       ]
     },
     "selectedPart": 1,
-    "selectedSkillId": "Spark"
+    "selectedSkillId": "Spark",
+    "supportContributions": [],
+    "supportCriticalChanceMultiplier": 1,
+    "supportDamageMultiplier": 1,
+    "supportGems": [],
+    "supportManaCostMultiplier": 1,
+    "supportSpeedMultiplier": 1,
+    "supportTotalCastTime": 0
   },
   "added-lightning-zero": {
     "ActionSpeedMod": 1,
@@ -608,7 +643,14 @@
       ]
     },
     "selectedPart": 1,
-    "selectedSkillId": "Spark"
+    "selectedSkillId": "Spark",
+    "supportContributions": [],
+    "supportCriticalChanceMultiplier": 1,
+    "supportDamageMultiplier": 1,
+    "supportGems": [],
+    "supportManaCostMultiplier": 1,
+    "supportSpeedMultiplier": 1,
+    "supportTotalCastTime": 0
   },
   "baseline": {
     "ActionSpeedMod": 1,
@@ -654,7 +696,14 @@
       ]
     },
     "selectedPart": 1,
-    "selectedSkillId": "Spark"
+    "selectedSkillId": "Spark",
+    "supportContributions": [],
+    "supportCriticalChanceMultiplier": 1,
+    "supportDamageMultiplier": 1,
+    "supportGems": [],
+    "supportManaCostMultiplier": 1,
+    "supportSpeedMultiplier": 1,
+    "supportTotalCastTime": 0
   },
   "cast": {
     "ActionSpeedMod": 1,
@@ -720,7 +769,14 @@
       ]
     },
     "selectedPart": 1,
-    "selectedSkillId": "Spark"
+    "selectedSkillId": "Spark",
+    "supportContributions": [],
+    "supportCriticalChanceMultiplier": 1,
+    "supportDamageMultiplier": 1,
+    "supportGems": [],
+    "supportManaCostMultiplier": 1,
+    "supportSpeedMultiplier": 1,
+    "supportTotalCastTime": 0
   },
   "increased": {
     "ActionSpeedMod": 1,
@@ -840,7 +896,14 @@
       ]
     },
     "selectedPart": 1,
-    "selectedSkillId": "Spark"
+    "selectedSkillId": "Spark",
+    "supportContributions": [],
+    "supportCriticalChanceMultiplier": 1,
+    "supportDamageMultiplier": 1,
+    "supportGems": [],
+    "supportManaCostMultiplier": 1,
+    "supportSpeedMultiplier": 1,
+    "supportTotalCastTime": 0
   },
   "no-damage": {
     "ActionSpeedMod": 1,
@@ -905,7 +968,14 @@
       ]
     },
     "selectedPart": 1,
-    "selectedSkillId": "Spark"
+    "selectedSkillId": "Spark",
+    "supportContributions": [],
+    "supportCriticalChanceMultiplier": 1,
+    "supportDamageMultiplier": 1,
+    "supportGems": [],
+    "supportManaCostMultiplier": 1,
+    "supportSpeedMultiplier": 1,
+    "supportTotalCastTime": 0
   },
   "resisted": {
     "ActionSpeedMod": 1,
@@ -1044,6 +1114,597 @@
       ]
     },
     "selectedPart": 1,
-    "selectedSkillId": "Spark"
+    "selectedSkillId": "Spark",
+    "supportContributions": [],
+    "supportCriticalChanceMultiplier": 1,
+    "supportDamageMultiplier": 1,
+    "supportGems": [],
+    "supportManaCostMultiplier": 1,
+    "supportSpeedMultiplier": 1,
+    "supportTotalCastTime": 0
+  },
+  "support-controlled-destruction-combined": {
+    "ActionSpeedMod": 1,
+    "AverageDamage": 2235,
+    "AverageHit": 2235,
+    "CombinedDPS": 4656.25,
+    "CritChance": 0,
+    "CritMultiplier": 0,
+    "HitChance": 100,
+    "LightningHitAverage": 2235,
+    "LightningMaxBase": 2021,
+    "LightningMinBase": 123,
+    "Speed": 2.0833333333333335,
+    "Time": 0.47999999999999998,
+    "TotalDPS": 4656.25,
+    "TotalMax": 4213.5,
+    "TotalMin": 256.5,
+    "addedContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 131072,
+        "name": "LightningMin",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 10
+      },
+      {
+        "flags": 0,
+        "keywordFlags": 131072,
+        "name": "LightningMax",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 20
+      }
+    ],
+    "addedMaximum": 20,
+    "addedMinimum": 10,
+    "contributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "Damage",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 10
+      },
+      {
+        "flags": 2,
+        "keywordFlags": 0,
+        "name": "Damage",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 20
+      },
+      {
+        "flags": 1024,
+        "keywordFlags": 0,
+        "name": "Damage",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 40
+      },
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "LightningDamage",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 30
+      },
+      {
+        "flags": 16,
+        "keywordFlags": 0,
+        "name": "Speed",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 25
+      }
+    ],
+    "damageEffectiveness": 1.8999999999999999,
+    "increasedCastSpeedPercent": 25,
+    "increasedDamagePercent": 100,
+    "itemModifierLines": [
+      {
+        "line": "Adds 10 to 20 Lightning Damage to Spells",
+        "mods": [
+          {
+            "flags": 0,
+            "keywordFlags": 131072,
+            "name": "LightningMin",
+            "value": 10
+          },
+          {
+            "flags": 0,
+            "keywordFlags": 131072,
+            "name": "LightningMax",
+            "value": 20
+          }
+        ]
+      },
+      {
+        "line": "10% increased Damage",
+        "mods": [
+          {
+            "flags": 0,
+            "keywordFlags": 0,
+            "name": "Damage",
+            "value": 10
+          }
+        ]
+      },
+      {
+        "line": "20% increased Spell Damage",
+        "mods": [
+          {
+            "flags": 2,
+            "keywordFlags": 0,
+            "name": "Damage",
+            "value": 20
+          }
+        ]
+      },
+      {
+        "line": "30% increased Lightning Damage",
+        "mods": [
+          {
+            "flags": 0,
+            "keywordFlags": 0,
+            "name": "LightningDamage",
+            "value": 30
+          }
+        ]
+      },
+      {
+        "line": "40% increased Projectile Damage",
+        "mods": [
+          {
+            "flags": 1024,
+            "keywordFlags": 0,
+            "name": "Damage",
+            "value": 40
+          }
+        ]
+      },
+      {
+        "line": "25% increased Cast Speed",
+        "mods": [
+          {
+            "flags": 16,
+            "keywordFlags": 0,
+            "name": "Speed",
+            "value": 25
+          }
+        ]
+      }
+    ],
+    "lightningBreakdown": {
+      "1": "Base damage:",
+      "2": "104 to 1983 ^8(base damage from skill)",
+      "3": "+ 10 to 20 ^8(added damage)",
+      "4": "x 1.90 ^8(damage effectiveness)",
+      "5": "= 123.0 to 2021.0",
+      "6": "Hit damage:",
+      "7": "342 to 5618 ^8(total damage)",
+      "8": "x 0.750 ^8(effective DPS modifier)",
+      "9": "= 256 to 4213",
+      "10": "Portion of total damage: 100%",
+      "damageTypes": [
+        {
+          "base": "123 to 2021",
+          "convSrc": false,
+          "inc": "x 2",
+          "more": "x 1.39",
+          "source": "Lightning",
+          "total": "342 to 5618"
+        }
+      ]
+    },
+    "selectedPart": 1,
+    "selectedSkillId": "Spark",
+    "supportContributions": [
+      {
+        "flags": 2,
+        "keywordFlags": 0,
+        "name": "Damage",
+        "source": "Skill:SupportControlledDestruction",
+        "value": 39
+      },
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritChance",
+        "source": "Skill:SupportControlledDestruction",
+        "value": -80
+      },
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "SupportManaMultiplier",
+        "source": "Skill:SupportControlledDestruction",
+        "value": 40
+      }
+    ],
+    "supportCriticalChanceMultiplier": 0.20000000000000001,
+    "supportDamageMultiplier": 1.3899999999999999,
+    "supportGems": [
+      {
+        "enabled": true,
+        "gameId": "Metadata/Items/Gems/SupportGemControlledDestruction",
+        "gemId": "Metadata/Items/Gems/SkillGemSupportControlledDestruction",
+        "level": 20,
+        "nameSpec": "Controlled Destruction",
+        "quality": 0,
+        "skillId": "SupportControlledDestruction"
+      }
+    ],
+    "supportManaCostMultiplier": 1.3999999999999999,
+    "supportSpeedMultiplier": 1,
+    "supportTotalCastTime": 0
+  },
+  "support-controlled-destruction-disabled": {
+    "ActionSpeedMod": 1,
+    "AverageDamage": 1043.5,
+    "AverageHit": 1043.5,
+    "CombinedDPS": 1739.1666666666667,
+    "CritChance": 0,
+    "CritMultiplier": 0,
+    "HitChance": 100,
+    "LightningHitAverage": 1043.5,
+    "LightningMaxBase": 1983,
+    "LightningMinBase": 104,
+    "Speed": 1.6666666666666667,
+    "Time": 0.59999999999999998,
+    "TotalDPS": 1739.1666666666667,
+    "TotalMax": 1983,
+    "TotalMin": 104,
+    "addedContributions": [],
+    "addedMaximum": 0,
+    "addedMinimum": 0,
+    "contributions": [],
+    "damageEffectiveness": 1.8999999999999999,
+    "increasedCastSpeedPercent": 0,
+    "increasedDamagePercent": 0,
+    "itemModifierLines": [],
+    "lightningBreakdown": {
+      "1": "Base damage:",
+      "2": "104 to 1983 ^8(base damage from skill)",
+      "3": "= 104.0 to 1983.0",
+      "4": "Hit damage:",
+      "5": "104 to 1983 ^8(total damage)",
+      "6": "= 104 to 1983",
+      "7": "Portion of total damage: 100%",
+      "damageTypes": [
+        {
+          "base": "104 to 1983",
+          "convSrc": false,
+          "inc": false,
+          "more": false,
+          "source": "Lightning",
+          "total": "104 to 1983"
+        }
+      ]
+    },
+    "selectedPart": 1,
+    "selectedSkillId": "Spark",
+    "supportContributions": [],
+    "supportCriticalChanceMultiplier": 1,
+    "supportDamageMultiplier": 1,
+    "supportGems": [
+      {
+        "enabled": false,
+        "gameId": "Metadata/Items/Gems/SupportGemControlledDestruction",
+        "gemId": "Metadata/Items/Gems/SkillGemSupportControlledDestruction",
+        "level": 20,
+        "nameSpec": "Controlled Destruction",
+        "quality": 0,
+        "skillId": "SupportControlledDestruction"
+      }
+    ],
+    "supportManaCostMultiplier": 1,
+    "supportSpeedMultiplier": 1,
+    "supportTotalCastTime": 0
+  },
+  "support-controlled-destruction-level1": {
+    "ActionSpeedMod": 1,
+    "AverageDamage": 1304.5,
+    "AverageHit": 1304.5,
+    "CombinedDPS": 2174.166666666667,
+    "CritChance": 0,
+    "CritMultiplier": 0,
+    "HitChance": 100,
+    "LightningHitAverage": 1304.5,
+    "LightningMaxBase": 1983,
+    "LightningMinBase": 104,
+    "Speed": 1.6666666666666667,
+    "Time": 0.59999999999999998,
+    "TotalDPS": 2174.166666666667,
+    "TotalMax": 2479,
+    "TotalMin": 130,
+    "addedContributions": [],
+    "addedMaximum": 0,
+    "addedMinimum": 0,
+    "contributions": [],
+    "damageEffectiveness": 1.8999999999999999,
+    "increasedCastSpeedPercent": 0,
+    "increasedDamagePercent": 0,
+    "itemModifierLines": [],
+    "lightningBreakdown": {
+      "1": "Base damage:",
+      "2": "104 to 1983 ^8(base damage from skill)",
+      "3": "= 104.0 to 1983.0",
+      "4": "Hit damage:",
+      "5": "130 to 2479 ^8(total damage)",
+      "6": "= 130 to 2479",
+      "7": "Portion of total damage: 100%",
+      "damageTypes": [
+        {
+          "base": "104 to 1983",
+          "convSrc": false,
+          "inc": false,
+          "more": "x 1.25",
+          "source": "Lightning",
+          "total": "130 to 2479"
+        }
+      ]
+    },
+    "selectedPart": 1,
+    "selectedSkillId": "Spark",
+    "supportContributions": [
+      {
+        "flags": 2,
+        "keywordFlags": 0,
+        "name": "Damage",
+        "source": "Skill:SupportControlledDestruction",
+        "value": 25
+      },
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritChance",
+        "source": "Skill:SupportControlledDestruction",
+        "value": -80
+      },
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "SupportManaMultiplier",
+        "source": "Skill:SupportControlledDestruction",
+        "value": 40
+      }
+    ],
+    "supportCriticalChanceMultiplier": 0.20000000000000001,
+    "supportDamageMultiplier": 1.25,
+    "supportGems": [
+      {
+        "enabled": true,
+        "gameId": "Metadata/Items/Gems/SupportGemControlledDestruction",
+        "gemId": "Metadata/Items/Gems/SkillGemSupportControlledDestruction",
+        "level": 1,
+        "nameSpec": "Controlled Destruction",
+        "quality": 0,
+        "skillId": "SupportControlledDestruction"
+      }
+    ],
+    "supportManaCostMultiplier": 1.3999999999999999,
+    "supportSpeedMultiplier": 1,
+    "supportTotalCastTime": 0
+  },
+  "support-controlled-destruction-level20": {
+    "ActionSpeedMod": 1,
+    "AverageDamage": 1450.5,
+    "AverageHit": 1450.5,
+    "CombinedDPS": 2417.5,
+    "CritChance": 0,
+    "CritMultiplier": 0,
+    "HitChance": 100,
+    "LightningHitAverage": 1450.5,
+    "LightningMaxBase": 1983,
+    "LightningMinBase": 104,
+    "Speed": 1.6666666666666667,
+    "Time": 0.59999999999999998,
+    "TotalDPS": 2417.5,
+    "TotalMax": 2756,
+    "TotalMin": 145,
+    "addedContributions": [],
+    "addedMaximum": 0,
+    "addedMinimum": 0,
+    "contributions": [],
+    "damageEffectiveness": 1.8999999999999999,
+    "increasedCastSpeedPercent": 0,
+    "increasedDamagePercent": 0,
+    "itemModifierLines": [],
+    "lightningBreakdown": {
+      "1": "Base damage:",
+      "2": "104 to 1983 ^8(base damage from skill)",
+      "3": "= 104.0 to 1983.0",
+      "4": "Hit damage:",
+      "5": "145 to 2756 ^8(total damage)",
+      "6": "= 145 to 2756",
+      "7": "Portion of total damage: 100%",
+      "damageTypes": [
+        {
+          "base": "104 to 1983",
+          "convSrc": false,
+          "inc": false,
+          "more": "x 1.39",
+          "source": "Lightning",
+          "total": "145 to 2756"
+        }
+      ]
+    },
+    "selectedPart": 1,
+    "selectedSkillId": "Spark",
+    "supportContributions": [
+      {
+        "flags": 2,
+        "keywordFlags": 0,
+        "name": "Damage",
+        "source": "Skill:SupportControlledDestruction",
+        "value": 39
+      },
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritChance",
+        "source": "Skill:SupportControlledDestruction",
+        "value": -80
+      },
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "SupportManaMultiplier",
+        "source": "Skill:SupportControlledDestruction",
+        "value": 40
+      }
+    ],
+    "supportCriticalChanceMultiplier": 0.20000000000000001,
+    "supportDamageMultiplier": 1.3899999999999999,
+    "supportGems": [
+      {
+        "enabled": true,
+        "gameId": "Metadata/Items/Gems/SupportGemControlledDestruction",
+        "gemId": "Metadata/Items/Gems/SkillGemSupportControlledDestruction",
+        "level": 20,
+        "nameSpec": "Controlled Destruction",
+        "quality": 0,
+        "skillId": "SupportControlledDestruction"
+      }
+    ],
+    "supportManaCostMultiplier": 1.3999999999999999,
+    "supportSpeedMultiplier": 1,
+    "supportTotalCastTime": 0
+  },
+  "support-controlled-destruction-rounded": {
+    "ActionSpeedMod": 1,
+    "AverageDamage": 1818,
+    "AverageHit": 1818,
+    "CombinedDPS": 3030,
+    "CritChance": 0,
+    "CritMultiplier": 0,
+    "HitChance": 100,
+    "LightningHitAverage": 1818,
+    "LightningMaxBase": 1986.8,
+    "LightningMinBase": 105.90000000000001,
+    "Speed": 1.6666666666666667,
+    "Time": 0.59999999999999998,
+    "TotalDPS": 3030,
+    "TotalMax": 3452,
+    "TotalMin": 184,
+    "addedContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 131072,
+        "name": "LightningMin",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 1
+      },
+      {
+        "flags": 0,
+        "keywordFlags": 131072,
+        "name": "LightningMax",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 2
+      }
+    ],
+    "addedMaximum": 2,
+    "addedMinimum": 1,
+    "contributions": [
+      {
+        "flags": 2,
+        "keywordFlags": 0,
+        "name": "Damage",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 25
+      }
+    ],
+    "damageEffectiveness": 1.8999999999999999,
+    "increasedCastSpeedPercent": 0,
+    "increasedDamagePercent": 25,
+    "itemModifierLines": [
+      {
+        "line": "Adds 1 to 2 Lightning Damage to Spells",
+        "mods": [
+          {
+            "flags": 0,
+            "keywordFlags": 131072,
+            "name": "LightningMin",
+            "value": 1
+          },
+          {
+            "flags": 0,
+            "keywordFlags": 131072,
+            "name": "LightningMax",
+            "value": 2
+          }
+        ]
+      },
+      {
+        "line": "25% increased Spell Damage",
+        "mods": [
+          {
+            "flags": 2,
+            "keywordFlags": 0,
+            "name": "Damage",
+            "value": 25
+          }
+        ]
+      }
+    ],
+    "lightningBreakdown": {
+      "1": "Base damage:",
+      "2": "104 to 1983 ^8(base damage from skill)",
+      "3": "+ 1 to 2 ^8(added damage)",
+      "4": "x 1.90 ^8(damage effectiveness)",
+      "5": "= 105.9 to 1986.8",
+      "6": "Hit damage:",
+      "7": "184 to 3452 ^8(total damage)",
+      "8": "= 184 to 3452",
+      "9": "Portion of total damage: 100%",
+      "damageTypes": [
+        {
+          "base": "105.9 to 1986.8",
+          "convSrc": false,
+          "inc": "x 1.25",
+          "more": "x 1.39",
+          "source": "Lightning",
+          "total": "184 to 3452"
+        }
+      ]
+    },
+    "selectedPart": 1,
+    "selectedSkillId": "Spark",
+    "supportContributions": [
+      {
+        "flags": 2,
+        "keywordFlags": 0,
+        "name": "Damage",
+        "source": "Skill:SupportControlledDestruction",
+        "value": 39
+      },
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritChance",
+        "source": "Skill:SupportControlledDestruction",
+        "value": -80
+      },
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "SupportManaMultiplier",
+        "source": "Skill:SupportControlledDestruction",
+        "value": 40
+      }
+    ],
+    "supportCriticalChanceMultiplier": 0.20000000000000001,
+    "supportDamageMultiplier": 1.3899999999999999,
+    "supportGems": [
+      {
+        "enabled": true,
+        "gameId": "Metadata/Items/Gems/SupportGemControlledDestruction",
+        "gemId": "Metadata/Items/Gems/SkillGemSupportControlledDestruction",
+        "level": 20,
+        "nameSpec": "Controlled Destruction",
+        "quality": 0,
+        "skillId": "SupportControlledDestruction"
+      }
+    ],
+    "supportManaCostMultiplier": 1.3999999999999999,
+    "supportSpeedMultiplier": 1,
+    "supportTotalCastTime": 0
   }
 }

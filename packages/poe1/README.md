@@ -37,7 +37,23 @@ addedLightningDamage: [
 ];
 ```
 
-Raw endpoints and their sums must be nonnegative safe integers with minimum at most maximum. Each group retains both stat IDs, values and shared provenance. The normalizer reads per-level client effectiveness (`1 + DamageEffectiveness / 10000`, currently 1.9), applies it to summed raw endpoints, adds intrinsic damage, then applies increases and final endpoint rounding. The result's `addedLightningDamage` trace reports each stage and every original group; `hit.baseLightningDamage` stays intrinsic. Generic/attack added damage, other elements, local/conditional effects, support gems and caller-defined effectiveness remain unsupported. This extension applies to selected-skill APIs; the original isolated-hit API above retains its earlier input contract.
+Raw endpoints and their sums must be nonnegative safe integers with minimum at most maximum. Each group retains both stat IDs, values and shared provenance. The normalizer reads per-level client effectiveness (`1 + DamageEffectiveness / 10000`, currently 1.9), applies it to summed raw endpoints, adds intrinsic damage, then applies increases, any reviewed support more multiplier and final endpoint rounding. The result's `addedLightningDamage` trace reports each stage and every original group; `hit.baseLightningDamage` stays intrinsic. Generic/attack added damage, other elements, local/conditional effects and caller-defined effectiveness remain unsupported. This extension applies to selected-skill APIs; the original isolated-hit API above retains its earlier input contract.
+
+One optional normal Controlled Destruction is supported in `skill.supports`:
+
+```js
+supports: [
+  {
+    id: 'SupportControlledDestruction',
+    gemLevel: 20,
+    quality: 0,
+    enabled: true,
+    source: { kind: 'skill', id: 'socket-group:1:gem:2' },
+  },
+];
+```
+
+Only levels 1–20, quality 0 and at most one explicit support record are accepted. `loadSparkDataset` loads matching support facts and validates normal Spark eligibility. The exact more-spell stat grants 25–39% more damage, multiplied after increased damage before hit rounding. The 80% less critical-chance stat remains visible in `supportEffects` with its source but does not apply to the explicit noncritical hit metric. The cast-time multiplier is 1: Spark retains its source base cast time and existing cast-speed rules. The support's own 1000 ms record is not an active cast-time override. Disabled known supports retain provenance and raw effects with applied multipliers of 1. Other supports, awakened versions, duplicate supports and nonzero support quality fail visibly. `supportEffects` reports raw contributions, source rows and all multipliers, including the 1.4 cost multiplier without calculating mana sustain.
 
 `createSelectedSkillSession(input, dataset)` returns a validated session. `session.recalculate(nextInput)` returns the calculation, `recalculated` node names and the current `dependencies`. The session captures immutable dataset facts, tracks changing applicability sets, and retains its last accepted state on invalid updates. `planCalculationGraph` rejects cycles/feedback explicitly instead of assuming every future mechanic is acyclic.
 

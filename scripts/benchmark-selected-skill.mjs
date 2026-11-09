@@ -22,7 +22,20 @@ const dataset = value(await loadSparkDataset(fixtureReader(fixture)));
 const initial = {
   identity: dataset.identity,
   buildId: 'benchmark-synthetic',
-  skill: { id: 'Spark', gemLevel: 20, quality: 0 },
+  skill: {
+    id: 'Spark',
+    gemLevel: 20,
+    quality: 0,
+    supports: [
+      {
+        id: 'SupportControlledDestruction',
+        gemLevel: 1,
+        quality: 0,
+        enabled: true,
+        source: { kind: 'skill', id: 'synthetic-support', line: 1 },
+      },
+    ],
+  },
   configuration: { id: 'benchmark-enemy', effectiveLightningResistancePercent: 25 },
   modifiers: Array.from({ length: 32 }, (_, index) => ({
     statId: index % 5 === 0 ? 'base_cast_speed_+%' : 'spell_damage_+%',
@@ -47,6 +60,8 @@ for (const mutation of [
   'enemy-resistance',
   'applicability',
   'added-lightning-range',
+  'support-level',
+  'support-enabled',
 ]) {
   const states = [];
   const next = structuredClone(initial);
@@ -58,6 +73,8 @@ for (const mutation of [
       next.modifiers[1].statId = index % 2 === 0 ? 'spell_damage_+%' : 'base_cast_speed_+%';
     if (mutation === 'added-lightning-range')
       next.addedLightningDamage[0].values = [index % 11, 20 + (index % 31)];
+    if (mutation === 'support-level') next.skill.supports[0].gemLevel = 1 + (index % 20);
+    if (mutation === 'support-enabled') next.skill.supports[0].enabled = index % 2 === 0;
     states.push(structuredClone(next));
   }
   const check = value(createSelectedSkillSession(initial, dataset));
@@ -114,12 +131,13 @@ for (const mutation of [
 console.log(
   JSON.stringify(
     {
-      benchmark: 'selected-skill-batches-v2',
+      benchmark: 'selected-skill-batches-v3',
       engineRevision: selectedSkillEngineRevision,
       node: process.version,
       identity: dataset.identity,
       modifierCount: initial.modifiers.length,
       addedLightningGroupCount: initial.addedLightningDamage.length,
+      supportCount: initial.skill.supports.length,
       timing:
         'performance.now; session creation and equality assertions excluded; alternating trial order; median of five warm batches',
       reports,

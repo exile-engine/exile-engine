@@ -21,6 +21,11 @@ const fixtures = Object.fromEntries(
       'added-lightning-rounded',
       'added-lightning-zero',
       'added-lightning-reversed',
+      'support-controlled-destruction-level1',
+      'support-controlled-destruction-level20',
+      'support-controlled-destruction-combined',
+      'support-controlled-destruction-disabled',
+      'support-controlled-destruction-rounded',
     ].map(async (name) => [
       name,
       await readFile(new URL(`./fixtures/pob/${name}.xml`, import.meta.url), 'utf8'),
@@ -36,7 +41,7 @@ const source = (xml = fixtures.baseline) => ({
 });
 
 test('PoB capability advertises exactly the bounded XML profile', () => {
-  assert.equal(pobAdapterVersion, 'poe1-spark-xml-v2');
+  assert.equal(pobAdapterVersion, 'poe1-spark-xml-v3');
   assert.equal(pobCompatibility.status, 'bounded-poe1-spark-xml');
   assert.equal(pobCompatibility.xmlImportImplemented, true);
   assert.equal(pobCompatibility.shareCodeImportImplemented, false);
@@ -228,6 +233,86 @@ test('reversed, oversized, decimal, attack, generic and conditional added damage
   assert.equal(reversed.diagnostics[0].code, 'pob.invalid-added-lightning-range');
   assert.equal(reversed.unresolved[0].reason, 'malformed-input');
   assert.equal(reversed.unresolved[0].source.textLine, 5);
+});
+
+test('one same-group normal Controlled Destruction support retains explicit state and gem provenance', () => {
+  for (const name of [
+    'support-controlled-destruction-level1',
+    'support-controlled-destruction-level20',
+    'support-controlled-destruction-combined',
+    'support-controlled-destruction-disabled',
+    'support-controlled-destruction-rounded',
+  ]) {
+    const imported = importPobXml(source(fixtures[name]));
+    assert.equal(imported.complete, true, name + JSON.stringify(imported.diagnostics));
+    assert.deepEqual(imported.supports, [
+      {
+        id: 'SupportControlledDestruction',
+        gemLevel: name.endsWith('level1') ? 1 : 20,
+        quality: 0,
+        enabled: !name.endsWith('disabled'),
+        source: { kind: 'skill', id: 'pob-gem:1:2', label: 'Controlled Destruction' },
+      },
+    ]);
+    assert.deepEqual(imported.selectedSkill.skill.supports, imported.supports);
+    assert.equal(imported.skills.length, 1);
+    assert.equal(imported.skills[0].gameSkillId, 'Spark');
+    assert.deepEqual(imported.selectedSkill.identity, target);
+    assert.equal(imported.rawXml, fixtures[name]);
+  }
+  const combined = importPobXml(source(fixtures['support-controlled-destruction-combined']));
+  assert.equal(combined.modifiers.length, 5);
+  assert.deepEqual(combined.addedLightningDamage[0].values, [10, 20]);
+  assert.equal(combined.selectedSkill.configuration.effectiveLightningResistancePercent, 25);
+  assert.deepEqual(importPobXml(source()).supports, []);
+});
+
+test('unknown, duplicate, incompatible or differently scoped support gems block adaptation even when disabled', () => {
+  const normal = fixtures['support-controlled-destruction-level20'];
+  const support =
+    '<Gem skillId="SupportControlledDestruction" gemId="Metadata/Items/Gems/SupportGemControlledDestruction" nameSpec="Controlled Destruction" level="20" quality="0" enabled="true"/>';
+  assert.ok(normal.includes(support));
+  const rejected = [
+    normal.replace(
+      'skillId="SupportControlledDestruction"',
+      'skillId="SupportAddedLightningDamage"',
+    ),
+    normal.replace('SupportGemControlledDestruction', 'SkillGemSupportControlledDestruction'),
+    normal.replace(
+      'nameSpec="Controlled Destruction"',
+      'nameSpec="Awakened Controlled Destruction"',
+    ),
+    normal.replace(support, support.replace('quality="0"', 'quality="1"')),
+    normal.replace(support, support.replace('level="20"', 'level="21"')),
+    normal.replace(support, support.replace('level="20"', 'level="0"')),
+    normal.replace(support, support.replace('level="20"', 'level="1.5"')),
+    normal.replace(support, support.replace(' enabled="true"', '')),
+    normal.replace(support, support.replace('enabled="true"', 'enabled="yes"')),
+    normal.replace(
+      support,
+      support
+        .replace('SupportControlledDestruction', 'SupportUnknown')
+        .replace('enabled="true"', 'enabled="false"'),
+    ),
+    normal.replace(support, support + support),
+    normal.replace(support, support.replace('/>', ' unsupportedEffect="true"/>')),
+    normal.replace(support, '').replace('<Gem skillId="Spark"', support + '<Gem skillId="Spark"'),
+    fixtures.baseline.replace(
+      '</Skills>',
+      `<Skill enabled="true" mainActiveSkill="1" skillPart="1">${support}</Skill></Skills>`,
+    ),
+    normal.replace('mainActiveSkill="1"', 'mainActiveSkill="2"'),
+  ];
+  for (const xml of rejected) {
+    const imported = importPobXml(source(xml));
+    assert.equal(imported.complete, false, xml);
+    assert.equal('selectedSkill' in imported, false);
+    assert.ok(imported.unresolved.length);
+    assert.equal(imported.rawXml, xml);
+  }
+  const unknown = importPobXml(source(rejected[0]));
+  assert.equal(unknown.unresolved[0].source.gemIndex, 2);
+  assert.equal(unknown.unresolved[0].source.socketGroup, 1);
 });
 
 test('ambiguous selection, unsupported version hints and mechanics fail visibly', () => {

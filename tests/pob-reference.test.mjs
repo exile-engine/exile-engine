@@ -93,6 +93,57 @@ test('added damage effectiveness is normalized from the exact client field and s
   }
 });
 
+test('Controlled Destruction facts and eligibility resolve from the same client snapshot', async () => {
+  const fact = reference.supportReference;
+  const effect = await reader.getRecord('GrantedEffects', fact.id);
+  const statSet = await reader.resolve(effect.fields.StatSet1);
+  const active = await reader.getRecord('ActiveSkills', 'spark');
+  assert.equal(effect.rowIndex, fact.sourceRows.grantedEffect.rowIndex);
+  assert.equal(effect.fields.IsSupport, true);
+  assert.equal(statSet.rowIndex, fact.sourceRows.statSet.rowIndex);
+  assert.deepEqual(
+    statSet.fields.ConstantStats.map((stat) => stat.key),
+    [fact.criticalChanceStatId],
+  );
+  assert.deepEqual(statSet.fields.ConstantStatsValues, [fact.criticalChancePercent]);
+  assert.deepEqual(effect.fields.ExcludedActiveSkillTypes, []);
+  const allowed = effect.fields.AllowedActiveSkillTypes.map((type) => type.key);
+  assert.ok(active.fields.ActiveSkillTypes.some((type) => allowed.includes(type.key)));
+  const normalized = dataset.supports.find((support) => support.id === fact.id);
+  assert.deepEqual(normalized.identity, reference.identity);
+  assert.equal(normalized.gemId, fact.gameItemId);
+  assert.equal(normalized.levels.length, 20);
+  const rawStats = await reader.getTable('GrantedEffectStatSetsPerLevel');
+  const rawEffects = await reader.getTable('GrantedEffectsPerLevel');
+  for (const [index, expected] of fact.moreSpellDamageByLevel.entries()) {
+    const gemLevel = index + 1;
+    const raw = rawStats.find(
+      (row) => row.fields.StatSet?.key === fact.id && row.fields.GemLevel === gemLevel,
+    );
+    const perEffect = rawEffects.find(
+      (row) => row.fields.GrantedEffect?.key === fact.id && row.fields.Level === gemLevel,
+    );
+    assert.deepEqual(
+      raw.fields.AdditionalStats.map((stat) => stat.key),
+      [fact.spellDamageStatId],
+    );
+    assert.deepEqual(raw.fields.AdditionalStatsValues, [expected]);
+    assert.equal(perEffect.fields.CostMultiplier, fact.costMultiplierSource);
+    const level = normalized.levels.find((level) => level.gemLevel === gemLevel);
+    assert.equal(level.moreSpellDamagePercent, expected);
+    assert.equal(level.criticalStrikeChancePercent, fact.criticalChancePercent);
+    close(level.manaCostMultiplier, fact.manaCostMultiplier, 'support cost multiplier');
+    assert.ok(
+      level.sourceRows.some(
+        (row) =>
+          row.table === 'GrantedEffectStatSetsPerLevel' &&
+          row.key === raw.key &&
+          row.rowIndex === raw.rowIndex,
+      ),
+    );
+  }
+});
+
 for (const expected of reference.cases) {
   test(`${expected.fixture}: adapted XML intermediates, contributions and selected hit/combined DPS match executed pinned PoB`, async () => {
     const xml = await readFile(
@@ -128,6 +179,41 @@ for (const expected of reference.cases) {
     assert.deepEqual(value.includedDamage, ['lightning-hit']);
     assert.equal(value.skill.id, 'Spark');
     assert.equal(value.skill.gemLevel, expected.gemLevel);
+    assert.deepEqual(value.skill.supports ?? [], expected.supports);
+    const supportEffects = value.supportEffects;
+    assert.deepEqual(supportEffects.supports, expected.supports);
+    for (const key of [
+      'spellDamageMultiplier',
+      'criticalChanceMultiplier',
+      'castTimeMultiplier',
+      'manaCostMultiplier',
+    ])
+      close(supportEffects[key], expected[key], key);
+    assert.equal(supportEffects.castTimeMultiplier, 1);
+    assert.deepEqual(
+      supportEffects.contributions.map(({ statId, value, operation, appliedToSelectedHit }) => ({
+        statId,
+        value,
+        operation,
+        appliedToSelectedHit,
+      })),
+      expected.supportContributions,
+    );
+    for (const contribution of supportEffects.contributions) {
+      assert.deepEqual(contribution.source, expected.supports[0].source);
+      assert.equal(contribution.scope, 'global');
+      assert.ok(
+        contribution.sourceRows.some(
+          (row) =>
+            row.table === 'GrantedEffectStatSets' && row.key === reference.supportReference.id,
+        ),
+      );
+      assert.ok(
+        contribution.sourceRows.some(
+          (row) => row.table === 'Stats' && row.key === contribution.statId,
+        ),
+      );
+    }
     const hit = value.hit;
     assert.deepEqual(
       hit.modifierContributions.map(({ statId, value }) => ({ statId, value })),
@@ -189,12 +275,14 @@ for (const expected of reference.cases) {
     const addedMaximum = expected.addedGroups.reduce((sum, group) => sum + group.values[1], 0);
     const minimum = Math.floor(
       (expected.baseLightningDamage.min + addedMinimum * expected.addedDamageEffectiveness) *
-        (1 + damageIncrease / 100) +
+        (1 + damageIncrease / 100) *
+        expected.spellDamageMultiplier +
         0.5,
     );
     const maximum = Math.floor(
       (expected.baseLightningDamage.max + addedMaximum * expected.addedDamageEffectiveness) *
-        (1 + damageIncrease / 100) +
+        (1 + damageIncrease / 100) *
+        expected.spellDamageMultiplier +
         0.5,
     );
     const speed = Math.min(
@@ -210,6 +298,69 @@ for (const expected of reference.cases) {
     assert.equal(observed.CritChance, 0);
     assert.equal(observed.HitChance, 100);
     assert.equal(observed.ActionSpeedMod, 1);
+    close(
+      supportEffects.spellDamageMultiplier,
+      observed.supportDamageMultiplier,
+      'PoB support damage multiplier',
+    );
+    close(
+      supportEffects.criticalChanceMultiplier,
+      observed.supportCriticalChanceMultiplier,
+      'PoB support crit chance multiplier',
+    );
+    close(
+      supportEffects.manaCostMultiplier,
+      observed.supportManaCostMultiplier,
+      'PoB support mana cost multiplier',
+    );
+    assert.equal(observed.supportSpeedMultiplier, 1);
+    assert.equal(observed.supportTotalCastTime, 0);
+    assert.deepEqual(
+      observed.supportGems.map((gem) => ({
+        id: gem.skillId,
+        gemLevel: gem.level,
+        quality: gem.quality,
+        enabled: gem.enabled,
+      })),
+      expected.supports.map(({ source, ...support }) => support),
+    );
+    for (const gem of observed.supportGems) {
+      assert.equal(gem.gameId, reference.supportReference.gameItemId);
+      assert.equal(gem.gemId, reference.supportReference.pobGemKey);
+      assert.equal(gem.nameSpec, reference.supportReference.name);
+    }
+    const supportEnabled = expected.supports[0]?.enabled === true;
+    const observedSupportMods = observed.supportContributions.map(
+      ({ name, value, flags, keywordFlags, source }) => {
+        assert.equal(source, `Skill:${reference.supportReference.id}`);
+        return { name, value, flags, keywordFlags };
+      },
+    );
+    assert.deepEqual(
+      observedSupportMods,
+      supportEnabled
+        ? [
+            {
+              name: 'Damage',
+              value: expected.supportContributions[0].value,
+              flags: 2,
+              keywordFlags: 0,
+            },
+            {
+              name: 'CritChance',
+              value: reference.supportReference.criticalChancePercent,
+              flags: 0,
+              keywordFlags: 0,
+            },
+            {
+              name: 'SupportManaMultiplier',
+              value: reference.supportReference.costMultiplierSource - 100,
+              flags: 0,
+              keywordFlags: 0,
+            },
+          ]
+        : [],
+    );
     close(added.raw.min, observed.addedMinimum, 'PoB added minimum');
     close(added.raw.max, observed.addedMaximum, 'PoB added maximum');
     close(added.effectiveness, observed.damageEffectiveness, 'PoB added effectiveness');
