@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Exile Engine browser smoke test</title>
+    <style>
+      body {
+        max-width: 960px;
+        margin: 40px auto;
+        padding: 0 24px;
+        font: 16px/1.5 system-ui;
+      }
+      pre {
+        white-space: pre-wrap;
+        background: #f3f4f6;
+        padding: 20px;
+        border-radius: 8px;
+      }
+    </style>
+    <script type="importmap">
+      {
+        "imports": {
+          "@exile-engine/core": "/packages/core/dist/index.js",
+          "@exile-engine/poe1": "/packages/poe1/dist/index.js",
+          "@exile-engine/poe2": "/packages/poe2/dist/index.js",
+          "@exile-engine/item-text": "/packages/item-text/dist/index.js",
+          "@exile-engine/pob": "/packages/pob/dist/index.js",
+          "@exile-engine/data-poe1": "/packages/data-poe1/dist/index.js",
+          "@exile-engine/data-poe2": "/packages/data-poe2/dist/index.js"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <h1>Exile Engine browser smoke test</h1>
+    <p id="status">Loading verified snapshots and running the English/Thai Spark example…</p>
+    <pre id="result"></pre>
+    <script type="module">
+      import { runSparkDemo } from '/examples/spark-demo.mjs';
+      import { pobCompatibility } from '@exile-engine/pob';
+      try {
+        const results = [];
+        for (const game of ['poe1', 'poe2']) {
+          results.push(
+            await runSparkDemo(game, async (relative) => {
+              const response = await fetch(`/packages/data-${game}/snapshot/${relative}`);
+              if (!response.ok) throw new Error(`Snapshot HTTP ${response.status}`);
+              return new Uint8Array(await response.arrayBuffer());
+            }),
+          );
+        }
+        document.querySelector('#result').textContent = JSON.stringify(
+          { results, pobCompatibility },
+          null,
+          2,
+        );
+        document.querySelector('#status').textContent =
+          'PASS: both games calculated, item text round-tripped, all seven ESM packages imported.';
+      } catch (error) {
+        document.querySelector('#status').textContent = 'FAIL: ' + error.message;
+        document.querySelector('#result').textContent = error.stack;
+      }
+    </script>
+  </body>
+</html>

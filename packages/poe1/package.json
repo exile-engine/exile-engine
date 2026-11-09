@@ -1,0 +1,33 @@
+{
+  "name": "@exile-engine/poe1",
+  "version": "0.1.0",
+  "description": "Exile Engine poe1 package.",
+  "type": "module",
+  "license": "MIT",
+  "sideEffects": false,
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "src",
+    "README.md",
+    "LICENSE",
+    "NOTICE.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/exile-engine/exile-engine.git",
+    "directory": "packages/poe1"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@exile-engine/core": "0.1.0"
+  }
+}

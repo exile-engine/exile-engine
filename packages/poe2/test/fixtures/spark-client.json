@@ -1,0 +1,868 @@
+{
+  "provenance": {
+    "kind": "client-extracted-subset",
+    "note": "Subset of decoded original local client tables. Snapshot identity below is a fixture identity, not a published game build."
+  },
+  "identity": {
+    "game": "poe2",
+    "build": "local-client-fixture",
+    "snapshotId": "poe2-spark-client-fixture-v1"
+  },
+  "tables": {
+    "Stats": [
+      {
+        "_index": 24,
+        "Id": "damage_+%",
+        "IsLocal": false,
+        "IsWeaponLocal": false
+      },
+      {
+        "_index": 25,
+        "Id": "spell_damage_+%",
+        "IsLocal": false,
+        "IsWeaponLocal": false
+      },
+      {
+        "_index": 56,
+        "Id": "lightning_damage_+%",
+        "IsLocal": false,
+        "IsWeaponLocal": false
+      },
+      {
+        "_index": 170,
+        "Id": "base_projectile_speed_+%",
+        "IsLocal": false,
+        "IsWeaponLocal": false
+      },
+      {
+        "_index": 213,
+        "Id": "base_cast_speed_+%",
+        "IsLocal": false,
+        "IsWeaponLocal": false
+      },
+      {
+        "_index": 347,
+        "Id": "base_skill_effect_duration",
+        "IsLocal": false,
+        "IsWeaponLocal": false
+      },
+      {
+        "_index": 488,
+        "Id": "projectile_damage_+%",
+        "IsLocal": false,
+        "IsWeaponLocal": false
+      },
+      {
+        "_index": 489,
+        "Id": "base_is_projectile",
+        "IsLocal": false,
+        "IsWeaponLocal": false
+      },
+      {
+        "_index": 1468,
+        "Id": "spell_minimum_base_lightning_damage",
+        "IsLocal": false,
+        "IsWeaponLocal": false
+      },
+      {
+        "_index": 1469,
+        "Id": "spell_maximum_base_lightning_damage",
+        "IsLocal": false,
+        "IsWeaponLocal": false
+      },
+      {
+        "_index": 4401,
+        "Id": "projectile_uses_contact_position",
+        "IsLocal": false,
+        "IsWeaponLocal": false
+      },
+      {
+        "_index": 6443,
+        "Id": "projectile_uses_contact_direction",
+        "IsLocal": false,
+        "IsWeaponLocal": false
+      },
+      {
+        "_index": 9949,
+        "Id": "check_for_targets_between_initiator_and_projectile_source",
+        "IsLocal": false,
+        "IsWeaponLocal": false
+      },
+      {
+        "_index": 11237,
+        "Id": "damage_hit_effect_index",
+        "IsLocal": false,
+        "IsWeaponLocal": false
+      },
+      {
+        "_index": 17186,
+        "Id": "spark_pathing_width_bounds",
+        "IsLocal": false,
+        "IsWeaponLocal": false
+      },
+      {
+        "_index": 17566,
+        "Id": "projectiles_should_collide_with_flying_monsters",
+        "IsLocal": false,
+        "IsWeaponLocal": false
+      },
+      {
+        "_index": 18042,
+        "Id": "base_number_of_projectiles",
+        "IsLocal": false,
+        "IsWeaponLocal": false
+      },
+      {
+        "_index": 18231,
+        "Id": "movement_speed_+%_final_while_performing_action",
+        "IsLocal": false,
+        "IsWeaponLocal": false
+      },
+      {
+        "_index": 18238,
+        "Id": "can_perform_skill_while_moving",
+        "IsLocal": false,
+        "IsWeaponLocal": false
+      },
+      {
+        "_index": 18294,
+        "Id": "movement_speed_acceleration_+%_per_second_while_performing_action",
+        "IsLocal": false,
+        "IsWeaponLocal": false
+      },
+      {
+        "_index": 20007,
+        "Id": "movement_speed_while_performing_action_locked_duration_%",
+        "IsLocal": false,
+        "IsWeaponLocal": false
+      },
+      {
+        "_index": 21278,
+        "Id": "spark_min_time_between_target_clearing_ms",
+        "IsLocal": false,
+        "IsWeaponLocal": false
+      }
+    ],
+    "GrantedEffects": [
+      {
+        "_index": 36,
+        "Id": "SparkPlayer",
+        "IsSupport": false,
+        "CastTime": 700,
+        "StatSet": 38
+      }
+    ],
+    "GrantedEffectStatSets": [
+      {
+        "_index": 38,
+        "Id": "SparkPlayer",
+        "Label": 12,
+        "ImplicitStats": [489, 17566, 4401, 6443, 9949, 18238],
+        "ConstantStats": [347, 17186, 11237, 18231, 18294, 20007, 21278],
+        "ConstantStatsValues": [2000, 20, 1009, -70, 160, 50, 660],
+        "BaseEffectiveness": 1.2000000476837158,
+        "IncrementalEffectiveness": 0.12999999523162842,
+        "DamageIncrementalEffectiveness": 0.006099999882280827,
+        "IgnoredStats": []
+      }
+    ],
+    "GrantedEffectStatSetsPerLevel": [
+      {
+        "_index": 1467,
+        "StatSet": 38,
+        "GemLevel": 1,
+        "BaseResolvedValues": [1, 10],
+        "FloatStats": [1468, 1469],
+        "StatInterpolations": [3, 3, 1],
+        "FloatStatsValues": [0.10000000149011612, 2.0999999046325684],
+        "ActorLevel": 1,
+        "AdditionalStats": [18042],
+        "AdditionalStatsValues": [4]
+      },
+      {
+        "_index": 1468,
+        "StatSet": 38,
+        "GemLevel": 2,
+        "BaseResolvedValues": [1, 13],
+        "FloatStats": [1468, 1469],
+        "StatInterpolations": [3, 3, 1],
+        "FloatStatsValues": [0.10000000149011612, 2.0999999046325684],
+        "ActorLevel": 3.4519999027252197,
+        "AdditionalStats": [18042],
+        "AdditionalStatsValues": [5]
+      },
+      {
+        "_index": 1469,
+        "StatSet": 38,
+        "GemLevel": 3,
+        "BaseResolvedValues": [1, 17],
+        "FloatStats": [1468, 1469],
+        "StatInterpolations": [3, 3, 1],
+        "FloatStatsValues": [0.10000000149011612, 2],
+        "ActorLevel": 6.767000198364258,
+        "AdditionalStats": [18042],
+        "AdditionalStatsValues": [5]
+      },
+      {
+        "_index": 1470,
+        "StatSet": 38,
+        "GemLevel": 4,
+        "BaseResolvedValues": [1, 21],
+        "FloatStats": [1468, 1469],
+        "StatInterpolations": [3, 3, 1],
+        "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
+        "ActorLevel": 10.307999610900879,
+        "AdditionalStats": [18042],
+        "AdditionalStatsValues": [5]
+      },
+      {
+        "_index": 1471,
+        "StatSet": 38,
+        "GemLevel": 5,
+        "BaseResolvedValues": [1, 26],
+        "FloatStats": [1468, 1469],
+        "StatInterpolations": [3, 3, 1],
+        "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
+        "ActorLevel": 14.074999809265137,
+        "AdditionalStats": [18042],
+        "AdditionalStatsValues": [5]
+      },
+      {
+        "_index": 1472,
+        "StatSet": 38,
+        "GemLevel": 6,
+        "BaseResolvedValues": [2, 32],
+        "FloatStats": [1468, 1469],
+        "StatInterpolations": [3, 3, 1],
+        "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
+        "ActorLevel": 18.06800079345703,
+        "AdditionalStats": [18042],
+        "AdditionalStatsValues": [5]
+      },
+      {
+        "_index": 1473,
+        "StatSet": 38,
+        "GemLevel": 7,
+        "BaseResolvedValues": [2, 38],
+        "FloatStats": [1468, 1469],
+        "StatInterpolations": [3, 3, 1],
+        "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
+        "ActorLevel": 22.28700065612793,
+        "AdditionalStats": [18042],
+        "AdditionalStatsValues": [6]
+      },
+      {
+        "_index": 1474,
+        "StatSet": 38,
+        "GemLevel": 8,
+        "BaseResolvedValues": [2, 45],
+        "FloatStats": [1468, 1469],
+        "StatInterpolations": [3, 3, 1],
+        "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
+        "ActorLevel": 26.73200035095215,
+        "AdditionalStats": [18042],
+        "AdditionalStatsValues": [6]
+      },
+      {
+        "_index": 1475,
+        "StatSet": 38,
+        "GemLevel": 9,
+        "BaseResolvedValues": [3, 53],
+        "FloatStats": [1468, 1469],
+        "StatInterpolations": [3, 3, 1],
+        "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
+        "ActorLevel": 31.402999877929688,
+        "AdditionalStats": [18042],
+        "AdditionalStatsValues": [6]
+      },
+      {
+        "_index": 1476,
+        "StatSet": 38,
+        "GemLevel": 10,
+        "BaseResolvedValues": [3, 61],
+        "FloatStats": [1468, 1469],
+        "StatInterpolations": [3, 3, 1],
+        "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
+        "ActorLevel": 36.29999923706055,
+        "AdditionalStats": [18042],
+        "AdditionalStatsValues": [6]
+      },
+      {
+        "_index": 1477,
+        "StatSet": 38,
+        "GemLevel": 11,
+        "BaseResolvedValues": [4, 71],
+        "FloatStats": [1468, 1469],
+        "StatInterpolations": [3, 3, 1],
+        "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
+        "ActorLevel": 41.42300033569336,
+        "AdditionalStats": [18042],
+        "AdditionalStatsValues": [7]
+      },
+      {
+        "_index": 1478,
+        "StatSet": 38,
+        "GemLevel": 12,
+        "BaseResolvedValues": [4, 81],
+        "FloatStats": [1468, 1469],
+        "StatInterpolations": [3, 3, 1],
+        "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
+        "ActorLevel": 46.77199935913086,
+        "AdditionalStats": [18042],
+        "AdditionalStatsValues": [7]
+      },
+      {
+        "_index": 1479,
+        "StatSet": 38,
+        "GemLevel": 13,
+        "BaseResolvedValues": [5, 93],
+        "FloatStats": [1468, 1469],
+        "StatInterpolations": [3, 3, 1],
+        "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
+        "ActorLevel": 52.34700012207031,
+        "AdditionalStats": [18042],
+        "AdditionalStatsValues": [7]
+      },
+      {
+        "_index": 1480,
+        "StatSet": 38,
+        "GemLevel": 14,
+        "BaseResolvedValues": [6, 106],
+        "FloatStats": [1468, 1469],
+        "StatInterpolations": [3, 3, 1],
+        "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
+        "ActorLevel": 58.14799880981445,
+        "AdditionalStats": [18042],
+        "AdditionalStatsValues": [7]
+      },
+      {
+        "_index": 1481,
+        "StatSet": 38,
+        "GemLevel": 15,
+        "BaseResolvedValues": [6, 120],
+        "FloatStats": [1468, 1469],
+        "StatInterpolations": [3, 3, 1],
+        "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
+        "ActorLevel": 64.17500305175781,
+        "AdditionalStats": [18042],
+        "AdditionalStatsValues": [8]
+      },
+      {
+        "_index": 1482,
+        "StatSet": 38,
+        "GemLevel": 16,
+        "BaseResolvedValues": [7, 135],
+        "FloatStats": [1468, 1469],
+        "StatInterpolations": [3, 3, 1],
+        "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
+        "ActorLevel": 70.4280014038086,
+        "AdditionalStats": [18042],
+        "AdditionalStatsValues": [8]
+      },
+      {
+        "_index": 1483,
+        "StatSet": 38,
+        "GemLevel": 17,
+        "BaseResolvedValues": [8, 153],
+        "FloatStats": [1468, 1469],
+        "StatInterpolations": [3, 3, 1],
+        "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
+        "ActorLevel": 76.90699768066406,
+        "AdditionalStats": [18042],
+        "AdditionalStatsValues": [8]
+      },
+      {
+        "_index": 1484,
+        "StatSet": 38,
+        "GemLevel": 18,
+        "BaseResolvedValues": [9, 172],
+        "FloatStats": [1468, 1469],
+        "StatInterpolations": [3, 3, 1],
+        "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
+        "ActorLevel": 83.61199951171875,
+        "AdditionalStats": [18042],
+        "AdditionalStatsValues": [8]
+      },
+      {
+        "_index": 1485,
+        "StatSet": 38,
+        "GemLevel": 19,
+        "BaseResolvedValues": [10, 193],
+        "FloatStats": [1468, 1469],
+        "StatInterpolations": [3, 3, 1],
+        "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
+        "ActorLevel": 90.54299926757812,
+        "AdditionalStats": [18042],
+        "AdditionalStatsValues": [9]
+      },
+      {
+        "_index": 1486,
+        "StatSet": 38,
+        "GemLevel": 20,
+        "BaseResolvedValues": [11, 216],
+        "FloatStats": [1468, 1469],
+        "StatInterpolations": [3, 3, 1],
+        "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
+        "ActorLevel": 97.69999694824219,
+        "AdditionalStats": [18042],
+        "AdditionalStatsValues": [9]
+      },
+      {
+        "_index": 1487,
+        "StatSet": 38,
+        "GemLevel": 21,
+        "BaseResolvedValues": [13, 242],
+        "FloatStats": [1468, 1469],
+        "StatInterpolations": [3, 3, 1],
+        "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
+        "ActorLevel": 105.08300018310547,
+        "AdditionalStats": [18042],
+        "AdditionalStatsValues": [9]
+      },
+      {
+        "_index": 1488,
+        "StatSet": 38,
+        "GemLevel": 22,
+        "BaseResolvedValues": [14, 271],
+        "FloatStats": [1468, 1469],
+        "StatInterpolations": [3, 3, 1],
+        "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
+        "ActorLevel": 112.69200134277344,
+        "AdditionalStats": [18042],
+        "AdditionalStatsValues": [10]
+      },
+      {
+        "_index": 1489,
+        "StatSet": 38,
+        "GemLevel": 23,
+        "BaseResolvedValues": [16, 303],
+        "FloatStats": [1468, 1469],
+        "StatInterpolations": [3, 3, 1],
+        "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
+        "ActorLevel": 120.5270004272461,
+        "AdditionalStats": [18042],
+        "AdditionalStatsValues": [10]
+      },
+      {
+        "_index": 1490,
+        "StatSet": 38,
+        "GemLevel": 24,
+        "BaseResolvedValues": [18, 338],
+        "FloatStats": [1468, 1469],
+        "StatInterpolations": [3, 3, 1],
+        "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
+        "ActorLevel": 128.58799743652344,
+        "AdditionalStats": [18042],
+        "AdditionalStatsValues": [10]
+      },
+      {
+        "_index": 1491,
+        "StatSet": 38,
+        "GemLevel": 25,
+        "BaseResolvedValues": [20, 378],
+        "FloatStats": [1468, 1469],
+        "StatInterpolations": [3, 3, 1],
+        "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
+        "ActorLevel": 136.875,
+        "AdditionalStats": [18042],
+        "AdditionalStatsValues": [10]
+      },
+      {
+        "_index": 1492,
+        "StatSet": 38,
+        "GemLevel": 26,
+        "BaseResolvedValues": [22, 421],
+        "FloatStats": [1468, 1469],
+        "StatInterpolations": [3, 3, 1],
+        "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
+        "ActorLevel": 145.38800048828125,
+        "AdditionalStats": [18042],
+        "AdditionalStatsValues": [11]
+      },
+      {
+        "_index": 1493,
+        "StatSet": 38,
+        "GemLevel": 27,
+        "BaseResolvedValues": [25, 470],
+        "FloatStats": [1468, 1469],
+        "StatInterpolations": [3, 3, 1],
+        "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
+        "ActorLevel": 154.1269989013672,
+        "AdditionalStats": [18042],
+        "AdditionalStatsValues": [11]
+      },
+      {
+        "_index": 1494,
+        "StatSet": 38,
+        "GemLevel": 28,
+        "BaseResolvedValues": [28, 524],
+        "FloatStats": [1468, 1469],
+        "StatInterpolations": [3, 3, 1],
+        "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
+        "ActorLevel": 163.0919952392578,
+        "AdditionalStats": [18042],
+        "AdditionalStatsValues": [11]
+      },
+      {
+        "_index": 1495,
+        "StatSet": 38,
+        "GemLevel": 29,
+        "BaseResolvedValues": [31, 584],
+        "FloatStats": [1468, 1469],
+        "StatInterpolations": [3, 3, 1],
+        "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
+        "ActorLevel": 172.2830047607422,
+        "AdditionalStats": [18042],
+        "AdditionalStatsValues": [11]
+      },
+      {
+        "_index": 1496,
+        "StatSet": 38,
+        "GemLevel": 30,
+        "BaseResolvedValues": [34, 651],
+        "FloatStats": [1468, 1469],
+        "StatInterpolations": [3, 3, 1],
+        "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
+        "ActorLevel": 181.6999969482422,
+        "AdditionalStats": [18042],
+        "AdditionalStatsValues": [12]
+      },
+      {
+        "_index": 1497,
+        "StatSet": 38,
+        "GemLevel": 31,
+        "BaseResolvedValues": [38, 726],
+        "FloatStats": [1468, 1469],
+        "StatInterpolations": [3, 3, 1],
+        "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
+        "ActorLevel": 191.34300231933594,
+        "AdditionalStats": [18042],
+        "AdditionalStatsValues": [12]
+      },
+      {
+        "_index": 1498,
+        "StatSet": 38,
+        "GemLevel": 32,
+        "BaseResolvedValues": [43, 809],
+        "FloatStats": [1468, 1469],
+        "StatInterpolations": [3, 3, 1],
+        "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
+        "ActorLevel": 201.21200561523438,
+        "AdditionalStats": [18042],
+        "AdditionalStatsValues": [12]
+      },
+      {
+        "_index": 1499,
+        "StatSet": 38,
+        "GemLevel": 33,
+        "BaseResolvedValues": [47, 902],
+        "FloatStats": [1468, 1469],
+        "StatInterpolations": [3, 3, 1],
+        "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
+        "ActorLevel": 211.3070068359375,
+        "AdditionalStats": [18042],
+        "AdditionalStatsValues": [12]
+      },
+      {
+        "_index": 1500,
+        "StatSet": 38,
+        "GemLevel": 34,
+        "BaseResolvedValues": [53, 1006],
+        "FloatStats": [1468, 1469],
+        "StatInterpolations": [3, 3, 1],
+        "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
+        "ActorLevel": 221.6280059814453,
+        "AdditionalStats": [18042],
+        "AdditionalStatsValues": [12]
+      },
+      {
+        "_index": 1501,
+        "StatSet": 38,
+        "GemLevel": 35,
+        "BaseResolvedValues": [59, 1122],
+        "FloatStats": [1468, 1469],
+        "StatInterpolations": [3, 3, 1],
+        "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
+        "ActorLevel": 232.1750030517578,
+        "AdditionalStats": [18042],
+        "AdditionalStatsValues": [12]
+      },
+      {
+        "_index": 1502,
+        "StatSet": 38,
+        "GemLevel": 36,
+        "BaseResolvedValues": [66, 1252],
+        "FloatStats": [1468, 1469],
+        "StatInterpolations": [3, 3, 1],
+        "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
+        "ActorLevel": 242.947998046875,
+        "AdditionalStats": [18042],
+        "AdditionalStatsValues": [12]
+      },
+      {
+        "_index": 1503,
+        "StatSet": 38,
+        "GemLevel": 37,
+        "BaseResolvedValues": [74, 1398],
+        "FloatStats": [1468, 1469],
+        "StatInterpolations": [3, 3, 1],
+        "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
+        "ActorLevel": 253.94700622558594,
+        "AdditionalStats": [18042],
+        "AdditionalStatsValues": [13]
+      },
+      {
+        "_index": 1504,
+        "StatSet": 38,
+        "GemLevel": 38,
+        "BaseResolvedValues": [82, 1561],
+        "FloatStats": [1468, 1469],
+        "StatInterpolations": [3, 3, 1],
+        "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
+        "ActorLevel": 265.1719970703125,
+        "AdditionalStats": [18042],
+        "AdditionalStatsValues": [13]
+      },
+      {
+        "_index": 1505,
+        "StatSet": 38,
+        "GemLevel": 39,
+        "BaseResolvedValues": [92, 1744],
+        "FloatStats": [1468, 1469],
+        "StatInterpolations": [3, 3, 1],
+        "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
+        "ActorLevel": 276.62298583984375,
+        "AdditionalStats": [18042],
+        "AdditionalStatsValues": [13]
+      },
+      {
+        "_index": 1506,
+        "StatSet": 38,
+        "GemLevel": 40,
+        "BaseResolvedValues": [103, 1949],
+        "FloatStats": [1468, 1469],
+        "StatInterpolations": [3, 3, 1],
+        "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
+        "ActorLevel": 288.29998779296875,
+        "AdditionalStats": [18042],
+        "AdditionalStatsValues": [13]
+      }
+    ],
+    "GrantedEffectsPerLevel": [
+      {
+        "_index": 1301,
+        "GrantedEffect": 36,
+        "Level": 1
+      },
+      {
+        "_index": 1302,
+        "GrantedEffect": 36,
+        "Level": 2
+      },
+      {
+        "_index": 1303,
+        "GrantedEffect": 36,
+        "Level": 3
+      },
+      {
+        "_index": 1304,
+        "GrantedEffect": 36,
+        "Level": 4
+      },
+      {
+        "_index": 1305,
+        "GrantedEffect": 36,
+        "Level": 5
+      },
+      {
+        "_index": 1306,
+        "GrantedEffect": 36,
+        "Level": 6
+      },
+      {
+        "_index": 1307,
+        "GrantedEffect": 36,
+        "Level": 7
+      },
+      {
+        "_index": 1308,
+        "GrantedEffect": 36,
+        "Level": 8
+      },
+      {
+        "_index": 1309,
+        "GrantedEffect": 36,
+        "Level": 9
+      },
+      {
+        "_index": 1310,
+        "GrantedEffect": 36,
+        "Level": 10
+      },
+      {
+        "_index": 1311,
+        "GrantedEffect": 36,
+        "Level": 11
+      },
+      {
+        "_index": 1312,
+        "GrantedEffect": 36,
+        "Level": 12
+      },
+      {
+        "_index": 1313,
+        "GrantedEffect": 36,
+        "Level": 13
+      },
+      {
+        "_index": 1314,
+        "GrantedEffect": 36,
+        "Level": 14
+      },
+      {
+        "_index": 1315,
+        "GrantedEffect": 36,
+        "Level": 15
+      },
+      {
+        "_index": 1316,
+        "GrantedEffect": 36,
+        "Level": 16
+      },
+      {
+        "_index": 1317,
+        "GrantedEffect": 36,
+        "Level": 17
+      },
+      {
+        "_index": 1318,
+        "GrantedEffect": 36,
+        "Level": 18
+      },
+      {
+        "_index": 1319,
+        "GrantedEffect": 36,
+        "Level": 19
+      },
+      {
+        "_index": 1320,
+        "GrantedEffect": 36,
+        "Level": 20
+      },
+      {
+        "_index": 1321,
+        "GrantedEffect": 36,
+        "Level": 21
+      },
+      {
+        "_index": 1322,
+        "GrantedEffect": 36,
+        "Level": 22
+      },
+      {
+        "_index": 1323,
+        "GrantedEffect": 36,
+        "Level": 23
+      },
+      {
+        "_index": 1324,
+        "GrantedEffect": 36,
+        "Level": 24
+      },
+      {
+        "_index": 1325,
+        "GrantedEffect": 36,
+        "Level": 25
+      },
+      {
+        "_index": 1326,
+        "GrantedEffect": 36,
+        "Level": 26
+      },
+      {
+        "_index": 1327,
+        "GrantedEffect": 36,
+        "Level": 27
+      },
+      {
+        "_index": 1328,
+        "GrantedEffect": 36,
+        "Level": 28
+      },
+      {
+        "_index": 1329,
+        "GrantedEffect": 36,
+        "Level": 29
+      },
+      {
+        "_index": 1330,
+        "GrantedEffect": 36,
+        "Level": 30
+      },
+      {
+        "_index": 1331,
+        "GrantedEffect": 36,
+        "Level": 31
+      },
+      {
+        "_index": 1332,
+        "GrantedEffect": 36,
+        "Level": 32
+      },
+      {
+        "_index": 1333,
+        "GrantedEffect": 36,
+        "Level": 33
+      },
+      {
+        "_index": 1334,
+        "GrantedEffect": 36,
+        "Level": 34
+      },
+      {
+        "_index": 1335,
+        "GrantedEffect": 36,
+        "Level": 35
+      },
+      {
+        "_index": 1336,
+        "GrantedEffect": 36,
+        "Level": 36
+      },
+      {
+        "_index": 1337,
+        "GrantedEffect": 36,
+        "Level": 37
+      },
+      {
+        "_index": 1338,
+        "GrantedEffect": 36,
+        "Level": 38
+      },
+      {
+        "_index": 1339,
+        "GrantedEffect": 36,
+        "Level": 39
+      },
+      {
+        "_index": 1340,
+        "GrantedEffect": 36,
+        "Level": 40
+      }
+    ],
+    "GrantedEffectQualityStats": [
+      {
+        "_index": 1,
+        "GrantedEffect": 36,
+        "Stats": [170],
+        "StatsValuesPermille": [1500],
+        "AddTypes": [],
+        "AddMinionTypes": [],
+        "ApplyToStatSets": [],
+        "AltStats": [18042],
+        "AltStatValuesPermille": [200],
+        "AltApplyToStatSets": []
+      }
+    ]
+  }
+}

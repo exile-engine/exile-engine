@@ -1,0 +1,12 @@
+{
+  "files": [],
+  "references": [
+    { "path": "packages/core" },
+    { "path": "packages/poe1" },
+    { "path": "packages/poe2" },
+    { "path": "packages/item-text" },
+    { "path": "packages/pob" },
+    { "path": "packages/data-poe1" },
+    { "path": "packages/data-poe2" }
+  ]
+}

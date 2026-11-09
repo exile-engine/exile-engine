@@ -1,0 +1,36 @@
+{
+  "name": "@exile-engine/data-poe2",
+  "version": "0.1.0",
+  "description": "Exile Engine data-poe2 package.",
+  "type": "module",
+  "license": "SEE LICENSE IN NOTICE.md",
+  "sideEffects": false,
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./manifest.json": "./snapshot/manifest.json",
+    "./snapshot/*": "./snapshot/*"
+  },
+  "files": [
+    "dist",
+    "src",
+    "README.md",
+    "LICENSE",
+    "NOTICE.md",
+    "snapshot"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/exile-engine/exile-engine.git",
+    "directory": "packages/data-poe2"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@exile-engine/core": "0.1.0"
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "name": "exile-engine-monorepo",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "description": "Portable, source-only Path of Exile calculation and item interpretation libraries.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/exile-engine/exile-engine.git"
+  },
+  "engines": {
+    "node": ">=24",
+    "npm": ">=11.5.1"
+  },
+  "packageManager": "npm@11.5.1",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "tsc6 -b",
+    "clean": "tsc6 -b --clean",
+    "typecheck": "tsc6 -b --pretty false",
+    "test": "npm run build && node scripts/test.mjs",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "data:extract": "node scripts/extract-catalogs.mjs",
+    "data:validate": "node scripts/validate-data.mjs",
+    "check:policy": "node scripts/check-policy.mjs",
+    "check:packages": "node scripts/check-packages.mjs",
+    "example": "npm run build && node examples/spark.mjs",
+    "test:browser": "node scripts/browser-smoke-server.mjs",
+    "verify": "npm run format:check && npm test && npm run data:validate && npm run check:policy && npm run check:packages"
+  },
+  "devDependencies": {
+    "@typescript/typescript6": "6.0.2",
+    "prettier": "3.9.10"
+  }
+}

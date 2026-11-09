@@ -1,0 +1,25 @@
+# Conventions
+
+## Code and API
+
+- Use named exports, camelCase values/functions, PascalCase types, and descriptive kebab-case files. Prettier controls two-space indentation, single quotes and LF endings.
+- Use strict TypeScript and explicit exported contracts. Prefer readonly input records, pure functions and discriminated results. Type assertions do not replace validation at an external-input boundary.
+- Use actual package names across workspaces and emitted `.js` extensions for relative source imports. Do not import another package's internal source path or add a `paths` shortcut.
+- Runtime packages use standard JavaScript. Host-specific I/O belongs in examples/tooling or a separately designed adapter. Core has zero runtime dependencies.
+- Keep stable diagnostic codes and include source provenance. Separate unsupported, ambiguous and malformed inputs. Do not silently ignore an effect that could change the requested result.
+
+## Stats, units and arithmetic
+
+- Retain the exact canonical game stat ID. Do not sanitize it, translate it, use a description alias instead, or convert it to a PoB internal name.
+- Store raw source values and preserve their source records. Convert units explicitly at the rule boundary: for example, client cast time milliseconds becomes seconds in the calculation result.
+- A percentage contribution is in percentage points: `28` means 28%, not `0.28`. Document scale and rounding for every new mechanic.
+- Each occurrence keeps provenance. Sum applicable increased damage categories additively in the Spark slice. Cast-speed scaling is separate. Conditions, local modifiers and more/less effects need explicit implementations before they are accepted.
+- Use finite numbers and validate domains and divisors. Preserve game-specific rounding where the source resolves base values. Do not manufacture additional rounding on intermediate presentation values.
+
+## Versions and documentation
+
+Package versions follow semver; all initial packages are `0.1.0`. Dataset build and snapshot IDs are separate. Data updates need their own review even if no engine rule changes.
+
+Keep implementation status near the API and in `docs/supported-mechanics.md`. Examples must run against public exports. Tag reference values as client-authored, source-derived or executed comparisons, as appropriate. Source-derived golden tests are not evidence of a live PoB comparison.
+
+Commit deterministic UTF-8 text. Generated catalogs are compact JSON shards, not formatter output. Never edit a snapshot directly to conceal a schema, reference or parser failure; fix the producer and regenerate.

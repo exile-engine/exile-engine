@@ -1,0 +1,9 @@
+node_modules/
+**/dist/
+**/snapshot/
+scripts/profiles/schema-v7.json
+package-lock.json
+temp/
+*.tsbuildinfo
+LICENSE
+packages/*/LICENSE
