@@ -144,6 +144,31 @@ test('Controlled Destruction facts and eligibility resolve from the same client 
   }
 });
 
+test('critical chance uses client rows while the base player multiplier keeps external rule provenance', async () => {
+  const fact = reference.criticalReference;
+  assert.equal(dataset.critical.baseMultiplierPercent, fact.baseMultiplierPercent);
+  assert.deepEqual(dataset.critical.baseMultiplierSource, fact.baseMultiplierSource);
+  assert.deepEqual(dataset.critical.identity, reference.identity);
+  assert.deepEqual(dataset.critical.sourceRows, fact.statRows);
+  for (const source of fact.statRows) {
+    const row = await reader.getRecord(source.table, source.key);
+    assert.equal(row.rowIndex, source.rowIndex);
+    assert.equal(row.fields.Id, source.key);
+    assert.equal(row.fields.IsLocal, false);
+    assert.equal(row.fields.IsWeaponLocal, false);
+  }
+  for (const source of fact.baseChanceSource.sourceRows) {
+    const row = await reader.getRecord(fact.baseChanceSource.table, source.key);
+    assert.equal(row.fields[fact.baseChanceSource.field], fact.baseChanceSource.rawValue);
+    close(
+      dataset.levels.find((level) => level.gemLevel === source.gemLevel)
+        .baseCriticalStrikeChancePercent,
+      fact.baseChanceSource.valuePercent,
+      'client critical chance',
+    );
+  }
+});
+
 for (const expected of reference.cases) {
   test(`${expected.fixture}: adapted XML intermediates, contributions and selected hit/combined DPS match executed pinned PoB`, async () => {
     const xml = await readFile(
@@ -179,6 +204,41 @@ for (const expected of reference.cases) {
     assert.deepEqual(value.includedDamage, ['lightning-hit']);
     assert.equal(value.skill.id, 'Spark');
     assert.equal(value.skill.gemLevel, expected.gemLevel);
+    assert.equal(value.configuration.criticalStrikeMode ?? 'disabled', expected.criticalMode);
+    if (expected.criticalMode === 'average')
+      assert.equal(value.configuration.ailmentMode, 'excluded');
+    const critical = value.criticalEffects;
+    assert.equal(critical.mode, expected.criticalMode);
+    for (const [key, wanted] of Object.entries(expected.criticalEffects)) {
+      if (key === 'mode') continue;
+      if (typeof wanted === 'number') close(critical[key], wanted, `critical.${key}`);
+      else range(critical[key], wanted, `critical.${key}`);
+    }
+    assert.deepEqual(
+      critical.baseMultiplierSource,
+      reference.criticalReference.baseMultiplierSource,
+    );
+    assert.deepEqual(
+      critical.modifierContributions.map(({ statId, value }) => ({ statId, value })),
+      expected.criticalModifiers.map(({ statId, value }) => ({ statId, value })),
+    );
+    assert.deepEqual(
+      critical.modifierContributions.map((mod) => ({
+        kind: mod.source.kind,
+        id: mod.source.id,
+        line: mod.source.line,
+      })),
+      expected.criticalModifiers.map((mod) => ({ kind: 'item', id: 'pob-item:1', line: mod.line })),
+    );
+    for (const source of reference.criticalReference.statRows)
+      assert.ok(
+        critical.sourceRows.some(
+          (row) =>
+            row.table === source.table &&
+            row.key === source.key &&
+            row.rowIndex === source.rowIndex,
+        ),
+      );
     assert.deepEqual(value.skill.supports ?? [], expected.supports);
     const supportEffects = value.supportEffects;
     assert.deepEqual(supportEffects.supports, expected.supports);
@@ -289,13 +349,70 @@ for (const expected of reference.cases) {
       Math.floor((1 + castIncrease / 100) * 100 + 0.5) / 100 / reference.base.castTimeSeconds,
       1 / 0.033,
     );
+    const refChanceIncrease = expected.criticalModifiers
+      .filter((mod) => mod.statId !== 'base_critical_strike_multiplier_+')
+      .reduce((sum, mod) => sum + mod.value, 0);
+    const refMultiplierAddition = expected.criticalModifiers
+      .filter((mod) => mod.statId === 'base_critical_strike_multiplier_+')
+      .reduce((sum, mod) => sum + mod.value, 0);
+    const refChance =
+      expected.criticalMode === 'average'
+        ? Math.max(
+            0,
+            Math.min(
+              100,
+              Math.floor(
+                reference.criticalReference.baseChanceSource.valuePercent *
+                  (1 + refChanceIncrease / 100) *
+                  expected.criticalChanceMultiplier *
+                  100 +
+                  0.5,
+              ) / 100,
+            ),
+          )
+        : 0;
+    const refMultiplier =
+      1 +
+      Math.max(
+        0,
+        (reference.criticalReference.baseMultiplierPercent - 100 + refMultiplierAddition) / 100,
+      );
+    const nonCritMean = (minimum + maximum) / 2;
+    const critMean = (minimum * refMultiplier) / 2 + (maximum * refMultiplier) / 2;
     const dps =
-      ((minimum + maximum) / 2) * (1 - expected.effectiveLightningResistancePercent / 100) * speed;
+      (nonCritMean * (1 - refChance / 100) + (critMean * refChance) / 100) *
+      (1 - expected.effectiveLightningResistancePercent / 100) *
+      speed;
     close(value.combinedDps, dps, 'independent pinned-source CombinedDPS branch');
     const observed = oracle[expected.fixture];
     assert.equal(observed.selectedSkillId, 'Spark');
     assert.equal(observed.selectedPart, 1);
-    assert.equal(observed.CritChance, 0);
+    close(critical.chancePercent, observed.CritChance, 'PoB critical chance');
+    if (expected.criticalMode === 'average') {
+      close(critical.criticalMultiplier, observed.CritMultiplier, 'PoB critical multiplier');
+      close(
+        critical.criticalHitAfterResistance.mean,
+        observed.LightningCritAverage,
+        'PoB mean critical lightning hit',
+      );
+      assert.ok(Object.values(observed.ailmentFlags).every((value) => value === true));
+    } else assert.equal(observed.CritChance, 0);
+    close(
+      critical.baseChancePercent,
+      observed.baseCriticalChancePercent,
+      'PoB base critical chance',
+    );
+    close(
+      critical.increasedChancePercent,
+      observed.increasedCriticalChancePercent,
+      'PoB increased critical chance total',
+    );
+    close(
+      critical.addedMultiplierPercent,
+      observed.criticalMultiplierExtraPercent -
+        (reference.criticalReference.baseMultiplierPercent - 100),
+      'PoB added critical multiplier total',
+    );
     assert.equal(observed.HitChance, 100);
     assert.equal(observed.ActionSpeedMod, 1);
     close(
@@ -373,8 +490,8 @@ for (const expected of reference.cases) {
       observed.LightningHitAverage,
       'PoB mean lightning hit',
     );
-    close(hit.nonCriticalHitAfterResistance.mean, observed.AverageHit, 'PoB AverageHit');
-    close(hit.nonCriticalHitAfterResistance.mean, observed.AverageDamage, 'PoB AverageDamage');
+    close(critical.expectedHitMeanAfterResistance, observed.AverageHit, 'PoB AverageHit');
+    close(critical.expectedHitMeanAfterResistance, observed.AverageDamage, 'PoB AverageDamage');
     close(
       hit.increasedDamagePercent,
       observed.increasedDamagePercent,
@@ -415,6 +532,36 @@ for (const expected of reference.cases) {
         (left, right) => left.statId.localeCompare(right.statId) || left.value - right.value,
       );
     assert.deepEqual(sorted(compared), sorted(expected.contributions));
+    const criticalMap = new Map([
+      ['CritChance:INC:0:0', 'critical_strike_chance_+%'],
+      ['CritChance:INC:2:0', 'spell_critical_strike_chance_+%'],
+      ['CritMultiplier:BASE:0:0', 'base_critical_strike_multiplier_+'],
+    ]);
+    const oracleCriticalItems = observed.criticalContributions
+      .filter((mod) => mod.source === 'Item:1:Synthetic Spark Fixture, Simple Robe')
+      .map((mod) => {
+        const statId = criticalMap.get(`${mod.name}:${mod.type}:${mod.flags}:${mod.keywordFlags}`);
+        assert.ok(statId, `Unreviewed PoB critical stat ${mod.name}`);
+        return { statId, value: mod.value };
+      });
+    assert.deepEqual(
+      sorted(oracleCriticalItems),
+      sorted(expected.criticalModifiers.map(({ statId, value }) => ({ statId, value }))),
+    );
+    assert.deepEqual(
+      observed.criticalContributions.filter((mod) => mod.source === 'Base'),
+      [
+        {
+          name: 'CritMultiplier',
+          type: 'BASE',
+          value: 50,
+          source: 'Base',
+          flags: 0,
+          keywordFlags: 0,
+        },
+      ],
+    );
+    assert.equal(observed.criticalContributions.length, oracleCriticalItems.length + 1);
     const flatIds = [
       'spell_minimum_added_lightning_damage',
       'spell_maximum_added_lightning_damage',

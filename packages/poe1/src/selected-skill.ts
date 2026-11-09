@@ -1,6 +1,7 @@
 import {
   SPARK_MODIFIER_STAT_IDS,
   SPARK_ADDED_LIGHTNING_STAT_IDS,
+  SELECTED_SPARK_CRITICAL_MODIFIER_STAT_IDS,
   calculateSparkForGame,
   errorDiagnostic,
   failure,
@@ -17,11 +18,14 @@ import {
   type SparkDataset,
   type SparkInput,
   type SelectedSkillSupportTrace,
+  type SelectedSkillCriticalTrace,
 } from '@exile-engine/core';
 import { calculateSelectedSkillSupports, selectedSupportDatasetShape } from './supports.js';
+import { calculateSelectedSkillCriticalEffects, selectedCriticalDatasetShape } from './critical.js';
 export { calculateSelectedSkillSupports } from './supports.js';
+export { calculateSelectedSkillCriticalEffects } from './critical.js';
 
-export const selectedSkillEngineRevision = 'poe1-selected-spark-v3' as const;
+export const selectedSkillEngineRevision = 'poe1-selected-spark-v4' as const;
 
 function object(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === 'object' && !Array.isArray(value);
@@ -41,6 +45,11 @@ function id(value: unknown): value is string {
 
 function finite(value: unknown): value is number {
   return typeof value === 'number' && Number.isFinite(value);
+}
+
+function addSafeInteger(total: number, value: number): number {
+  const next = total + value;
+  return Number.isSafeInteger(next) ? next : NaN;
 }
 
 function denseArray(value: unknown, maximum: number): value is readonly unknown[] {
@@ -85,6 +94,7 @@ function selectedDatasetShape(dataset: SparkDataset): boolean {
       'sourceRows',
       'ruleProvenance',
       'supports',
+      'critical',
     ]) &&
     object(dataset.identity) &&
     keys(dataset.identity, ['game', 'build', 'snapshotId']) &&
@@ -102,6 +112,7 @@ function selectedDatasetShape(dataset: SparkDataset): boolean {
           'baseLightningMin',
           'baseLightningMax',
           'addedDamageEffectiveness',
+          'baseCriticalStrikeChancePercent',
           'sourceRows',
         ]) &&
         keys(level, [
@@ -109,10 +120,14 @@ function selectedDatasetShape(dataset: SparkDataset): boolean {
           'baseLightningMin',
           'baseLightningMax',
           'addedDamageEffectiveness',
+          'baseCriticalStrikeChancePercent',
           'sourceRows',
         ]) &&
         finite(level.addedDamageEffectiveness) &&
         level.addedDamageEffectiveness >= 0 &&
+        finite(level.baseCriticalStrikeChancePercent) &&
+        level.baseCriticalStrikeChancePercent >= 0 &&
+        level.baseCriticalStrikeChancePercent <= 100 &&
         rows(level.sourceRows),
     ) &&
     denseArray(dataset.qualityStats, 100) &&
@@ -126,7 +141,8 @@ function selectedDatasetShape(dataset: SparkDataset): boolean {
     rows(dataset.sourceRows) &&
     denseArray(dataset.ruleProvenance, 100) &&
     (dataset.supports === undefined || Object.hasOwn(dataset, 'supports')) &&
-    selectedSupportDatasetShape(dataset)
+    selectedSupportDatasetShape(dataset) &&
+    selectedCriticalDatasetShape(dataset)
   );
 }
 
@@ -222,7 +238,18 @@ export function validateSelectedSkillInput(input: SelectedSkillInput): Result<Se
   if (
     !object(config) ||
     !ownFields(config, ['id', 'effectiveLightningResistancePercent']) ||
-    !keys(config, ['id', 'effectiveLightningResistancePercent']) ||
+    !keys(config, [
+      'id',
+      'effectiveLightningResistancePercent',
+      'criticalStrikeMode',
+      'ailmentMode',
+    ]) ||
+    (config.criticalStrikeMode !== undefined &&
+      (!Object.hasOwn(config, 'criticalStrikeMode') ||
+        !['disabled', 'average'].includes(config.criticalStrikeMode))) ||
+    (config.ailmentMode !== undefined &&
+      (!Object.hasOwn(config, 'ailmentMode') || config.ailmentMode !== 'excluded')) ||
+    (config.criticalStrikeMode === 'average' && config.ailmentMode !== 'excluded') ||
     !id(config.id) ||
     !finite(config.effectiveLightningResistancePercent) ||
     config.effectiveLightningResistancePercent < -200 ||
@@ -230,7 +257,7 @@ export function validateSelectedSkillInput(input: SelectedSkillInput): Result<Se
   )
     reject(
       'selected.configuration',
-      'An explicit configuration ID and effective lightning resistance from -200% through 90% are required.',
+      'An explicit configuration ID and effective lightning resistance from -200% through 90% are required. Critical mode must be disabled or average; average requires explicitly excluded ailments.',
     );
   if (!Array.isArray(input.modifiers) || input.modifiers.length > 1000) {
     reject('selected.modifiers', 'Expected at most 1000 individual contributions.');
@@ -240,8 +267,15 @@ export function validateSelectedSkillInput(input: SelectedSkillInput): Result<Se
         !object(mod) ||
         !ownFields(mod, ['statId', 'value', 'source']) ||
         !keys(mod, ['statId', 'value', 'source', 'scope', 'conditions']) ||
-        !(SPARK_MODIFIER_STAT_IDS as readonly unknown[]).includes(mod.statId) ||
+        !(
+          [
+            ...SPARK_MODIFIER_STAT_IDS,
+            ...SELECTED_SPARK_CRITICAL_MODIFIER_STAT_IDS,
+          ] as readonly unknown[]
+        ).includes(mod.statId) ||
         !finite(mod.value) ||
+        ((SELECTED_SPARK_CRITICAL_MODIFIER_STAT_IDS as readonly unknown[]).includes(mod.statId) &&
+          !Number.isSafeInteger(mod.value)) ||
         (mod.scope !== undefined && mod.scope !== 'global') ||
         (mod.conditions !== undefined &&
           (!Array.isArray(mod.conditions) || mod.conditions.length !== 0)) ||
@@ -261,25 +295,41 @@ export function validateSelectedSkillInput(input: SelectedSkillInput): Result<Se
       )
         reject(
           'selected.unsupported-modifier',
-          'Each contribution needs a supported exact stat ID, finite value and source; local, conditional and extra semantics are unsupported.',
+          'Each contribution needs a supported exact stat ID, finite value and source. Critical values must be safe integers; local, conditional and extra semantics are unsupported.',
         );
     }
     if (diagnostics.length === 0) {
       const damage = input.modifiers
-        .filter((mod) => mod.statId !== 'base_cast_speed_+%')
+        .filter(
+          (mod) =>
+            mod.statId !== 'base_cast_speed_+%' &&
+            (SPARK_MODIFIER_STAT_IDS as readonly string[]).includes(mod.statId),
+        )
         .reduce((sum, mod) => sum + mod.value, 0);
       const speed = input.modifiers
         .filter((mod) => mod.statId === 'base_cast_speed_+%')
         .reduce((sum, mod) => sum + mod.value, 0);
+      const chance = input.modifiers
+        .filter(
+          (mod) =>
+            mod.statId === 'critical_strike_chance_+%' ||
+            mod.statId === 'spell_critical_strike_chance_+%',
+        )
+        .reduce((sum, mod) => addSafeInteger(sum, mod.value), 0);
+      const multiplier = input.modifiers
+        .filter((mod) => mod.statId === 'base_critical_strike_multiplier_+')
+        .reduce((sum, mod) => addSafeInteger(sum, mod.value), 0);
       if (
         !Number.isFinite(damage) ||
         damage < -100 ||
         !Number.isFinite(speed) ||
-        Math.floor((1 + speed / 100) * 100 + 0.5) / 100 <= 0
+        Math.floor((1 + speed / 100) * 100 + 0.5) / 100 <= 0 ||
+        !Number.isSafeInteger(chance) ||
+        !Number.isSafeInteger(multiplier)
       )
         reject(
           'selected.multiplier',
-          'Finite additive totals, damage increase at least -100% and a positive rounded cast-speed multiplier are required.',
+          'Finite additive totals, damage increase at least -100% and a positive rounded cast-speed multiplier are required. Critical totals must remain safe integers at every addition.',
         );
     }
   }
@@ -427,7 +477,9 @@ function sparkInput(input: SelectedSkillInput): SparkInput {
     quality: input.skill.quality,
     ...(input.skill.variant === undefined ? {} : { variant: input.skill.variant }),
     ...(input.skill.statSet === undefined ? {} : { statSet: input.skill.statSet }),
-    modifiers: input.modifiers,
+    modifiers: input.modifiers.filter((mod) =>
+      (SPARK_MODIFIER_STAT_IDS as readonly string[]).includes(mod.statId),
+    ),
     effectiveLightningResistancePercent: input.configuration.effectiveLightningResistancePercent,
   };
 }
@@ -438,8 +490,9 @@ export function assembleSelectedSkill(
   hit: SparkCalculation,
   addedLightningDamage: AddedLightningDamageTrace,
   supportEffects: SelectedSkillSupportTrace,
+  criticalEffects: SelectedSkillCriticalTrace,
 ): Result<SelectedSkillCalculation> {
-  const hitDps = hit.nonCriticalHitAfterResistance.mean * hit.castsPerSecond;
+  const hitDps = criticalEffects.expectedHitMeanAfterResistance * hit.castsPerSecond;
   if (!Number.isFinite(hitDps) || !Number.isFinite(hit.castsPerSecond) || hit.castsPerSecond <= 0)
     return failure(
       errorDiagnostic(
@@ -466,7 +519,18 @@ export function assembleSelectedSkill(
     metric: 'selected-skill-hit-combined-dps',
     hit,
     addedLightningDamage,
-    supportEffects,
+    supportEffects: {
+      ...supportEffects,
+      contributions: supportEffects.contributions.map((contribution) => ({
+        ...contribution,
+        appliedToSelectedHit:
+          contribution.operation === 'less-critical-strike-chance'
+            ? criticalEffects.mode === 'average' &&
+              supportEffects.supports.some((support) => support.enabled)
+            : contribution.appliedToSelectedHit,
+      })),
+    },
+    criticalEffects,
     hitsPerCast: 1,
     hitsPerSecond: hit.castsPerSecond,
     hitDps,
@@ -498,11 +562,22 @@ export function calculateSelectedSkill(
   if (!added.ok) return added;
   const supportEffects = calculateSelectedSkillSupports(validated.value, dataset);
   if (!supportEffects.ok) return supportEffects;
+  const selectedHit = selectedHitRules(hit.value, added.value.combinedBase, supportEffects.value);
+  const criticalEffects = calculateSelectedSkillCriticalEffects(
+    validated.value,
+    selectedHit,
+    supportEffects.value,
+    dataset.levels.find((level) => level.gemLevel === validated.value.skill.gemLevel)!
+      .baseCriticalStrikeChancePercent!,
+    dataset.critical,
+  );
+  if (!criticalEffects.ok) return criticalEffects;
   return assembleSelectedSkill(
     validated.value,
-    selectedHitRules(hit.value, added.value.combinedBase, supportEffects.value),
+    selectedHit,
     added.value,
     supportEffects.value,
+    criticalEffects.value,
   );
 }
 
@@ -552,6 +627,7 @@ export function prepareSelectedSkill(
   input: SelectedSkillInput;
   baseline: SparkCalculation;
   addedDamageEffectiveness: number;
+  baseCriticalStrikeChancePercent: number;
 }> {
   const validated = validateSelectedSkillInput(input);
   if (!validated.ok) return validated;
@@ -574,5 +650,8 @@ export function prepareSelectedSkill(
     addedDamageEffectiveness: dataset.levels.find(
       (level) => level.gemLevel === validated.value.skill.gemLevel,
     )!.addedDamageEffectiveness!,
+    baseCriticalStrikeChancePercent: dataset.levels.find(
+      (level) => level.gemLevel === validated.value.skill.gemLevel,
+    )!.baseCriticalStrikeChancePercent!,
   });
 }

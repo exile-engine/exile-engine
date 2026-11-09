@@ -1,4 +1,5 @@
 import {
+  SPARK_MODIFIER_STAT_IDS,
   errorDiagnostic,
   failure,
   sameSnapshot,
@@ -15,6 +16,7 @@ import {
   assembleSelectedSkill,
   calculateSelectedSkill,
   calculateSelectedSkillSupports,
+  calculateSelectedSkillCriticalEffects,
   prepareSelectedSkill,
   selectedHitRules,
   validateSelectedSkillInput,
@@ -35,6 +37,12 @@ export interface SelectedSkillSession {
 }
 
 const CAST_SPEED = 'base_cast_speed_+%';
+const CRITICAL_MULTIPLIER = 'base_critical_strike_multiplier_+';
+const DAMAGE_STATS = new Set<string>(SPARK_MODIFIER_STAT_IDS.filter((id) => id !== CAST_SPEED));
+const CRITICAL_CHANCE_STATS = new Set([
+  'critical_strike_chance_+%',
+  'spell_critical_strike_chance_+%',
+]);
 const DERIVED = new Set([
   'base',
   'added-lightning',
@@ -43,9 +51,12 @@ const DERIVED = new Set([
   'damage-increase',
   'cast-speed-increase',
   'support-effects',
+  'critical-chance-increase',
+  'critical-multiplier-increase',
   'damage-before-resistance',
   'damage-after-resistance',
   'cast-rate',
+  'critical-effects',
   'selected-skill',
 ]);
 
@@ -113,6 +124,11 @@ function copyDataset(dataset: SparkDataset): SparkDataset {
       ...(level.addedDamageEffectiveness === undefined
         ? {}
         : { addedDamageEffectiveness: level.addedDamageEffectiveness }),
+      ...(level.baseCriticalStrikeChancePercent === undefined
+        ? {}
+        : {
+            baseCriticalStrikeChancePercent: level.baseCriticalStrikeChancePercent,
+          }),
       sourceRows: copyRows(level.sourceRows),
     })),
     qualityStats: dataset.qualityStats.map((stat) => ({
@@ -143,6 +159,37 @@ function copyDataset(dataset: SparkDataset): SparkDataset {
             sourceRows: copyRows(support.sourceRows),
           })),
         }),
+    ...(dataset.critical === undefined
+      ? {}
+      : {
+          critical: {
+            identity: {
+              game: dataset.critical.identity.game,
+              build: dataset.critical.identity.build,
+              snapshotId: dataset.critical.identity.snapshotId,
+            },
+            baseMultiplierPercent: dataset.critical.baseMultiplierPercent,
+            baseMultiplierSource: { ...dataset.critical.baseMultiplierSource },
+            sourceRows: copyRows(dataset.critical.sourceRows),
+          },
+        }),
+  };
+}
+
+function copyCriticalEffects(
+  effects: SelectedSkillCalculation['criticalEffects'],
+): SelectedSkillCalculation['criticalEffects'] {
+  return {
+    ...effects,
+    criticalHitBeforeResistance: { ...effects.criticalHitBeforeResistance },
+    criticalHitAfterResistance: { ...effects.criticalHitAfterResistance },
+    modifierContributions: effects.modifierContributions.map(copyModifier),
+    sourceRows: effects.sourceRows.map((row) => ({
+      table: row.table,
+      key: row.key,
+      rowIndex: row.rowIndex,
+    })),
+    baseMultiplierSource: { ...effects.baseMultiplierSource },
   };
 }
 
@@ -185,6 +232,15 @@ function inputNodes(input: SelectedSkillInput): Readonly<Record<string, unknown>
     ['input.metadata', [input.identity, input.buildId, input.configuration.id]],
     ['input.skill', baseSkill],
     ['input.supports', [Object.hasOwn(input.skill, 'supports'), input.skill.supports]],
+    [
+      'input.critical-configuration',
+      [
+        Object.hasOwn(input.configuration, 'criticalStrikeMode'),
+        input.configuration.criticalStrikeMode,
+        Object.hasOwn(input.configuration, 'ailmentMode'),
+        input.configuration.ailmentMode,
+      ],
+    ],
     ['input.resistance', input.configuration.effectiveLightningResistancePercent],
     ...input.modifiers.map((modifier, index) => [`modifier:${index}`, modifier]),
     ...(input.addedLightningDamage ?? []).map((group, index) => [
@@ -198,8 +254,13 @@ function graph(input: SelectedSkillInput): CalculationDependencies {
   const roots = inputNodes(input);
   const damage: string[] = [];
   const speed: string[] = [];
+  const criticalChance: string[] = [];
+  const criticalMultiplier: string[] = [];
   input.modifiers.forEach((modifier, index) => {
-    (modifier.statId === CAST_SPEED ? speed : damage).push(`modifier:${index}`);
+    if (modifier.statId === CAST_SPEED) speed.push(`modifier:${index}`);
+    else if (DAMAGE_STATS.has(modifier.statId)) damage.push(`modifier:${index}`);
+    else if (CRITICAL_CHANCE_STATS.has(modifier.statId)) criticalChance.push(`modifier:${index}`);
+    else if (modifier.statId === CRITICAL_MULTIPLIER) criticalMultiplier.push(`modifier:${index}`);
   });
   return {
     ...Object.fromEntries(Object.keys(roots).map((id) => [id, []])),
@@ -212,13 +273,24 @@ function graph(input: SelectedSkillInput): CalculationDependencies {
     'damage-increase': damage,
     'cast-speed-increase': speed,
     'support-effects': ['input.supports'],
+    'critical-chance-increase': criticalChance,
+    'critical-multiplier-increase': criticalMultiplier,
     'damage-before-resistance': ['combined-base', 'damage-increase', 'support-effects'],
     'damage-after-resistance': ['damage-before-resistance', 'input.resistance'],
     'cast-rate': ['base', 'cast-speed-increase', 'support-effects'],
+    'critical-effects': [
+      'base',
+      'support-effects',
+      'critical-chance-increase',
+      'critical-multiplier-increase',
+      'damage-after-resistance',
+      'input.critical-configuration',
+    ],
     'selected-skill': [
       'input.metadata',
       'input.skill',
       'input.supports',
+      'input.critical-configuration',
       'input.resistance',
       ...input.modifiers.map((_, index) => `modifier:${index}`),
       ...(input.addedLightningDamage ?? []).map((_, index) => `added-lightning:${index}`),
@@ -229,9 +301,12 @@ function graph(input: SelectedSkillInput): CalculationDependencies {
       'damage-increase',
       'cast-speed-increase',
       'support-effects',
+      'critical-chance-increase',
+      'critical-multiplier-increase',
       'damage-before-resistance',
       'damage-after-resistance',
       'cast-rate',
+      'critical-effects',
     ],
   };
 }
@@ -267,6 +342,10 @@ interface Cache {
   readonly damageIncrease: number;
   readonly speedIncrease: number;
   readonly supportEffects: SelectedSkillCalculation['supportEffects'];
+  readonly baseChancePercent: number;
+  readonly increasedChancePercent: number;
+  readonly addedMultiplierPercent: number;
+  readonly criticalEffects: SelectedSkillCalculation['criticalEffects'];
   readonly before: DamageRange;
   readonly after: DamageRange;
   readonly castTime: number;
@@ -300,6 +379,10 @@ export function createSelectedSkillSession(
     damageIncrease: hit.increasedDamagePercent,
     speedIncrease: hit.increasedCastSpeedPercent,
     supportEffects: copySupportEffects(full.value.supportEffects),
+    baseChancePercent: full.value.criticalEffects.baseChancePercent,
+    increasedChancePercent: full.value.criticalEffects.increasedChancePercent,
+    addedMultiplierPercent: full.value.criticalEffects.addedMultiplierPercent,
+    criticalEffects: copyCriticalEffects(full.value.criticalEffects),
     before: hit.nonCriticalHitBeforeResistance,
     after: hit.nonCriticalHitAfterResistance,
     castTime: hit.castTimeSeconds,
@@ -310,6 +393,7 @@ export function createSelectedSkillSession(
       ...full.value,
       skill: accepted.skill,
       supportEffects: cache.supportEffects,
+      criticalEffects: cache.criticalEffects,
       hit: {
         ...full.value.hit,
         sourceRows: full.value.hit.sourceRows.map((row) => ({ ...row })),
@@ -362,6 +446,10 @@ export function createSelectedSkillSession(
       damageIncrease,
       speedIncrease,
       supportEffects,
+      baseChancePercent,
+      increasedChancePercent,
+      addedMultiplierPercent,
+      criticalEffects,
       before,
       after,
       castTime,
@@ -374,6 +462,7 @@ export function createSelectedSkillSession(
           if (!base.ok) return base;
           baseline = selectedHitRules(base.value.baseline);
           effectiveness = base.value.addedDamageEffectiveness;
+          baseChancePercent = base.value.baseCriticalStrikeChancePercent;
           break;
         }
         case 'added-lightning':
@@ -393,7 +482,7 @@ export function createSelectedSkillSession(
           break;
         case 'damage-increase':
           damageIncrease = next.modifiers
-            .filter((modifier) => modifier.statId !== CAST_SPEED)
+            .filter((modifier) => DAMAGE_STATS.has(modifier.statId))
             .reduce((sum, modifier) => sum + modifier.value, 0);
           break;
         case 'cast-speed-increase':
@@ -407,6 +496,16 @@ export function createSelectedSkillSession(
           supportEffects = effects.value;
           break;
         }
+        case 'critical-chance-increase':
+          increasedChancePercent = next.modifiers
+            .filter((modifier) => CRITICAL_CHANCE_STATS.has(modifier.statId))
+            .reduce((sum, modifier) => sum + modifier.value, 0);
+          break;
+        case 'critical-multiplier-increase':
+          addedMultiplierPercent = next.modifiers
+            .filter((modifier) => modifier.statId === CRITICAL_MULTIPLIER)
+            .reduce((sum, modifier) => sum + modifier.value, 0);
+          break;
         case 'damage-before-resistance': {
           const scale = Math.max(0, 1 + damageIncrease / 100);
           before = range(
@@ -429,6 +528,23 @@ export function createSelectedSkillSession(
           );
           castTime = 1 / casts;
           break;
+        case 'critical-effects': {
+          const effects = calculateSelectedSkillCriticalEffects(
+            next,
+            {
+              ...baseline,
+              nonCriticalHitBeforeResistance: before,
+              nonCriticalHitAfterResistance: after,
+            },
+            supportEffects,
+            baseChancePercent,
+            captured.critical,
+            { increasedChancePercent, addedMultiplierPercent },
+          );
+          if (!effects.ok) return effects;
+          criticalEffects = effects.value;
+          break;
+        }
       }
     }
     if (
@@ -457,6 +573,9 @@ export function createSelectedSkillSession(
         supportEffects.criticalChanceMultiplier,
         supportEffects.castTimeMultiplier,
         supportEffects.manaCostMultiplier,
+        baseChancePercent,
+        increasedChancePercent,
+        addedMultiplierPercent,
       ].every(Number.isFinite)
     ) {
       return failure(
@@ -474,12 +593,16 @@ export function createSelectedSkillSession(
         effectiveLightningResistancePercent: next.configuration.effectiveLightningResistancePercent,
         increasedDamagePercent: damageIncrease,
         increasedCastSpeedPercent: speedIncrease,
-        modifierContributions: next.modifiers.map((modifier) => ({
-          statId: modifier.statId,
-          value: modifier.value,
-          source: { ...modifier.source },
-          scope: 'global',
-        })),
+        modifierContributions: next.modifiers
+          .filter((modifier) =>
+            (SPARK_MODIFIER_STAT_IDS as readonly string[]).includes(modifier.statId),
+          )
+          .map((modifier) => ({
+            statId: modifier.statId,
+            value: modifier.value,
+            source: { ...modifier.source },
+            scope: 'global',
+          })),
       },
       {
         raw: rawAdded,
@@ -489,6 +612,7 @@ export function createSelectedSkillSession(
         contributions: next.addedLightningDamage ?? [],
       },
       supportEffects,
+      criticalEffects,
     );
     if (!assembled.ok) return assembled;
     accepted = next;
@@ -502,6 +626,10 @@ export function createSelectedSkillSession(
       damageIncrease,
       speedIncrease,
       supportEffects,
+      baseChancePercent,
+      increasedChancePercent,
+      addedMultiplierPercent,
+      criticalEffects,
       before,
       after,
       castTime,

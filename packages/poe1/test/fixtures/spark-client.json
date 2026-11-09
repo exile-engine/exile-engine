@@ -129,6 +129,24 @@
         "IsScalable": true,
         "ContextFlags": [],
         "DotFlag": []
+      },
+      {
+        "_index": 556,
+        "Id": "critical_strike_chance_+%",
+        "IsLocal": false,
+        "IsWeaponLocal": false
+      },
+      {
+        "_index": 558,
+        "Id": "spell_critical_strike_chance_+%",
+        "IsLocal": false,
+        "IsWeaponLocal": false
+      },
+      {
+        "_index": 95,
+        "Id": "base_critical_strike_multiplier_+",
+        "IsLocal": false,
+        "IsWeaponLocal": false
       }
     ],
     "GrantedEffects": [
@@ -230,7 +248,8 @@
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
         "AdditionalStatsValues": [4],
-        "DamageEffectiveness": 9000
+        "DamageEffectiveness": 9000,
+        "SpellCritChance": 600
       },
       {
         "_index": 7430,
@@ -243,7 +262,8 @@
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
         "AdditionalStatsValues": [4],
-        "DamageEffectiveness": 9000
+        "DamageEffectiveness": 9000,
+        "SpellCritChance": 600
       },
       {
         "_index": 7431,
@@ -256,7 +276,8 @@
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
         "AdditionalStatsValues": [4],
-        "DamageEffectiveness": 9000
+        "DamageEffectiveness": 9000,
+        "SpellCritChance": 600
       },
       {
         "_index": 7432,
@@ -269,7 +290,8 @@
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
         "AdditionalStatsValues": [4],
-        "DamageEffectiveness": 9000
+        "DamageEffectiveness": 9000,
+        "SpellCritChance": 600
       },
       {
         "_index": 7433,
@@ -282,7 +304,8 @@
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
         "AdditionalStatsValues": [5],
-        "DamageEffectiveness": 9000
+        "DamageEffectiveness": 9000,
+        "SpellCritChance": 600
       },
       {
         "_index": 7434,
@@ -295,7 +318,8 @@
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
         "AdditionalStatsValues": [5],
-        "DamageEffectiveness": 9000
+        "DamageEffectiveness": 9000,
+        "SpellCritChance": 600
       },
       {
         "_index": 7435,
@@ -308,7 +332,8 @@
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
         "AdditionalStatsValues": [5],
-        "DamageEffectiveness": 9000
+        "DamageEffectiveness": 9000,
+        "SpellCritChance": 600
       },
       {
         "_index": 7436,
@@ -321,7 +346,8 @@
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
         "AdditionalStatsValues": [5],
-        "DamageEffectiveness": 9000
+        "DamageEffectiveness": 9000,
+        "SpellCritChance": 600
       },
       {
         "_index": 7437,
@@ -334,7 +360,8 @@
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
         "AdditionalStatsValues": [5],
-        "DamageEffectiveness": 9000
+        "DamageEffectiveness": 9000,
+        "SpellCritChance": 600
       },
       {
         "_index": 7438,
@@ -347,7 +374,8 @@
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
         "AdditionalStatsValues": [6],
-        "DamageEffectiveness": 9000
+        "DamageEffectiveness": 9000,
+        "SpellCritChance": 600
       },
       {
         "_index": 7439,
@@ -360,7 +388,8 @@
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
         "AdditionalStatsValues": [6],
-        "DamageEffectiveness": 9000
+        "DamageEffectiveness": 9000,
+        "SpellCritChance": 600
       },
       {
         "_index": 7440,
@@ -373,7 +402,8 @@
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
         "AdditionalStatsValues": [6],
-        "DamageEffectiveness": 9000
+        "DamageEffectiveness": 9000,
+        "SpellCritChance": 600
       },
       {
         "_index": 7441,
@@ -386,7 +416,8 @@
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
         "AdditionalStatsValues": [6],
-        "DamageEffectiveness": 9000
+        "DamageEffectiveness": 9000,
+        "SpellCritChance": 600
       },
       {
         "_index": 7442,
@@ -399,7 +430,8 @@
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
         "AdditionalStatsValues": [7],
-        "DamageEffectiveness": 9000
+        "DamageEffectiveness": 9000,
+        "SpellCritChance": 600
       },
       {
         "_index": 7443,
@@ -412,7 +444,8 @@
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
         "AdditionalStatsValues": [7],
-        "DamageEffectiveness": 9000
+        "DamageEffectiveness": 9000,
+        "SpellCritChance": 600
       },
       {
         "_index": 7444,
@@ -425,7 +458,8 @@
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
         "AdditionalStatsValues": [7],
-        "DamageEffectiveness": 9000
+        "DamageEffectiveness": 9000,
+        "SpellCritChance": 600
       },
       {
         "_index": 7445,
@@ -438,7 +472,8 @@
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
         "AdditionalStatsValues": [7],
-        "DamageEffectiveness": 9000
+        "DamageEffectiveness": 9000,
+        "SpellCritChance": 600
       },
       {
         "_index": 7446,
@@ -451,7 +486,8 @@
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
         "AdditionalStatsValues": [7],
-        "DamageEffectiveness": 9000
+        "DamageEffectiveness": 9000,
+        "SpellCritChance": 600
       },
       {
         "_index": 7447,
@@ -464,7 +500,8 @@
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
         "AdditionalStatsValues": [8],
-        "DamageEffectiveness": 9000
+        "DamageEffectiveness": 9000,
+        "SpellCritChance": 600
       },
       {
         "_index": 7448,
@@ -477,7 +514,8 @@
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
         "AdditionalStatsValues": [8],
-        "DamageEffectiveness": 9000
+        "DamageEffectiveness": 9000,
+        "SpellCritChance": 600
       },
       {
         "_index": 7449,
@@ -490,7 +528,8 @@
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
         "AdditionalStatsValues": [8],
-        "DamageEffectiveness": 9000
+        "DamageEffectiveness": 9000,
+        "SpellCritChance": 600
       },
       {
         "_index": 7450,
@@ -503,7 +542,8 @@
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
         "AdditionalStatsValues": [8],
-        "DamageEffectiveness": 9000
+        "DamageEffectiveness": 9000,
+        "SpellCritChance": 600
       },
       {
         "_index": 7451,
@@ -516,7 +556,8 @@
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
         "AdditionalStatsValues": [8],
-        "DamageEffectiveness": 9000
+        "DamageEffectiveness": 9000,
+        "SpellCritChance": 600
       },
       {
         "_index": 7452,
@@ -529,7 +570,8 @@
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
         "AdditionalStatsValues": [8],
-        "DamageEffectiveness": 9000
+        "DamageEffectiveness": 9000,
+        "SpellCritChance": 600
       },
       {
         "_index": 7453,
@@ -542,7 +584,8 @@
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
         "AdditionalStatsValues": [9],
-        "DamageEffectiveness": 9000
+        "DamageEffectiveness": 9000,
+        "SpellCritChance": 600
       },
       {
         "_index": 7454,
@@ -555,7 +598,8 @@
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
         "AdditionalStatsValues": [9],
-        "DamageEffectiveness": 9000
+        "DamageEffectiveness": 9000,
+        "SpellCritChance": 600
       },
       {
         "_index": 7455,
@@ -568,7 +612,8 @@
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
         "AdditionalStatsValues": [9],
-        "DamageEffectiveness": 9000
+        "DamageEffectiveness": 9000,
+        "SpellCritChance": 600
       },
       {
         "_index": 7456,
@@ -581,7 +626,8 @@
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
         "AdditionalStatsValues": [9],
-        "DamageEffectiveness": 9000
+        "DamageEffectiveness": 9000,
+        "SpellCritChance": 600
       },
       {
         "_index": 7457,
@@ -594,7 +640,8 @@
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
         "AdditionalStatsValues": [9],
-        "DamageEffectiveness": 9000
+        "DamageEffectiveness": 9000,
+        "SpellCritChance": 600
       },
       {
         "_index": 7458,
@@ -607,7 +654,8 @@
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
         "AdditionalStatsValues": [9],
-        "DamageEffectiveness": 9000
+        "DamageEffectiveness": 9000,
+        "SpellCritChance": 600
       },
       {
         "_index": 7459,
@@ -620,7 +668,8 @@
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
         "AdditionalStatsValues": [9],
-        "DamageEffectiveness": 9000
+        "DamageEffectiveness": 9000,
+        "SpellCritChance": 600
       },
       {
         "_index": 7460,
@@ -633,7 +682,8 @@
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
         "AdditionalStatsValues": [10],
-        "DamageEffectiveness": 9000
+        "DamageEffectiveness": 9000,
+        "SpellCritChance": 600
       },
       {
         "_index": 7461,
@@ -646,7 +696,8 @@
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
         "AdditionalStatsValues": [10],
-        "DamageEffectiveness": 9000
+        "DamageEffectiveness": 9000,
+        "SpellCritChance": 600
       },
       {
         "_index": 7462,
@@ -659,7 +710,8 @@
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
         "AdditionalStatsValues": [10],
-        "DamageEffectiveness": 9000
+        "DamageEffectiveness": 9000,
+        "SpellCritChance": 600
       },
       {
         "_index": 7463,
@@ -672,7 +724,8 @@
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
         "AdditionalStatsValues": [10],
-        "DamageEffectiveness": 9000
+        "DamageEffectiveness": 9000,
+        "SpellCritChance": 600
       },
       {
         "_index": 7464,
@@ -685,7 +738,8 @@
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
         "AdditionalStatsValues": [10],
-        "DamageEffectiveness": 9000
+        "DamageEffectiveness": 9000,
+        "SpellCritChance": 600
       },
       {
         "_index": 7465,
@@ -698,7 +752,8 @@
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
         "AdditionalStatsValues": [10],
-        "DamageEffectiveness": 9000
+        "DamageEffectiveness": 9000,
+        "SpellCritChance": 600
       },
       {
         "_index": 7466,
@@ -711,7 +766,8 @@
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
         "AdditionalStatsValues": [10],
-        "DamageEffectiveness": 9000
+        "DamageEffectiveness": 9000,
+        "SpellCritChance": 600
       },
       {
         "_index": 7467,
@@ -724,7 +780,8 @@
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
         "AdditionalStatsValues": [10],
-        "DamageEffectiveness": 9000
+        "DamageEffectiveness": 9000,
+        "SpellCritChance": 600
       },
       {
         "_index": 7468,
@@ -737,7 +794,8 @@
         "FloatStatsValues": [0.10000000149011612, 1.899999976158142],
         "AdditionalStats": [19273],
         "AdditionalStatsValues": [11],
-        "DamageEffectiveness": 9000
+        "DamageEffectiveness": 9000,
+        "SpellCritChance": 600
       },
       {
         "_index": 43214,

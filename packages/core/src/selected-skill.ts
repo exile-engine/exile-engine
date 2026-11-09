@@ -12,6 +12,40 @@ export const SPARK_ADDED_LIGHTNING_STAT_IDS = [
   'spell_maximum_added_lightning_damage',
 ] as const;
 
+export const SELECTED_SPARK_CRITICAL_MODIFIER_STAT_IDS = [
+  'critical_strike_chance_+%',
+  'spell_critical_strike_chance_+%',
+  'base_critical_strike_multiplier_+',
+] as const;
+
+export interface SelectedSkillCriticalDataset {
+  readonly identity: SnapshotIdentity;
+  /** Explicit pinned PoE1 player rule, not an invented client constant row. */
+  readonly baseMultiplierPercent: 150;
+  readonly baseMultiplierSource: SourceRef;
+  readonly sourceRows: readonly SourceRowRef[];
+}
+
+export interface SelectedSkillCriticalTrace {
+  readonly mode: 'disabled' | 'average';
+  readonly baseChancePercent: number;
+  readonly increasedChancePercent: number;
+  readonly lessChanceMultiplier: number;
+  readonly unroundedChancePercent: number;
+  readonly roundedChancePercent: number;
+  readonly chancePercent: number;
+  readonly baseMultiplierPercent: number;
+  readonly addedMultiplierPercent: number;
+  readonly criticalMultiplier: number;
+  readonly criticalHitBeforeResistance: DamageRange;
+  readonly criticalHitAfterResistance: DamageRange;
+  readonly expectedHitMeanBeforeResistance: number;
+  readonly expectedHitMeanAfterResistance: number;
+  readonly modifierContributions: readonly StatContribution[];
+  readonly sourceRows: readonly SourceRowRef[];
+  readonly baseMultiplierSource: SourceRef;
+}
+
 export const CONTROLLED_DESTRUCTION_STAT_IDS = [
   'support_controlled_destruction_spell_damage_+%_final',
   'support_controlled_destruction_critical_strike_chance_+%_final',
@@ -80,6 +114,9 @@ export interface AddedLightningDamageTrace {
 export interface SelectedSkillConfiguration {
   readonly id: string;
   readonly effectiveLightningResistancePercent: number;
+  /** Absent retains the earlier explicitly noncritical profile. */
+  readonly criticalStrikeMode?: 'disabled' | 'average';
+  readonly ailmentMode?: 'excluded';
 }
 
 export interface SelectedSkillSelection {
@@ -106,11 +143,12 @@ export interface SelectedSkillCalculation {
   readonly buildId: string;
   readonly configuration: SelectedSkillConfiguration;
   readonly skill: SelectedSkillSelection;
-  readonly engineRevision: 'poe1-selected-spark-v3';
+  readonly engineRevision: 'poe1-selected-spark-v4';
   readonly metric: 'selected-skill-hit-combined-dps';
   readonly hit: SparkCalculation;
   readonly addedLightningDamage: AddedLightningDamageTrace;
   readonly supportEffects: SelectedSkillSupportTrace;
+  readonly criticalEffects: SelectedSkillCriticalTrace;
   readonly hitsPerCast: 1;
   readonly hitsPerSecond: number;
   readonly hitDps: number;

@@ -235,6 +235,7 @@ export async function loadSparkDatasetForGame(
       if (levels.some((level) => level.gemLevel === gemLevel))
         throw new Error(`Duplicate Spark gem level ${gemLevel}.`);
       let addedDamageEffectiveness: number | undefined;
+      let baseCriticalStrikeChancePercent: number | undefined;
       if (game === 'poe1') {
         const rawEffectiveness = numberField(row, 'DamageEffectiveness');
         addedDamageEffectiveness = 1 + rawEffectiveness / 10_000;
@@ -244,12 +245,19 @@ export async function loadSparkDatasetForGame(
           !finite(addedDamageEffectiveness)
         )
           throw new Error(`Spark level ${gemLevel} has invalid added-damage effectiveness.`);
+        const rawCritChance = numberField(row, 'SpellCritChance');
+        if (!Number.isSafeInteger(rawCritChance) || rawCritChance < 0 || rawCritChance > 10_000)
+          throw new Error(`Spark level ${gemLevel} has invalid base critical chance.`);
+        baseCriticalStrikeChancePercent = rawCritChance / 100;
       }
       levels.push({
         gemLevel,
         baseLightningMin: min,
         baseLightningMax: max,
         ...(addedDamageEffectiveness === undefined ? {} : { addedDamageEffectiveness }),
+        ...(baseCriticalStrikeChancePercent === undefined
+          ? {}
+          : { baseCriticalStrikeChancePercent }),
         sourceRows: [
           rowRef('GrantedEffectStatSetsPerLevel', row),
           rowRef('GrantedEffectsPerLevel', perEffect[0]!),

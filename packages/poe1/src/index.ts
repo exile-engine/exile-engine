@@ -10,6 +10,7 @@ import {
   type SparkInput,
 } from '@exile-engine/core';
 import { loadControlledDestructionDataset } from './supports.js';
+import { loadSelectedSkillCriticalDataset } from './critical.js';
 
 export const game = 'poe1' as const;
 
@@ -19,9 +20,12 @@ export async function loadSparkDataset(reader: CatalogReader) {
   if (!loaded.ok) return loaded;
   const support = await loadControlledDestructionDataset(reader);
   if (!support.ok) return support;
+  const critical = await loadSelectedSkillCriticalDataset(reader);
+  if (!critical.ok) return critical;
   if (
     !sameSnapshot(loaded.value.identity, support.value.identity) ||
-    !sameSnapshot(loaded.value.identity, reader.identity)
+    !sameSnapshot(loaded.value.identity, reader.identity) ||
+    !sameSnapshot(loaded.value.identity, critical.value.identity)
   )
     return failure(
       errorDiagnostic(
@@ -29,7 +33,11 @@ export async function loadSparkDataset(reader: CatalogReader) {
         'Spark and support facts must share the exact snapshot throughout loading.',
       ),
     );
-  return success<SparkDataset>({ ...loaded.value, supports: [support.value] });
+  return success<SparkDataset>({
+    ...loaded.value,
+    supports: [support.value],
+    critical: critical.value,
+  });
 }
 
 /** Evaluate one normal noncritical hit; this function does not calculate full DPS. */
@@ -49,6 +57,8 @@ export type {
   SelectedSkillSupport,
   SelectedSkillSupportTrace,
   SelectedSkillSupportDataset,
+  SelectedSkillCriticalTrace,
+  SelectedSkillCriticalDataset,
 } from '@exile-engine/core';
 export { createSelectedSkillSession } from './incremental.js';
 export type { IncrementalSelectedSkillReport, SelectedSkillSession } from './incremental.js';

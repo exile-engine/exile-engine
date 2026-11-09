@@ -181,7 +181,7 @@ test('supported zero damage succeeds while missing or unsupported data has no ca
     { ...input, modifiers: [mod('damage_+%', -101)] },
     { ...input, modifiers: [mod('base_cast_speed_+%', -99.9)] },
     { ...input, modifiers: [{ ...mod('spell_damage_+%', 20), conditions: ['on-low-life'] }] },
-    { ...input, modifiers: [mod('critical_strike_chance_+%', 10)] },
+    { ...input, modifiers: [{ ...mod('critical_strike_chance_+%', 10), scope: 'local' }] },
     { ...input, modifiers: [{ ...mod('damage_+%', 10), source: null }] },
   ]) {
     const result = calculateSelectedSkill(changed, dataset);

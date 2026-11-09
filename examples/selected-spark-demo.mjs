@@ -17,7 +17,7 @@ export async function runSelectedSparkDemo(readShard, readXml) {
   const dataset = value(await loadSparkDataset(reader));
   const imported = importPobXml({
     format: 'pob-xml',
-    xml: await readXml('support-controlled-destruction-combined'),
+    xml: await readXml('crit-combined'),
     target: reader.identity,
     buildId: 'browser-synthetic-spark',
     configurationId: 'explicit-nonboss-25',
@@ -35,10 +35,30 @@ export async function runSelectedSparkDemo(readShard, readXml) {
     initial.supportEffects.castTimeMultiplier !== 1
   )
     throw new Error('Expected the reviewed support damage and unchanged cast-time rules.');
+  if (
+    initial.criticalEffects.mode !== 'average' ||
+    initial.criticalEffects.chancePercent !== 3 ||
+    initial.criticalEffects.criticalMultiplier !== 2
+  )
+    throw new Error(
+      'Expected explicit average critical hits and Controlled Destruction less crit.',
+    );
   const session = value(createSelectedSkillSession(imported.selectedSkill, dataset));
   const next = structuredClone(imported.selectedSkill);
   const reports = [];
   for (const change of [
+    () => {
+      next.modifiers.find((mod) => mod.statId === 'critical_strike_chance_+%').value += 25;
+    },
+    () => {
+      next.modifiers.find((mod) => mod.statId === 'base_critical_strike_multiplier_+').value += 25;
+    },
+    () => {
+      next.configuration.criticalStrikeMode = 'disabled';
+    },
+    () => {
+      next.configuration.criticalStrikeMode = 'average';
+    },
     () => {
       next.skill.supports[0].gemLevel = 1;
     },
@@ -98,6 +118,14 @@ export async function runSelectedSparkDemo(readShard, readXml) {
             appliedToSelectedHit,
           }),
         ),
+      },
+      criticalEffects: {
+        mode: report.calculation.criticalEffects.mode,
+        chancePercent: report.calculation.criticalEffects.chancePercent,
+        criticalMultiplier: report.calculation.criticalEffects.criticalMultiplier,
+        expectedHitMeanAfterResistance:
+          report.calculation.criticalEffects.expectedHitMeanAfterResistance,
+        modifierContributions: report.calculation.criticalEffects.modifierContributions,
       },
     });
   }

@@ -98,6 +98,8 @@ export interface SparkLevel {
   readonly baseLightningMax: number;
   /** PoE1 client DamageEffectiveness / 10000 + 1; absent for the PoE2 slice. */
   readonly addedDamageEffectiveness?: number;
+  /** PoE1 source SpellCritChance / 100, in percentage points. */
+  readonly baseCriticalStrikeChancePercent?: number;
   readonly sourceRows: readonly SourceRowRef[];
 }
 
@@ -121,6 +123,7 @@ export interface SparkDataset {
   readonly ruleProvenance: readonly string[];
   /** Optional PoE1 selected-skill facts, loaded by the PoE1 host-facing normalizer. */
   readonly supports?: readonly import('./selected-skill.js').SelectedSkillSupportDataset[];
+  readonly critical?: import('./selected-skill.js').SelectedSkillCriticalDataset;
 }
 
 export interface DamageRange {

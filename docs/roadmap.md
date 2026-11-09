@@ -10,11 +10,12 @@
 - Fresh recomputation, dependency-tracked sessions, dynamic applicability invalidation and explicit feedback rejection.
 - Ordered spell added-lightning ranges with client-derived effectiveness, intermediate provenance, executed pinned PoB fixtures and selective invalidation.
 - One normal Controlled Destruction support with explicit more/less/cast-time rules, gem and source-row provenance, executed oracle fixtures and selective support invalidation.
+- Explicit average critical hits with client base chance, a pinned player multiplier rule, Controlled Destruction less crit, excluded ailments, exact scalar modifier provenance and fresh/incremental oracle checks.
 
 ## Next capabilities
 
-1. Add crit chance/multiplier with an explicit enemy/ailment policy before accepting ordinary crit-enabled builds. This must apply the retained Controlled Destruction less-crit modifier and gain its own pinned oracle fixtures.
-2. Add explicit resistance penetration/exposure and caps as separate configured rules, then evaluate another support only with stated eligibility, timing and hit-count semantics.
+1. Add explicit lightning resistance penetration/exposure and caps as separate configured rules, with the same resistance treatment checked for noncritical and critical hits.
+2. Evaluate another support only with stated eligibility, timing and hit-count semantics. Add ailment effects only under a separate explicit enemy policy and oracle fixtures.
 3. Expand item reconciliation and passive/equipment integration within the existing normal Spark slice. Add conditions only with applicability tests; feedback mechanics require bounded solver semantics.
 4. Evaluate graph overhead and data validation costs using representative workloads before extending incremental machinery. Add further skills/variants only as separate documented, tested slices.
 

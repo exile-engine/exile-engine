@@ -36,12 +36,34 @@ const initial = {
       },
     ],
   },
-  configuration: { id: 'benchmark-enemy', effectiveLightningResistancePercent: 25 },
-  modifiers: Array.from({ length: 32 }, (_, index) => ({
-    statId: index % 5 === 0 ? 'base_cast_speed_+%' : 'spell_damage_+%',
-    value: 1,
-    source: { kind: 'item', id: `synthetic-item-${index}`, line: 1 },
-  })),
+  configuration: {
+    id: 'benchmark-enemy',
+    effectiveLightningResistancePercent: 25,
+    criticalStrikeMode: 'average',
+    ailmentMode: 'excluded',
+  },
+  modifiers: [
+    ...Array.from({ length: 32 }, (_, index) => ({
+      statId: index % 5 === 0 ? 'base_cast_speed_+%' : 'spell_damage_+%',
+      value: 1,
+      source: { kind: 'item', id: `synthetic-item-${index}`, line: 1 },
+    })),
+    {
+      statId: 'critical_strike_chance_+%',
+      value: 100,
+      source: { kind: 'item', id: 'synthetic-critical-global', line: 1 },
+    },
+    {
+      statId: 'spell_critical_strike_chance_+%',
+      value: 50,
+      source: { kind: 'item', id: 'synthetic-critical-spell', line: 1 },
+    },
+    {
+      statId: 'base_critical_strike_multiplier_+',
+      value: 50,
+      source: { kind: 'item', id: 'synthetic-critical-multiplier', line: 1 },
+    },
+  ],
   addedLightningDamage: [
     {
       statIds: ['spell_minimum_added_lightning_damage', 'spell_maximum_added_lightning_damage'],
@@ -62,6 +84,10 @@ for (const mutation of [
   'added-lightning-range',
   'support-level',
   'support-enabled',
+  'critical-chance',
+  'critical-multiplier',
+  'critical-mode',
+  'critical-applicability',
 ]) {
   const states = [];
   const next = structuredClone(initial);
@@ -75,6 +101,13 @@ for (const mutation of [
       next.addedLightningDamage[0].values = [index % 11, 20 + (index % 31)];
     if (mutation === 'support-level') next.skill.supports[0].gemLevel = 1 + (index % 20);
     if (mutation === 'support-enabled') next.skill.supports[0].enabled = index % 2 === 0;
+    if (mutation === 'critical-chance') next.modifiers[32].value = index % 501;
+    if (mutation === 'critical-multiplier') next.modifiers[34].value = index % 201;
+    if (mutation === 'critical-mode')
+      next.configuration.criticalStrikeMode = index % 2 === 0 ? 'average' : 'disabled';
+    if (mutation === 'critical-applicability')
+      next.modifiers[32].statId =
+        index % 2 === 0 ? 'critical_strike_chance_+%' : 'base_critical_strike_multiplier_+';
     states.push(structuredClone(next));
   }
   const check = value(createSelectedSkillSession(initial, dataset));
@@ -131,7 +164,7 @@ for (const mutation of [
 console.log(
   JSON.stringify(
     {
-      benchmark: 'selected-skill-batches-v3',
+      benchmark: 'selected-skill-batches-v4',
       engineRevision: selectedSkillEngineRevision,
       node: process.version,
       identity: dataset.identity,

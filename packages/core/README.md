@@ -10,6 +10,8 @@ Exports include `GameId`, `SnapshotIdentity`, `CatalogRecord`, `CatalogRef`, `Ca
 
 `SelectedSkillSupport` preserves explicit gem selection and provenance. Optional normalized support facts live on `SparkDataset.supports`; only the PoE1 selected-skill rules interpret the reviewed Controlled Destruction record. `SelectedSkillSupportTrace` retains exact raw stat IDs, enabled effects, more/less/cast-time multipliers and source rows. These contracts do not provide an arbitrary support loader or alter the original isolated-hit API.
 
+`SelectedSkillCriticalDataset` separates verified critical stat identities from the explicitly attributed pinned player multiplier rule. PoE1 levels retain client-derived `baseCriticalStrikeChancePercent`. `SelectedSkillCriticalTrace` reports chance/multiplier stages, critical ranges and probability-weighted expected hit means, plus modifier and source provenance. Explicit configuration selects average critical hits with ailments excluded; the earlier profile remains disabled by default. The original isolated-hit API and PoE2 arithmetic remain unchanged.
+
 Game packages use the portable shared normalization/calculation helpers. Hosts supply data through `CatalogReader`; core never imports a dataset, Node API, filesystem or network client. Every calculated result identifies the exact snapshot and its source rows.
 
 See the root architecture and conventions documentation. Package semver is not a client build ID. Unsupported input produces explicit diagnostics; the package does not contain a full character calculator.

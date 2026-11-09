@@ -5,11 +5,14 @@
     "AverageHit": 1072,
     "CombinedDPS": 1786.6666666666667,
     "CritChance": 0,
+    "CritEffect": 1,
     "CritMultiplier": 0,
     "HitChance": 100,
+    "LightningCritAverage": 0,
     "LightningHitAverage": 1072,
     "LightningMaxBase": 2021,
     "LightningMinBase": 123,
+    "PreEffectiveCritChance": 0,
     "Speed": 1.6666666666666667,
     "Time": 0.59999999999999998,
     "TotalDPS": 1786.6666666666667,
@@ -33,9 +36,31 @@
     ],
     "addedMaximum": 20,
     "addedMinimum": 10,
+    "ailmentFlags": {
+      "CannotBrittle": false,
+      "CannotChill": false,
+      "CannotFreeze": false,
+      "CannotIgnite": false,
+      "CannotSap": false,
+      "CannotScorch": false,
+      "CannotShock": false
+    },
+    "baseCriticalChancePercent": 6,
     "contributions": [],
+    "criticalContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritMultiplier",
+        "source": "Base",
+        "type": "BASE",
+        "value": 50
+      }
+    ],
+    "criticalMultiplierExtraPercent": 50,
     "damageEffectiveness": 1.8999999999999999,
     "increasedCastSpeedPercent": 0,
+    "increasedCriticalChancePercent": 0,
     "increasedDamagePercent": 0,
     "itemModifierLines": [
       {
@@ -93,11 +118,14 @@
     "AverageHit": 1608,
     "CombinedDPS": 3350.0000000000005,
     "CritChance": 0,
+    "CritEffect": 1,
     "CritMultiplier": 0,
     "HitChance": 100,
+    "LightningCritAverage": 0,
     "LightningHitAverage": 1608,
     "LightningMaxBase": 2021,
     "LightningMinBase": 123,
+    "PreEffectiveCritChance": 0,
     "Speed": 2.0833333333333335,
     "Time": 0.47999999999999998,
     "TotalDPS": 3350.0000000000005,
@@ -121,6 +149,16 @@
     ],
     "addedMaximum": 20,
     "addedMinimum": 10,
+    "ailmentFlags": {
+      "CannotBrittle": false,
+      "CannotChill": false,
+      "CannotFreeze": false,
+      "CannotIgnite": false,
+      "CannotSap": false,
+      "CannotScorch": false,
+      "CannotShock": false
+    },
+    "baseCriticalChancePercent": 6,
     "contributions": [
       {
         "flags": 0,
@@ -158,8 +196,20 @@
         "value": 25
       }
     ],
+    "criticalContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritMultiplier",
+        "source": "Base",
+        "type": "BASE",
+        "value": 50
+      }
+    ],
+    "criticalMultiplierExtraPercent": 50,
     "damageEffectiveness": 1.8999999999999999,
     "increasedCastSpeedPercent": 25,
+    "increasedCriticalChancePercent": 0,
     "increasedDamagePercent": 100,
     "itemModifierLines": [
       {
@@ -273,11 +323,14 @@
     "AverageHit": 43,
     "CombinedDPS": 71.666666666666671,
     "CritChance": 0,
+    "CritEffect": 1,
     "CritMultiplier": 0,
     "HitChance": 100,
+    "LightningCritAverage": 0,
     "LightningHitAverage": 43,
     "LightningMaxBase": 66,
     "LightningMinBase": 20,
+    "PreEffectiveCritChance": 0,
     "Speed": 1.6666666666666667,
     "Time": 0.59999999999999998,
     "TotalDPS": 71.666666666666671,
@@ -301,9 +354,31 @@
     ],
     "addedMaximum": 20,
     "addedMinimum": 10,
+    "ailmentFlags": {
+      "CannotBrittle": false,
+      "CannotChill": false,
+      "CannotFreeze": false,
+      "CannotIgnite": false,
+      "CannotSap": false,
+      "CannotScorch": false,
+      "CannotShock": false
+    },
+    "baseCriticalChancePercent": 6,
     "contributions": [],
+    "criticalContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritMultiplier",
+        "source": "Base",
+        "type": "BASE",
+        "value": 50
+      }
+    ],
+    "criticalMultiplierExtraPercent": 50,
     "damageEffectiveness": 1.8999999999999999,
     "increasedCastSpeedPercent": 0,
+    "increasedCriticalChancePercent": 0,
     "increasedDamagePercent": 0,
     "itemModifierLines": [
       {
@@ -361,11 +436,14 @@
     "AverageHit": 1081.5,
     "CombinedDPS": 1802.5,
     "CritChance": 0,
+    "CritEffect": 1,
     "CritMultiplier": 0,
     "HitChance": 100,
+    "LightningCritAverage": 0,
     "LightningHitAverage": 1081.5,
     "LightningMaxBase": 2034.3,
     "LightningMinBase": 128.69999999999999,
+    "PreEffectiveCritChance": 0,
     "Speed": 1.6666666666666667,
     "Time": 0.59999999999999998,
     "TotalDPS": 1802.5,
@@ -403,9 +481,31 @@
     ],
     "addedMaximum": 27,
     "addedMinimum": 13,
+    "ailmentFlags": {
+      "CannotBrittle": false,
+      "CannotChill": false,
+      "CannotFreeze": false,
+      "CannotIgnite": false,
+      "CannotSap": false,
+      "CannotScorch": false,
+      "CannotShock": false
+    },
+    "baseCriticalChancePercent": 6,
     "contributions": [],
+    "criticalContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritMultiplier",
+        "source": "Base",
+        "type": "BASE",
+        "value": 50
+      }
+    ],
+    "criticalMultiplierExtraPercent": 50,
     "damageEffectiveness": 1.8999999999999999,
     "increasedCastSpeedPercent": 0,
+    "increasedCriticalChancePercent": 0,
     "increasedDamagePercent": 0,
     "itemModifierLines": [
       {
@@ -480,11 +580,14 @@
     "AverageHit": 1308,
     "CombinedDPS": 2180,
     "CritChance": 0,
+    "CritEffect": 1,
     "CritMultiplier": 0,
     "HitChance": 100,
+    "LightningCritAverage": 0,
     "LightningHitAverage": 1308,
     "LightningMaxBase": 1986.8,
     "LightningMinBase": 105.90000000000001,
+    "PreEffectiveCritChance": 0,
     "Speed": 1.6666666666666667,
     "Time": 0.59999999999999998,
     "TotalDPS": 2180,
@@ -508,6 +611,16 @@
     ],
     "addedMaximum": 2,
     "addedMinimum": 1,
+    "ailmentFlags": {
+      "CannotBrittle": false,
+      "CannotChill": false,
+      "CannotFreeze": false,
+      "CannotIgnite": false,
+      "CannotSap": false,
+      "CannotScorch": false,
+      "CannotShock": false
+    },
+    "baseCriticalChancePercent": 6,
     "contributions": [
       {
         "flags": 2,
@@ -517,8 +630,20 @@
         "value": 25
       }
     ],
+    "criticalContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritMultiplier",
+        "source": "Base",
+        "type": "BASE",
+        "value": 50
+      }
+    ],
+    "criticalMultiplierExtraPercent": 50,
     "damageEffectiveness": 1.8999999999999999,
     "increasedCastSpeedPercent": 0,
+    "increasedCriticalChancePercent": 0,
     "increasedDamagePercent": 25,
     "itemModifierLines": [
       {
@@ -587,11 +712,14 @@
     "AverageHit": 1043.5,
     "CombinedDPS": 1739.1666666666667,
     "CritChance": 0,
+    "CritEffect": 1,
     "CritMultiplier": 0,
     "HitChance": 100,
+    "LightningCritAverage": 0,
     "LightningHitAverage": 1043.5,
     "LightningMaxBase": 1983,
     "LightningMinBase": 104,
+    "PreEffectiveCritChance": 0,
     "Speed": 1.6666666666666667,
     "Time": 0.59999999999999998,
     "TotalDPS": 1739.1666666666667,
@@ -600,9 +728,31 @@
     "addedContributions": [],
     "addedMaximum": 0,
     "addedMinimum": 0,
+    "ailmentFlags": {
+      "CannotBrittle": false,
+      "CannotChill": false,
+      "CannotFreeze": false,
+      "CannotIgnite": false,
+      "CannotSap": false,
+      "CannotScorch": false,
+      "CannotShock": false
+    },
+    "baseCriticalChancePercent": 6,
     "contributions": [],
+    "criticalContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritMultiplier",
+        "source": "Base",
+        "type": "BASE",
+        "value": 50
+      }
+    ],
+    "criticalMultiplierExtraPercent": 50,
     "damageEffectiveness": 1.8999999999999999,
     "increasedCastSpeedPercent": 0,
+    "increasedCriticalChancePercent": 0,
     "increasedDamagePercent": 0,
     "itemModifierLines": [
       {
@@ -658,11 +808,14 @@
     "AverageHit": 1043.5,
     "CombinedDPS": 1739.1666666666667,
     "CritChance": 0,
+    "CritEffect": 1,
     "CritMultiplier": 0,
     "HitChance": 100,
+    "LightningCritAverage": 0,
     "LightningHitAverage": 1043.5,
     "LightningMaxBase": 1983,
     "LightningMinBase": 104,
+    "PreEffectiveCritChance": 0,
     "Speed": 1.6666666666666667,
     "Time": 0.59999999999999998,
     "TotalDPS": 1739.1666666666667,
@@ -671,9 +824,31 @@
     "addedContributions": [],
     "addedMaximum": 0,
     "addedMinimum": 0,
+    "ailmentFlags": {
+      "CannotBrittle": false,
+      "CannotChill": false,
+      "CannotFreeze": false,
+      "CannotIgnite": false,
+      "CannotSap": false,
+      "CannotScorch": false,
+      "CannotShock": false
+    },
+    "baseCriticalChancePercent": 6,
     "contributions": [],
+    "criticalContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritMultiplier",
+        "source": "Base",
+        "type": "BASE",
+        "value": 50
+      }
+    ],
+    "criticalMultiplierExtraPercent": 50,
     "damageEffectiveness": 1.8999999999999999,
     "increasedCastSpeedPercent": 0,
+    "increasedCriticalChancePercent": 0,
     "increasedDamagePercent": 0,
     "itemModifierLines": [],
     "lightningBreakdown": {
@@ -711,11 +886,14 @@
     "AverageHit": 1043.5,
     "CombinedDPS": 2173.9583333333335,
     "CritChance": 0,
+    "CritEffect": 1,
     "CritMultiplier": 0,
     "HitChance": 100,
+    "LightningCritAverage": 0,
     "LightningHitAverage": 1043.5,
     "LightningMaxBase": 1983,
     "LightningMinBase": 104,
+    "PreEffectiveCritChance": 0,
     "Speed": 2.0833333333333335,
     "Time": 0.47999999999999998,
     "TotalDPS": 2173.9583333333335,
@@ -724,6 +902,16 @@
     "addedContributions": [],
     "addedMaximum": 0,
     "addedMinimum": 0,
+    "ailmentFlags": {
+      "CannotBrittle": false,
+      "CannotChill": false,
+      "CannotFreeze": false,
+      "CannotIgnite": false,
+      "CannotSap": false,
+      "CannotScorch": false,
+      "CannotShock": false
+    },
+    "baseCriticalChancePercent": 6,
     "contributions": [
       {
         "flags": 16,
@@ -733,8 +921,20 @@
         "value": 25
       }
     ],
+    "criticalContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritMultiplier",
+        "source": "Base",
+        "type": "BASE",
+        "value": 50
+      }
+    ],
+    "criticalMultiplierExtraPercent": 50,
     "damageEffectiveness": 1.8999999999999999,
     "increasedCastSpeedPercent": 25,
+    "increasedCriticalChancePercent": 0,
     "increasedDamagePercent": 0,
     "itemModifierLines": [
       {
@@ -778,17 +978,1280 @@
     "supportSpeedMultiplier": 1,
     "supportTotalCastTime": 0
   },
+  "crit-baseline": {
+    "ActionSpeedMod": 1,
+    "AverageDamage": 1074.8050000000001,
+    "AverageHit": 1074.8050000000001,
+    "CombinedDPS": 1791.3416666666669,
+    "CritChance": 6,
+    "CritEffect": 1.03,
+    "CritMultiplier": 1.5,
+    "HitChance": 100,
+    "LightningCritAverage": 1565.25,
+    "LightningHitAverage": 1043.5,
+    "LightningMaxBase": 1983,
+    "LightningMinBase": 104,
+    "PreEffectiveCritChance": 6,
+    "Speed": 1.6666666666666667,
+    "Time": 0.59999999999999998,
+    "TotalDPS": 1791.3416666666669,
+    "TotalMax": 1983,
+    "TotalMin": 104,
+    "addedContributions": [],
+    "addedMaximum": 0,
+    "addedMinimum": 0,
+    "ailmentFlags": {
+      "CannotBrittle": true,
+      "CannotChill": true,
+      "CannotFreeze": true,
+      "CannotIgnite": true,
+      "CannotSap": true,
+      "CannotScorch": true,
+      "CannotShock": true
+    },
+    "baseCriticalChancePercent": 6,
+    "contributions": [],
+    "criticalContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritMultiplier",
+        "source": "Base",
+        "type": "BASE",
+        "value": 50
+      }
+    ],
+    "criticalMultiplierExtraPercent": 50,
+    "damageEffectiveness": 1.8999999999999999,
+    "increasedCastSpeedPercent": 0,
+    "increasedCriticalChancePercent": 0,
+    "increasedDamagePercent": 0,
+    "itemModifierLines": [],
+    "lightningBreakdown": {
+      "1": "Base damage:",
+      "2": "104 to 1983 ^8(base damage from skill)",
+      "3": "= 104.0 to 1983.0",
+      "4": "Hit damage:",
+      "5": "104 to 1983 ^8(total damage)",
+      "6": "= 104 to 1983",
+      "7": "Portion of total damage: 100%",
+      "damageTypes": [
+        {
+          "base": "104 to 1983",
+          "convSrc": false,
+          "inc": false,
+          "more": false,
+          "source": "Lightning",
+          "total": "104 to 1983"
+        }
+      ]
+    },
+    "selectedPart": 1,
+    "selectedSkillId": "Spark",
+    "supportContributions": [],
+    "supportCriticalChanceMultiplier": 1,
+    "supportDamageMultiplier": 1,
+    "supportGems": [],
+    "supportManaCostMultiplier": 1,
+    "supportSpeedMultiplier": 1,
+    "supportTotalCastTime": 0
+  },
+  "crit-cap": {
+    "ActionSpeedMod": 1,
+    "AverageDamage": 1565.25,
+    "AverageHit": 1565.25,
+    "CombinedDPS": 2608.75,
+    "CritChance": 100,
+    "CritEffect": 1.5,
+    "CritMultiplier": 1.5,
+    "HitChance": 100,
+    "LightningCritAverage": 1565.25,
+    "LightningHitAverage": 1043.5,
+    "LightningMaxBase": 1983,
+    "LightningMinBase": 104,
+    "PreEffectiveCritChance": 100,
+    "Speed": 1.6666666666666667,
+    "Time": 0.59999999999999998,
+    "TotalDPS": 2608.75,
+    "TotalMax": 1983,
+    "TotalMin": 104,
+    "addedContributions": [],
+    "addedMaximum": 0,
+    "addedMinimum": 0,
+    "ailmentFlags": {
+      "CannotBrittle": true,
+      "CannotChill": true,
+      "CannotFreeze": true,
+      "CannotIgnite": true,
+      "CannotSap": true,
+      "CannotScorch": true,
+      "CannotShock": true
+    },
+    "baseCriticalChancePercent": 6,
+    "contributions": [],
+    "criticalContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritChance",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "type": "INC",
+        "value": 2000
+      },
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritMultiplier",
+        "source": "Base",
+        "type": "BASE",
+        "value": 50
+      }
+    ],
+    "criticalMultiplierExtraPercent": 50,
+    "damageEffectiveness": 1.8999999999999999,
+    "increasedCastSpeedPercent": 0,
+    "increasedCriticalChancePercent": 2000,
+    "increasedDamagePercent": 0,
+    "itemModifierLines": [
+      {
+        "line": "2000% increased Critical Strike Chance",
+        "mods": [
+          {
+            "flags": 0,
+            "keywordFlags": 0,
+            "name": "CritChance",
+            "value": 2000
+          }
+        ]
+      }
+    ],
+    "lightningBreakdown": {
+      "1": "Base damage:",
+      "2": "104 to 1983 ^8(base damage from skill)",
+      "3": "= 104.0 to 1983.0",
+      "4": "Hit damage:",
+      "5": "104 to 1983 ^8(total damage)",
+      "6": "= 104 to 1983",
+      "7": "Portion of total damage: 100%",
+      "damageTypes": [
+        {
+          "base": "104 to 1983",
+          "convSrc": false,
+          "inc": false,
+          "more": false,
+          "source": "Lightning",
+          "total": "104 to 1983"
+        }
+      ]
+    },
+    "selectedPart": 1,
+    "selectedSkillId": "Spark",
+    "supportContributions": [],
+    "supportCriticalChanceMultiplier": 1,
+    "supportDamageMultiplier": 1,
+    "supportGems": [],
+    "supportManaCostMultiplier": 1,
+    "supportSpeedMultiplier": 1,
+    "supportTotalCastTime": 0
+  },
+  "crit-combined": {
+    "ActionSpeedMod": 1,
+    "AverageDamage": 2302.0499999999997,
+    "AverageHit": 2302.0499999999997,
+    "CombinedDPS": 4795.9375,
+    "CritChance": 3,
+    "CritEffect": 1.03,
+    "CritMultiplier": 2,
+    "HitChance": 100,
+    "LightningCritAverage": 4470,
+    "LightningHitAverage": 2235,
+    "LightningMaxBase": 2021,
+    "LightningMinBase": 123,
+    "PreEffectiveCritChance": 3,
+    "Speed": 2.0833333333333335,
+    "Time": 0.47999999999999998,
+    "TotalDPS": 4795.9375,
+    "TotalMax": 4213.5,
+    "TotalMin": 256.5,
+    "addedContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 131072,
+        "name": "LightningMin",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 10
+      },
+      {
+        "flags": 0,
+        "keywordFlags": 131072,
+        "name": "LightningMax",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 20
+      }
+    ],
+    "addedMaximum": 20,
+    "addedMinimum": 10,
+    "ailmentFlags": {
+      "CannotBrittle": true,
+      "CannotChill": true,
+      "CannotFreeze": true,
+      "CannotIgnite": true,
+      "CannotSap": true,
+      "CannotScorch": true,
+      "CannotShock": true
+    },
+    "baseCriticalChancePercent": 6,
+    "contributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "Damage",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 10
+      },
+      {
+        "flags": 2,
+        "keywordFlags": 0,
+        "name": "Damage",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 20
+      },
+      {
+        "flags": 1024,
+        "keywordFlags": 0,
+        "name": "Damage",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 40
+      },
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "LightningDamage",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 30
+      },
+      {
+        "flags": 16,
+        "keywordFlags": 0,
+        "name": "Speed",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "value": 25
+      }
+    ],
+    "criticalContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritChance",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "type": "INC",
+        "value": 100
+      },
+      {
+        "flags": 2,
+        "keywordFlags": 0,
+        "name": "CritChance",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "type": "INC",
+        "value": 50
+      },
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritMultiplier",
+        "source": "Base",
+        "type": "BASE",
+        "value": 50
+      },
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritMultiplier",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "type": "BASE",
+        "value": 50
+      }
+    ],
+    "criticalMultiplierExtraPercent": 100,
+    "damageEffectiveness": 1.8999999999999999,
+    "increasedCastSpeedPercent": 25,
+    "increasedCriticalChancePercent": 150,
+    "increasedDamagePercent": 100,
+    "itemModifierLines": [
+      {
+        "line": "Adds 10 to 20 Lightning Damage to Spells",
+        "mods": [
+          {
+            "flags": 0,
+            "keywordFlags": 131072,
+            "name": "LightningMin",
+            "value": 10
+          },
+          {
+            "flags": 0,
+            "keywordFlags": 131072,
+            "name": "LightningMax",
+            "value": 20
+          }
+        ]
+      },
+      {
+        "line": "10% increased Damage",
+        "mods": [
+          {
+            "flags": 0,
+            "keywordFlags": 0,
+            "name": "Damage",
+            "value": 10
+          }
+        ]
+      },
+      {
+        "line": "20% increased Spell Damage",
+        "mods": [
+          {
+            "flags": 2,
+            "keywordFlags": 0,
+            "name": "Damage",
+            "value": 20
+          }
+        ]
+      },
+      {
+        "line": "30% increased Lightning Damage",
+        "mods": [
+          {
+            "flags": 0,
+            "keywordFlags": 0,
+            "name": "LightningDamage",
+            "value": 30
+          }
+        ]
+      },
+      {
+        "line": "40% increased Projectile Damage",
+        "mods": [
+          {
+            "flags": 1024,
+            "keywordFlags": 0,
+            "name": "Damage",
+            "value": 40
+          }
+        ]
+      },
+      {
+        "line": "25% increased Cast Speed",
+        "mods": [
+          {
+            "flags": 16,
+            "keywordFlags": 0,
+            "name": "Speed",
+            "value": 25
+          }
+        ]
+      },
+      {
+        "line": "100% increased Critical Strike Chance",
+        "mods": [
+          {
+            "flags": 0,
+            "keywordFlags": 0,
+            "name": "CritChance",
+            "value": 100
+          }
+        ]
+      },
+      {
+        "line": "50% increased Critical Strike Chance for Spells",
+        "mods": [
+          {
+            "flags": 2,
+            "keywordFlags": 0,
+            "name": "CritChance",
+            "value": 50
+          }
+        ]
+      },
+      {
+        "line": "+50% to Global Critical Strike Multiplier",
+        "mods": [
+          {
+            "flags": 0,
+            "keywordFlags": 0,
+            "name": "CritMultiplier",
+            "value": 50
+          }
+        ]
+      }
+    ],
+    "lightningBreakdown": {
+      "1": "Base damage:",
+      "2": "104 to 1983 ^8(base damage from skill)",
+      "3": "+ 10 to 20 ^8(added damage)",
+      "4": "x 1.90 ^8(damage effectiveness)",
+      "5": "= 123.0 to 2021.0",
+      "6": "Hit damage:",
+      "7": "342 to 5618 ^8(total damage)",
+      "8": "x 0.750 ^8(effective DPS modifier)",
+      "9": "= 256 to 4213",
+      "10": "Portion of total damage: 100%",
+      "damageTypes": [
+        {
+          "base": "123 to 2021",
+          "convSrc": false,
+          "inc": "x 2",
+          "more": "x 1.39",
+          "source": "Lightning",
+          "total": "342 to 5618"
+        }
+      ]
+    },
+    "selectedPart": 1,
+    "selectedSkillId": "Spark",
+    "supportContributions": [
+      {
+        "flags": 2,
+        "keywordFlags": 0,
+        "name": "Damage",
+        "source": "Skill:SupportControlledDestruction",
+        "value": 39
+      },
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritChance",
+        "source": "Skill:SupportControlledDestruction",
+        "value": -80
+      },
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "SupportManaMultiplier",
+        "source": "Skill:SupportControlledDestruction",
+        "value": 40
+      }
+    ],
+    "supportCriticalChanceMultiplier": 0.20000000000000001,
+    "supportDamageMultiplier": 1.3899999999999999,
+    "supportGems": [
+      {
+        "enabled": true,
+        "gameId": "Metadata/Items/Gems/SupportGemControlledDestruction",
+        "gemId": "Metadata/Items/Gems/SkillGemSupportControlledDestruction",
+        "level": 20,
+        "nameSpec": "Controlled Destruction",
+        "quality": 0,
+        "skillId": "SupportControlledDestruction"
+      }
+    ],
+    "supportManaCostMultiplier": 1.3999999999999999,
+    "supportSpeedMultiplier": 1,
+    "supportTotalCastTime": 0
+  },
+  "crit-controlled-active": {
+    "ActionSpeedMod": 1,
+    "AverageDamage": 1459.203,
+    "AverageHit": 1459.203,
+    "CombinedDPS": 2432.0050000000001,
+    "CritChance": 1.2,
+    "CritEffect": 1.006,
+    "CritMultiplier": 1.5,
+    "HitChance": 100,
+    "LightningCritAverage": 2175.75,
+    "LightningHitAverage": 1450.5,
+    "LightningMaxBase": 1983,
+    "LightningMinBase": 104,
+    "PreEffectiveCritChance": 1.2,
+    "Speed": 1.6666666666666667,
+    "Time": 0.59999999999999998,
+    "TotalDPS": 2432.0050000000001,
+    "TotalMax": 2756,
+    "TotalMin": 145,
+    "addedContributions": [],
+    "addedMaximum": 0,
+    "addedMinimum": 0,
+    "ailmentFlags": {
+      "CannotBrittle": true,
+      "CannotChill": true,
+      "CannotFreeze": true,
+      "CannotIgnite": true,
+      "CannotSap": true,
+      "CannotScorch": true,
+      "CannotShock": true
+    },
+    "baseCriticalChancePercent": 6,
+    "contributions": [],
+    "criticalContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritMultiplier",
+        "source": "Base",
+        "type": "BASE",
+        "value": 50
+      }
+    ],
+    "criticalMultiplierExtraPercent": 50,
+    "damageEffectiveness": 1.8999999999999999,
+    "increasedCastSpeedPercent": 0,
+    "increasedCriticalChancePercent": 0,
+    "increasedDamagePercent": 0,
+    "itemModifierLines": [],
+    "lightningBreakdown": {
+      "1": "Base damage:",
+      "2": "104 to 1983 ^8(base damage from skill)",
+      "3": "= 104.0 to 1983.0",
+      "4": "Hit damage:",
+      "5": "145 to 2756 ^8(total damage)",
+      "6": "= 145 to 2756",
+      "7": "Portion of total damage: 100%",
+      "damageTypes": [
+        {
+          "base": "104 to 1983",
+          "convSrc": false,
+          "inc": false,
+          "more": "x 1.39",
+          "source": "Lightning",
+          "total": "145 to 2756"
+        }
+      ]
+    },
+    "selectedPart": 1,
+    "selectedSkillId": "Spark",
+    "supportContributions": [
+      {
+        "flags": 2,
+        "keywordFlags": 0,
+        "name": "Damage",
+        "source": "Skill:SupportControlledDestruction",
+        "value": 39
+      },
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritChance",
+        "source": "Skill:SupportControlledDestruction",
+        "value": -80
+      },
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "SupportManaMultiplier",
+        "source": "Skill:SupportControlledDestruction",
+        "value": 40
+      }
+    ],
+    "supportCriticalChanceMultiplier": 0.20000000000000001,
+    "supportDamageMultiplier": 1.3899999999999999,
+    "supportGems": [
+      {
+        "enabled": true,
+        "gameId": "Metadata/Items/Gems/SupportGemControlledDestruction",
+        "gemId": "Metadata/Items/Gems/SkillGemSupportControlledDestruction",
+        "level": 20,
+        "nameSpec": "Controlled Destruction",
+        "quality": 0,
+        "skillId": "SupportControlledDestruction"
+      }
+    ],
+    "supportManaCostMultiplier": 1.3999999999999999,
+    "supportSpeedMultiplier": 1,
+    "supportTotalCastTime": 0
+  },
+  "crit-controlled-cap": {
+    "ActionSpeedMod": 1,
+    "AverageDamage": 1633.2629999999999,
+    "AverageHit": 1633.2629999999999,
+    "CombinedDPS": 2722.105,
+    "CritChance": 25.199999999999999,
+    "CritEffect": 1.1259999999999999,
+    "CritMultiplier": 1.5,
+    "HitChance": 100,
+    "LightningCritAverage": 2175.75,
+    "LightningHitAverage": 1450.5,
+    "LightningMaxBase": 1983,
+    "LightningMinBase": 104,
+    "PreEffectiveCritChance": 25.199999999999999,
+    "Speed": 1.6666666666666667,
+    "Time": 0.59999999999999998,
+    "TotalDPS": 2722.105,
+    "TotalMax": 2756,
+    "TotalMin": 145,
+    "addedContributions": [],
+    "addedMaximum": 0,
+    "addedMinimum": 0,
+    "ailmentFlags": {
+      "CannotBrittle": true,
+      "CannotChill": true,
+      "CannotFreeze": true,
+      "CannotIgnite": true,
+      "CannotSap": true,
+      "CannotScorch": true,
+      "CannotShock": true
+    },
+    "baseCriticalChancePercent": 6,
+    "contributions": [],
+    "criticalContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritChance",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "type": "INC",
+        "value": 2000
+      },
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritMultiplier",
+        "source": "Base",
+        "type": "BASE",
+        "value": 50
+      }
+    ],
+    "criticalMultiplierExtraPercent": 50,
+    "damageEffectiveness": 1.8999999999999999,
+    "increasedCastSpeedPercent": 0,
+    "increasedCriticalChancePercent": 2000,
+    "increasedDamagePercent": 0,
+    "itemModifierLines": [
+      {
+        "line": "2000% increased Critical Strike Chance",
+        "mods": [
+          {
+            "flags": 0,
+            "keywordFlags": 0,
+            "name": "CritChance",
+            "value": 2000
+          }
+        ]
+      }
+    ],
+    "lightningBreakdown": {
+      "1": "Base damage:",
+      "2": "104 to 1983 ^8(base damage from skill)",
+      "3": "= 104.0 to 1983.0",
+      "4": "Hit damage:",
+      "5": "145 to 2756 ^8(total damage)",
+      "6": "= 145 to 2756",
+      "7": "Portion of total damage: 100%",
+      "damageTypes": [
+        {
+          "base": "104 to 1983",
+          "convSrc": false,
+          "inc": false,
+          "more": "x 1.39",
+          "source": "Lightning",
+          "total": "145 to 2756"
+        }
+      ]
+    },
+    "selectedPart": 1,
+    "selectedSkillId": "Spark",
+    "supportContributions": [
+      {
+        "flags": 2,
+        "keywordFlags": 0,
+        "name": "Damage",
+        "source": "Skill:SupportControlledDestruction",
+        "value": 39
+      },
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritChance",
+        "source": "Skill:SupportControlledDestruction",
+        "value": -80
+      },
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "SupportManaMultiplier",
+        "source": "Skill:SupportControlledDestruction",
+        "value": 40
+      }
+    ],
+    "supportCriticalChanceMultiplier": 0.20000000000000001,
+    "supportDamageMultiplier": 1.3899999999999999,
+    "supportGems": [
+      {
+        "enabled": true,
+        "gameId": "Metadata/Items/Gems/SupportGemControlledDestruction",
+        "gemId": "Metadata/Items/Gems/SkillGemSupportControlledDestruction",
+        "level": 20,
+        "nameSpec": "Controlled Destruction",
+        "quality": 0,
+        "skillId": "SupportControlledDestruction"
+      }
+    ],
+    "supportManaCostMultiplier": 1.3999999999999999,
+    "supportSpeedMultiplier": 1,
+    "supportTotalCastTime": 0
+  },
+  "crit-controlled-disabled": {
+    "ActionSpeedMod": 1,
+    "AverageDamage": 1074.8050000000001,
+    "AverageHit": 1074.8050000000001,
+    "CombinedDPS": 1791.3416666666669,
+    "CritChance": 6,
+    "CritEffect": 1.03,
+    "CritMultiplier": 1.5,
+    "HitChance": 100,
+    "LightningCritAverage": 1565.25,
+    "LightningHitAverage": 1043.5,
+    "LightningMaxBase": 1983,
+    "LightningMinBase": 104,
+    "PreEffectiveCritChance": 6,
+    "Speed": 1.6666666666666667,
+    "Time": 0.59999999999999998,
+    "TotalDPS": 1791.3416666666669,
+    "TotalMax": 1983,
+    "TotalMin": 104,
+    "addedContributions": [],
+    "addedMaximum": 0,
+    "addedMinimum": 0,
+    "ailmentFlags": {
+      "CannotBrittle": true,
+      "CannotChill": true,
+      "CannotFreeze": true,
+      "CannotIgnite": true,
+      "CannotSap": true,
+      "CannotScorch": true,
+      "CannotShock": true
+    },
+    "baseCriticalChancePercent": 6,
+    "contributions": [],
+    "criticalContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritMultiplier",
+        "source": "Base",
+        "type": "BASE",
+        "value": 50
+      }
+    ],
+    "criticalMultiplierExtraPercent": 50,
+    "damageEffectiveness": 1.8999999999999999,
+    "increasedCastSpeedPercent": 0,
+    "increasedCriticalChancePercent": 0,
+    "increasedDamagePercent": 0,
+    "itemModifierLines": [],
+    "lightningBreakdown": {
+      "1": "Base damage:",
+      "2": "104 to 1983 ^8(base damage from skill)",
+      "3": "= 104.0 to 1983.0",
+      "4": "Hit damage:",
+      "5": "104 to 1983 ^8(total damage)",
+      "6": "= 104 to 1983",
+      "7": "Portion of total damage: 100%",
+      "damageTypes": [
+        {
+          "base": "104 to 1983",
+          "convSrc": false,
+          "inc": false,
+          "more": false,
+          "source": "Lightning",
+          "total": "104 to 1983"
+        }
+      ]
+    },
+    "selectedPart": 1,
+    "selectedSkillId": "Spark",
+    "supportContributions": [],
+    "supportCriticalChanceMultiplier": 1,
+    "supportDamageMultiplier": 1,
+    "supportGems": [
+      {
+        "enabled": false,
+        "gameId": "Metadata/Items/Gems/SupportGemControlledDestruction",
+        "gemId": "Metadata/Items/Gems/SkillGemSupportControlledDestruction",
+        "level": 20,
+        "nameSpec": "Controlled Destruction",
+        "quality": 0,
+        "skillId": "SupportControlledDestruction"
+      }
+    ],
+    "supportManaCostMultiplier": 1,
+    "supportSpeedMultiplier": 1,
+    "supportTotalCastTime": 0
+  },
+  "crit-increased": {
+    "ActionSpeedMod": 1,
+    "AverageDamage": 1121.7625,
+    "AverageHit": 1121.7625,
+    "CombinedDPS": 1869.6041666666667,
+    "CritChance": 15,
+    "CritEffect": 1.075,
+    "CritMultiplier": 1.5,
+    "HitChance": 100,
+    "LightningCritAverage": 1565.25,
+    "LightningHitAverage": 1043.5,
+    "LightningMaxBase": 1983,
+    "LightningMinBase": 104,
+    "PreEffectiveCritChance": 15,
+    "Speed": 1.6666666666666667,
+    "Time": 0.59999999999999998,
+    "TotalDPS": 1869.6041666666667,
+    "TotalMax": 1983,
+    "TotalMin": 104,
+    "addedContributions": [],
+    "addedMaximum": 0,
+    "addedMinimum": 0,
+    "ailmentFlags": {
+      "CannotBrittle": true,
+      "CannotChill": true,
+      "CannotFreeze": true,
+      "CannotIgnite": true,
+      "CannotSap": true,
+      "CannotScorch": true,
+      "CannotShock": true
+    },
+    "baseCriticalChancePercent": 6,
+    "contributions": [],
+    "criticalContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritChance",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "type": "INC",
+        "value": 100
+      },
+      {
+        "flags": 2,
+        "keywordFlags": 0,
+        "name": "CritChance",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "type": "INC",
+        "value": 50
+      },
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritMultiplier",
+        "source": "Base",
+        "type": "BASE",
+        "value": 50
+      }
+    ],
+    "criticalMultiplierExtraPercent": 50,
+    "damageEffectiveness": 1.8999999999999999,
+    "increasedCastSpeedPercent": 0,
+    "increasedCriticalChancePercent": 150,
+    "increasedDamagePercent": 0,
+    "itemModifierLines": [
+      {
+        "line": "100% increased Critical Strike Chance",
+        "mods": [
+          {
+            "flags": 0,
+            "keywordFlags": 0,
+            "name": "CritChance",
+            "value": 100
+          }
+        ]
+      },
+      {
+        "line": "50% increased Critical Strike Chance for Spells",
+        "mods": [
+          {
+            "flags": 2,
+            "keywordFlags": 0,
+            "name": "CritChance",
+            "value": 50
+          }
+        ]
+      }
+    ],
+    "lightningBreakdown": {
+      "1": "Base damage:",
+      "2": "104 to 1983 ^8(base damage from skill)",
+      "3": "= 104.0 to 1983.0",
+      "4": "Hit damage:",
+      "5": "104 to 1983 ^8(total damage)",
+      "6": "= 104 to 1983",
+      "7": "Portion of total damage: 100%",
+      "damageTypes": [
+        {
+          "base": "104 to 1983",
+          "convSrc": false,
+          "inc": false,
+          "more": false,
+          "source": "Lightning",
+          "total": "104 to 1983"
+        }
+      ]
+    },
+    "selectedPart": 1,
+    "selectedSkillId": "Spark",
+    "supportContributions": [],
+    "supportCriticalChanceMultiplier": 1,
+    "supportDamageMultiplier": 1,
+    "supportGems": [],
+    "supportManaCostMultiplier": 1,
+    "supportSpeedMultiplier": 1,
+    "supportTotalCastTime": 0
+  },
+  "crit-multiplier": {
+    "ActionSpeedMod": 1,
+    "AverageDamage": 1106.1099999999999,
+    "AverageHit": 1106.1099999999999,
+    "CombinedDPS": 1843.5166666666667,
+    "CritChance": 6,
+    "CritEffect": 1.0600000000000001,
+    "CritMultiplier": 2,
+    "HitChance": 100,
+    "LightningCritAverage": 2087,
+    "LightningHitAverage": 1043.5,
+    "LightningMaxBase": 1983,
+    "LightningMinBase": 104,
+    "PreEffectiveCritChance": 6,
+    "Speed": 1.6666666666666667,
+    "Time": 0.59999999999999998,
+    "TotalDPS": 1843.5166666666667,
+    "TotalMax": 1983,
+    "TotalMin": 104,
+    "addedContributions": [],
+    "addedMaximum": 0,
+    "addedMinimum": 0,
+    "ailmentFlags": {
+      "CannotBrittle": true,
+      "CannotChill": true,
+      "CannotFreeze": true,
+      "CannotIgnite": true,
+      "CannotSap": true,
+      "CannotScorch": true,
+      "CannotShock": true
+    },
+    "baseCriticalChancePercent": 6,
+    "contributions": [],
+    "criticalContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritMultiplier",
+        "source": "Base",
+        "type": "BASE",
+        "value": 50
+      },
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritMultiplier",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "type": "BASE",
+        "value": 50
+      }
+    ],
+    "criticalMultiplierExtraPercent": 100,
+    "damageEffectiveness": 1.8999999999999999,
+    "increasedCastSpeedPercent": 0,
+    "increasedCriticalChancePercent": 0,
+    "increasedDamagePercent": 0,
+    "itemModifierLines": [
+      {
+        "line": "+50% to Global Critical Strike Multiplier",
+        "mods": [
+          {
+            "flags": 0,
+            "keywordFlags": 0,
+            "name": "CritMultiplier",
+            "value": 50
+          }
+        ]
+      }
+    ],
+    "lightningBreakdown": {
+      "1": "Base damage:",
+      "2": "104 to 1983 ^8(base damage from skill)",
+      "3": "= 104.0 to 1983.0",
+      "4": "Hit damage:",
+      "5": "104 to 1983 ^8(total damage)",
+      "6": "= 104 to 1983",
+      "7": "Portion of total damage: 100%",
+      "damageTypes": [
+        {
+          "base": "104 to 1983",
+          "convSrc": false,
+          "inc": false,
+          "more": false,
+          "source": "Lightning",
+          "total": "104 to 1983"
+        }
+      ]
+    },
+    "selectedPart": 1,
+    "selectedSkillId": "Spark",
+    "supportContributions": [],
+    "supportCriticalChanceMultiplier": 1,
+    "supportDamageMultiplier": 1,
+    "supportGems": [],
+    "supportManaCostMultiplier": 1,
+    "supportSpeedMultiplier": 1,
+    "supportTotalCastTime": 0
+  },
+  "crit-rounded": {
+    "ActionSpeedMod": 1,
+    "AverageDamage": 1470.807,
+    "AverageHit": 1470.807,
+    "CombinedDPS": 2451.3450000000003,
+    "CritChance": 1.3999999999999999,
+    "CritEffect": 1.014,
+    "CritMultiplier": 2,
+    "HitChance": 100,
+    "LightningCritAverage": 2901,
+    "LightningHitAverage": 1450.5,
+    "LightningMaxBase": 1983,
+    "LightningMinBase": 104,
+    "PreEffectiveCritChance": 1.3999999999999999,
+    "Speed": 1.6666666666666667,
+    "Time": 0.59999999999999998,
+    "TotalDPS": 2451.3450000000003,
+    "TotalMax": 2756,
+    "TotalMin": 145,
+    "addedContributions": [],
+    "addedMaximum": 0,
+    "addedMinimum": 0,
+    "ailmentFlags": {
+      "CannotBrittle": true,
+      "CannotChill": true,
+      "CannotFreeze": true,
+      "CannotIgnite": true,
+      "CannotSap": true,
+      "CannotScorch": true,
+      "CannotShock": true
+    },
+    "baseCriticalChancePercent": 6,
+    "contributions": [],
+    "criticalContributions": [
+      {
+        "flags": 2,
+        "keywordFlags": 0,
+        "name": "CritChance",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "type": "INC",
+        "value": 17
+      },
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritMultiplier",
+        "source": "Base",
+        "type": "BASE",
+        "value": 50
+      },
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritMultiplier",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "type": "BASE",
+        "value": 50
+      }
+    ],
+    "criticalMultiplierExtraPercent": 100,
+    "damageEffectiveness": 1.8999999999999999,
+    "increasedCastSpeedPercent": 0,
+    "increasedCriticalChancePercent": 17,
+    "increasedDamagePercent": 0,
+    "itemModifierLines": [
+      {
+        "line": "17% increased Critical Strike Chance for Spells",
+        "mods": [
+          {
+            "flags": 2,
+            "keywordFlags": 0,
+            "name": "CritChance",
+            "value": 17
+          }
+        ]
+      },
+      {
+        "line": "+50% to Global Critical Strike Multiplier",
+        "mods": [
+          {
+            "flags": 0,
+            "keywordFlags": 0,
+            "name": "CritMultiplier",
+            "value": 50
+          }
+        ]
+      }
+    ],
+    "lightningBreakdown": {
+      "1": "Base damage:",
+      "2": "104 to 1983 ^8(base damage from skill)",
+      "3": "= 104.0 to 1983.0",
+      "4": "Hit damage:",
+      "5": "145 to 2756 ^8(total damage)",
+      "6": "= 145 to 2756",
+      "7": "Portion of total damage: 100%",
+      "damageTypes": [
+        {
+          "base": "104 to 1983",
+          "convSrc": false,
+          "inc": false,
+          "more": "x 1.39",
+          "source": "Lightning",
+          "total": "145 to 2756"
+        }
+      ]
+    },
+    "selectedPart": 1,
+    "selectedSkillId": "Spark",
+    "supportContributions": [
+      {
+        "flags": 2,
+        "keywordFlags": 0,
+        "name": "Damage",
+        "source": "Skill:SupportControlledDestruction",
+        "value": 39
+      },
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritChance",
+        "source": "Skill:SupportControlledDestruction",
+        "value": -80
+      },
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "SupportManaMultiplier",
+        "source": "Skill:SupportControlledDestruction",
+        "value": 40
+      }
+    ],
+    "supportCriticalChanceMultiplier": 0.20000000000000001,
+    "supportDamageMultiplier": 1.3899999999999999,
+    "supportGems": [
+      {
+        "enabled": true,
+        "gameId": "Metadata/Items/Gems/SupportGemControlledDestruction",
+        "gemId": "Metadata/Items/Gems/SkillGemSupportControlledDestruction",
+        "level": 20,
+        "nameSpec": "Controlled Destruction",
+        "quality": 0,
+        "skillId": "SupportControlledDestruction"
+      }
+    ],
+    "supportManaCostMultiplier": 1.3999999999999999,
+    "supportSpeedMultiplier": 1,
+    "supportTotalCastTime": 0
+  },
+  "crit-zero": {
+    "ActionSpeedMod": 1,
+    "AverageDamage": 1043.5,
+    "AverageHit": 1043.5,
+    "CombinedDPS": 1739.1666666666667,
+    "CritChance": 0,
+    "CritEffect": 1,
+    "CritMultiplier": 1.5,
+    "HitChance": 100,
+    "LightningCritAverage": 1565.25,
+    "LightningHitAverage": 1043.5,
+    "LightningMaxBase": 1983,
+    "LightningMinBase": 104,
+    "PreEffectiveCritChance": 0,
+    "Speed": 1.6666666666666667,
+    "Time": 0.59999999999999998,
+    "TotalDPS": 1739.1666666666667,
+    "TotalMax": 1983,
+    "TotalMin": 104,
+    "addedContributions": [],
+    "addedMaximum": 0,
+    "addedMinimum": 0,
+    "ailmentFlags": {
+      "CannotBrittle": true,
+      "CannotChill": true,
+      "CannotFreeze": true,
+      "CannotIgnite": true,
+      "CannotSap": true,
+      "CannotScorch": true,
+      "CannotShock": true
+    },
+    "baseCriticalChancePercent": 6,
+    "contributions": [],
+    "criticalContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritChance",
+        "source": "Item:1:Synthetic Spark Fixture, Simple Robe",
+        "type": "INC",
+        "value": -100
+      },
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritMultiplier",
+        "source": "Base",
+        "type": "BASE",
+        "value": 50
+      }
+    ],
+    "criticalMultiplierExtraPercent": 50,
+    "damageEffectiveness": 1.8999999999999999,
+    "increasedCastSpeedPercent": 0,
+    "increasedCriticalChancePercent": -100,
+    "increasedDamagePercent": 0,
+    "itemModifierLines": [
+      {
+        "line": "100% reduced Critical Strike Chance",
+        "mods": [
+          {
+            "flags": 0,
+            "keywordFlags": 0,
+            "name": "CritChance",
+            "value": -100
+          }
+        ]
+      }
+    ],
+    "lightningBreakdown": {
+      "1": "Base damage:",
+      "2": "104 to 1983 ^8(base damage from skill)",
+      "3": "= 104.0 to 1983.0",
+      "4": "Hit damage:",
+      "5": "104 to 1983 ^8(total damage)",
+      "6": "= 104 to 1983",
+      "7": "Portion of total damage: 100%",
+      "damageTypes": [
+        {
+          "base": "104 to 1983",
+          "convSrc": false,
+          "inc": false,
+          "more": false,
+          "source": "Lightning",
+          "total": "104 to 1983"
+        }
+      ]
+    },
+    "selectedPart": 1,
+    "selectedSkillId": "Spark",
+    "supportContributions": [],
+    "supportCriticalChanceMultiplier": 1,
+    "supportDamageMultiplier": 1,
+    "supportGems": [],
+    "supportManaCostMultiplier": 1,
+    "supportSpeedMultiplier": 1,
+    "supportTotalCastTime": 0
+  },
   "increased": {
     "ActionSpeedMod": 1,
     "AverageDamage": 2087,
     "AverageHit": 2087,
     "CombinedDPS": 3478.3333333333335,
     "CritChance": 0,
+    "CritEffect": 1,
     "CritMultiplier": 0,
     "HitChance": 100,
+    "LightningCritAverage": 0,
     "LightningHitAverage": 2087,
     "LightningMaxBase": 1983,
     "LightningMinBase": 104,
+    "PreEffectiveCritChance": 0,
     "Speed": 1.6666666666666667,
     "Time": 0.59999999999999998,
     "TotalDPS": 3478.3333333333335,
@@ -797,6 +2260,16 @@
     "addedContributions": [],
     "addedMaximum": 0,
     "addedMinimum": 0,
+    "ailmentFlags": {
+      "CannotBrittle": false,
+      "CannotChill": false,
+      "CannotFreeze": false,
+      "CannotIgnite": false,
+      "CannotSap": false,
+      "CannotScorch": false,
+      "CannotShock": false
+    },
+    "baseCriticalChancePercent": 6,
     "contributions": [
       {
         "flags": 0,
@@ -827,8 +2300,20 @@
         "value": 30
       }
     ],
+    "criticalContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritMultiplier",
+        "source": "Base",
+        "type": "BASE",
+        "value": 50
+      }
+    ],
+    "criticalMultiplierExtraPercent": 50,
     "damageEffectiveness": 1.8999999999999999,
     "increasedCastSpeedPercent": 0,
+    "increasedCriticalChancePercent": 0,
     "increasedDamagePercent": 100,
     "itemModifierLines": [
       {
@@ -911,11 +2396,14 @@
     "AverageHit": 0,
     "CombinedDPS": 0,
     "CritChance": 0,
+    "CritEffect": 1,
     "CritMultiplier": 0,
     "HitChance": 100,
+    "LightningCritAverage": 0,
     "LightningHitAverage": 0,
     "LightningMaxBase": 1983,
     "LightningMinBase": 104,
+    "PreEffectiveCritChance": 0,
     "Speed": 1.6666666666666667,
     "Time": 0.59999999999999998,
     "TotalDPS": 0,
@@ -924,6 +2412,16 @@
     "addedContributions": [],
     "addedMaximum": 0,
     "addedMinimum": 0,
+    "ailmentFlags": {
+      "CannotBrittle": false,
+      "CannotChill": false,
+      "CannotFreeze": false,
+      "CannotIgnite": false,
+      "CannotSap": false,
+      "CannotScorch": false,
+      "CannotShock": false
+    },
+    "baseCriticalChancePercent": 6,
     "contributions": [
       {
         "flags": 0,
@@ -933,8 +2431,20 @@
         "value": -100
       }
     ],
+    "criticalContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritMultiplier",
+        "source": "Base",
+        "type": "BASE",
+        "value": 50
+      }
+    ],
+    "criticalMultiplierExtraPercent": 50,
     "damageEffectiveness": 1.8999999999999999,
     "increasedCastSpeedPercent": 0,
+    "increasedCriticalChancePercent": 0,
     "increasedDamagePercent": -100,
     "itemModifierLines": [
       {
@@ -983,11 +2493,14 @@
     "AverageHit": 1565.25,
     "CombinedDPS": 3260.9375000000005,
     "CritChance": 0,
+    "CritEffect": 1,
     "CritMultiplier": 0,
     "HitChance": 100,
+    "LightningCritAverage": 0,
     "LightningHitAverage": 1565.25,
     "LightningMaxBase": 1983,
     "LightningMinBase": 104,
+    "PreEffectiveCritChance": 0,
     "Speed": 2.0833333333333335,
     "Time": 0.47999999999999998,
     "TotalDPS": 3260.9375000000005,
@@ -996,6 +2509,16 @@
     "addedContributions": [],
     "addedMaximum": 0,
     "addedMinimum": 0,
+    "ailmentFlags": {
+      "CannotBrittle": false,
+      "CannotChill": false,
+      "CannotFreeze": false,
+      "CannotIgnite": false,
+      "CannotSap": false,
+      "CannotScorch": false,
+      "CannotShock": false
+    },
+    "baseCriticalChancePercent": 6,
     "contributions": [
       {
         "flags": 0,
@@ -1033,8 +2556,20 @@
         "value": 25
       }
     ],
+    "criticalContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritMultiplier",
+        "source": "Base",
+        "type": "BASE",
+        "value": 50
+      }
+    ],
+    "criticalMultiplierExtraPercent": 50,
     "damageEffectiveness": 1.8999999999999999,
     "increasedCastSpeedPercent": 25,
+    "increasedCriticalChancePercent": 0,
     "increasedDamagePercent": 100,
     "itemModifierLines": [
       {
@@ -1129,11 +2664,14 @@
     "AverageHit": 2235,
     "CombinedDPS": 4656.25,
     "CritChance": 0,
+    "CritEffect": 1,
     "CritMultiplier": 0,
     "HitChance": 100,
+    "LightningCritAverage": 0,
     "LightningHitAverage": 2235,
     "LightningMaxBase": 2021,
     "LightningMinBase": 123,
+    "PreEffectiveCritChance": 0,
     "Speed": 2.0833333333333335,
     "Time": 0.47999999999999998,
     "TotalDPS": 4656.25,
@@ -1157,6 +2695,16 @@
     ],
     "addedMaximum": 20,
     "addedMinimum": 10,
+    "ailmentFlags": {
+      "CannotBrittle": false,
+      "CannotChill": false,
+      "CannotFreeze": false,
+      "CannotIgnite": false,
+      "CannotSap": false,
+      "CannotScorch": false,
+      "CannotShock": false
+    },
+    "baseCriticalChancePercent": 6,
     "contributions": [
       {
         "flags": 0,
@@ -1194,8 +2742,20 @@
         "value": 25
       }
     ],
+    "criticalContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritMultiplier",
+        "source": "Base",
+        "type": "BASE",
+        "value": 50
+      }
+    ],
+    "criticalMultiplierExtraPercent": 50,
     "damageEffectiveness": 1.8999999999999999,
     "increasedCastSpeedPercent": 25,
+    "increasedCriticalChancePercent": 0,
     "increasedDamagePercent": 100,
     "itemModifierLines": [
       {
@@ -1341,11 +2901,14 @@
     "AverageHit": 1043.5,
     "CombinedDPS": 1739.1666666666667,
     "CritChance": 0,
+    "CritEffect": 1,
     "CritMultiplier": 0,
     "HitChance": 100,
+    "LightningCritAverage": 0,
     "LightningHitAverage": 1043.5,
     "LightningMaxBase": 1983,
     "LightningMinBase": 104,
+    "PreEffectiveCritChance": 0,
     "Speed": 1.6666666666666667,
     "Time": 0.59999999999999998,
     "TotalDPS": 1739.1666666666667,
@@ -1354,9 +2917,31 @@
     "addedContributions": [],
     "addedMaximum": 0,
     "addedMinimum": 0,
+    "ailmentFlags": {
+      "CannotBrittle": false,
+      "CannotChill": false,
+      "CannotFreeze": false,
+      "CannotIgnite": false,
+      "CannotSap": false,
+      "CannotScorch": false,
+      "CannotShock": false
+    },
+    "baseCriticalChancePercent": 6,
     "contributions": [],
+    "criticalContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritMultiplier",
+        "source": "Base",
+        "type": "BASE",
+        "value": 50
+      }
+    ],
+    "criticalMultiplierExtraPercent": 50,
     "damageEffectiveness": 1.8999999999999999,
     "increasedCastSpeedPercent": 0,
+    "increasedCriticalChancePercent": 0,
     "increasedDamagePercent": 0,
     "itemModifierLines": [],
     "lightningBreakdown": {
@@ -1404,11 +2989,14 @@
     "AverageHit": 1304.5,
     "CombinedDPS": 2174.166666666667,
     "CritChance": 0,
+    "CritEffect": 1,
     "CritMultiplier": 0,
     "HitChance": 100,
+    "LightningCritAverage": 0,
     "LightningHitAverage": 1304.5,
     "LightningMaxBase": 1983,
     "LightningMinBase": 104,
+    "PreEffectiveCritChance": 0,
     "Speed": 1.6666666666666667,
     "Time": 0.59999999999999998,
     "TotalDPS": 2174.166666666667,
@@ -1417,9 +3005,31 @@
     "addedContributions": [],
     "addedMaximum": 0,
     "addedMinimum": 0,
+    "ailmentFlags": {
+      "CannotBrittle": false,
+      "CannotChill": false,
+      "CannotFreeze": false,
+      "CannotIgnite": false,
+      "CannotSap": false,
+      "CannotScorch": false,
+      "CannotShock": false
+    },
+    "baseCriticalChancePercent": 6,
     "contributions": [],
+    "criticalContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritMultiplier",
+        "source": "Base",
+        "type": "BASE",
+        "value": 50
+      }
+    ],
+    "criticalMultiplierExtraPercent": 50,
     "damageEffectiveness": 1.8999999999999999,
     "increasedCastSpeedPercent": 0,
+    "increasedCriticalChancePercent": 0,
     "increasedDamagePercent": 0,
     "itemModifierLines": [],
     "lightningBreakdown": {
@@ -1489,11 +3099,14 @@
     "AverageHit": 1450.5,
     "CombinedDPS": 2417.5,
     "CritChance": 0,
+    "CritEffect": 1,
     "CritMultiplier": 0,
     "HitChance": 100,
+    "LightningCritAverage": 0,
     "LightningHitAverage": 1450.5,
     "LightningMaxBase": 1983,
     "LightningMinBase": 104,
+    "PreEffectiveCritChance": 0,
     "Speed": 1.6666666666666667,
     "Time": 0.59999999999999998,
     "TotalDPS": 2417.5,
@@ -1502,9 +3115,31 @@
     "addedContributions": [],
     "addedMaximum": 0,
     "addedMinimum": 0,
+    "ailmentFlags": {
+      "CannotBrittle": false,
+      "CannotChill": false,
+      "CannotFreeze": false,
+      "CannotIgnite": false,
+      "CannotSap": false,
+      "CannotScorch": false,
+      "CannotShock": false
+    },
+    "baseCriticalChancePercent": 6,
     "contributions": [],
+    "criticalContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritMultiplier",
+        "source": "Base",
+        "type": "BASE",
+        "value": 50
+      }
+    ],
+    "criticalMultiplierExtraPercent": 50,
     "damageEffectiveness": 1.8999999999999999,
     "increasedCastSpeedPercent": 0,
+    "increasedCriticalChancePercent": 0,
     "increasedDamagePercent": 0,
     "itemModifierLines": [],
     "lightningBreakdown": {
@@ -1574,11 +3209,14 @@
     "AverageHit": 1818,
     "CombinedDPS": 3030,
     "CritChance": 0,
+    "CritEffect": 1,
     "CritMultiplier": 0,
     "HitChance": 100,
+    "LightningCritAverage": 0,
     "LightningHitAverage": 1818,
     "LightningMaxBase": 1986.8,
     "LightningMinBase": 105.90000000000001,
+    "PreEffectiveCritChance": 0,
     "Speed": 1.6666666666666667,
     "Time": 0.59999999999999998,
     "TotalDPS": 3030,
@@ -1602,6 +3240,16 @@
     ],
     "addedMaximum": 2,
     "addedMinimum": 1,
+    "ailmentFlags": {
+      "CannotBrittle": false,
+      "CannotChill": false,
+      "CannotFreeze": false,
+      "CannotIgnite": false,
+      "CannotSap": false,
+      "CannotScorch": false,
+      "CannotShock": false
+    },
+    "baseCriticalChancePercent": 6,
     "contributions": [
       {
         "flags": 2,
@@ -1611,8 +3259,20 @@
         "value": 25
       }
     ],
+    "criticalContributions": [
+      {
+        "flags": 0,
+        "keywordFlags": 0,
+        "name": "CritMultiplier",
+        "source": "Base",
+        "type": "BASE",
+        "value": 50
+      }
+    ],
+    "criticalMultiplierExtraPercent": 50,
     "damageEffectiveness": 1.8999999999999999,
     "increasedCastSpeedPercent": 0,
+    "increasedCriticalChancePercent": 0,
     "increasedDamagePercent": 25,
     "itemModifierLines": [
       {

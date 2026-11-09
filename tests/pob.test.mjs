@@ -26,6 +26,16 @@ const fixtures = Object.fromEntries(
       'support-controlled-destruction-combined',
       'support-controlled-destruction-disabled',
       'support-controlled-destruction-rounded',
+      'crit-baseline',
+      'crit-increased',
+      'crit-multiplier',
+      'crit-controlled-active',
+      'crit-controlled-disabled',
+      'crit-controlled-cap',
+      'crit-cap',
+      'crit-zero',
+      'crit-rounded',
+      'crit-combined',
     ].map(async (name) => [
       name,
       await readFile(new URL(`./fixtures/pob/${name}.xml`, import.meta.url), 'utf8'),
@@ -41,7 +51,7 @@ const source = (xml = fixtures.baseline) => ({
 });
 
 test('PoB capability advertises exactly the bounded XML profile', () => {
-  assert.equal(pobAdapterVersion, 'poe1-spark-xml-v3');
+  assert.equal(pobAdapterVersion, 'poe1-spark-xml-v4');
   assert.equal(pobCompatibility.status, 'bounded-poe1-spark-xml');
   assert.equal(pobCompatibility.xmlImportImplemented, true);
   assert.equal(pobCompatibility.shareCodeImportImplemented, false);
@@ -313,6 +323,143 @@ test('unknown, duplicate, incompatible or differently scoped support gems block 
   const unknown = importPobXml(source(rejected[0]));
   assert.equal(unknown.unresolved[0].source.gemIndex, 2);
   assert.equal(unknown.unresolved[0].source.socketGroup, 1);
+});
+
+test('average critical fixtures require the exact excluded-ailment declaration and preserve mode identity', () => {
+  for (const name of [
+    'crit-baseline',
+    'crit-increased',
+    'crit-multiplier',
+    'crit-controlled-active',
+    'crit-controlled-disabled',
+    'crit-controlled-cap',
+    'crit-cap',
+    'crit-zero',
+    'crit-rounded',
+    'crit-combined',
+  ]) {
+    const imported = importPobXml(source(fixtures[name]));
+    assert.equal(imported.complete, true, name + JSON.stringify(imported.diagnostics));
+    assert.deepEqual(imported.selectedSkill.configuration, {
+      id: 'explicit-enemy',
+      effectiveLightningResistancePercent: name === 'crit-combined' ? 25 : 0,
+      criticalStrikeMode: 'average',
+      ailmentMode: 'excluded',
+    });
+    assert.equal(imported.selectedSkill.buildId, 'synthetic-spark');
+    assert.deepEqual(imported.selectedSkill.identity, target);
+    assert.equal(imported.rawXml, fixtures[name]);
+  }
+  const disabled = importPobXml(
+    source(
+      fixtures['crit-increased'].replace(
+        'Cannot inflict Elemental Ailments',
+        'Never deal Critical Strikes',
+      ),
+    ),
+  );
+  assert.equal(disabled.complete, true);
+  assert.deepEqual(disabled.selectedSkill.configuration, {
+    id: 'explicit-enemy',
+    effectiveLightningResistancePercent: 0,
+  });
+  assert.equal(disabled.modifiers.length, 2);
+});
+
+test('critical modifiers share the ordered scalar array and retain exact IDs and individual item lines', () => {
+  const increased = importPobXml(source(fixtures['crit-increased']));
+  assert.deepEqual(
+    increased.modifiers.map(({ statId, value, source, scope }) => ({
+      statId,
+      value,
+      source,
+      scope,
+    })),
+    [
+      {
+        statId: 'critical_strike_chance_+%',
+        value: 100,
+        scope: 'global',
+        source: {
+          kind: 'item',
+          id: 'pob-item:1',
+          line: 5,
+          label: '100% increased Critical Strike Chance',
+        },
+      },
+      {
+        statId: 'spell_critical_strike_chance_+%',
+        value: 50,
+        scope: 'global',
+        source: {
+          kind: 'item',
+          id: 'pob-item:1',
+          line: 6,
+          label: '50% increased Critical Strike Chance for Spells',
+        },
+      },
+    ],
+  );
+  assert.deepEqual(increased.selectedSkill.modifiers, increased.modifiers);
+  const multiplier = importPobXml(source(fixtures['crit-multiplier']));
+  assert.equal(multiplier.modifiers[0].statId, 'base_critical_strike_multiplier_+');
+  assert.equal(multiplier.modifiers[0].value, 50);
+  assert.equal(importPobXml(source(fixtures['crit-zero'])).modifiers[0].value, -100);
+  assert.equal(importPobXml(source(fixtures['crit-rounded'])).modifiers[0].value, 17);
+  const combined = importPobXml(source(fixtures['crit-combined']));
+  assert.equal(combined.modifiers.length, 8);
+  assert.deepEqual(
+    combined.modifiers.slice(5).map(({ source }) => source.line),
+    [11, 12, 13],
+  );
+  assert.deepEqual(combined.addedLightningDamage[0].values, [10, 20]);
+  assert.equal(combined.supports[0].enabled, true);
+  const repeated = importPobXml(
+    source(
+      fixtures['crit-increased'].replace(
+        '50% increased Critical Strike Chance for Spells',
+        '50% increased Critical Strike Chance for Spells\n25% increased Critical Strike Chance',
+      ),
+    ),
+  );
+  assert.deepEqual(
+    repeated.modifiers.map(({ value }) => value),
+    [100, 50, 25],
+  );
+});
+
+test('missing ailment policy, lucky crits, flat crit, charges, local or conditional critical mechanics stay unresolved', () => {
+  const average = fixtures['crit-baseline'];
+  const rejected = [
+    average.replace('Cannot inflict Elemental Ailments', ''),
+    average.replace('Cannot inflict Elemental Ailments', 'Cannot Shock'),
+    average.replace(
+      'Cannot inflict Elemental Ailments',
+      'Cannot inflict Elemental Ailments&#10;Never deal Critical Strikes',
+    ),
+    average.replace('Cannot inflict Elemental Ailments', 'Your Critical Strike Chance is Lucky'),
+    average.replace('</Config>', '<Input name="conditionEnemyShocked" boolean="true"/></Config>'),
+    ...[
+      '+1% to Spell Critical Strike Chance',
+      '100% increased Critical Strike Chance with Attacks',
+      '100% increased Critical Strike Chance while on Full Life',
+      '100% increased Critical Strike Chance (local)',
+      '12.34% increased Critical Strike Chance for Spells',
+      '12.34% increased Critical Strike Chance',
+      '+50.5% to Global Critical Strike Multiplier',
+      '9007199254740992% increased Critical Strike Chance',
+      '+50% to Critical Strike Multiplier for Spell Damage',
+      '+1 to Maximum Power Charges',
+      '10% chance to Shock',
+    ].map((line) => average.replace('Implicits: 0', 'Implicits: 0\n' + line)),
+  ];
+  for (const xml of rejected) {
+    const imported = importPobXml(source(xml));
+    assert.equal(imported.complete, false, xml);
+    assert.equal('selectedSkill' in imported, false);
+    assert.ok(imported.unresolved.length);
+    assert.equal(imported.rawXml, xml);
+  }
 });
 
 test('ambiguous selection, unsupported version hints and mechanics fail visibly', () => {

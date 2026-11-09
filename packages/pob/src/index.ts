@@ -1,5 +1,6 @@
 import {
   isSnapshotIdentity,
+  SELECTED_SPARK_CRITICAL_MODIFIER_STAT_IDS,
   type AddedLightningDamageContribution,
   type Diagnostic,
   type SelectedSkillInput,
@@ -10,7 +11,7 @@ import {
 import { parseXml, XmlError, type PobXmlLimits, type XmlElement } from './xml.js';
 
 export { pobXmlLimits, type PobXmlLimits } from './xml.js';
-export const pobAdapterVersion = 'poe1-spark-xml-v3';
+export const pobAdapterVersion = 'poe1-spark-xml-v4';
 export const pobCompatibility = Object.freeze({
   status: 'bounded-poe1-spark-xml' as const,
   xmlImportImplemented: true as const,
@@ -79,6 +80,12 @@ const rules = [
   [/^([0-9]+(?:\.[0-9]+)?)% (increased|reduced) Lightning Damage$/, 'lightning_damage_+%'],
   [/^([0-9]+(?:\.[0-9]+)?)% (increased|reduced) Projectile Damage$/, 'projectile_damage_+%'],
   [/^([0-9]+(?:\.[0-9]+)?)% (increased|reduced) Cast Speed$/, 'base_cast_speed_+%'],
+  [/^([0-9]+)% (increased|reduced) Critical Strike Chance$/, 'critical_strike_chance_+%'],
+  [
+    /^([0-9]+)% (increased|reduced) Critical Strike Chance for Spells$/,
+    'spell_critical_strike_chance_+%',
+  ],
+  [/^\+([0-9]+)% to Global Critical Strike Multiplier$/, 'base_critical_strike_multiplier_+'],
 ] as const;
 const object = (value: unknown): value is Record<string, unknown> =>
   !!value && typeof value === 'object' && !Array.isArray(value);
@@ -377,6 +384,7 @@ export function importPobXml(
   }
   const config = unique(root, 'Config');
   let resistance: number | undefined;
+  let averageCriticalStrikes = false;
   if (config) {
     check(config, [], ['Input']);
     const inputs = new Map<string, XmlElement>();
@@ -408,7 +416,9 @@ export function importPobXml(
       boss.attributes.string !== 'None' ||
       boss.attributes.number !== undefined ||
       !crit ||
-      crit.attributes.string !== 'Never deal Critical Strikes' ||
+      !['Never deal Critical Strikes', 'Cannot inflict Elemental Ailments'].includes(
+        crit.attributes.string ?? '',
+      ) ||
       crit.attributes.number !== undefined ||
       !resist ||
       resist.attributes.string !== undefined ||
@@ -416,12 +426,13 @@ export function importPobXml(
     )
       problem(
         'pob.missing-configuration',
-        'Require explicit enemyIsBoss=None, numeric enemyLightningResist and customMods=Never deal Critical Strikes.',
+        'Require explicit enemyIsBoss=None, numeric enemyLightningResist and one exact customMods literal: Never deal Critical Strikes, or Cannot inflict Elemental Ailments for average critical strikes with excluded ailments.',
         { element: 'Config' },
         JSON.stringify([...inputs.keys()]),
         'malformed-input',
       );
     else {
+      averageCriticalStrikes = crit.attributes.string === 'Cannot inflict Elemental Ailments';
       resistance = Number(resist.attributes.number);
       if (!Number.isFinite(resistance) || resistance < -200 || resistance > 90) {
         problem(
@@ -569,7 +580,14 @@ export function importPobXml(
             ? [{ statId, value: Number(match[1]) * (match[2] === 'reduced' ? -1 : 1) }]
             : [];
         });
-        if (matches.length !== 1 || !Number.isFinite(matches[0]?.value))
+        if (
+          matches.length !== 1 ||
+          !Number.isFinite(matches[0]?.value) ||
+          ((SELECTED_SPARK_CRITICAL_MODIFIER_STAT_IDS as readonly string[]).includes(
+            matches[0]?.statId ?? '',
+          ) &&
+            !Number.isSafeInteger(matches[0]?.value))
+        )
           problem(
             matches.length > 1 ? 'pob.ambiguous-stat' : 'pob.unsupported-item-line',
             'Item line is outside the exact supported grammar.',
@@ -603,7 +621,13 @@ export function importPobXml(
       statSet: 'base',
       supports,
     },
-    configuration: { id: configurationId, effectiveLightningResistancePercent: resistance },
+    configuration: {
+      id: configurationId,
+      effectiveLightningResistancePercent: resistance,
+      ...(averageCriticalStrikes
+        ? { criticalStrikeMode: 'average' as const, ailmentMode: 'excluded' as const }
+        : {}),
+    },
     modifiers,
     ...(addedLightningDamage.length ? { addedLightningDamage } : {}),
   });
